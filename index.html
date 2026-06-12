@@ -347,13 +347,21 @@
   .tab:hover{color:var(--blanc);border-color:var(--gris-d);transform:translateY(-2px)}
   .tab.active{background:var(--rouge);color:#fff;border-color:var(--rouge);box-shadow:0 12px 26px -14px rgba(226,35,26,.8)}
   /* recherche dans la carte */
-  .menu-search{max-width:540px;margin:34px auto 0;position:relative}
+  .menu-search{max-width:540px;margin:34px auto 0}
+  .menu-search .search-field{position:relative}
   .menu-search input{width:100%;background:var(--noir-3);border:1.5px solid var(--noir-4);border-radius:40px;
-    color:var(--blanc);font-family:"Inter",sans-serif;font-size:1rem;padding:15px 22px 15px 50px;outline:none;
+    color:var(--blanc);font-family:"Inter",sans-serif;font-size:1rem;padding:15px 50px 15px 50px;outline:none;
     transition:border-color .25s,background .25s}
   .menu-search input:focus{border-color:var(--or);background:var(--noir-2)}
   .menu-search input::placeholder{color:var(--gris-d)}
-  .menu-search .s-ico{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--gris-d);pointer-events:none}
+  .menu-search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+  .menu-search .s-ico{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--gris-d);
+    pointer-events:none;display:flex;align-items:center;justify-content:center;line-height:0}
+  .menu-search .s-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:30px;height:30px;
+    border:0;border-radius:50%;background:var(--noir-4);color:var(--gris);cursor:pointer;font-size:1.2rem;line-height:1;
+    display:none;align-items:center;justify-content:center;padding:0;transition:background .2s,color .2s}
+  .menu-search .s-clear:hover{background:var(--rouge);color:#fff}
+  .menu-search.has-text .s-clear{display:flex}
   .search-count{display:block;margin-top:14px;min-height:1em;font-family:"Oswald",sans-serif;letter-spacing:.06em;
     text-transform:uppercase;font-size:.8rem;color:var(--or)}
   body.searching .menu-tabs{opacity:.45;pointer-events:none}
@@ -684,8 +692,11 @@
     <h2 class="reveal" style="--i:1">Notre <em>carte</em></h2>
     <p class="lead reveal" style="--i:2">Pâtes fraîches, pizzas au feu de bois, viandes et desserts. Cherchez un plat, ou parcourez par catégorie.</p>
     <div class="menu-search reveal" style="--i:2">
-      <span class="s-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
-      <input type="search" id="menuSearch" placeholder="Rechercher un plat ou un ingrédient…" aria-label="Rechercher dans la carte" autocomplete="off">
+      <div class="search-field">
+        <span class="s-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+        <input type="search" id="menuSearch" placeholder="Rechercher un plat ou un ingrédient…" aria-label="Rechercher dans la carte" autocomplete="off">
+        <button type="button" class="s-clear" id="searchClear" aria-label="Effacer la recherche">×</button>
+      </div>
       <span class="search-count" id="searchCount" aria-live="polite"></span>
     </div>
     <div class="menu-tabs reveal" style="--i:2">
@@ -1222,8 +1233,16 @@
     var dishes = Array.prototype.slice.call(document.querySelectorAll(".menu-panel .dish"));
     function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
     var index = dishes.map(function(d){ return norm(d.querySelector(".name").textContent); });
+    var wrap = input.closest(".menu-search");
+    var clearBtn = document.getElementById("searchClear");
     var t;
-    input.addEventListener("input", function(){ clearTimeout(t); t = setTimeout(run, 90); });
+    input.addEventListener("input", function(){
+      if(wrap) wrap.classList.toggle("has-text", input.value.length > 0);
+      clearTimeout(t); t = setTimeout(run, 90);
+    });
+    if(clearBtn) clearBtn.addEventListener("click", function(){
+      input.value = ""; if(wrap) wrap.classList.remove("has-text"); run(); input.focus();
+    });
     function run(){
       var q = norm(input.value.trim());
       if(!q){
