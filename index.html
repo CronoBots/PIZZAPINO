@@ -74,7 +74,7 @@
 <link rel="preload" as="image" href="images/hero-pizza.webp" type="image/webp" fetchpriority="high">
 <style>
   :root{
-    --rouge:#e2231a;
+    --rouge:#c81f18;
     --rouge-d:#b3140d;
     --rouge-l:#ff4438;
     --noir:#0d0b0a;          /* fond profond, légèrement chaud */
@@ -209,7 +209,7 @@
   .nav-cta{display:inline-flex;align-items:center;gap:8px;background:var(--rouge);color:#fff;text-decoration:none;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.82rem;font-weight:600;
     padding:11px 20px;border-radius:2px;transition:transform .2s,background .2s,box-shadow .2s}
-  .nav-cta:hover{background:var(--rouge-d);transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(226,35,26,.8)}
+  .nav-cta:hover{background:var(--rouge-d);transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(0,0,0,.5)}
   .burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:8px;z-index:110}
   .burger span{width:26px;height:2px;background:var(--blanc);transition:.35s;border-radius:2px}
   .burger.x span:nth-child(1){transform:translateY(7px) rotate(45deg)}
@@ -264,11 +264,11 @@
     overflow:hidden;will-change:transform}
   .btn span{position:relative;z-index:1}
   .btn:hover{transform:translateY(-2px)}
-  .btn-primary{background:var(--rouge);color:#fff;box-shadow:0 18px 40px -18px rgba(226,35,26,.7)}
+  .btn-primary{background:var(--rouge);color:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
   .btn-primary::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,var(--rouge-d),var(--rouge));
     opacity:0;transition:opacity .25s}
   .btn-primary:hover::before{opacity:1}
-  .btn-primary:hover{box-shadow:0 24px 50px -16px rgba(226,35,26,.85)}
+  .btn-primary:hover{box-shadow:0 24px 50px -16px rgba(0,0,0,.6)}
   .btn-ghost{background:transparent;color:var(--blanc);border:1.5px solid rgba(247,243,236,.35)}
   .btn-ghost:hover{border-color:var(--or);color:var(--or)}
   .scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;
@@ -371,7 +371,7 @@
     background:transparent;color:var(--gris);border:1.5px solid var(--noir-4);padding:11px 22px;cursor:pointer;
     border-radius:40px;transition:.28s}
   .tab:hover{color:var(--blanc);border-color:var(--gris-d);transform:translateY(-2px)}
-  .tab.active{background:var(--rouge);color:#fff;border-color:var(--rouge);box-shadow:0 12px 26px -14px rgba(226,35,26,.8)}
+  .tab.active{background:var(--rouge);color:#fff;border-color:var(--rouge);box-shadow:0 12px 26px -14px rgba(0,0,0,.55)}
   /* recherche dans la carte */
   .menu-search{max-width:540px;margin:34px auto 0}
   .menu-search .search-field{position:relative}
@@ -539,7 +539,7 @@
   /* ===== FLOTTANTS ===== */
   #toTop{position:fixed;right:22px;bottom:22px;z-index:90;width:48px;height:48px;border-radius:50%;
     background:var(--rouge);color:#fff;border:0;cursor:pointer;font-size:1.2rem;opacity:0;visibility:hidden;
-    transform:translateY(14px);transition:.35s;box-shadow:0 14px 30px -12px rgba(226,35,26,.8)}
+    transform:translateY(14px);transition:.35s;box-shadow:0 14px 30px -12px rgba(0,0,0,.55)}
   #toTop.show{opacity:1;visibility:visible;transform:none}
   #toTop:hover{background:var(--rouge-d);transform:translateY(-3px)}
   .call-bar{display:none}
