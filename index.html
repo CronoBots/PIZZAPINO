@@ -574,9 +574,9 @@
     .hours .hrs{color:var(--gris)}
     /* Réseaux : on empile (libellé puis identifiant) pour éviter les coupures */
     .ig-line a{display:flex;margin-top:5px;width:max-content;max-width:100%}
-    /* iOS : on fige la hauteur du fond (100vh = grand viewport, stable) ancré en haut.
-       Ainsi la barre d'adresse qui se rétracte ne redimensionne plus l'image -> fin de l'effet de zoom au scroll */
-    .hero-bg{background-attachment:scroll;inset:0;bottom:auto;height:100vh}
+    /* iOS : hauteur du fond en PIXELS FIXES (aucune unité viewport) -> la barre d'adresse
+       ne peut plus le redimensionner -> aucun zoom possible au scroll */
+    .hero-bg{background-attachment:scroll;inset:0;bottom:auto;height:880px}
     /* Scroll fluide : pas de flou sur le header collant, fond solide, hauteur constante */
     header,header.scrolled{backdrop-filter:none;-webkit-backdrop-filter:none}
     header{background:#110D0A;padding-top:env(safe-area-inset-top)}
@@ -594,16 +594,14 @@
     .hero .hero-lead-full{display:none}
     .hero .hero-lead-mini{display:block;margin:14px 0 0;font-size:1.02rem;line-height:1.55;color:#F0E6D4;
       text-shadow:0 1px 14px rgba(0,0,0,.85);max-width:32ch}
-    .rating{margin:18px 0 0;text-shadow:0 1px 14px rgba(0,0,0,.9)}
-    .hero-status{margin-top:16px;margin-bottom:0}
-    /* Les boutons du hero font doublon avec la barre du bas (Appeler/La carte) → on les masque pour aérer */
-    .hero .cta-row{display:none}
+    /* Accueil épuré : on retire du hero la note (avis) et le statut ouvert/fermé,
+       car ces infos sont déjà plus bas (section Avis + Infos). Les boutons aussi (doublon barre du bas). */
+    .hero .rating,.hero .hero-status,.hero .cta-row{display:none!important}
     /* Pas de parallaxe / compositing sur mobile (évite les saccades au scroll) */
     /* Aucune parallaxe sur mobile : fonds totalement statiques (zéro transform) */
     .hero-bg,.parallax .pbg{will-change:auto!important;transform:none!important}
     .parallax .pbg{inset:0;background-attachment:scroll}
     .topbar{display:none}
-    .hero-status{display:inline-flex}
     body{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
     .call-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:95;gap:1px;
       border-top:1px solid rgba(198,154,77,.4);padding-bottom:env(safe-area-inset-bottom);background:var(--noir-4)}
@@ -1092,7 +1090,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 21</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 22</b></p>
   </div>
 </footer>
 
