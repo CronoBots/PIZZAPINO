@@ -602,13 +602,6 @@
 </div>
 <a class="skip" href="#carte">Aller à la carte</a>
 
-<!-- PRÉCHARGEUR -->
-<div id="preload"><div class="pl-inner">
-  <div class="pl-pizza">🍕</div>
-  <div class="pl-name">PIZZERIA <b>PINO</b></div>
-  <div class="pl-bar"><i></i></div>
-</div></div>
-
 <div id="progress"></div>
 
 <!-- TOPBAR -->
@@ -1090,22 +1083,20 @@
       if(hidden) return; hidden = true;
       document.body.classList.add("intro-hide");
       document.body.classList.remove("locked");
-      window.removeEventListener("wheel", hide);
-      window.removeEventListener("touchmove", hide);
-      setTimeout(function(){ intro.remove(); }, 750);
+      window.removeEventListener("wheel", onGesture);
+      window.removeEventListener("touchmove", onGesture);
+      setTimeout(function(){ intro.remove(); }, 700);
     }
-    setTimeout(hide, 1300);
-    window.addEventListener("wheel", hide, {passive:true});
-    window.addEventListener("touchmove", hide, {passive:true});
-    intro.addEventListener("click", hide);
+    // L'intro reste affichée ~2,8 s puis s'efface en douceur
+    setTimeout(hide, 2800);
+    // On ne ferme sur un geste qu'après un temps mini (sinon l'intro disparaît trop vite)
+    var armed = false;
+    setTimeout(function(){ armed = true; }, 1400);
+    function onGesture(){ if(armed) hide(); }
+    window.addEventListener("wheel", onGesture, {passive:true});
+    window.addEventListener("touchmove", onGesture, {passive:true});
+    intro.addEventListener("click", function(){ if(armed) hide(); });
   })();
-
-  /* ---- Préchargeur ---- */
-  window.addEventListener("load", function(){
-    setTimeout(function(){ document.getElementById("preload").classList.add("done"); }, 450);
-  });
-  // sécurité : on retire le préchargeur même si "load" tarde
-  setTimeout(function(){ var p=document.getElementById("preload"); if(p) p.classList.add("done"); }, 2500);
 
   /* ---- Titre du hero : découpe en mots animés ---- */
   (function(){
@@ -1196,10 +1187,10 @@
   onScroll();
   toTop.addEventListener("click", function(){ window.scrollTo({top:0, behavior: reduce?"auto":"smooth"}); });
 
-  /* ---- Parallaxe (hero + four) ---- */
+  /* ---- Parallaxe (hero + four) — desktop/souris uniquement (évite le scroll saccadé sur mobile) ---- */
   var heroBg = document.getElementById("heroBg");
   var paraBg = document.getElementById("paraBg");
-  if(!reduce){
+  if(!reduce && window.matchMedia("(min-width:761px) and (pointer:fine)").matches){
     var pTick = false;
     window.addEventListener("scroll", function(){
       if(pTick) return; pTick = true;
