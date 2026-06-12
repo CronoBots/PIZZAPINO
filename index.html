@@ -530,13 +530,15 @@
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
     .hero-bg{background-attachment:scroll}
-    /* Hero : on masque l'indicateur "Découvrir" (il chevauchait les boutons) et on resserre */
+    /* Hero mobile : centré verticalement, contenu toujours au-dessus de la barre du bas */
     .scroll-cue{display:none}
-    .hero{min-height:auto;padding-top:54px;padding-bottom:40px}
-    .hero h1{font-size:clamp(2.4rem,8.5vw,3.2rem)}
-    .hero p{margin:18px 0 6px}
-    .rating{margin:16px 0 16px}
-    .hero-status{margin-bottom:22px}
+    .hero{min-height:calc(100svh - 58px);padding-top:22px;padding-bottom:66px}
+    .hero .hero-cat{margin-bottom:16px}
+    .hero h1{font-size:clamp(2.2rem,8vw,3rem)}
+    .hero p{margin:14px 0 2px;font-size:1rem;max-width:34ch}
+    .rating{margin:12px 0 12px}
+    .hero-status{margin-bottom:18px}
+    .hero .cta-row{margin-top:4px}
     /* Haut allégé : la barre d'infos du haut est masquée (le statut passe dans le hero) */
     .topbar{display:none}
     .hero-status{display:inline-flex}
@@ -611,8 +613,8 @@
   <div class="wrap">
     <span class="hero-cat reveal">Restaurant · À emporter · Traiteur</span>
     <h1 class="anim-head">Pâtes fraîches &amp; pizzas au <span class="gold">feu de bois</span>.</h1>
-    <p class="reveal" style="--i:3">La vraie cuisine italienne sur la route du Condroz, avec des produits de première qualité. Bienvenue chez Pino.</p>
-    <div class="rating reveal" style="--i:4"><span class="stars">★★★★☆</span> <b>4,2/5</b> · plus de 1 000 avis Google</div>
+    <p class="reveal" style="--i:3">La vraie cuisine italienne sur la route du Condroz. Bienvenue chez Pino.</p>
+    <div class="rating reveal" style="--i:4"><span class="stars">★★★★☆</span> <b>4,2/5</b> · 1 000+ avis Google</div>
     <div class="hero-status reveal" id="heroStatus" style="--i:4"></div>
     <div class="cta-row reveal" style="--i:5">
       <a class="btn btn-primary magnet" href="tel:+3285513339"><span>Réserver une table</span></a>
