@@ -202,6 +202,7 @@
     padding:17px 36px;border-radius:2px;transition:transform .15s,background .25s,box-shadow .25s,color .25s;
     overflow:hidden;will-change:transform}
   .btn span{position:relative;z-index:1}
+  .btn:hover{transform:translateY(-2px)}
   .btn-primary{background:var(--rouge);color:#fff;box-shadow:0 18px 40px -18px rgba(226,35,26,.7)}
   .btn-primary::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,var(--rouge-d),var(--rouge));
     opacity:0;transition:opacity .25s}
@@ -972,15 +973,6 @@
 
   /* ---- Boutons magnétiques + tilt cartes ---- */
   if(!reduce && window.matchMedia("(pointer:fine)").matches){
-    document.querySelectorAll(".magnet").forEach(function(btn){
-      btn.addEventListener("mousemove", function(e){
-        var r = btn.getBoundingClientRect();
-        var x = e.clientX - r.left - r.width/2;
-        var y = e.clientY - r.top - r.height/2;
-        btn.style.transform = "translate("+(x*0.25)+"px,"+(y*0.35)+"px)";
-      });
-      btn.addEventListener("mouseleave", function(){ btn.style.transform = ""; });
-    });
     document.querySelectorAll(".tilt").forEach(function(card){
       card.addEventListener("mousemove", function(e){
         var r = card.getBoundingClientRect();
