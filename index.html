@@ -301,10 +301,15 @@
   .lead{font-size:1.1rem;max-width:60ch;color:var(--gris)}
   .center{text-align:center}.center .eyebrow{justify-content:center}.center .lead{margin:0 auto}
 
-  /* ===== MAISON — bloc éditorial (récit + atouts) ===== */
-  .maison-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5.5vw,84px);align-items:center}
-  .maison-intro .lead{max-width:46ch;margin-bottom:0}
-  .maison-list{list-style:none;margin:0;padding:0}
+  /* ===== MAISON — intro centrée + 3 atouts ===== */
+  .values{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(28px,4vw,56px);
+    margin-top:clamp(46px,6vw,80px);text-align:center}
+  .value{position:relative;padding-top:30px;border-top:1px solid var(--hair);transition:border-color .4s}
+  .value:hover{border-top-color:rgba(198,154,77,.5)}
+  .value .vnum{display:block;font-family:"Fraunces",serif;font-style:italic;font-size:2.1rem;font-weight:500;
+    color:rgba(198,154,77,.5);line-height:1;margin-bottom:14px}
+  .value h3{font-size:1.35rem;margin-bottom:8px;color:var(--blanc);font-style:italic;font-weight:500}
+  .value p{color:var(--gris);font-size:.95rem;max-width:32ch;margin:0 auto}
   .maison-list li{display:flex;gap:22px;align-items:flex-start;padding:22px 0;border-top:1px solid var(--hair);
     transition:border-color .4s}
   .maison-list li:last-child{border-bottom:1px solid var(--hair)}
@@ -559,7 +564,7 @@
   @media(max-width:920px){
     nav.main,.nav-cta{display:none}
     .burger{display:flex}
-    .maison-grid{grid-template-columns:1fr;gap:clamp(24px,5vw,36px)}
+    .values{grid-template-columns:1fr;gap:0}
     .infos-grid{grid-template-columns:1fr;gap:34px}
   }
   @media(max-width:760px){
@@ -643,8 +648,8 @@
     .stats{padding:46px 0}
     h2{font-size:clamp(2.2rem,7.6vw,3rem);margin-bottom:16px}
     .eyebrow{margin-bottom:18px}
-    .maison-list{margin-top:30px}
-    .maison-list li{padding:18px 0;gap:16px}
+    .values{margin-top:36px}
+    .value{padding:24px 0}
     .gal-grid{margin-top:34px}
     .insta-grid{margin-top:34px}
     .menu-panel{margin-top:32px}
@@ -797,18 +802,16 @@
 </div>
 
 <!-- MAISON -->
-<section id="maison" class="maison">
-  <div class="wrap maison-grid">
-    <div class="maison-intro">
-      <p class="eyebrow reveal"><span class="num">01</span> La maison</p>
-      <h2 class="reveal" style="--i:1">Une pizzeria comme <em>en Italie</em></h2>
-      <p class="lead reveal" style="--i:2">Depuis plus de trente ans, la vraie cuisine italienne sur la route du Condroz à Nandrin : une pâte travaillée chaque jour et cuite au feu de bois, des pâtes fraîches préparées maison, dans une ambiance chaleureuse et familiale.</p>
+<section id="maison" class="maison center">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="num">01</span> La maison</p>
+    <h2 class="reveal" style="--i:1">Une pizzeria comme <em>en Italie</em></h2>
+    <p class="lead reveal" style="--i:2">Depuis plus de trente ans, la vraie cuisine italienne sur la route du Condroz à Nandrin : une pâte travaillée chaque jour et cuite au feu de bois, des pâtes fraîches préparées maison, dans une ambiance chaleureuse et familiale.</p>
+    <div class="values reveal" style="--i:3">
+      <div class="value"><span class="vnum">01</span><h3>Pizzas au feu de bois</h3><p>Une large carte, des classiques aux incontournables de la maison.</p></div>
+      <div class="value"><span class="vnum">02</span><h3>Pâtes fraîches</h3><p>Rigatoni, tagliatelle, gnocchi et spécialités préparés maison.</p></div>
+      <div class="value"><span class="vnum">03</span><h3>Salles &amp; terrasses</h3><p>Deux salles et deux terrasses, jusqu'à près de 100 couverts.</p></div>
     </div>
-    <ul class="maison-list reveal" style="--i:3">
-      <li><span class="ml-n">01</span><div><h3>Pizzas au feu de bois</h3><p>Une large carte, des classiques aux incontournables de la maison.</p></div></li>
-      <li><span class="ml-n">02</span><div><h3>Pâtes fraîches</h3><p>Rigatoni, tagliatelle, gnocchi et spécialités préparés maison.</p></div></li>
-      <li><span class="ml-n">03</span><div><h3>Salles &amp; terrasses</h3><p>Deux salles et deux terrasses, jusqu'à près de 100 couverts.</p></div></li>
-    </ul>
   </div>
 </section>
 
@@ -1030,9 +1033,6 @@
         <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
       </div>
       <span class="badge-off">🎬 Vidéo officielle · @pino.nandrin</span>
-      <div class="cta-row" style="justify-content:center;margin-top:22px">
-        <a class="btn btn-ghost" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Plus de vidéos sur Instagram</span></a>
-      </div>
     </div>
   </div>
 </section>
@@ -1042,7 +1042,7 @@
   <div class="wrap">
     <p class="eyebrow reveal"><span class="num">★</span> Sur Instagram</p>
     <h2 class="reveal" style="--i:1">Suivez <em>@pino.nandrin</em></h2>
-    <p class="lead reveal" style="--i:2">Nos reels, l'ambiance et les coulisses. Cliquez pour voir nos vidéos directement sur Instagram.</p>
+    <p class="lead reveal" style="--i:2">Nos reels, l'ambiance et les coulisses de la maison, au quotidien.</p>
     <div class="insta-grid">
       <a class="insta-tile reveal" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir le reel sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
@@ -1148,7 +1148,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 39</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 40</b></p>
   </div>
 </footer>
 
