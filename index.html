@@ -470,6 +470,7 @@
   /* ===== AVIS ===== */
   .reviews{background:linear-gradient(180deg,var(--noir-2),var(--noir))}
   .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:50px;text-align:left}
+  .ti-embed{margin-top:46px;min-height:140px;text-align:left}
   .rev{background:var(--noir-3);padding:34px 30px;border-radius:6px;border:1px solid rgba(255,255,255,.05);
     position:relative;transition:transform .4s,border-color .4s,box-shadow .4s}
   .rev::before{content:"“";position:absolute;top:8px;right:22px;font-family:"Fraunces",serif;font-size:5rem;
@@ -986,13 +987,9 @@
     <p class="eyebrow reveal"><span class="num">04</span> Ils en parlent</p>
     <h2 class="reveal" style="--i:1">Ce que disent <em>nos clients</em></h2>
     <p class="lead reveal" style="--i:2"><strong style="color:var(--or)">4,2/5</strong> sur Google (plus de 1 000 avis) · <strong style="color:var(--or)">4/5</strong> sur Tripadvisor. Merci à nos clients !</p>
-    <div class="rev-grid">
-      <div class="rev reveal"><div class="stars">★★★★★</div><p>« Tout avait du goût. On oublie souvent que la pâte doit avoir du goût — chez Pino, on ne l'oublie pas ! L'ambiance et le cadre sont très bien. »</p><div class="who">— Avis Google</div></div>
-      <div class="rev reveal" style="--i:1"><div class="stars">★★★★★</div><p>« Excellentes pizzas au feu de bois, copieusement garnies. Produits très frais, personnel souriant. Prix très démocratiques. »</p><div class="who">— Avis Google</div></div>
-      <div class="rev reveal" style="--i:2"><div class="stars">★★★★★</div><p>« Jamais aussi bon ailleurs, aussi garni, et à un prix aussi intéressant. On y revient à chaque fois. »</p><div class="who">— Avis Google</div></div>
-      <div class="rev reveal"><div class="stars">★★★★★</div><p>« L'osso buco maison est une vraie réussite : copieux, goûteux, des légumes bien relevés et des tagliatelle parfaitement cuites. »</p><div class="who">— Avis Tripadvisor</div></div>
-      <div class="rev reveal" style="--i:1"><div class="stars">★★★★★</div><p>« Que ce soit en couple, entre amis ou en famille, chez Pino c'est LA pizzeria à découvrir pour la qualité des mets servis. »</p><div class="who">— Avis Tripadvisor</div></div>
-      <div class="rev reveal" style="--i:2"><div class="stars">★★★★★</div><p>« Accueil chaleureux, service superbe, cuisine excellente et atmosphère très conviviale. »</p><div class="who">— Avis Tripadvisor</div></div>
+    <!-- Avis Google en direct (Trustindex) -->
+    <div class="ti-embed reveal" style="--i:2">
+      <script defer async src='https://cdn.trustindex.io/loader.js?8b0a3f97485a10343c462c85adf'></script>
     </div>
     <div class="cta-row reveal" style="justify-content:center;margin-top:44px">
       <a class="btn btn-primary magnet" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener"><span>Nos avis Google</span></a>
