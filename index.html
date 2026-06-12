@@ -301,22 +301,10 @@
   .lead{font-size:1.1rem;max-width:60ch;color:var(--gris)}
   .center{text-align:center}.center .eyebrow{justify-content:center}.center .lead{margin:0 auto}
 
-  /* ===== MAISON — bloc éditorial (photo + récit + atouts) ===== */
-  .maison-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(40px,5.5vw,84px);align-items:center}
-  .maison-media{position:relative;overflow:hidden;border-radius:5px;aspect-ratio:4/5;
-    box-shadow:0 34px 80px rgba(0,0,0,.55);border:1px solid var(--hair)}
-  .maison-media .pbg{position:absolute;inset:-10% 0;background-image:url('images/four-bois.jpg');
-    background-image:image-set(url('images/four-bois.webp') type('image/webp'),url('images/four-bois.jpg') type('image/jpeg'));
-    background-size:cover;background-position:center;will-change:transform;z-index:0}
-  .maison-media::after{content:"";position:absolute;inset:0;z-index:1;
-    background:linear-gradient(180deg,rgba(20,16,13,.05) 40%,rgba(20,16,13,.55))}
-  .maison-since{position:absolute;left:0;bottom:0;z-index:2;background:var(--rouge);color:var(--blanc);
-    padding:13px 22px;display:flex;flex-direction:column;line-height:1.04}
-  .maison-since i{font-family:"Oswald",sans-serif;font-style:normal;font-size:.6rem;letter-spacing:.22em;
-    text-transform:uppercase;opacity:.85;margin-bottom:3px}
-  .maison-since b{font-family:"Fraunces",serif;font-style:italic;font-size:1.7rem;font-weight:500}
-  .maison-txt .lead{max-width:48ch}
-  .maison-list{list-style:none;margin:clamp(28px,3.4vw,44px) 0 0;padding:0}
+  /* ===== MAISON — bloc éditorial (récit + atouts) ===== */
+  .maison-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5.5vw,84px);align-items:center}
+  .maison-intro .lead{max-width:46ch;margin-bottom:0}
+  .maison-list{list-style:none;margin:0;padding:0}
   .maison-list li{display:flex;gap:22px;align-items:flex-start;padding:22px 0;border-top:1px solid var(--hair);
     transition:border-color .4s}
   .maison-list li:last-child{border-bottom:1px solid var(--hair)}
@@ -571,8 +559,7 @@
   @media(max-width:920px){
     nav.main,.nav-cta{display:none}
     .burger{display:flex}
-    .maison-grid{grid-template-columns:1fr;gap:clamp(26px,5vw,40px)}
-    .maison-media{aspect-ratio:16/11}
+    .maison-grid{grid-template-columns:1fr;gap:clamp(24px,5vw,36px)}
     .infos-grid{grid-template-columns:1fr;gap:34px}
   }
   @media(max-width:760px){
@@ -812,20 +799,16 @@
 <!-- MAISON -->
 <section id="maison" class="maison">
   <div class="wrap maison-grid">
-    <figure class="maison-media reveal">
-      <div class="pbg" id="paraBg"></div>
-      <span class="maison-since"><i>Depuis plus de</i><b>30 ans</b></span>
-    </figure>
-    <div class="maison-txt">
+    <div class="maison-intro">
       <p class="eyebrow reveal"><span class="num">01</span> La maison</p>
       <h2 class="reveal" style="--i:1">Une pizzeria comme <em>en Italie</em></h2>
       <p class="lead reveal" style="--i:2">Depuis plus de trente ans, la vraie cuisine italienne sur la route du Condroz à Nandrin : une pâte travaillée chaque jour et cuite au feu de bois, des pâtes fraîches préparées maison, dans une ambiance chaleureuse et familiale.</p>
-      <ul class="maison-list reveal" style="--i:3">
-        <li><span class="ml-n">01</span><div><h3>Pizzas au feu de bois</h3><p>Une large carte, des classiques aux incontournables de la maison.</p></div></li>
-        <li><span class="ml-n">02</span><div><h3>Pâtes fraîches</h3><p>Rigatoni, tagliatelle, gnocchi et spécialités préparés maison.</p></div></li>
-        <li><span class="ml-n">03</span><div><h3>Salles &amp; terrasses</h3><p>Deux salles et deux terrasses, jusqu'à près de 100 couverts.</p></div></li>
-      </ul>
     </div>
+    <ul class="maison-list reveal" style="--i:3">
+      <li><span class="ml-n">01</span><div><h3>Pizzas au feu de bois</h3><p>Une large carte, des classiques aux incontournables de la maison.</p></div></li>
+      <li><span class="ml-n">02</span><div><h3>Pâtes fraîches</h3><p>Rigatoni, tagliatelle, gnocchi et spécialités préparés maison.</p></div></li>
+      <li><span class="ml-n">03</span><div><h3>Salles &amp; terrasses</h3><p>Deux salles et deux terrasses, jusqu'à près de 100 couverts.</p></div></li>
+    </ul>
   </div>
 </section>
 
@@ -1122,7 +1105,6 @@
     <h2 class="reveal" style="--i:1">Horaires &amp; <em>accès</em></h2>
     <div class="infos-grid">
       <div class="reveal" style="--i:1">
-        <div class="status-pill" id="statusPill">· Horaires</div>
         <ul class="hours" id="hoursList">
           <li data-days="1,2,3,4"><span class="day">Lundi → Jeudi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
           <li data-days="5,6,0"><span class="day">Vendredi → Dimanche</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
@@ -1166,7 +1148,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 38</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 39</b></p>
   </div>
 </footer>
 
@@ -1482,12 +1464,16 @@
     var liveTxt = document.getElementById("liveTxt");
     function hhmm(m){ var h=Math.floor(m/60), mm=m%60; return h+"h"+(mm<10?"0"+mm:mm===0?"00":mm); }
     if(open){
-      pill.className = "status-pill open"; pill.textContent = "● Ouvert maintenant";
-      dot.className = "dot-live open"; liveTxt.textContent = "Ouvert";
+      if(pill){ pill.className = "status-pill open"; pill.textContent = "● Ouvert maintenant"; }
+      if(dot) dot.className = "dot-live open";
+      if(liveTxt) liveTxt.textContent = "Ouvert";
     } else {
-      pill.className = "status-pill closed";
-      pill.textContent = nextOpen!==null ? "● Fermé · ouvre à "+hhmm(nextOpen) : "● Fermé actuellement";
-      dot.className = "dot-live closed"; liveTxt.textContent = "Fermé";
+      if(pill){
+        pill.className = "status-pill closed";
+        pill.textContent = nextOpen!==null ? "● Fermé · ouvre à "+hhmm(nextOpen) : "● Fermé actuellement";
+      }
+      if(dot) dot.className = "dot-live closed";
+      if(liveTxt) liveTxt.textContent = "Fermé";
     }
     // pastille statut (bas-gauche) : si ouvert -> "Ouvert" + téléphone cliquable ; sinon "Fermé · ouvre à…"
     var hs = document.getElementById("heroStatus");
