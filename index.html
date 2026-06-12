@@ -119,7 +119,9 @@
   .intro-logo{font-family:"Fraunces",Georgia,serif;font-weight:600;text-transform:uppercase;letter-spacing:.2em;
     font-size:clamp(1.7rem,6.5vw,2.9rem);color:var(--blanc);opacity:0;transform:translateY(10px);
     animation:introUp .9s cubic-bezier(.2,.7,.2,1) .1s forwards}
-  .intro-logo b{color:var(--or);font-weight:600}
+  .intro-logo b{color:var(--rouge);font-weight:600}
+  .intro-pre{display:block;font-family:"Oswald",sans-serif;font-weight:500;font-size:.6rem;letter-spacing:.46em;
+    text-transform:uppercase;color:var(--or);margin-bottom:14px}
   .intro-line{height:1px;width:0;margin:20px auto 16px;background:linear-gradient(90deg,transparent,var(--or),transparent);
     animation:introLine 1s ease .5s forwards}
   .intro-sub{font-family:"Oswald",sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.34em;
@@ -187,7 +189,9 @@
   header.scrolled .nav{padding:12px 0}
   .brand{font-family:"Fraunces",Georgia,serif;font-weight:600;text-transform:uppercase;font-size:1.42rem;line-height:1;
     letter-spacing:.16em;color:var(--blanc);text-decoration:none;display:inline-block}
-  .brand b{color:var(--or);font-weight:600;font-style:italic;letter-spacing:.1em}
+  .brand b{color:var(--rouge);font-weight:600;font-style:italic;letter-spacing:.1em}
+  .brand-pre{display:block;font-family:"Oswald",sans-serif;font-weight:500;font-size:.5rem;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--or);margin-bottom:6px}
   .brand small{display:block;font-family:"Oswald",sans-serif;font-weight:500;font-size:.55rem;letter-spacing:.34em;
     text-transform:uppercase;color:var(--gris-d);margin-top:7px}
   nav.main ul{list-style:none;display:flex;gap:34px;align-items:center;font-family:"Oswald",sans-serif;
@@ -587,11 +591,12 @@
     .hero .cta-row{margin-top:24px}
     .topbar{display:none}
     .hero-status{display:inline-flex}
-    body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+    body{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
     .call-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:95;gap:1px;
       border-top:1px solid rgba(198,154,77,.4);padding-bottom:env(safe-area-inset-bottom);background:var(--noir-4)}
-    .call-bar a{flex:1;text-align:center;padding:17px;font-family:"Oswald",sans-serif;text-transform:uppercase;
-      letter-spacing:.14em;font-size:.84rem;font-weight:600;text-decoration:none;color:#fff}
+    .call-bar a{flex:1;text-align:center;padding:12px;font-family:"Oswald",sans-serif;text-transform:uppercase;
+      letter-spacing:.12em;font-size:.74rem;font-weight:600;text-decoration:none;color:#fff;
+      display:flex;align-items:center;justify-content:center;gap:7px}
     .call-bar .c-tel{background:var(--rouge)}
     .call-bar .c-menu{background:var(--noir-4)}
     #toTop{bottom:74px}
@@ -624,7 +629,7 @@
 <!-- Écran d'intro (s'efface après ~1,3s ; ignoré si l'utilisateur réduit les animations) -->
 <div id="intro" aria-hidden="true">
   <div class="intro-inner">
-    <div class="intro-logo">PIZZERIA <b>PINO</b></div>
+    <div class="intro-logo"><span class="intro-pre">Restaurant</span>Pizzeria <b>Pino</b></div>
     <div class="intro-line"></div>
     <div class="intro-sub">Pâtes fraîches · Feu de bois · Nandrin</div>
   </div>
@@ -644,7 +649,7 @@
 <!-- HEADER -->
 <header id="hdr">
   <div class="wrap nav">
-    <a href="#top" class="brand">PIZZERIA <b>PINO</b><small>Pâtes fraîches · Feu de bois · Nandrin</small></a>
+    <a href="#top" class="brand"><span class="brand-pre">Restaurant</span>Pizzeria <b>Pino</b><small>Pâtes fraîches · Feu de bois · Nandrin</small></a>
     <nav class="main">
       <ul>
         <li><a href="#maison">La maison</a></li>
@@ -1063,7 +1068,7 @@
 
 <footer>
   <div class="wrap">
-    <a href="#top" class="brand">PIZZERIA <b>PINO</b></a>
+    <a href="#top" class="brand"><span class="brand-pre">Restaurant</span>Pizzeria <b>Pino</b></a>
     <p>Restaurant italien · Pâtes fraîches · Pizzas au feu de bois</p>
     <div class="fnav">
       <a href="#maison">La maison</a><a href="#carte">La carte</a><a href="#galerie">Galerie</a>
