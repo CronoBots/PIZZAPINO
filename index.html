@@ -276,10 +276,9 @@
   .vid-frame{position:relative;justify-self:center;display:block;width:min(330px,78vw);text-decoration:none}
   .vid-frame::before{content:"";position:absolute;inset:-34px;z-index:0;filter:blur(26px);
     background:radial-gradient(circle,rgba(226,35,26,.3),transparent 70%)}
-  .vid-frame img{position:relative;z-index:1;width:100%;aspect-ratio:9/16;object-fit:cover;
+  .vid-frame video,.vid-frame img{position:relative;z-index:1;width:100%;aspect-ratio:9/16;object-fit:cover;
     border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:var(--ombre);background:#000;
-    display:block;transition:transform .5s}
-  .vid-frame:hover img{transform:scale(1.02)}
+    display:block}
   .vid-play{position:absolute;inset:0;z-index:2;display:grid;place-items:center;pointer-events:none}
   .vid-play span{width:72px;height:72px;border-radius:50%;background:rgba(0,0,0,.42);
     border:2px solid rgba(255,255,255,.7);display:grid;place-items:center;color:#fff;font-size:1.5rem;
@@ -588,17 +587,15 @@
     <div class="vid-copy reveal left">
       <p class="eyebrow"><span class="num">★</span> L'ambiance en vidéo</p>
       <h2>Un avant-goût <em>chez Pino</em></h2>
-      <p class="lead">Notre vidéo officielle, réalisée pour la Saint-Valentin : l'atmosphère, la table dressée et la cuisine au feu de bois. Le meilleur moyen de ressentir l'ambiance avant de pousser la porte.</p>
+      <p class="lead">« Une soirée chez Pino, comme si t'y étais. » Envie de vivre l'ambiance en vrai ? Découvre notre vidéo officielle — et on t'attend à Nandrin.</p>
       <span class="badge-off">🎬 Vidéo officielle · @pino.nandrin</span>
       <div class="cta-row" style="margin-top:26px">
-        <a class="btn btn-ghost" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Voir la vidéo sur Instagram</span></a>
+        <a class="btn btn-ghost" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Plus de vidéos sur Instagram</span></a>
       </div>
     </div>
-    <a class="vid-frame reveal right" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Lire la vidéo officielle sur Instagram">
-      <img loading="lazy" decoding="async" width="330" height="586" src="images/insta-2.jpg" alt="Vidéo officielle Saint-Valentin — Pizzeria Pino">
-      <span class="vid-play"><span>▶</span></span>
-      <span class="vid-tag">Lire sur Instagram</span>
-    </a>
+    <div class="vid-frame reveal right">
+      <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
+    </div>
   </div>
 </section>
 
@@ -1196,6 +1193,22 @@
         }
       }
     });
+  })();
+
+  /* ---- Vidéo : chargement + lecture différés (uniquement à l'écran) ---- */
+  (function(){
+    var v = document.getElementById("pinoVideo");
+    if(!v) return;
+    var loaded = false;
+    var vio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          if(!loaded){ v.src = v.getAttribute("data-src"); v.load(); loaded = true; }
+          if(!reduce){ var p = v.play(); if(p&&p.catch) p.catch(function(){}); }
+        } else if(loaded && !v.paused){ v.pause(); }
+      });
+    }, {threshold:.4});
+    vio.observe(v);
   })();
 
   /* ---- Année footer ---- */
