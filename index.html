@@ -681,8 +681,10 @@
     .hero{align-items:center;justify-content:center;padding:0;height:calc(100svh - 72px)}
     .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.46),rgba(17,12,8,.86))}
     .hi-cta{display:none}
-    .hi-center{padding:0}
-    .hero .hi-brand{font-size:clamp(1.55rem,6.3vw,2.7rem);letter-spacing:.16em;white-space:nowrap}
+    /* on force le conteneur à occuper toute la largeur (sinon il se rétrécit au logo et part à gauche) */
+    .hero .wrap{flex:1 1 100%;width:100%;min-width:0;margin:0;max-width:100%}
+    .hi-center{padding:0;width:100%;max-width:100%;margin:0}
+    .hero .hi-brand{font-size:clamp(1.5rem,6vw,2.7rem);letter-spacing:.15em}
     .hi-desc{font-size:1.02rem;max-width:32ch;margin-top:18px}
     .hi-line{margin:18px auto 14px}
   }
@@ -739,8 +741,8 @@
       <span class="hi-cat">Restaurant</span>
       <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
       <span class="hi-line"></span>
-      <span class="hi-tag">Pâtes fraîches · Feu de bois · Nandrin</span>
-      <p class="hi-desc">Depuis plus de trente ans, la vraie cuisine italienne au feu de bois, sur la route du Condroz.</p>
+      <span class="hi-tag">Pâtes fraîches · Pizza feu de bois</span>
+      <p class="hi-desc">Depuis plus de trente ans, la vraie cuisine italienne au feu de bois, sur la route du Condroz à Nandrin.</p>
       <div class="hi-cta">
         <a class="btn btn-primary" href="tel:+3285513339"><span>Réserver une table</span></a>
         <a class="btn btn-ghost" href="#carte"><span>Voir la carte</span></a>
@@ -1123,7 +1125,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 27</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 28</b></p>
   </div>
 </footer>
 
@@ -1292,19 +1294,8 @@
       spot.style.setProperty("--my", ((e.clientY-r.top)/r.height*100)+"%");
     });
   }
-  if(hero && !reduce){
-    for(var i=0;i<14;i++){
-      (function(){
-        var em = document.createElement("span"); em.className = "ember";
-        var dur = 6 + Math.random()*7;
-        em.style.left = (Math.random()*100)+"%";
-        em.style.setProperty("--dx", (Math.random()*60-30)+"px");
-        em.style.animation = "float-up "+dur+"s linear "+(Math.random()*dur)+"s infinite";
-        em.style.width = em.style.height = (2+Math.random()*3)+"px";
-        hero.appendChild(em);
-      })();
-    }
-  }
+  /* (ancien système de braises en <span> retiré : il polluait la mise en page du hero ;
+     les braises sont gérées par le canvas #embers) */
 
   /* ---- Boutons magnétiques + tilt cartes ---- */
   if(!reduce && window.matchMedia("(pointer:fine)").matches){
