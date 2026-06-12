@@ -1093,11 +1093,11 @@
       window.removeEventListener("touchmove", onGesture);
       setTimeout(function(){ intro.remove(); }, 700);
     }
-    // L'intro reste affichée ~2,8 s puis s'efface en douceur
-    setTimeout(hide, 2800);
+    // L'intro reste affichée ~2,3 s puis s'efface en douceur
+    setTimeout(hide, 2300);
     // On ne ferme sur un geste qu'après un temps mini (sinon l'intro disparaît trop vite)
     var armed = false;
-    setTimeout(function(){ armed = true; }, 1400);
+    setTimeout(function(){ armed = true; }, 1300);
     function onGesture(){ if(armed) hide(); }
     window.addEventListener("wheel", onGesture, {passive:true});
     window.addEventListener("touchmove", onGesture, {passive:true});
