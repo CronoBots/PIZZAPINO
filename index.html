@@ -588,12 +588,17 @@
       gap:5px;padding:0;box-shadow:0 8px 24px -9px rgba(0,0,0,.8);border:1px solid rgba(198,154,77,.2)}
     .burger span{width:18px}
     /* Statut ouvert/fermé : petite pastille discrète en haut à gauche */
-    #heroStatus{display:inline-flex!important;position:fixed;top:calc(15px + env(safe-area-inset-top));left:15px;z-index:110;
-      align-items:center;gap:8px;background:rgba(15,11,8,.82);border:1px solid rgba(198,154,77,.2);
-      box-shadow:0 8px 24px -9px rgba(0,0,0,.8);padding:0 15px;height:46px;border-radius:30px;margin:0;
-      font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.6rem;font-weight:500;
+    /* Statut combiné en bas à gauche : "Ouvert" + téléphone (cliquable) si ouvert, sinon "Fermé · ouvre à…" */
+    #heroStatus{display:inline-flex!important;position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:18px;top:auto;right:auto;z-index:110;
+      align-items:center;gap:9px;background:rgba(15,11,8,.82);border:1px solid rgba(198,154,77,.2);
+      box-shadow:0 8px 24px -9px rgba(0,0,0,.8);padding:0 16px;height:46px;border-radius:30px;margin:0;
+      font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.64rem;font-weight:500;
       pointer-events:none;animation:chromeIn .7s ease 1.35s both}
     #heroStatus.open,#heroStatus.closed{background:rgba(15,11,8,.82);border-color:rgba(198,154,77,.2)}
+    #heroStatus .hs-call{pointer-events:auto;display:inline-flex;align-items:center;gap:9px;color:inherit;text-decoration:none}
+    #heroStatus svg{width:17px;height:17px}
+    /* l'ancien bouton téléphone séparé est fusionné dans le statut */
+    .call-bar{display:none!important}
     section[id]{scroll-margin-top:20px}
     /* Hero "affiche" : hauteur basée sur la LARGEUR (vw) = stable au scroll, pas de zoom iOS */
     .scroll-cue{display:none}
@@ -687,6 +692,12 @@
   @keyframes hiUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   @keyframes hiLine{to{width:min(260px,56vw)}}
   @keyframes heroPhoto{to{opacity:1}}
+  /* Indicateur "scroll vers le bas" (chevron qui rebondit, en bas du hero) */
+  .scroll-down{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:3;
+    color:rgba(245,239,228,.7);opacity:0;animation:sdIn .8s ease 2.4s forwards,sdBob 1.8s ease-in-out 3.2s infinite}
+  .scroll-down svg{width:28px;height:28px;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))}
+  @keyframes sdIn{to{opacity:1}}
+  @keyframes sdBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
   /* L'intro remplit tout l'écran comme avant : en-tête masqué pendant ~1,4 s, puis il apparaît avec la photo */
   header,.topbar,.call-bar{animation:chromeIn .7s ease 1.35s both}
   @keyframes chromeIn{from{opacity:0}to{opacity:1}}
@@ -694,10 +705,12 @@
     .hero .hero-bg,.hi-cat,.hero .hi-brand,.hi-tag,.hi-desc,.hi-cta{opacity:1!important;animation:none!important}
     .hi-line{width:min(260px,56vw);animation:none}
     header,.topbar,.call-bar{animation:none!important;opacity:1}
+    .scroll-down{opacity:1;animation:none}
+    #heroStatus,.burger{animation:none!important;opacity:1}
   }
   @media(max-width:760px){
     /* hauteur en vw (largeur écran) = stable au scroll, plein écran, contenu qui ne bouge plus */
-    .hero{align-items:center;justify-content:center;padding:0;height:198vw}
+    .hero{align-items:center;justify-content:center;padding:0;height:178vw}
     .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.46),rgba(17,12,8,.86))}
     .hi-cta{display:none}
     /* on force le conteneur à occuper toute la largeur (sinon il se rétrécit au logo et part à gauche) */
@@ -768,6 +781,7 @@
       </div>
     </div>
   </div>
+  <a class="scroll-down" href="#maison" aria-label="Découvrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></a>
 </section>
 
 <!-- MARQUEE -->
@@ -1144,7 +1158,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 33</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 34</b></p>
   </div>
 </footer>
 
@@ -1467,14 +1481,19 @@
       pill.textContent = nextOpen!==null ? "● Fermé · ouvre à "+hhmm(nextOpen) : "● Fermé actuellement";
       dot.className = "dot-live closed"; liveTxt.textContent = "Fermé";
     }
-    // pastille de statut dans le hero
+    // pastille statut (bas-gauche) : si ouvert -> "Ouvert" + téléphone cliquable ; sinon "Fermé · ouvre à…"
     var hs = document.getElementById("heroStatus");
     if(hs){
       hs.className = "hero-status reveal in " + (open ? "open" : "closed");
-      hs.innerHTML = '<span class="dot-live '+(open?"open":"closed")+'"></span>'
-        + (open ? "Ouvert" : ("Fermé" + (nextOpen!==null ? " · ouvre à "+hhmm(nextOpen) : "")));
+      if(open){
+        hs.innerHTML = '<a class="hs-call" href="tel:+3285513339" aria-label="Ouvert — appeler">'
+          + '<span class="dot-live open"></span>Ouvert'
+          + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>';
+      } else {
+        hs.innerHTML = '<span class="dot-live closed"></span>Fermé'
+          + (nextOpen!==null ? " · ouvre à "+hhmm(nextOpen) : "");
+      }
     }
-    // bouton Appeler visible seulement quand c'est ouvert
     document.body.classList.toggle("resto-open", open);
     // surligner la ligne d'horaire du jour
     document.querySelectorAll("#hoursList li").forEach(function(li){
