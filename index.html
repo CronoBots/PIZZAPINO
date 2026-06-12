@@ -100,6 +100,27 @@
   /* La saisie reste sélectionnable (champ de recherche) */
   input,textarea,[contenteditable]{-webkit-user-select:text;-moz-user-select:text;user-select:text}
   ::selection{background:var(--rouge);color:#fff}
+  /* ===== ÉCRAN D'INTRO ===== */
+  #intro{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;overflow:hidden;
+    background-color:#0a0908;background-image:radial-gradient(120% 90% at 50% 42%,#15110d 0%,#0a0908 60%);
+    transition:opacity .7s ease,visibility .7s ease}
+  #intro::before{content:"";position:absolute;width:78vmax;height:78vmax;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(232,181,74,.16),rgba(212,69,47,.07) 38%,transparent 64%);
+    animation:introGlow 3s ease-in-out infinite}
+  .intro-inner{position:relative;text-align:center;padding:0 24px}
+  .intro-logo{font-family:"Oswald",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+    font-size:clamp(2rem,8vw,3.4rem);color:var(--blanc);opacity:0;transform:translateY(10px);
+    animation:introUp .9s cubic-bezier(.2,.7,.2,1) .1s forwards}
+  .intro-logo b{color:var(--rouge)}
+  .intro-line{height:1px;width:0;margin:18px auto 14px;background:linear-gradient(90deg,transparent,var(--or),transparent);
+    animation:introLine 1s ease .5s forwards}
+  .intro-sub{font-family:"Inter",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.26em;
+    font-size:.62rem;color:var(--gris);opacity:0;animation:introUp .9s ease .55s forwards}
+  body.intro-hide #intro{opacity:0;visibility:hidden;pointer-events:none}
+  @keyframes introUp{to{opacity:1;transform:translateY(0)}}
+  @keyframes introLine{to{width:min(220px,60vw)}}
+  @keyframes introGlow{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.05);opacity:1}}
+  @media(prefers-reduced-motion:reduce){#intro{display:none}}
   img{display:block;max-width:100%}
   a{color:inherit}
   /* Accessibilité : focus clavier visible, lien d'évitement, ancres dégagées de l'en-tête */
@@ -176,8 +197,8 @@
   .brand{font-family:"Oswald",sans-serif;font-weight:700;text-transform:uppercase;font-size:1.75rem;line-height:.82;
     letter-spacing:.03em;color:var(--blanc);text-decoration:none;display:inline-block}
   .brand b{color:var(--rouge)}
-  .brand small{display:block;font-family:"Inter",sans-serif;font-weight:600;font-size:.54rem;letter-spacing:.32em;
-    text-transform:uppercase;color:var(--gris-d);margin-top:6px}
+  .brand small{display:block;font-family:"Inter",sans-serif;font-weight:600;font-size:.58rem;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--gris);margin-top:6px}
   nav.main ul{list-style:none;display:flex;gap:34px;align-items:center;font-family:"Oswald",sans-serif;
     font-size:.86rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
   nav.main a{text-decoration:none;color:var(--gris);position:relative;padding:6px 0;transition:color .3s}
@@ -481,6 +502,7 @@
   .hours .day{font-family:"Oswald",sans-serif;font-weight:500;letter-spacing:.05em;color:var(--rouge-l);
     display:inline-flex;align-items:center;gap:8px}
   .hours .badge-today{font-size:.62rem;background:var(--or);color:#1a1510;padding:2px 8px;border-radius:20px;letter-spacing:.06em}
+  .hours .nb{white-space:nowrap}
   .feat{margin-top:26px;display:flex;flex-wrap:wrap;gap:9px}
   .feat span{font-size:.78rem;background:var(--noir-4);color:var(--gris);padding:7px 15px;border-radius:30px;
     border:1px solid rgba(255,255,255,.05);transition:.25s}
@@ -509,8 +531,8 @@
   footer .social a.ig:hover{background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af)}
   footer .social a.fb:hover{background:#1877f2}
   footer .fine{margin-top:18px;font-size:.74rem;opacity:.7}
-  .ig-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-  .ig-line a{display:inline-flex;align-items:center;gap:6px}
+  .ig-line{display:block}
+  .ig-line a{display:flex;align-items:center;gap:7px;margin-top:5px;width:max-content;max-width:100%}
   .ig-line svg{width:18px;height:18px}
 
   /* ===== FLOTTANTS ===== */
@@ -534,6 +556,9 @@
     .stat:nth-child(2)::after{display:none}
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
+    /* Horaires : jour (+ badge) sur une ligne, plage en dessous sur toute la largeur */
+    .hours li{flex-direction:column;align-items:flex-start;gap:7px}
+    .hours .hrs{color:var(--gris)}
     .hero-bg{background-attachment:scroll}
     /* Hero mobile premium épuré : image titre dégagée, contenu ancré en bas */
     .scroll-cue{display:none}
@@ -567,6 +592,14 @@
 </style>
 </head>
 <body>
+<!-- Écran d'intro (s'efface après ~1,3s ; ignoré si l'utilisateur réduit les animations) -->
+<div id="intro" aria-hidden="true">
+  <div class="intro-inner">
+    <div class="intro-logo">PIZZERIA <b>PINO</b></div>
+    <div class="intro-line"></div>
+    <div class="intro-sub">Pâtes fraîches · Feu de bois · Nandrin</div>
+  </div>
+</div>
 <a class="skip" href="#carte">Aller à la carte</a>
 
 <!-- PRÉCHARGEUR -->
@@ -984,8 +1017,8 @@
       <div class="reveal" style="--i:1">
         <div class="status-pill" id="statusPill">· Horaires</div>
         <ul class="hours" id="hoursList">
-          <li data-days="1,2,3,4"><span class="day">Lundi → Jeudi</span><span>12h–14h · 17h–21h30</span></li>
-          <li data-days="5,6,0"><span class="day">Vendredi → Dimanche</span><span>12h–14h · 17h–22h</span></li>
+          <li data-days="1,2,3,4"><span class="day">Lundi → Jeudi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
+          <li data-days="5,6,0"><span class="day">Vendredi → Dimanche</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
         </ul>
         <div class="feat">
           <span>Terrasse</span><span>À emporter</span><span>Repas sur place</span><span>Traiteur</span>
@@ -998,7 +1031,7 @@
           <p>Route du Condroz 131 (Centre commercial)<br>4550 Nandrin · <a href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener">Itinéraire ↗</a></p>
           <p>Tél. : <a href="tel:+3285513339">085 51 33 39</a></p>
           <p class="ig-line">Instagram : <a href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg> @pino.nandrin</a></p>
-          <p class="ig-line">Facebook : <a href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg> Pizzeria Pino Nandrin</a></p>
+          <p class="ig-line">Facebook : <a href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg> Pizzeria Pino</a></p>
           <div class="map">
             <iframe loading="lazy" title="Localisation de la Pizzeria Pino sur la carte" src="https://maps.google.com/maps?q=Pizzeria%20Pino%2C%20Route%20du%20Condroz%20131%2C%204550%20Nandrin&hl=fr&z=16&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
@@ -1045,6 +1078,27 @@
 (function(){
   "use strict";
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- Écran d'intro ---- */
+  (function(){
+    var intro = document.getElementById("intro");
+    if(!intro) return;
+    if(reduce){ intro.parentNode && intro.remove(); return; }
+    document.body.classList.add("locked");
+    var hidden = false;
+    function hide(){
+      if(hidden) return; hidden = true;
+      document.body.classList.add("intro-hide");
+      document.body.classList.remove("locked");
+      window.removeEventListener("wheel", hide);
+      window.removeEventListener("touchmove", hide);
+      setTimeout(function(){ intro.remove(); }, 750);
+    }
+    setTimeout(hide, 1300);
+    window.addEventListener("wheel", hide, {passive:true});
+    window.addEventListener("touchmove", hide, {passive:true});
+    intro.addEventListener("click", hide);
+  })();
 
   /* ---- Préchargeur ---- */
   window.addEventListener("load", function(){
