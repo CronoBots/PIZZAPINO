@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Pizzeria Pino — Restaurant italien & pizzas au feu de bois à Nandrin</title>
 <meta name="description" content="Pizzeria Pino, route du Condroz à Nandrin. Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. Restaurant, à emporter et traiteur. 4,2/5 sur plus de 1000 avis. Tél. 085 51 33 39.">
 <meta name="keywords" content="pizzeria Nandrin, restaurant italien Nandrin, pizza feu de bois, pâtes fraîches, Condroz, à emporter, traiteur, osso buco">
@@ -566,8 +566,9 @@
     /* Scroll fluide : pas de flou sur le header collant (backdrop-filter = saccades sur mobile),
        fond solide, et hauteur de header constante (évite le saut quand il rétrécit) */
     header,header.scrolled{backdrop-filter:none;-webkit-backdrop-filter:none}
-    header{background:rgba(13,11,10,.9)}
-    header.scrolled{background:rgba(13,11,10,.97)}
+    /* En-tête opaque qui couvre aussi la barre d'état/encoche (évite que le contenu "bave" en haut dans les navigateurs intégrés type Telegram) */
+    header{background:#0d0b0a;padding-top:env(safe-area-inset-top)}
+    header.scrolled{background:#0d0b0a}
     .nav,header.scrolled .nav{padding:14px 0}
     /* Hero mobile premium épuré : image titre dégagée, contenu ancré en bas */
     .scroll-cue{display:none}
@@ -584,9 +585,9 @@
     /* Haut allégé : la barre d'infos du haut est masquée (le statut passe dans le hero) */
     .topbar{display:none}
     .hero-status{display:inline-flex}
-    body{padding-bottom:64px}
+    body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
     .call-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:95;gap:1px;
-      border-top:1px solid rgba(232,181,74,.35)}
+      border-top:1px solid rgba(232,181,74,.35);padding-bottom:env(safe-area-inset-bottom);background:var(--noir-4)}
     .call-bar a{flex:1;text-align:center;padding:17px;font-family:"Oswald",sans-serif;text-transform:uppercase;
       letter-spacing:.08em;font-size:.86rem;font-weight:600;text-decoration:none;color:#fff}
     .call-bar .c-tel{background:var(--rouge)}
