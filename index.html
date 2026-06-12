@@ -49,6 +49,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="images/hero-pizza.jpg" fetchpriority="high">
 <style>
   :root{
     --rouge:#e2231a;
@@ -272,11 +273,20 @@
   .vid-copy .badge-off{display:inline-flex;align-items:center;gap:8px;font-family:"Oswald",sans-serif;
     text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;color:var(--or);
     border:1px solid rgba(232,181,74,.3);padding:7px 15px;border-radius:30px;margin-top:22px}
-  .vid-frame{position:relative;justify-self:center}
+  .vid-frame{position:relative;justify-self:center;display:block;width:min(330px,78vw);text-decoration:none}
   .vid-frame::before{content:"";position:absolute;inset:-34px;z-index:0;filter:blur(26px);
     background:radial-gradient(circle,rgba(226,35,26,.3),transparent 70%)}
-  .vid-frame video{position:relative;z-index:1;width:min(330px,78vw);aspect-ratio:9/16;object-fit:cover;
-    border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:var(--ombre);background:#000;display:block}
+  .vid-frame img{position:relative;z-index:1;width:100%;aspect-ratio:9/16;object-fit:cover;
+    border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:var(--ombre);background:#000;
+    display:block;transition:transform .5s}
+  .vid-frame:hover img{transform:scale(1.02)}
+  .vid-play{position:absolute;inset:0;z-index:2;display:grid;place-items:center;pointer-events:none}
+  .vid-play span{width:72px;height:72px;border-radius:50%;background:rgba(0,0,0,.42);
+    border:2px solid rgba(255,255,255,.7);display:grid;place-items:center;color:#fff;font-size:1.5rem;
+    padding-left:5px;transition:transform .3s,background .3s}
+  .vid-frame:hover .vid-play span{transform:scale(1.12);background:rgba(226,35,26,.75);border-color:transparent}
+  .vid-tag{position:absolute;left:0;right:0;bottom:16px;z-index:2;text-align:center;font-family:"Oswald",sans-serif;
+    text-transform:uppercase;letter-spacing:.1em;font-size:.74rem;color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.8)}
   @media(max-width:920px){
     .vid-grid{grid-template-columns:1fr;gap:36px;text-align:center}
     .vid-copy .eyebrow{justify-content:center}.vid-copy .lead{margin:0 auto}
@@ -581,12 +591,14 @@
       <p class="lead">Notre vidéo officielle, réalisée pour la Saint-Valentin : l'atmosphère, la table dressée et la cuisine au feu de bois. Le meilleur moyen de ressentir l'ambiance avant de pousser la porte.</p>
       <span class="badge-off">🎬 Vidéo officielle · @pino.nandrin</span>
       <div class="cta-row" style="margin-top:26px">
-        <a class="btn btn-ghost" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Suivre sur Instagram</span></a>
+        <a class="btn btn-ghost" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Voir la vidéo sur Instagram</span></a>
       </div>
     </div>
-    <div class="vid-frame reveal right">
-      <video src="media/pino-video.mp4" poster="images/gal-salle.jpg" muted loop autoplay playsinline preload="metadata" controls aria-label="Vidéo officielle de la Pizzeria Pino"></video>
-    </div>
+    <a class="vid-frame reveal right" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Lire la vidéo officielle sur Instagram">
+      <img loading="lazy" decoding="async" width="330" height="586" src="images/insta-2.jpg" alt="Vidéo officielle Saint-Valentin — Pizzeria Pino">
+      <span class="vid-play"><span>▶</span></span>
+      <span class="vid-tag">Lire sur Instagram</span>
+    </a>
   </div>
 </section>
 
