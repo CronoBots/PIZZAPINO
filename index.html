@@ -197,6 +197,11 @@
   .rating{display:flex;align-items:center;gap:14px;margin:22px 0 38px;font-size:.98rem;color:#ded7ca;flex-wrap:wrap}
   .stars{color:var(--or);letter-spacing:3px;font-size:1.05rem}
   .rating b{color:var(--blanc)}
+  .hero-status{display:none;align-items:center;gap:9px;font-family:"Oswald",sans-serif;
+    text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;font-weight:500;padding:9px 17px;
+    border-radius:30px;border:1px solid rgba(255,255,255,.15);margin:0 0 32px;background:rgba(0,0,0,.25)}
+  .hero-status.open{color:#5fe294;background:rgba(55,198,111,.12);border-color:rgba(55,198,111,.4)}
+  .hero-status.closed{color:#ff8a82;background:rgba(226,35,26,.14);border-color:rgba(226,35,26,.4)}
   .cta-row{display:flex;gap:16px;flex-wrap:wrap}
   .btn{position:relative;display:inline-flex;align-items:center;gap:10px;text-decoration:none;
     font-family:"Oswald",sans-serif;text-transform:uppercase;font-weight:600;letter-spacing:.07em;font-size:.98rem;
@@ -456,7 +461,6 @@
   #toTop.show{opacity:1;visibility:visible;transform:none}
   #toTop:hover{background:var(--rouge-d);transform:translateY(-3px)}
   .call-bar{display:none}
-  .m-status{display:none}
 
   /* ===== RESPONSIVE ===== */
   @media(max-width:920px){
@@ -472,20 +476,16 @@
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
     .hero-bg{background-attachment:scroll}
-    /* On retire la barre d'infos du haut et on la place en bas */
+    /* Haut allégé : la barre d'infos du haut est masquée (le statut passe dans le hero) */
     .topbar{display:none}
-    body{padding-bottom:98px}
-    .m-status{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
-      position:fixed;left:0;right:0;bottom:54px;z-index:94;background:#060504;
-      border-top:1px solid rgba(255,255,255,.06);padding:9px 14px;font-size:.74rem;
-      letter-spacing:.02em;color:var(--gris);text-align:center}
-    .m-status .dot-live{flex:none}
+    .hero-status{display:inline-flex}
+    body{padding-bottom:64px}
     .call-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:95;gap:1px}
     .call-bar a{flex:1;text-align:center;padding:17px;font-family:"Oswald",sans-serif;text-transform:uppercase;
       letter-spacing:.08em;font-size:.86rem;font-weight:600;text-decoration:none;color:#fff}
     .call-bar .c-tel{background:var(--rouge)}
     .call-bar .c-menu{background:var(--noir-4)}
-    #toTop{bottom:112px}
+    #toTop{bottom:74px}
   }
 </style>
 </head>
@@ -545,6 +545,7 @@
     <h1 class="anim-head">Pâtes fraîches &amp; pizzas au <span class="gold">feu de bois</span>.</h1>
     <p class="reveal" style="--i:3">La vraie cuisine italienne sur la route du Condroz, avec des produits de première qualité. Bienvenue chez Pino.</p>
     <div class="rating reveal" style="--i:4"><span class="stars">★★★★☆</span> <b>4,2/5</b> · plus de 1 000 avis Google</div>
+    <div class="hero-status reveal" id="heroStatus" style="--i:4"></div>
     <div class="cta-row reveal" style="--i:5">
       <a class="btn btn-primary magnet" href="tel:+3285513339"><span>Réserver une table</span></a>
       <a class="btn btn-ghost magnet" href="#carte"><span>Voir la carte</span></a>
@@ -947,8 +948,7 @@
 <!-- BOUTON RETOUR HAUT -->
 <button id="toTop" aria-label="Remonter">↑</button>
 
-<!-- BARRE D'INFOS + APPEL MOBILE (en bas) -->
-<div class="m-status" id="mStatus"></div>
+<!-- BARRE D'APPEL MOBILE (en bas) -->
 <div class="call-bar">
   <a class="c-tel" href="tel:+3285513339">📞 Appeler</a>
   <a class="c-menu" href="#carte">🍕 La carte</a>
@@ -1190,12 +1190,12 @@
       pill.textContent = nextOpen!==null ? "● Fermé · ouvre à "+hhmm(nextOpen) : "● Fermé actuellement";
       dot.className = "dot-live closed"; liveTxt.textContent = "Fermé";
     }
-    // barre d'infos mobile en bas (statut + adresse)
-    var ms = document.getElementById("mStatus");
-    if(ms){
-      var etat = open ? "Ouvert" : ("Fermé" + (nextOpen!==null ? " · ouvre à "+hhmm(nextOpen) : ""));
-      ms.innerHTML = '<span class="dot-live '+(open?"open":"closed")+'"></span>'
-        + '<span><strong style="color:'+(open?"#5fe294":"#ff8a82")+'">'+etat+'</strong> · Route du Condroz 131, Nandrin</span>';
+    // pastille de statut dans le hero
+    var hs = document.getElementById("heroStatus");
+    if(hs){
+      hs.className = "hero-status reveal in " + (open ? "open" : "closed");
+      hs.innerHTML = '<span class="dot-live '+(open?"open":"closed")+'"></span>'
+        + (open ? "Ouvert maintenant" : ("Fermé" + (nextOpen!==null ? " · ouvre à "+hhmm(nextOpen) : "")));
     }
     // surligner la ligne d'horaire du jour
     document.querySelectorAll("#hoursList li").forEach(function(li){
