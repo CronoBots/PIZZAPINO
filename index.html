@@ -266,6 +266,23 @@
   .value h3{font-size:1.45rem;margin-bottom:12px;color:var(--blanc)}
   .value p{color:var(--gris);font-size:.98rem}
 
+  /* ===== VIDÉO ===== */
+  .vidsec{background:linear-gradient(180deg,var(--noir-2),var(--noir));overflow:hidden}
+  .vid-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+  .vid-copy .badge-off{display:inline-flex;align-items:center;gap:8px;font-family:"Oswald",sans-serif;
+    text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;color:var(--or);
+    border:1px solid rgba(232,181,74,.3);padding:7px 15px;border-radius:30px;margin-top:22px}
+  .vid-frame{position:relative;justify-self:center}
+  .vid-frame::before{content:"";position:absolute;inset:-34px;z-index:0;filter:blur(26px);
+    background:radial-gradient(circle,rgba(226,35,26,.3),transparent 70%)}
+  .vid-frame video{position:relative;z-index:1;width:min(330px,78vw);aspect-ratio:9/16;object-fit:cover;
+    border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:var(--ombre);background:#000;display:block}
+  @media(max-width:920px){
+    .vid-grid{grid-template-columns:1fr;gap:36px;text-align:center}
+    .vid-copy .eyebrow{justify-content:center}.vid-copy .lead{margin:0 auto}
+    .vid-copy .cta-row{justify-content:center}
+  }
+
   /* ===== PARALLAXE ===== */
   .parallax{min-height:480px;display:flex;align-items:center;justify-content:center;text-align:center;
     position:relative;overflow:hidden}
@@ -397,8 +414,9 @@
   footer .social{display:flex;gap:14px;justify-content:center;margin:4px 0 22px}
   footer .social a{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;
     border:1px solid rgba(255,255,255,.12);color:var(--gris);transition:.28s}
-  footer .social a:hover{color:#fff;border-color:var(--or);transform:translateY(-3px);
-    background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af)}
+  footer .social a:hover{color:#fff;transform:translateY(-3px);border-color:transparent}
+  footer .social a.ig:hover{background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af)}
+  footer .social a.fb:hover{background:#1877f2}
   footer .fine{margin-top:18px;font-size:.74rem;opacity:.7}
   .ig-line{display:inline-flex;align-items:center;gap:8px}
   .ig-line svg{width:18px;height:18px}
@@ -531,6 +549,24 @@
       <div class="value tilt reveal"><span class="ico">🔥</span><h3>Pizzas au feu de bois</h3><p>Une pâte cuite au feu de bois et une large carte, des classiques aux incontournables de la maison.</p></div>
       <div class="value tilt reveal" style="--i:1"><span class="ico">🍝</span><h3>Pâtes fraîches</h3><p>Rigatoni, tagliatelle, spaghetti, gnocchi et spécialités préparés maison avec des produits italiens.</p></div>
       <div class="value tilt reveal" style="--i:2"><span class="ico">🍷</span><h3>Salles &amp; terrasses</h3><p>Deux salles (30 et 25 pers.), une terrasse à rue de 30 couverts et une terrasse suspendue de 20 places.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDÉO OFFICIELLE -->
+<section id="video" class="vidsec">
+  <div class="wrap vid-grid">
+    <div class="vid-copy reveal left">
+      <p class="eyebrow"><span class="num">★</span> L'ambiance en vidéo</p>
+      <h2>Un avant-goût <em>chez Pino</em></h2>
+      <p class="lead">Notre vidéo officielle, réalisée pour la Saint-Valentin : l'atmosphère, la table dressée et la cuisine au feu de bois. Le meilleur moyen de ressentir l'ambiance avant de pousser la porte.</p>
+      <span class="badge-off">🎬 Vidéo officielle · @pino.nandrin</span>
+      <div class="cta-row" style="margin-top:26px">
+        <a class="btn btn-ghost" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Suivre sur Instagram</span></a>
+      </div>
+    </div>
+    <div class="vid-frame reveal right">
+      <video src="media/pino-video.mp4" poster="images/gal-salle.jpg" muted loop autoplay playsinline preload="metadata" controls aria-label="Vidéo officielle de la Pizzeria Pino"></video>
     </div>
   </div>
 </section>
@@ -798,6 +834,7 @@
           <p>Route du Condroz 131 (Centre commercial)<br>4550 Nandrin · <a href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener">Itinéraire ↗</a></p>
           <p>Tél. : <a href="tel:+3285513339">085 51 33 39</a></p>
           <p class="ig-line">Instagram : <a href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg> @pino.nandrin</a></p>
+          <p class="ig-line">Facebook : <a href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg> Pizzeria Pino Nandrin</a></p>
           <div class="map">
             <iframe loading="lazy" title="Localisation de la Pizzeria Pino sur la carte" src="https://maps.google.com/maps?q=Pizzeria%20Pino%2C%20Route%20du%20Condroz%20131%2C%204550%20Nandrin&hl=fr&z=16&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
@@ -816,8 +853,11 @@
       <a href="#avis">Avis</a><a href="#infos">Contact</a>
     </div>
     <div class="social">
-      <a href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Instagram de la Pizzeria Pino">
+      <a class="ig" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Instagram de la Pizzeria Pino">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="fb" href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener" aria-label="Facebook de la Pizzeria Pino">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg>
       </a>
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none">085 51 33 39</a></p>
