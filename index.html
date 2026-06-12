@@ -1090,7 +1090,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 19</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 20</b></p>
   </div>
 </footer>
 
@@ -1465,6 +1465,8 @@
     var hero = document.getElementById("top");
     if(!canvas || !hero) return;
     if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    /* Pas de braises animées sur mobile/tactile : libère le scroll (rAF + canvas) */
+    if(window.matchMedia && window.matchMedia("(max-width:760px), (pointer:coarse)").matches){ canvas.remove(); return; }
     var ctx = canvas.getContext("2d");
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var W = 0, H = 0, parts = [], raf = null, visible = true;
