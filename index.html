@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pizzeria Pino — Restaurant italien & pizzas au feu de bois à Nandrin</title>
+<meta name="description" content="Pizzeria Pino, route du Condroz à Nandrin. Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. Restaurant, à emporter et traiteur. 4,2/5 sur plus de 1000 avis. Tél. 085 51 33 39.">
+<meta name="keywords" content="pizzeria Nandrin, restaurant italien Nandrin, pizza feu de bois, pâtes fraîches, Condroz, à emporter, traiteur, osso buco">
+<meta name="author" content="Pizzeria Pino">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#e2231a">
+<link rel="canonical" href="https://www.pizzeriapino.be/">
+
+<!-- Open Graph (aperçu lors du partage sur réseaux sociaux) -->
+<meta property="og:type" content="restaurant">
+<meta property="og:title" content="Pizzeria Pino — Restaurant italien & pizzas au feu de bois à Nandrin">
+<meta property="og:description" content="Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. 4,2/5 sur plus de 1000 avis.">
+<meta property="og:image" content="images/hero-pizza.jpg">
+<meta property="og:locale" content="fr_BE">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Favicon emoji pizza -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
+
+<!-- Données structurées Google (fiche restaurant enrichie) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Pizzeria Pino",
+  "servesCuisine": "Italienne",
+  "priceRange": "€€",
+  "telephone": "+32 85 51 33 39",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Route du Condroz 131",
+    "addressLocality": "Nandrin",
+    "postalCode": "4550",
+    "addressCountry": "BE"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.2",
+    "reviewCount": "1000"
+  },
+  "openingHours": ["Mo-Th 12:00-14:00,17:00-21:30", "Fr-Su 12:00-14:00,17:00-22:00"]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rouge:#e2231a;        /* rouge du menu */
+    --rouge-d:#b91610;
+    --noir:#111111;         /* fond noir du menu */
+    --noir-2:#1c1c1c;
+    --noir-3:#262626;
+    --blanc:#f6f3ee;
+    --gris:#b8b2a8;
+    --gris-d:#8a857c;
+    --or:#e8b54a;           /* doré discret pour prix/accents */
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:"Inter",system-ui,sans-serif;background:var(--noir);color:var(--blanc);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  h1,h2,h3,.brand,.cat{font-family:"Oswald",sans-serif;text-transform:uppercase}
+
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .75s cubic-bezier(.2,.7,.2,1),transform .75s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+  /* topbar */
+  .topbar{background:#000;color:var(--gris);font-size:.82rem;letter-spacing:.04em;padding:9px 0}
+  .topbar .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+  .topbar a{color:var(--rouge);text-decoration:none;font-weight:700}
+
+  /* header */
+  header{background:rgba(17,17,17,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--noir-3);position:sticky;top:0;z-index:50}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+  .brand{font-size:1.9rem;font-weight:700;line-height:.85;color:var(--blanc);letter-spacing:.02em}
+  .brand b{color:var(--rouge)}
+  .brand small{display:block;font-family:"Inter",sans-serif;font-size:.58rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gris-d);margin-top:5px;font-weight:600}
+  nav ul{list-style:none;display:flex;gap:28px;font-family:"Oswald",sans-serif;font-size:.92rem;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+  nav a{text-decoration:none;color:var(--gris);position:relative;padding-bottom:3px}
+  nav a:after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--rouge);transition:width .3s}
+  nav a:hover{color:var(--blanc)}nav a:hover:after{width:100%}
+  .burger{display:none;background:none;border:0;font-size:1.6rem;cursor:pointer;color:var(--blanc)}
+
+  /* hero */
+  .hero{position:relative;min-height:90vh;display:flex;align-items:center;color:var(--blanc);overflow:hidden;
+    background-image:linear-gradient(rgba(10,10,10,.8),rgba(10,10,10,.7)),url('images/hero-pizza.jpg');
+    background-size:cover;background-position:center;background-attachment:fixed}
+  @media(max-width:860px){.hero{background-attachment:scroll}}
+  .hero:after{content:"";position:absolute;inset:0;opacity:.04;background:repeating-linear-gradient(135deg,#fff 0 1px,transparent 1px 30px)}
+  .hero .wrap{position:relative;max-width:860px}
+  .hero .cat{display:inline-block;background:var(--rouge);color:#fff;font-size:.78rem;letter-spacing:.18em;padding:6px 16px;margin-bottom:24px;font-weight:600}
+  .hero h1{font-size:clamp(2.9rem,8vw,5.6rem);line-height:.98;font-weight:700;max-width:15ch}
+  .hero h1 b{color:var(--rouge)}
+  .hero p{font-size:1.24rem;margin:24px 0 14px;max-width:48ch;color:#e3ddd2;font-family:"Inter",sans-serif}
+  .rating{display:flex;align-items:center;gap:12px;margin:16px 0 36px;font-size:.96rem;color:#e3ddd2}
+  .stars{color:var(--or);letter-spacing:2px;font-size:1.1rem}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;text-decoration:none;font-family:"Oswald",sans-serif;text-transform:uppercase;font-weight:600;letter-spacing:.06em;font-size:1rem;padding:15px 34px;transition:transform .15s,background .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--rouge);color:#fff;border:2px solid var(--rouge)}
+  .btn-primary:hover{background:var(--rouge-d);border-color:var(--rouge-d)}
+  .btn-ghost{background:transparent;color:var(--blanc);border:2px solid rgba(246,243,238,.45)}
+  .btn-ghost:hover{border-color:var(--blanc)}
+  .scroll-cue{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(246,243,238,.5);font-size:1.4rem;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  section{padding:90px 0}
+  .eyebrow{font-family:"Oswald",sans-serif;font-size:.86rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rouge);margin-bottom:14px;font-weight:600}
+  h2{font-size:clamp(2.2rem,5vw,3.3rem);font-weight:700;line-height:1.06;margin-bottom:18px;color:var(--blanc)}
+  .lead{font-size:1.14rem;max-width:62ch;color:var(--gris)}
+  .center{text-align:center}.center .lead{margin:0 auto}
+
+  /* stats */
+  .stats{background:var(--rouge)}
+  .stats .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+  .stat .n{font-family:"Oswald",sans-serif;font-size:clamp(2.2rem,5vw,3.4rem);font-weight:700;color:#fff;line-height:1}
+  .stat .l{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;margin-top:8px;color:#ffe0de;font-weight:500}
+
+  /* maison / valeurs */
+  .values{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:54px;text-align:left}
+  .value{background:var(--noir-2);padding:34px 30px;border-top:3px solid var(--rouge);transition:transform .3s,background .3s}
+  .value:hover{transform:translateY(-4px);background:var(--noir-3)}
+  .value .ico{font-size:1.7rem;margin-bottom:14px;display:block}
+  .value h3{font-size:1.35rem;margin-bottom:10px;color:var(--blanc);font-weight:600;letter-spacing:.02em}
+  .value p{color:var(--gris);font-size:.98rem;font-family:"Inter",sans-serif}
+
+  /* ===== CARTE ===== */
+  .menu{background:var(--noir-2)}
+  .menu-tabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:40px 0 8px}
+  .tab{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.92rem;font-weight:500;
+    background:transparent;color:var(--gris);border:2px solid var(--noir-3);padding:10px 20px;cursor:pointer;transition:.2s}
+  .tab:hover{color:var(--blanc);border-color:var(--gris-d)}
+  .tab.active{background:var(--rouge);color:#fff;border-color:var(--rouge)}
+  .menu-panel{display:none;margin-top:30px}
+  .menu-panel.show{display:block;animation:fade .4s}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .cat-title{font-family:"Oswald",sans-serif;text-transform:uppercase;color:var(--rouge);letter-spacing:.08em;font-size:1.15rem;font-weight:600;margin:30px 0 6px;display:flex;align-items:center;gap:10px}
+  .cat-title:before{content:"▶";font-size:.7rem}
+  .cat-title:first-child{margin-top:0}
+  .dishes{display:grid;grid-template-columns:repeat(2,1fr);gap:0 52px}
+  .dish{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:13px 0;border-bottom:1px solid var(--noir-3)}
+  .dish .name{font-weight:600;font-size:1.02rem;color:var(--blanc)}
+  .dish .name small{display:block;font-family:"Inter",sans-serif;font-size:.8rem;color:var(--gris-d);font-weight:400;margin-top:2px;line-height:1.35}
+  .dish .dot{flex:1;border-bottom:1px dotted #3a3a3a;margin:0 4px;transform:translateY(-5px);min-width:18px}
+  .dish .price{font-family:"Oswald",sans-serif;color:var(--or);font-weight:600;font-size:1.05rem;white-space:nowrap}
+  .menu-foot{margin-top:34px;font-size:.84rem;color:var(--gris-d);font-style:italic;text-align:center}
+  .supp-note{background:var(--rouge);color:#fff;padding:4px 10px;font-size:.78rem;font-family:"Oswald",sans-serif;letter-spacing:.05em;border-radius:2px;display:inline-block}
+
+  /* avis */
+  .reviews{background:var(--noir)}
+  .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:46px;text-align:left}
+  .rev{background:var(--noir-2);padding:30px 28px;border-top:3px solid var(--or)}
+  .rev .stars{color:var(--or);letter-spacing:1px;font-size:1rem;margin-bottom:12px}
+  .rev p{font-size:1.06rem;color:var(--blanc);line-height:1.55;font-style:italic}
+  .rev .who{margin-top:16px;font-size:.84rem;color:var(--gris-d);font-weight:600;letter-spacing:.03em}
+
+  /* citation */
+  .quote{background:var(--rouge);color:#fff;text-align:center}
+  .quote p{font-family:"Oswald",sans-serif;text-transform:uppercase;font-size:clamp(1.5rem,3.6vw,2.3rem);max-width:24ch;margin:0 auto;line-height:1.2;font-weight:600;letter-spacing:.02em}
+  .quote span{display:block;font-family:"Inter",sans-serif;text-transform:uppercase;letter-spacing:.22em;font-size:.74rem;margin-top:22px;color:#ffd9d6}
+
+  /* infos */
+  .infos{background:var(--noir-2)}
+  .infos-grid{display:grid;grid-template-columns:1fr 1fr;gap:54px;margin-top:42px;align-items:start}
+  .hours li{list-style:none;display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--noir-3);font-size:1.02rem}
+  .hours .day{font-family:"Oswald",sans-serif;font-weight:500;letter-spacing:.04em;color:var(--rouge)}
+  .feat{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px}
+  .feat span{font-size:.78rem;background:var(--noir-3);color:var(--gris);padding:6px 13px;border-radius:20px}
+  .contact-card{background:#000;padding:34px;border:1px solid var(--noir-3)}
+  .contact-card h3{letter-spacing:.05em;font-size:1.15rem;color:var(--rouge);margin-bottom:18px;font-weight:600}
+  .contact-card p{margin-bottom:12px;font-size:1.06rem;color:var(--blanc)}
+  .contact-card a{color:var(--or);font-weight:600;text-decoration:none}
+  .map{margin-top:18px;border:2px solid var(--rouge);overflow:hidden}
+  .map iframe{display:block;width:100%;height:220px;border:0;filter:grayscale(.4) contrast(1.1)}
+
+  /* ===== PARALLAXE ===== */
+  .parallax{position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center;
+    background-attachment:fixed;background-size:cover;background-position:center;color:#fff}
+  .parallax:before{content:"";position:absolute;inset:0;background:rgba(10,10,10,.62)}
+  .parallax .wrap{position:relative}
+  .parallax h2{color:#fff}
+  .parallax p{color:#efe6d6;font-size:1.15rem;max-width:50ch;margin:0 auto}
+  /* fallback mobile : background-attachment:fixed buggé sur iOS */
+  @media(max-width:860px){.parallax{background-attachment:scroll}}
+
+  /* ===== GALERIE ===== */
+  .gallery{background:var(--noir)}
+  .gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:46px}
+  .gal-item{position:relative;overflow:hidden;aspect-ratio:4/3;border-radius:3px}
+  .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+  .gal-item:hover img{transform:scale(1.08)}
+  .gal-item .cap{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;font-family:"Oswald",sans-serif;
+    text-transform:uppercase;letter-spacing:.04em;font-size:.9rem;color:#fff;
+    background:linear-gradient(transparent,rgba(0,0,0,.8));opacity:0;transform:translateY(8px);transition:.3s}
+  .gal-item:hover .cap{opacity:1;transform:none}
+  @media(max-width:860px){.gal-grid{grid-template-columns:1fr 1fr;gap:8px}}
+
+  footer{background:#000;color:var(--gris-d);padding:48px 0;text-align:center;font-size:.86rem}
+  footer .brand{color:var(--blanc);margin-bottom:10px;font-size:1.7rem}
+  footer b{color:var(--rouge)}
+
+  @media(max-width:860px){
+    nav ul{display:none}.burger{display:block}
+    .stats .grid{grid-template-columns:repeat(2,1fr);gap:34px 24px}
+    .values{grid-template-columns:1fr}
+    .dishes{grid-template-columns:1fr;gap:0}
+    .rev-grid{grid-template-columns:1fr}
+    .infos-grid{grid-template-columns:1fr;gap:34px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span>Route du Condroz 131 (Centre commercial) · 4550 Nandrin</span>
+    <span>Commandes & réservations : <a href="tel:+3285513339">085 51 33 39</a></span>
+  </div>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">PIZZERIA <b>PINO</b><small>Pâtes fraîches · Pizzas au feu de bois · Nandrin</small></div>
+    <nav>
+      <ul>
+        <li><a href="#maison">La maison</a></li>
+        <li><a href="#carte">La carte</a></li>
+        <li><a href="#avis">Avis</a></li>
+        <li><a href="#infos">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="burger" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <span class="cat reveal">Restaurant · À emporter · Traiteur</span>
+    <h1 class="reveal d1">Pâtes fraîches & pizzas au <b>feu de bois</b>.</h1>
+    <p class="reveal d2">La vraie cuisine italienne sur la route du Condroz, avec des produits de première qualité. Bienvenue chez Pino.</p>
+    <div class="rating reveal d2"><span class="stars">★★★★☆</span> <strong>4,2/5</strong> · plus de 1 000 avis Google</div>
+    <div class="cta-row reveal d3">
+      <a class="btn btn-primary" href="tel:+3285513339">Réserver une table</a>
+      <a class="btn btn-ghost" href="#carte">Voir la carte</a>
+    </div>
+  </div>
+  <div class="scroll-cue">↓</div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="wrap">
+    <div class="grid">
+      <div class="stat reveal"><div class="n">30+</div><div class="l">Ans d'expérience</div></div>
+      <div class="stat reveal d1"><div class="n">4,2★</div><div class="l">Note Google</div></div>
+      <div class="stat reveal d2"><div class="n">1 000+</div><div class="l">Avis clients</div></div>
+      <div class="stat reveal d3"><div class="n">75</div><div class="l">Couverts + terrasses</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAISON -->
+<section id="maison" class="center">
+  <div class="wrap">
+    <p class="eyebrow reveal">La maison</p>
+    <h2 class="reveal d1">Une pizzeria comme en Italie</h2>
+    <p class="lead reveal d2">Depuis plus de trente ans, la Pizzeria Pino régale le Condroz avec ses pâtes fraîches et ses pizzas cuites au feu de bois. Une cuisine généreuse et authentique, préparée avec des produits italiens de première qualité.</p>
+    <div class="values">
+      <div class="value reveal"><span class="ico">🔥</span><h3>Pizzas au feu de bois</h3><p>Une pâte cuite au feu de bois et une large carte, des classiques aux incontournables de la maison.</p></div>
+      <div class="value reveal d1"><span class="ico">🍝</span><h3>Pâtes fraîches</h3><p>Rigatoni, tagliatelle, spaghetti, gnocchi et spécialités préparés maison avec des produits italiens.</p></div>
+      <div class="value reveal d2"><span class="ico">🍷</span><h3>Salles & terrasses</h3><p>Deux salles (30 et 25 pers.), une terrasse à rue de 30 couverts et une terrasse suspendue de 20 places.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PARALLAXE — IMAGE DE DÉMO À REMPLACER par une vraie photo de Pino -->
+<section class="parallax" style="background-image:url('images/four-bois.jpg')">
+  <div class="wrap">
+    <h2 class="reveal">Cuites au feu de bois</h2>
+    <p class="reveal d1">Une pâte travaillée chaque jour, des produits italiens de première qualité, et le four à bois qui fait toute la différence.</p>
+  </div>
+</section>
+
+<!-- CARTE -->
+<section id="carte" class="menu">
+  <div class="wrap center">
+    <p class="eyebrow reveal">À la carte · Tarif à emporter</p>
+    <h2 class="reveal d1">Notre carte</h2>
+    <p class="lead reveal d2">Pâtes fraîches, pizzas au feu de bois, viandes et desserts. Choisissez une catégorie ci-dessous.</p>
+
+    <div class="menu-tabs reveal d2">
+      <button class="tab active" data-tab="pates">Pâtes fraîches</button>
+      <button class="tab" data-tab="pizzas">Pizzas au feu de bois</button>
+      <button class="tab" data-tab="bianca">Pizza Bianca</button>
+      <button class="tab" data-tab="viandes">Viandes</button>
+      <button class="tab" data-tab="desserts">Desserts</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- PÂTES -->
+    <div class="menu-panel show" id="pates">
+      <div class="dishes">
+        <div class="dish"><span class="name">Rigatoni 4 fromages<small>Jambon, 4 fromages, crème</small></span><span class="dot"></span><span class="price">8,50</span></div>
+        <div class="dish"><span class="name">Rigatoni Pinocchio<small>Bolognaise, crème, jambon</small></span><span class="dot"></span><span class="price">8,50</span></div>
+        <div class="dish"><span class="name">Rigatoni Romagnola<small>Tomate, 4 fromages, jambon de Parme</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Rigatoni Parmigiana<small>Tomate, aubergines, basilic, ail</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Rigatoni Asparagi e Crudo<small>Crème, asperges, jambon de Parme, ail</small></span><span class="dot"></span><span class="price">10,50</span></div>
+        <div class="dish"><span class="name">Rigatoni aux épinards<small>Épinards, crème, ail, lardons</small></span><span class="dot"></span><span class="price">10,50</span></div>
+        <div class="dish"><span class="name">Rigatoni Brocolis Scampis<small>Crème, brocolis, scampis, basilic, ail</small></span><span class="dot"></span><span class="price">13,50</span></div>
+        <div class="dish"><span class="name">Rigatoni Indiana<small>Tomates fraîches, basilic, aubergines, scampis, ail</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Rigatoni Adriatica<small>Tomate, crème, poireaux, scampis, ail</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Rigatoni Cremoso di Tartufata<small>Bresaola, crème, tomate, huile de truffe, salsa tartufata</small></span><span class="dot"></span><span class="price">15,00</span></div>
+        <div class="dish"><span class="name">Tagliatelle Piemontese<small>Jambon de Parme, ail, roquette, tomates séchées, oignons, huile d'olive</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Tagliatelle saumon fumé<small>Tomate, crème, saumon, ail</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Tagliatelle aux scampis<small>Scampis, crème, tomates, ail</small></span><span class="dot"></span><span class="price">12,00</span></div>
+        <div class="dish"><span class="name">Tagliatelle du Chef<small>Bresaola, roquette, copeaux de parmesan, huile de truffe, crème de balsamique</small></span><span class="dot"></span><span class="price">13,50</span></div>
+        <div class="dish"><span class="name">Spaghetti Arrabbiata<small>Tomate, crème, pancetta, piment</small></span><span class="dot"></span><span class="price">8,50</span></div>
+        <div class="dish"><span class="name">Spaghetti al Pomodoro<small>Tomates fraîches, ail, basilic</small></span><span class="dot"></span><span class="price">9,00</span></div>
+        <div class="dish"><span class="name">Spaghetti Carbonara<small>Crème, pancetta, œuf, parmesan</small></span><span class="dot"></span><span class="price">9,00</span></div>
+        <div class="dish"><span class="name">Spaghetti Bolognaise<small>Tomate, viande hachée</small></span><span class="dot"></span><span class="price">8,50</span></div>
+        <div class="dish"><span class="name">Spaghetti alle Vongole<small>Vongole veraci, tomates, ail</small></span><span class="dot"></span><span class="price">14,00</span></div>
+        <div class="dish"><span class="name">Spaghetti Boscaiola<small>Champignons, crème, lardons, ail</small></span><span class="dot"></span><span class="price">9,00</span></div>
+        <div class="dish"><span class="name">Spaghetti Puttanesca<small>Tomate, thon, câpres, olives noires, ail</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Spaghetti aux fruits de mer<small>Tomate, fruits de mer, basilic, ail</small></span><span class="dot"></span><span class="price">10,50</span></div>
+        <div class="dish"><span class="name">Linguini allo Scoglio<small>Fruits de mer, scampis, vongole, langoustines, pesto, ail</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Lasagne maison<small>Bolognaise, crème, jambon, mozzarella</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Lasagne 4 fromages<small>Bolognaise, sauce 4 fromages, jambon</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Cannelloni du Chef<small>Tomate, crème, viande hachée</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Tortelloni Genovese<small>Bolognaise, crème, jambon</small></span><span class="dot"></span><span class="price">9,00</span></div>
+        <div class="dish"><span class="name">Tortelloni crème jambon<small>Crème, jambon, fromage</small></span><span class="dot"></span><span class="price">9,00</span></div>
+        <div class="dish"><span class="name">Tortelloni alla Ricotta<small>Tomate, crème, ricotta, épinards</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Gnocchi Romana<small>Tomate, crème, Porto, fromage</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Gnocchi aux 4 fromages<small>Sauce 4 fromages, crème</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Rotolo alla Ricotta<small>Tomate, crème, ricotta, épinards, jambon</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Rotolo Parmigiana<small>Tomate, aubergines, jambon, parmesan, basilic</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Penne Ortolana<small>Tomates, courgettes, aubergines, basilic</small></span><span class="dot"></span><span class="price">9,50</span></div>
+      </div>
+      <div class="cat-title">Les incontournables</div>
+      <div class="dishes">
+        <div class="dish"><span class="name">Rigatoni Regiano<small>Parmesan reggiano 24 mois, taleggio, speck, crème, salsa tartufata</small></span><span class="dot"></span><span class="price">15,00</span></div>
+        <div class="dish"><span class="name">Tortelloni saumon épinards<small>Tortelloni, crème, saumon, ail, épinards</small></span><span class="dot"></span><span class="price">14,00</span></div>
+        <div class="dish"><span class="name">Stracciatella di Burrata<small>Tomates fraîches, aubergines, stracciatella di burrata</small></span><span class="dot"></span><span class="price">13,50</span></div>
+        <div class="dish"><span class="name">Spaghetti Nduja<small>Tomate, nduja</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Risotto aux fruits de mer<small>Tomates fraîches, fruits de mer</small></span><span class="dot"></span><span class="price">15,00</span></div>
+        <div class="dish"><span class="name">Risotto aux asperges<small>Asperges, speck</small></span><span class="dot"></span><span class="price">15,00</span></div>
+        <div class="dish"><span class="name">Farfalles Primavera<small>Mascarpone, saumon fumé, courgettes, ail</small></span><span class="dot"></span><span class="price">14,00</span></div>
+        <div class="dish"><span class="name">Spaghetti all'Amatriciana<small>Oignons, pancetta, vin rouge, tomates fraîches</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Spaghetti "Fantasia di Gamberoni"<small>Tomates fraîches, gambas flambés, ½ moules</small></span><span class="dot"></span><span class="price">14,50</span></div>
+      </div>
+    </div>
+
+    <!-- PIZZAS -->
+    <div class="menu-panel" id="pizzas">
+      <div class="dishes">
+        <div class="dish"><span class="name">Nerone<small>Tomate, mozzarella, salami piquant, poivrons</small></span><span class="dot"></span><span class="price">10,50</span></div>
+        <div class="dish"><span class="name">Vesuvio<small>Tomate, mozzarella, jambon, oignons</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Marinara<small>Tomate, mozzarella, thon, oignons</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Caprino<small>Tomate, mozzarella, fromage de chèvre, pesto</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Pomodoro<small>Tomate, mozzarella, tomates fraîches, basilic</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Romana<small>Tomate, mozzarella, thon, oignons, champignons</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Regina<small>Tomate, mozzarella, jambon, champignons</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Du Chef<small>Tomate, mozzarella, champignons, artichauts, poivrons, thon, anchois, jambon</small></span><span class="dot"></span><span class="price">11,50</span></div>
+        <div class="dish"><span class="name">César<small>Mozzarella, crème, jambon de Parme, parmesan</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Fermière<small>Tomate, mozzarella, fromage de chèvre, speck, herbes de Provence</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Fiorentina<small>Mozzarella, crème, épinards, ricotta</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Margherita<small>Tomate, mozzarella</small></span><span class="dot"></span><span class="price">7,00</span></div>
+        <div class="dish"><span class="name">Nonna<small>Tomate, mozzarella, jambon</small></span><span class="dot"></span><span class="price">9,00</span></div>
+        <div class="dish"><span class="name">Napoli<small>Tomate, mozzarella, anchois, câpres</small></span><span class="dot"></span><span class="price">8,50</span></div>
+        <div class="dish"><span class="name">Siciliana<small>Tomate, mozzarella, olives, anchois</small></span><span class="dot"></span><span class="price">8,50</span></div>
+        <div class="dish"><span class="name">4 Saisons<small>Tomate, mozzarella, jambon, artichauts, olives</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Capricciosa<small>Tomate, mozzarella, jambon, champignons, artichauts, anchois, œuf dur</small></span><span class="dot"></span><span class="price">10,50</span></div>
+        <div class="dish"><span class="name">Fruits de mer<small>Tomate, mozzarella, fruits de mer</small></span><span class="dot"></span><span class="price">11,50</span></div>
+        <div class="dish"><span class="name">Tonnata<small>Tomate, mozzarella, thon, câpres</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Végétarienne<small>Tomate, mozzarella, légumes divers</small></span><span class="dot"></span><span class="price">10,50</span></div>
+        <div class="dish"><span class="name">Calzone<small>Tomate, mozzarella, jambon, poivrons, champignons (fermée)</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Parmigiana<small>Tomate, mozzarella, aubergines, parmesan</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">4 Fromages<small>Tomate, mozzarella, gorgonzola, taleggio, fontina</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Genovese<small>Mozzarella, crème, pesto, parmesan</small></span><span class="dot"></span><span class="price">9,00</span></div>
+        <div class="dish"><span class="name">Focaccia al Formaggio<small>Double pâte, mozzarella, gorgonzola, jambon</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Calabrese<small>Tomate, mozzarella, salami piquant</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Diavola<small>Tomate, mozzarella, salami piquant, champignons</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Palermo<small>Tomate, mozzarella, aubergines, oignons, ricotta</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Épinards<small>Tomate, mozzarella, épinards, brocolis, olives</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Sole Mio<small>Tomate, mozzarella, jambon, champignons, œuf frais</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Al Crudo<small>Tomate, mozzarella, jambon de Parme</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Speck<small>Tomate, mozzarella, speck, ricotta</small></span><span class="dot"></span><span class="price">11,50</span></div>
+        <div class="dish"><span class="name">Hawaïenne<small>Tomate, mozzarella, jambon, ananas</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Merguez<small>Tomate, mozzarella, merguez, œuf frais</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Pinocchio<small>Tomate, mozzarella, jambon de Parme, roquette</small></span><span class="dot"></span><span class="price">13,00</span></div>
+        <div class="dish"><span class="name">Geppetto<small>Tomate, mozzarella, jambon, bolognaise</small></span><span class="dot"></span><span class="price">9,00</span></div>
+        <div class="dish"><span class="name">Adriana<small>Tomate, mozzarella, scampis, ail, persil</small></span><span class="dot"></span><span class="price">12,50</span></div>
+        <div class="dish"><span class="name">Romina<small>Tomate, mozzarella, bresaola, roquette, parmesan</small></span><span class="dot"></span><span class="price">13,00</span></div>
+        <div class="dish"><span class="name">Italia<small>Tomate, mozzarella, épinards, aubergines, ricotta</small></span><span class="dot"></span><span class="price">11,50</span></div>
+        <div class="dish"><span class="name">Dolce Latte<small>Tomate, mozzarella, gorgonzola, ricotta, aubergines</small></span><span class="dot"></span><span class="price">11,50</span></div>
+        <div class="dish"><span class="name">Mezzo Mezzo<small>Tomate, mozzarella, champignons, jambon, pâtes 4 fromages</small></span><span class="dot"></span><span class="price">12,00</span></div>
+        <div class="dish"><span class="name">Mafiosa<small>Tomate, mozzarella, jambon, poivrons, olives</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Carbonara<small>Mozzarella, pancetta, crème, parmesan, œuf frais</small></span><span class="dot"></span><span class="price">10,50</span></div>
+        <div class="dish"><span class="name">Mont Blanc<small>Mozzarella, crème, oignons, saumon</small></span><span class="dot"></span><span class="price">12,00</span></div>
+        <div class="dish"><span class="name">Norvégienne<small>Tomate, mozzarella, saumon, oignons</small></span><span class="dot"></span><span class="price">12,00</span></div>
+        <div class="dish"><span class="name">Liégeoise<small>Tomate, mozzarella, lardons, Zwan</small></span><span class="dot"></span><span class="price">10,00</span></div>
+        <div class="dish"><span class="name">Bosco<small>Tomate, mozzarella, lardons, champignons des bois</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Carpaccio<small>Tomate, mozzarella, carpaccio, champignons, parmesan</small></span><span class="dot"></span><span class="price">13,00</span></div>
+        <div class="dish"><span class="name">Poulet Provençal<small>Tomate, mozzarella, poulet, poivrons, oignons</small></span><span class="dot"></span><span class="price">12,00</span></div>
+        <div class="dish"><span class="name">Poulet Archiduc<small>Tomate, mozzarella, poulet, crème, champignons</small></span><span class="dot"></span><span class="price">12,00</span></div>
+        <div class="dish"><span class="name">Paysanne<small>Tomate, mozzarella, salami, courgettes, oignons</small></span><span class="dot"></span><span class="price">10,50</span></div>
+        <div class="dish"><span class="name">Coppa<small>Tomate, mozzarella, coppa, roquette, tomates séchées, parmesan</small></span><span class="dot"></span><span class="price">14,00</span></div>
+      </div>
+      <div class="cat-title">Les incontournables</div>
+      <div class="dishes">
+        <div class="dish"><span class="name">Pizza Tartufata<small>Sauce tomate, tapenade de truffe, mascarpone, roquette, coppa, copeaux de parmesan</small></span><span class="dot"></span><span class="price">14,00</span></div>
+        <div class="dish"><span class="name">Pizza Burrata<small>Burrata, roquette, coppa, tomates confites</small></span><span class="dot"></span><span class="price">13,50</span></div>
+        <div class="dish"><span class="name">Pizza Bufalina<small>Tomate, mozzarella di bufala cuite, tomates cerises, roquette, coppa</small></span><span class="dot"></span><span class="price">13,50</span></div>
+        <div class="dish"><span class="name">Pizza Bufala<small>Pâte blanche, roquette, tomates cerises, jambon de Parme, mozzarella di bufala</small></span><span class="dot"></span><span class="price">13,50</span></div>
+        <div class="dish"><span class="name">Pizza Nduja<small>Tomate, mozzarella, nduja</small></span><span class="dot"></span><span class="price">13,00</span></div>
+        <div class="dish"><span class="name">Pizza du Patron<small>Tomate, mozzarella, jambon, salami nduja piccante, mozzarella di bufala</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Pizza Primo<small>Tomate, mozzarella, speck, 4 fromages, tomates cerises, roquette</small></span><span class="dot"></span><span class="price">15,00</span></div>
+        <div class="dish"><span class="name">Pizza Antonio<small>Mozzarella, ricotta, speck, truffe</small></span><span class="dot"></span><span class="price">15,50</span></div>
+        <div class="dish"><span class="name">Pizza Primavera<small>Mozzarella, scampis, courgettes, tomates cerises, balsamique</small></span><span class="dot"></span><span class="price">15,50</span></div>
+        <div class="dish"><span class="name">Pizza Tartiflette<small>Mozzarella, roblochon, pommes de terre, lardons (en saison)</small></span><span class="dot"></span><span class="price">13,50</span></div>
+      </div>
+      <p class="menu-foot" style="text-align:left;margin-top:20px">Pizza Junior (-14 ans) : <strong style="color:var(--or)">−2,00</strong> à déduire du prix de la pizza choisie.</p>
+    </div>
+
+    <!-- PIZZA BIANCA -->
+    <div class="menu-panel" id="bianca">
+      <div class="dishes">
+        <div class="dish"><span class="name">Salumi e Formaggi<small>Assortiment de charcuteries, roquette, taleggio, gorgonzola</small></span><span class="dot"></span><span class="price">13,00</span></div>
+        <div class="dish"><span class="name">Bresaola<small>Bresaola, roquette, copeaux de parmesan, crème de truffe</small></span><span class="dot"></span><span class="price">13,00</span></div>
+        <div class="dish"><span class="name">Estate<small>Carpaccio, roquette, tomates séchées, copeaux de parmesan</small></span><span class="dot"></span><span class="price">13,50</span></div>
+        <div class="dish"><span class="name">Bruschetta<small>Tomates fraîches, ail, basilic, origan</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Fraicheur<small>Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)</small></span><span class="dot"></span><span class="price">11,00</span></div>
+      </div>
+    </div>
+
+    <!-- VIANDES -->
+    <div class="menu-panel" id="viandes">
+      <p style="color:var(--gris);font-size:.92rem;margin-bottom:8px"><strong style="color:var(--blanc)">Escalopes panées</strong> — escalope panée + accompagnement de pâtes + sauce au choix.</p>
+      <div class="dishes">
+        <div class="dish"><span class="name">Parmigiana<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Archiduc<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Napolitaine<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Pizzaiola<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Gorgonzola<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Poivre & crème<small>Escalope panée, poivre vert, crème</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Escalope Valdostana<small>Jambon, vin blanc, fromage</small></span><span class="dot"></span><span class="price">14,00</span></div>
+        <div class="dish"><span class="name">Osso Buco Maison<small>Accompagné de pâtes</small></span><span class="dot"></span><span class="price">16,00</span></div>
+      </div>
+    </div>
+
+    <!-- DESSERTS -->
+    <div class="menu-panel" id="desserts">
+      <div class="dishes">
+        <div class="dish"><span class="name">Tiramisù</span><span class="dot"></span><span class="price">4,50</span></div>
+        <div class="dish"><span class="name">Tiramisù Speculoos</span><span class="dot"></span><span class="price">4,00</span></div>
+        <div class="dish"><span class="name">Mousse au chocolat</span><span class="dot"></span><span class="price">4,00</span></div>
+      </div>
+    </div>
+
+    <div class="center" style="margin-top:36px">
+      <span class="supp-note">Suppléments de 1,00 à 4,00 € · Beurre d'ail offert</span>
+      <p class="menu-foot">Commander par téléphone ne supprime pas forcément le délai d'attente sur place : cela dépend de notre planning. Merci de votre compréhension.</p>
+      <div class="cta-row" style="justify-content:center;margin-top:24px">
+        <a class="btn btn-primary" href="tel:+3285513339">Commander à emporter</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE — IMAGES DE DÉMO À REMPLACER par les vraies photos de Pino -->
+<section class="gallery center">
+  <div class="wrap">
+    <p class="eyebrow reveal">En images</p>
+    <h2 class="reveal d1">L'ambiance & les plats</h2>
+    <p class="lead reveal d2">Photos d'illustration — à remplacer par les vôtres avant la mise en ligne.</p>
+    <div class="gal-grid">
+      <div class="gal-item reveal"><img loading="lazy" decoding="async" src="images/gal-pizza.jpg" alt="Pizza au feu de bois"><span class="cap">Pizzas au feu de bois</span></div>
+      <div class="gal-item reveal d1"><img loading="lazy" decoding="async" src="images/gal-pates.jpg" alt="Pâtes fraîches"><span class="cap">Pâtes fraîches</span></div>
+      <div class="gal-item reveal d2"><img loading="lazy" decoding="async" src="images/gal-ossobuco.jpg" alt="Spécialités italiennes"><span class="cap">Nos spécialités</span></div>
+      <div class="gal-item reveal"><img loading="lazy" decoding="async" src="images/gal-salle.jpg" alt="Salle de restaurant"><span class="cap">La salle</span></div>
+      <div class="gal-item reveal d1"><img loading="lazy" decoding="async" src="images/gal-terrasse.jpg" alt="Terrasse"><span class="cap">La terrasse</span></div>
+      <div class="gal-item reveal d2"><img loading="lazy" decoding="async" src="images/gal-tiramisu.jpg" alt="Desserts maison"><span class="cap">Desserts maison</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- AVIS -->
+<section id="avis" class="reviews center">
+  <div class="wrap">
+    <p class="eyebrow reveal">Ils en parlent</p>
+    <h2 class="reveal d1">Ce que disent nos clients</h2>
+    <p class="lead reveal d2" style="margin-bottom:8px">Une note moyenne de <strong style="color:var(--or)">4,2/5</strong> sur plus de 1 000 avis Google.</p>
+    <div class="rev-grid">
+      <div class="rev reveal"><div class="stars">★★★★★</div><p>« Tout avait du goût. On oublie souvent que la pâte doit avoir du goût — chez Pino, on ne l'oublie pas ! L'ambiance et le cadre sont très bien. »</p><div class="who">— Avis Google</div></div>
+      <div class="rev reveal d1"><div class="stars">★★★★★</div><p>« Excellentes pizzas au feu de bois, copieusement garnies. Produits très frais, personnel souriant. Prix très démocratiques. »</p><div class="who">— Avis Google</div></div>
+      <div class="rev reveal d2"><div class="stars">★★★★★</div><p>« Jamais aussi bon ailleurs, aussi garni, et à un prix aussi intéressant. On y revient à chaque fois. »</p><div class="who">— Avis Google</div></div>
+      <div class="rev reveal"><div class="stars">★★★★★</div><p>« Le tiramisu est une tuerie et la portion est super généreuse ! »</p><div class="who">— Avis Google</div></div>
+      <div class="rev reveal d1"><div class="stars">★★★★★</div><p>« Que ce soit en couple, entre amis ou en famille, chez Pino c'est LA pizzeria à découvrir pour la qualité des mets servis. »</p><div class="who">— Avis Tripadvisor</div></div>
+      <div class="rev reveal d2"><div class="stars">★★★★★</div><p>« Accueil chaleureux, service superbe, cuisine excellente et atmosphère très conviviale. »</p><div class="who">— Avis Tripadvisor</div></div>
+    </div>
+    <div class="cta-row reveal" style="justify-content:center;margin-top:40px">
+      <a class="btn btn-primary" href="https://www.google.com/search?q=Pizzeria+Pino+Nandrin+avis" target="_blank" rel="noopener">Voir tous nos avis sur Google</a>
+    </div>
+  </div>
+</section>
+
+<!-- CITATION -->
+<section class="quote">
+  <div class="wrap">
+    <p class="reveal">La Pizzeria Pino utilise des produits italiens de première qualité</p>
+    <span class="reveal d1">— Au plaisir de vous accueillir ou de vous revoir · Pino</span>
+  </div>
+</section>
+
+<!-- INFOS -->
+<section id="infos" class="infos">
+  <div class="wrap">
+    <p class="eyebrow reveal">Infos & contact</p>
+    <h2 class="reveal d1">Horaires & accès</h2>
+    <div class="infos-grid">
+      <div class="reveal d1">
+        <ul class="hours">
+          <li><span class="day">Lundi → Jeudi</span><span>12h–14h · 17h–21h30</span></li>
+          <li><span class="day">Vendredi → Dimanche</span><span>12h–14h · 17h–22h</span></li>
+        </ul>
+        <div class="feat">
+          <span>Terrasse</span><span>À emporter</span><span>Repas sur place</span><span>Traiteur</span>
+          <span>Accessible PMR</span><span>Parking gratuit</span><span>Menu enfant</span><span>Groupes</span>
+        </div>
+      </div>
+      <div class="reveal d2">
+        <div class="contact-card">
+          <h3>Nous contacter</h3>
+          <p>Route du Condroz 131 (Centre commercial)<br>4550 Nandrin</p>
+          <p>Tél. : <a href="tel:+3285513339">085 51 33 39</a></p>
+        </div>
+        <div class="map">
+          <iframe loading="lazy" title="Plan d'accès Pizzeria Pino" src="https://www.openstreetmap.org/export/embed.html?bbox=5.40%2C50.50%2C5.46%2C50.53&layer=mapnik"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand">PIZZERIA <b>PINO</b></div>
+    <p>Restaurant italien · Pâtes fraîches · Pizzas au feu de bois</p>
+    <p style="margin-top:8px">Route du Condroz 131, 4550 Nandrin · 085 51 33 39</p>
+    <p style="margin-top:10px;font-size:.78rem">Proposition de refonte — maquette de présentation</p>
+  </div>
+</footer>
+
+<script>
+  // Reveal au scroll
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Onglets de la carte
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.menu-panel').forEach(p=>p.classList.remove('show'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('show');
+    });
+  });
+</script>
+</body>
+</html>
