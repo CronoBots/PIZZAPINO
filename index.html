@@ -376,8 +376,9 @@
   .menu-search{max-width:540px;margin:34px auto 0}
   .menu-search .search-field{position:relative}
   .menu-search input{width:100%;background:var(--noir-3);border:1.5px solid var(--noir-4);border-radius:40px;
-    color:var(--blanc);font-family:"Inter",sans-serif;font-size:1rem;padding:15px 50px 15px 50px;outline:none;
-    transition:border-color .25s,background .25s}
+    color:var(--blanc);font-family:"Inter",sans-serif;font-size:1rem;padding:15px 20px 15px 48px;outline:none;
+    text-overflow:ellipsis;transition:border-color .25s,background .25s,padding .2s}
+  .menu-search.has-text input{padding-right:48px}
   .menu-search input:focus{border-color:var(--or);background:var(--noir-2)}
   .menu-search input::placeholder{color:var(--gris-d)}
   .menu-search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
@@ -738,7 +739,7 @@
     <div class="menu-search reveal" style="--i:2">
       <div class="search-field">
         <span class="s-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
-        <input type="search" id="menuSearch" placeholder="Rechercher un plat ou un ingrédient…" aria-label="Rechercher dans la carte" autocomplete="off">
+        <input type="search" id="menuSearch" placeholder="Rechercher un plat ou ingrédient…" aria-label="Rechercher dans la carte" autocomplete="off">
         <button type="button" class="s-clear" id="searchClear" aria-label="Effacer la recherche">×</button>
       </div>
       <span class="search-count" id="searchCount" aria-live="polite"></span>
