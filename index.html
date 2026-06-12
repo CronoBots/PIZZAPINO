@@ -15,9 +15,15 @@
 <meta property="og:type" content="restaurant">
 <meta property="og:title" content="Pizzeria Pino — Restaurant italien & pizzas au feu de bois à Nandrin">
 <meta property="og:description" content="Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. 4,2/5 sur plus de 1000 avis.">
-<meta property="og:image" content="images/hero-pizza.jpg">
+<meta property="og:image" content="https://www.pizzeriapino.be/images/hero-pizza.jpg">
+<meta property="og:image:alt" content="Pizza au feu de bois de la Pizzeria Pino à Nandrin">
+<meta property="og:url" content="https://www.pizzeriapino.be/">
+<meta property="og:site_name" content="Pizzeria Pino">
 <meta property="og:locale" content="fr_BE">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pizzeria Pino — Restaurant italien à Nandrin">
+<meta name="twitter:description" content="Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. 4,2/5 sur plus de 1000 avis.">
+<meta name="twitter:image" content="https://www.pizzeriapino.be/images/hero-pizza.jpg">
 
 <!-- Favicon emoji pizza -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
@@ -28,9 +34,16 @@
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": "Pizzeria Pino",
-  "servesCuisine": "Italienne",
+  "description": "Restaurant italien à Nandrin : pâtes fraîches et pizzas au feu de bois, produits italiens de première qualité. Sur place, à emporter et traiteur.",
+  "servesCuisine": ["Italienne", "Pizza"],
   "priceRange": "€€",
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "Espèces, Carte bancaire",
+  "url": "https://www.pizzeriapino.be/",
   "telephone": "+32 85 51 33 39",
+  "image": "https://www.pizzeriapino.be/images/hero-pizza.jpg",
+  "hasMap": "https://www.google.com/maps?cid=8822678863966983754",
+  "acceptsReservations": "True",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Route du Condroz 131",
@@ -38,12 +51,21 @@
     "postalCode": "4550",
     "addressCountry": "BE"
   },
+  "sameAs": [
+    "https://www.instagram.com/pino.nandrin/",
+    "https://www.facebook.com/100064486855231/"
+  ],
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "4.2",
     "reviewCount": "1000"
   },
-  "openingHours": ["Mo-Th 12:00-14:00,17:00-21:30", "Fr-Su 12:00-14:00,17:00-22:00"]
+  "openingHoursSpecification": [
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"], "opens": "12:00", "closes": "14:00"},
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"], "opens": "17:00", "closes": "21:30"},
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday","Saturday","Sunday"], "opens": "12:00", "closes": "14:00"},
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday","Saturday","Sunday"], "opens": "17:00", "closes": "22:00"}
+  ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,6 +98,12 @@
   ::selection{background:var(--rouge);color:#fff}
   img{display:block;max-width:100%}
   a{color:inherit}
+  /* Accessibilité : focus clavier visible, lien d'évitement, ancres dégagées de l'en-tête */
+  :focus-visible{outline:2px solid var(--or);outline-offset:3px;border-radius:3px}
+  section[id]{scroll-margin-top:84px}
+  .skip{position:absolute;left:-9999px;top:0;z-index:300;background:var(--or);color:#1a1510;
+    padding:12px 20px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .skip:focus{left:0}
   .wrap{max-width:1200px;margin:0 auto;padding:0 26px}
   .display{font-family:"Fraunces",Georgia,serif;font-optical-sizing:auto}
   h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-optical-sizing:auto;font-weight:600;line-height:1.04}
@@ -316,6 +344,20 @@
     border-radius:40px;transition:.28s}
   .tab:hover{color:var(--blanc);border-color:var(--gris-d);transform:translateY(-2px)}
   .tab.active{background:var(--rouge);color:#fff;border-color:var(--rouge);box-shadow:0 12px 26px -14px rgba(226,35,26,.8)}
+  /* recherche dans la carte */
+  .menu-search{max-width:540px;margin:34px auto 0;position:relative}
+  .menu-search input{width:100%;background:var(--noir-3);border:1.5px solid var(--noir-4);border-radius:40px;
+    color:var(--blanc);font-family:"Inter",sans-serif;font-size:1rem;padding:15px 22px 15px 50px;outline:none;
+    transition:border-color .25s,background .25s}
+  .menu-search input:focus{border-color:var(--or);background:var(--noir-2)}
+  .menu-search input::placeholder{color:var(--gris-d)}
+  .menu-search .s-ico{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--gris-d);pointer-events:none}
+  .search-count{display:block;margin-top:14px;min-height:1em;font-family:"Oswald",sans-serif;letter-spacing:.06em;
+    text-transform:uppercase;font-size:.8rem;color:var(--or)}
+  body.searching .menu-tabs{opacity:.45;pointer-events:none}
+  body.searching .menu-panel{display:block;margin-top:30px}
+  body.searching .menu-panel .cat-title,body.searching .menu-panel .menu-foot{display:none}
+  .dish.hide{display:none}
   .menu-panel{display:none;margin-top:38px}
   .menu-panel.show{display:block}
   .menu-panel.show .dish{animation:dishin .5s both}
@@ -335,6 +377,7 @@
   .dish .dot{flex:1;border-bottom:1px dotted #43403b;margin:0 4px;transform:translateY(-5px);min-width:18px}
   .dish .price{font-family:"Oswald",sans-serif;color:var(--or);font-weight:600;font-size:1.08rem;white-space:nowrap;
     transition:transform .25s,color .25s}
+  .dish .price::after{content:" €";font-size:.82em;color:var(--gris-d);font-weight:500}
   .dish:hover .price{transform:scale(1.08);color:var(--or-l)}
   .menu-foot{margin-top:32px;font-size:.84rem;color:var(--gris-d);font-style:italic;text-align:center}
   .supp-note{background:linear-gradient(90deg,var(--rouge),var(--rouge-d));color:#fff;padding:7px 16px;font-size:.8rem;
@@ -490,6 +533,7 @@
 </style>
 </head>
 <body>
+<a class="skip" href="#carte">Aller à la carte</a>
 
 <!-- PRÉCHARGEUR -->
 <div id="preload"><div class="pl-inner">
@@ -622,7 +666,12 @@
   <div class="wrap center">
     <p class="eyebrow reveal"><span class="num">02</span> À la carte · Tarif à emporter</p>
     <h2 class="reveal" style="--i:1">Notre <em>carte</em></h2>
-    <p class="lead reveal" style="--i:2">Pâtes fraîches, pizzas au feu de bois, viandes et desserts. Choisissez une catégorie ci-dessous.</p>
+    <p class="lead reveal" style="--i:2">Pâtes fraîches, pizzas au feu de bois, viandes et desserts. Cherchez un plat, ou parcourez par catégorie.</p>
+    <div class="menu-search reveal" style="--i:2">
+      <span class="s-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
+      <input type="search" id="menuSearch" placeholder="Rechercher un plat ou un ingrédient…" aria-label="Rechercher dans la carte" autocomplete="off">
+      <span class="search-count" id="searchCount" aria-live="polite"></span>
+    </div>
     <div class="menu-tabs reveal" style="--i:2">
       <button class="tab active" data-tab="pates">Pâtes fraîches</button>
       <button class="tab" data-tab="pizzas">Pizzas au feu de bois</button>
@@ -1114,20 +1163,69 @@
     });
   }
 
-  /* ---- Onglets de la carte ---- */
-  document.querySelectorAll(".tab").forEach(function(tab){
-    tab.addEventListener("click", function(){
-      document.querySelectorAll(".tab").forEach(function(t){ t.classList.remove("active"); });
-      document.querySelectorAll(".menu-panel").forEach(function(p){ p.classList.remove("show"); });
-      tab.classList.add("active");
-      var panel = document.getElementById(tab.dataset.tab);
-      panel.classList.add("show");
-      // index pour l'animation en cascade
-      panel.querySelectorAll(".dish").forEach(function(d,idx){ d.style.setProperty("--d", idx%18); });
+  /* ---- Onglets de la carte (ARIA + navigation clavier) ---- */
+  var tabEls = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  var tablist = document.querySelector(".menu-tabs");
+  if(tablist) tablist.setAttribute("role","tablist");
+  function selectTab(tab){
+    tabEls.forEach(function(t){
+      var on = t===tab;
+      t.classList.toggle("active", on);
+      t.setAttribute("aria-selected", on?"true":"false");
+      t.setAttribute("tabindex", on?"0":"-1");
+    });
+    document.querySelectorAll(".menu-panel").forEach(function(p){ p.classList.remove("show"); });
+    var panel = document.getElementById(tab.dataset.tab);
+    if(panel){ panel.classList.add("show");
+      panel.querySelectorAll(".dish").forEach(function(d,idx){ d.style.setProperty("--d", idx%18); }); }
+  }
+  tabEls.forEach(function(tab){
+    tab.setAttribute("role","tab");
+    tab.id = "tab-"+tab.dataset.tab;
+    tab.setAttribute("aria-controls", tab.dataset.tab);
+    tab.setAttribute("aria-selected", tab.classList.contains("active")?"true":"false");
+    tab.setAttribute("tabindex", tab.classList.contains("active")?"0":"-1");
+    var panel = document.getElementById(tab.dataset.tab);
+    if(panel){ panel.setAttribute("role","tabpanel"); panel.setAttribute("aria-labelledby", tab.id); }
+    tab.addEventListener("click", function(){ selectTab(tab); });
+    tab.addEventListener("keydown", function(e){
+      var i = tabEls.indexOf(tab), n = tabEls.length, j = null;
+      if(e.key==="ArrowRight"||e.key==="ArrowDown") j=(i+1)%n;
+      else if(e.key==="ArrowLeft"||e.key==="ArrowUp") j=(i-1+n)%n;
+      else if(e.key==="Home") j=0; else if(e.key==="End") j=n-1;
+      if(j!==null){ e.preventDefault(); selectTab(tabEls[j]); tabEls[j].focus(); }
     });
   });
-  // index initial
   document.querySelectorAll(".menu-panel.show .dish").forEach(function(d,idx){ d.style.setProperty("--d", idx%18); });
+
+  /* ---- Recherche dans la carte (nom + ingrédients) ---- */
+  (function(){
+    var input = document.getElementById("menuSearch");
+    var count = document.getElementById("searchCount");
+    if(!input) return;
+    var dishes = Array.prototype.slice.call(document.querySelectorAll(".menu-panel .dish"));
+    function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+    var index = dishes.map(function(d){ return norm(d.querySelector(".name").textContent); });
+    var t;
+    input.addEventListener("input", function(){ clearTimeout(t); t = setTimeout(run, 90); });
+    function run(){
+      var q = norm(input.value.trim());
+      if(!q){
+        document.body.classList.remove("searching");
+        dishes.forEach(function(d){ d.classList.remove("hide"); });
+        count.textContent = "";
+        return;
+      }
+      document.body.classList.add("searching");
+      var n = 0;
+      dishes.forEach(function(d,i){
+        var m = index[i].indexOf(q) > -1;
+        d.classList.toggle("hide", !m);
+        if(m) n++;
+      });
+      count.textContent = n===0 ? "Aucun plat trouvé" : (n + (n>1?" plats trouvés":" plat trouvé"));
+    }
+  })();
 
   /* ---- Menu mobile ---- */
   var burger = document.getElementById("burger");
