@@ -370,13 +370,13 @@
   .cat-title::after{flex:1}
   .cat-title:first-child{margin-top:0}
   .dishes{display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px}
-  .dish{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:15px 0;
-    border-bottom:1px solid var(--hair-ink);transition:padding .25s,background .25s}
-  .dish:hover{background:rgba(168,38,29,.04);padding-left:8px}
+  .dish{display:flex;flex-wrap:wrap;align-items:baseline;padding:14px 0;
+    border-bottom:1px solid var(--hair-ink);transition:background .25s}
+  .dish:hover{background:rgba(168,38,29,.04)}
   .dish .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink)}
-  .dish .name small{display:block;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.86rem;
-    color:var(--ink-mut);margin-top:2px;line-height:1.45}
-  .dish .dot{flex:1;border-bottom:1px dotted rgba(38,32,26,.4);margin:0 4px;transform:translateY(-5px);min-width:18px}
+  .dish .desc{flex:0 0 100%;width:100%;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
+    color:var(--ink-mut);margin-top:3px;line-height:1.45}
+  .dish .dot{flex:1;border-bottom:1px dotted rgba(38,32,26,.42);margin:0 8px;transform:translateY(-4px);min-width:24px}
   .dish .price{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;font-size:1.06rem;white-space:nowrap;
     transition:color .25s}
   .dish .price::after{content:" €";font-size:.78em;color:var(--ink-mut);font-weight:500}
@@ -629,6 +629,17 @@
     .cta-row{justify-content:center}
     .cta-row .btn{width:100%}
   }
+  /* ===== TACTILE : aucun effet de survol (ils provoquaient des tremblements au scroll) ===== */
+  @media (hover: none){
+    .dish:hover{background:none}
+    .dish:hover .price{color:var(--ink)}
+    .dish:hover{padding-left:0}
+    .btn:hover{transform:none}
+    .gal-item:hover img,.insta-tile:hover img,.value:hover,.tab:hover{transform:none}
+    .feat span:hover{transform:none}
+    #toTop:hover{transform:none}
+    .nav-cta:hover{transform:none}
+  }
 </style>
 </head>
 <body>
@@ -760,123 +771,123 @@
     <!-- PÂTES -->
     <div class="menu-panel show" id="pates">
       <div class="dishes">
-        <div class="dish"><span class="name">Rigatoni 4 fromages<small>Jambon, 4 fromages, crème</small></span><span class="dot"></span><span class="price">8,50</span></div>
-        <div class="dish"><span class="name">Rigatoni Pinocchio<small>Bolognaise, crème, jambon</small></span><span class="dot"></span><span class="price">8,50</span></div>
-        <div class="dish"><span class="name">Rigatoni Romagnola<small>Tomate, 4 fromages, jambon de Parme</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Rigatoni Parmigiana<small>Tomate, aubergines, basilic, ail</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Rigatoni Asparagi e Crudo<small>Crème, asperges, jambon de Parme, ail</small></span><span class="dot"></span><span class="price">10,50</span></div>
-        <div class="dish"><span class="name">Rigatoni aux épinards<small>Épinards, crème, ail, lardons</small></span><span class="dot"></span><span class="price">10,50</span></div>
-        <div class="dish"><span class="name">Rigatoni Brocolis Scampis<small>Crème, brocolis, scampis, basilic, ail</small></span><span class="dot"></span><span class="price">13,50</span></div>
-        <div class="dish"><span class="name">Rigatoni Indiana<small>Tomates fraîches, basilic, aubergines, scampis, ail</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Rigatoni Adriatica<small>Tomate, crème, poireaux, scampis, ail</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Rigatoni Cremoso di Tartufata<small>Bresaola, crème, tomate, huile de truffe, salsa tartufata</small></span><span class="dot"></span><span class="price">15,00</span></div>
-        <div class="dish"><span class="name">Tagliatelle Piemontese<small>Jambon de Parme, ail, roquette, tomates séchées, oignons, huile d'olive</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Tagliatelle saumon fumé<small>Tomate, crème, saumon, ail</small></span><span class="dot"></span><span class="price">11,00</span></div>
-        <div class="dish"><span class="name">Tagliatelle aux scampis<small>Scampis, crème, tomates, ail</small></span><span class="dot"></span><span class="price">12,00</span></div>
-        <div class="dish"><span class="name">Tagliatelle du Chef<small>Bresaola, roquette, copeaux de parmesan, huile de truffe, crème de balsamique</small></span><span class="dot"></span><span class="price">13,50</span></div>
-        <div class="dish"><span class="name">Spaghetti Arrabbiata<small>Tomate, crème, pancetta, piment</small></span><span class="dot"></span><span class="price">8,50</span></div>
-        <div class="dish"><span class="name">Spaghetti al Pomodoro<small>Tomates fraîches, ail, basilic</small></span><span class="dot"></span><span class="price">9,00</span></div>
-        <div class="dish"><span class="name">Spaghetti Carbonara<small>Crème, pancetta, œuf, parmesan</small></span><span class="dot"></span><span class="price">9,00</span></div>
-        <div class="dish"><span class="name">Spaghetti Bolognaise<small>Tomate, viande hachée</small></span><span class="dot"></span><span class="price">8,50</span></div>
-        <div class="dish"><span class="name">Spaghetti alle Vongole<small>Vongole veraci, tomates, ail</small></span><span class="dot"></span><span class="price">14,00</span></div>
-        <div class="dish"><span class="name">Spaghetti Boscaiola<small>Champignons, crème, lardons, ail</small></span><span class="dot"></span><span class="price">9,00</span></div>
-        <div class="dish"><span class="name">Spaghetti Puttanesca<small>Tomate, thon, câpres, olives noires, ail</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Spaghetti aux fruits de mer<small>Tomate, fruits de mer, basilic, ail</small></span><span class="dot"></span><span class="price">10,50</span></div>
-        <div class="dish"><span class="name">Linguini allo Scoglio<small>Fruits de mer, scampis, vongole, langoustines, pesto, ail</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Lasagne maison<small>Bolognaise, crème, jambon, mozzarella</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Lasagne 4 fromages<small>Bolognaise, sauce 4 fromages, jambon</small></span><span class="dot"></span><span class="price">11,00</span></div>
-        <div class="dish"><span class="name">Cannelloni du Chef<small>Tomate, crème, viande hachée</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Tortelloni Genovese<small>Bolognaise, crème, jambon</small></span><span class="dot"></span><span class="price">9,00</span></div>
-        <div class="dish"><span class="name">Tortelloni crème jambon<small>Crème, jambon, fromage</small></span><span class="dot"></span><span class="price">9,00</span></div>
-        <div class="dish"><span class="name">Tortelloni alla Ricotta<small>Tomate, crème, ricotta, épinards</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Gnocchi Romana<small>Tomate, crème, Porto, fromage</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Gnocchi aux 4 fromages<small>Sauce 4 fromages, crème</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Rotolo alla Ricotta<small>Tomate, crème, ricotta, épinards, jambon</small></span><span class="dot"></span><span class="price">11,00</span></div>
-        <div class="dish"><span class="name">Rotolo Parmigiana<small>Tomate, aubergines, jambon, parmesan, basilic</small></span><span class="dot"></span><span class="price">11,00</span></div>
-        <div class="dish"><span class="name">Penne Ortolana<small>Tomates, courgettes, aubergines, basilic</small></span><span class="dot"></span><span class="price">9,50</span></div>
+        <div class="dish"><span class="name">Rigatoni 4 fromages</span><span class="dot"></span><span class="price">8,50</span><small class="desc">Jambon, 4 fromages, crème</small></div>
+        <div class="dish"><span class="name">Rigatoni Pinocchio</span><span class="dot"></span><span class="price">8,50</span><small class="desc">Bolognaise, crème, jambon</small></div>
+        <div class="dish"><span class="name">Rigatoni Romagnola</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, 4 fromages, jambon de Parme</small></div>
+        <div class="dish"><span class="name">Rigatoni Parmigiana</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, aubergines, basilic, ail</small></div>
+        <div class="dish"><span class="name">Rigatoni Asparagi e Crudo</span><span class="dot"></span><span class="price">10,50</span><small class="desc">Crème, asperges, jambon de Parme, ail</small></div>
+        <div class="dish"><span class="name">Rigatoni aux épinards</span><span class="dot"></span><span class="price">10,50</span><small class="desc">Épinards, crème, ail, lardons</small></div>
+        <div class="dish"><span class="name">Rigatoni Brocolis Scampis</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Crème, brocolis, scampis, basilic, ail</small></div>
+        <div class="dish"><span class="name">Rigatoni Indiana</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Tomates fraîches, basilic, aubergines, scampis, ail</small></div>
+        <div class="dish"><span class="name">Rigatoni Adriatica</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Tomate, crème, poireaux, scampis, ail</small></div>
+        <div class="dish"><span class="name">Rigatoni Cremoso di Tartufata</span><span class="dot"></span><span class="price">15,00</span><small class="desc">Bresaola, crème, tomate, huile de truffe, salsa tartufata</small></div>
+        <div class="dish"><span class="name">Tagliatelle Piemontese</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Jambon de Parme, ail, roquette, tomates séchées, oignons, huile d'olive</small></div>
+        <div class="dish"><span class="name">Tagliatelle saumon fumé</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Tomate, crème, saumon, ail</small></div>
+        <div class="dish"><span class="name">Tagliatelle aux scampis</span><span class="dot"></span><span class="price">12,00</span><small class="desc">Scampis, crème, tomates, ail</small></div>
+        <div class="dish"><span class="name">Tagliatelle du Chef</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Bresaola, roquette, copeaux de parmesan, huile de truffe, crème de balsamique</small></div>
+        <div class="dish"><span class="name">Spaghetti Arrabbiata</span><span class="dot"></span><span class="price">8,50</span><small class="desc">Tomate, crème, pancetta, piment</small></div>
+        <div class="dish"><span class="name">Spaghetti al Pomodoro</span><span class="dot"></span><span class="price">9,00</span><small class="desc">Tomates fraîches, ail, basilic</small></div>
+        <div class="dish"><span class="name">Spaghetti Carbonara</span><span class="dot"></span><span class="price">9,00</span><small class="desc">Crème, pancetta, œuf, parmesan</small></div>
+        <div class="dish"><span class="name">Spaghetti Bolognaise</span><span class="dot"></span><span class="price">8,50</span><small class="desc">Tomate, viande hachée</small></div>
+        <div class="dish"><span class="name">Spaghetti alle Vongole</span><span class="dot"></span><span class="price">14,00</span><small class="desc">Vongole veraci, tomates, ail</small></div>
+        <div class="dish"><span class="name">Spaghetti Boscaiola</span><span class="dot"></span><span class="price">9,00</span><small class="desc">Champignons, crème, lardons, ail</small></div>
+        <div class="dish"><span class="name">Spaghetti Puttanesca</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, thon, câpres, olives noires, ail</small></div>
+        <div class="dish"><span class="name">Spaghetti aux fruits de mer</span><span class="dot"></span><span class="price">10,50</span><small class="desc">Tomate, fruits de mer, basilic, ail</small></div>
+        <div class="dish"><span class="name">Linguini allo Scoglio</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Fruits de mer, scampis, vongole, langoustines, pesto, ail</small></div>
+        <div class="dish"><span class="name">Lasagne maison</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Bolognaise, crème, jambon, mozzarella</small></div>
+        <div class="dish"><span class="name">Lasagne 4 fromages</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Bolognaise, sauce 4 fromages, jambon</small></div>
+        <div class="dish"><span class="name">Cannelloni du Chef</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, crème, viande hachée</small></div>
+        <div class="dish"><span class="name">Tortelloni Genovese</span><span class="dot"></span><span class="price">9,00</span><small class="desc">Bolognaise, crème, jambon</small></div>
+        <div class="dish"><span class="name">Tortelloni crème jambon</span><span class="dot"></span><span class="price">9,00</span><small class="desc">Crème, jambon, fromage</small></div>
+        <div class="dish"><span class="name">Tortelloni alla Ricotta</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, crème, ricotta, épinards</small></div>
+        <div class="dish"><span class="name">Gnocchi Romana</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, crème, Porto, fromage</small></div>
+        <div class="dish"><span class="name">Gnocchi aux 4 fromages</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Sauce 4 fromages, crème</small></div>
+        <div class="dish"><span class="name">Rotolo alla Ricotta</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Tomate, crème, ricotta, épinards, jambon</small></div>
+        <div class="dish"><span class="name">Rotolo Parmigiana</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Tomate, aubergines, jambon, parmesan, basilic</small></div>
+        <div class="dish"><span class="name">Penne Ortolana</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomates, courgettes, aubergines, basilic</small></div>
       </div>
       <div class="cat-title">Les incontournables</div>
       <div class="dishes">
-        <div class="dish"><span class="name">Rigatoni Regiano<small>Parmesan reggiano 24 mois, taleggio, speck, crème, salsa tartufata</small></span><span class="dot"></span><span class="price">15,00</span></div>
-        <div class="dish"><span class="name">Tortelloni saumon épinards<small>Tortelloni, crème, saumon, ail, épinards</small></span><span class="dot"></span><span class="price">14,00</span></div>
-        <div class="dish"><span class="name">Stracciatella di Burrata<small>Tomates fraîches, aubergines, stracciatella di burrata</small></span><span class="dot"></span><span class="price">13,50</span></div>
-        <div class="dish"><span class="name">Spaghetti Nduja<small>Tomate, nduja</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Risotto aux fruits de mer<small>Tomates fraîches, fruits de mer</small></span><span class="dot"></span><span class="price">15,00</span></div>
-        <div class="dish"><span class="name">Risotto aux asperges<small>Asperges, speck</small></span><span class="dot"></span><span class="price">15,00</span></div>
-        <div class="dish"><span class="name">Farfalles Primavera<small>Mascarpone, saumon fumé, courgettes, ail</small></span><span class="dot"></span><span class="price">14,00</span></div>
-        <div class="dish"><span class="name">Spaghetti all'Amatriciana<small>Oignons, pancetta, vin rouge, tomates fraîches</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Spaghetti "Fantasia di Gamberoni"<small>Tomates fraîches, gambas flambés, ½ moules</small></span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Rigatoni Regiano</span><span class="dot"></span><span class="price">15,00</span><small class="desc">Parmesan reggiano 24 mois, taleggio, speck, crème, salsa tartufata</small></div>
+        <div class="dish"><span class="name">Tortelloni saumon épinards</span><span class="dot"></span><span class="price">14,00</span><small class="desc">Tortelloni, crème, saumon, ail, épinards</small></div>
+        <div class="dish"><span class="name">Stracciatella di Burrata</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Tomates fraîches, aubergines, stracciatella di burrata</small></div>
+        <div class="dish"><span class="name">Spaghetti Nduja</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Tomate, nduja</small></div>
+        <div class="dish"><span class="name">Risotto aux fruits de mer</span><span class="dot"></span><span class="price">15,00</span><small class="desc">Tomates fraîches, fruits de mer</small></div>
+        <div class="dish"><span class="name">Risotto aux asperges</span><span class="dot"></span><span class="price">15,00</span><small class="desc">Asperges, speck</small></div>
+        <div class="dish"><span class="name">Farfalles Primavera</span><span class="dot"></span><span class="price">14,00</span><small class="desc">Mascarpone, saumon fumé, courgettes, ail</small></div>
+        <div class="dish"><span class="name">Spaghetti all'Amatriciana</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Oignons, pancetta, vin rouge, tomates fraîches</small></div>
+        <div class="dish"><span class="name">Spaghetti "Fantasia di Gamberoni"</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Tomates fraîches, gambas flambés, ½ moules</small></div>
       </div>
     </div>
 
     <!-- PIZZAS -->
     <div class="menu-panel" id="pizzas">
       <div class="dishes">
-        <div class="dish"><span class="name">Nerone<small>Tomate, mozzarella, salami piquant, poivrons</small></span><span class="dot"></span><span class="price">10,50</span></div>
-        <div class="dish"><span class="name">Vesuvio<small>Tomate, mozzarella, jambon, oignons</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Marinara<small>Tomate, mozzarella, thon, oignons</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Caprino<small>Tomate, mozzarella, fromage de chèvre, pesto</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Pomodoro<small>Tomate, mozzarella, tomates fraîches, basilic</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Romana<small>Tomate, mozzarella, thon, oignons, champignons</small></span><span class="dot"></span><span class="price">11,00</span></div>
-        <div class="dish"><span class="name">Regina<small>Tomate, mozzarella, jambon, champignons</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Du Chef<small>Tomate, mozzarella, champignons, artichauts, poivrons, thon, anchois, jambon</small></span><span class="dot"></span><span class="price">11,50</span></div>
-        <div class="dish"><span class="name">César<small>Mozzarella, crème, jambon de Parme, parmesan</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Fermière<small>Tomate, mozzarella, fromage de chèvre, speck, herbes de Provence</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Fiorentina<small>Mozzarella, crème, épinards, ricotta</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Margherita<small>Tomate, mozzarella</small></span><span class="dot"></span><span class="price">7,00</span></div>
-        <div class="dish"><span class="name">Nonna<small>Tomate, mozzarella, jambon</small></span><span class="dot"></span><span class="price">9,00</span></div>
-        <div class="dish"><span class="name">Napoli<small>Tomate, mozzarella, anchois, câpres</small></span><span class="dot"></span><span class="price">8,50</span></div>
-        <div class="dish"><span class="name">Siciliana<small>Tomate, mozzarella, olives, anchois</small></span><span class="dot"></span><span class="price">8,50</span></div>
-        <div class="dish"><span class="name">4 Saisons<small>Tomate, mozzarella, jambon, artichauts, olives</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Capricciosa<small>Tomate, mozzarella, jambon, champignons, artichauts, anchois, œuf dur</small></span><span class="dot"></span><span class="price">10,50</span></div>
-        <div class="dish"><span class="name">Fruits de mer<small>Tomate, mozzarella, fruits de mer</small></span><span class="dot"></span><span class="price">11,50</span></div>
-        <div class="dish"><span class="name">Tonnata<small>Tomate, mozzarella, thon, câpres</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Végétarienne<small>Tomate, mozzarella, légumes divers</small></span><span class="dot"></span><span class="price">10,50</span></div>
-        <div class="dish"><span class="name">Calzone<small>Tomate, mozzarella, jambon, poivrons, champignons (fermée)</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Parmigiana<small>Tomate, mozzarella, aubergines, parmesan</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">4 Fromages<small>Tomate, mozzarella, gorgonzola, taleggio, fontina</small></span><span class="dot"></span><span class="price">11,00</span></div>
-        <div class="dish"><span class="name">Genovese<small>Mozzarella, crème, pesto, parmesan</small></span><span class="dot"></span><span class="price">9,00</span></div>
-        <div class="dish"><span class="name">Focaccia al Formaggio<small>Double pâte, mozzarella, gorgonzola, jambon</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Calabrese<small>Tomate, mozzarella, salami piquant</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Diavola<small>Tomate, mozzarella, salami piquant, champignons</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Palermo<small>Tomate, mozzarella, aubergines, oignons, ricotta</small></span><span class="dot"></span><span class="price">11,00</span></div>
-        <div class="dish"><span class="name">Épinards<small>Tomate, mozzarella, épinards, brocolis, olives</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Sole Mio<small>Tomate, mozzarella, jambon, champignons, œuf frais</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Al Crudo<small>Tomate, mozzarella, jambon de Parme</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Speck<small>Tomate, mozzarella, speck, ricotta</small></span><span class="dot"></span><span class="price">11,50</span></div>
-        <div class="dish"><span class="name">Hawaïenne<small>Tomate, mozzarella, jambon, ananas</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Merguez<small>Tomate, mozzarella, merguez, œuf frais</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Pinocchio<small>Tomate, mozzarella, jambon de Parme, roquette</small></span><span class="dot"></span><span class="price">13,00</span></div>
-        <div class="dish"><span class="name">Geppetto<small>Tomate, mozzarella, jambon, bolognaise</small></span><span class="dot"></span><span class="price">9,00</span></div>
-        <div class="dish"><span class="name">Adriana<small>Tomate, mozzarella, scampis, ail, persil</small></span><span class="dot"></span><span class="price">12,50</span></div>
-        <div class="dish"><span class="name">Romina<small>Tomate, mozzarella, bresaola, roquette, parmesan</small></span><span class="dot"></span><span class="price">13,00</span></div>
-        <div class="dish"><span class="name">Italia<small>Tomate, mozzarella, épinards, aubergines, ricotta</small></span><span class="dot"></span><span class="price">11,50</span></div>
-        <div class="dish"><span class="name">Dolce Latte<small>Tomate, mozzarella, gorgonzola, ricotta, aubergines</small></span><span class="dot"></span><span class="price">11,50</span></div>
-        <div class="dish"><span class="name">Mezzo Mezzo<small>Tomate, mozzarella, champignons, jambon, pâtes 4 fromages</small></span><span class="dot"></span><span class="price">12,00</span></div>
-        <div class="dish"><span class="name">Mafiosa<small>Tomate, mozzarella, jambon, poivrons, olives</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Carbonara<small>Mozzarella, pancetta, crème, parmesan, œuf frais</small></span><span class="dot"></span><span class="price">10,50</span></div>
-        <div class="dish"><span class="name">Mont Blanc<small>Mozzarella, crème, oignons, saumon</small></span><span class="dot"></span><span class="price">12,00</span></div>
-        <div class="dish"><span class="name">Norvégienne<small>Tomate, mozzarella, saumon, oignons</small></span><span class="dot"></span><span class="price">12,00</span></div>
-        <div class="dish"><span class="name">Liégeoise<small>Tomate, mozzarella, lardons, Zwan</small></span><span class="dot"></span><span class="price">10,00</span></div>
-        <div class="dish"><span class="name">Bosco<small>Tomate, mozzarella, lardons, champignons des bois</small></span><span class="dot"></span><span class="price">11,00</span></div>
-        <div class="dish"><span class="name">Carpaccio<small>Tomate, mozzarella, carpaccio, champignons, parmesan</small></span><span class="dot"></span><span class="price">13,00</span></div>
-        <div class="dish"><span class="name">Poulet Provençal<small>Tomate, mozzarella, poulet, poivrons, oignons</small></span><span class="dot"></span><span class="price">12,00</span></div>
-        <div class="dish"><span class="name">Poulet Archiduc<small>Tomate, mozzarella, poulet, crème, champignons</small></span><span class="dot"></span><span class="price">12,00</span></div>
-        <div class="dish"><span class="name">Paysanne<small>Tomate, mozzarella, salami, courgettes, oignons</small></span><span class="dot"></span><span class="price">10,50</span></div>
-        <div class="dish"><span class="name">Coppa<small>Tomate, mozzarella, coppa, roquette, tomates séchées, parmesan</small></span><span class="dot"></span><span class="price">14,00</span></div>
+        <div class="dish"><span class="name">Nerone</span><span class="dot"></span><span class="price">10,50</span><small class="desc">Tomate, mozzarella, salami piquant, poivrons</small></div>
+        <div class="dish"><span class="name">Vesuvio</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, jambon, oignons</small></div>
+        <div class="dish"><span class="name">Marinara</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, thon, oignons</small></div>
+        <div class="dish"><span class="name">Caprino</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, mozzarella, fromage de chèvre, pesto</small></div>
+        <div class="dish"><span class="name">Pomodoro</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, tomates fraîches, basilic</small></div>
+        <div class="dish"><span class="name">Romana</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Tomate, mozzarella, thon, oignons, champignons</small></div>
+        <div class="dish"><span class="name">Regina</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, jambon, champignons</small></div>
+        <div class="dish"><span class="name">Du Chef</span><span class="dot"></span><span class="price">11,50</span><small class="desc">Tomate, mozzarella, champignons, artichauts, poivrons, thon, anchois, jambon</small></div>
+        <div class="dish"><span class="name">César</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Mozzarella, crème, jambon de Parme, parmesan</small></div>
+        <div class="dish"><span class="name">Fermière</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Tomate, mozzarella, fromage de chèvre, speck, herbes de Provence</small></div>
+        <div class="dish"><span class="name">Fiorentina</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Mozzarella, crème, épinards, ricotta</small></div>
+        <div class="dish"><span class="name">Margherita</span><span class="dot"></span><span class="price">7,00</span><small class="desc">Tomate, mozzarella</small></div>
+        <div class="dish"><span class="name">Nonna</span><span class="dot"></span><span class="price">9,00</span><small class="desc">Tomate, mozzarella, jambon</small></div>
+        <div class="dish"><span class="name">Napoli</span><span class="dot"></span><span class="price">8,50</span><small class="desc">Tomate, mozzarella, anchois, câpres</small></div>
+        <div class="dish"><span class="name">Siciliana</span><span class="dot"></span><span class="price">8,50</span><small class="desc">Tomate, mozzarella, olives, anchois</small></div>
+        <div class="dish"><span class="name">4 Saisons</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, mozzarella, jambon, artichauts, olives</small></div>
+        <div class="dish"><span class="name">Capricciosa</span><span class="dot"></span><span class="price">10,50</span><small class="desc">Tomate, mozzarella, jambon, champignons, artichauts, anchois, œuf dur</small></div>
+        <div class="dish"><span class="name">Fruits de mer</span><span class="dot"></span><span class="price">11,50</span><small class="desc">Tomate, mozzarella, fruits de mer</small></div>
+        <div class="dish"><span class="name">Tonnata</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, mozzarella, thon, câpres</small></div>
+        <div class="dish"><span class="name">Végétarienne</span><span class="dot"></span><span class="price">10,50</span><small class="desc">Tomate, mozzarella, légumes divers</small></div>
+        <div class="dish"><span class="name">Calzone</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, jambon, poivrons, champignons (fermée)</small></div>
+        <div class="dish"><span class="name">Parmigiana</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, mozzarella, aubergines, parmesan</small></div>
+        <div class="dish"><span class="name">4 Fromages</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Tomate, mozzarella, gorgonzola, taleggio, fontina</small></div>
+        <div class="dish"><span class="name">Genovese</span><span class="dot"></span><span class="price">9,00</span><small class="desc">Mozzarella, crème, pesto, parmesan</small></div>
+        <div class="dish"><span class="name">Focaccia al Formaggio</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Double pâte, mozzarella, gorgonzola, jambon</small></div>
+        <div class="dish"><span class="name">Calabrese</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, salami piquant</small></div>
+        <div class="dish"><span class="name">Diavola</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, mozzarella, salami piquant, champignons</small></div>
+        <div class="dish"><span class="name">Palermo</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Tomate, mozzarella, aubergines, oignons, ricotta</small></div>
+        <div class="dish"><span class="name">Épinards</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, épinards, brocolis, olives</small></div>
+        <div class="dish"><span class="name">Sole Mio</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, mozzarella, jambon, champignons, œuf frais</small></div>
+        <div class="dish"><span class="name">Al Crudo</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Tomate, mozzarella, jambon de Parme</small></div>
+        <div class="dish"><span class="name">Speck</span><span class="dot"></span><span class="price">11,50</span><small class="desc">Tomate, mozzarella, speck, ricotta</small></div>
+        <div class="dish"><span class="name">Hawaïenne</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, mozzarella, jambon, ananas</small></div>
+        <div class="dish"><span class="name">Merguez</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, merguez, œuf frais</small></div>
+        <div class="dish"><span class="name">Pinocchio</span><span class="dot"></span><span class="price">13,00</span><small class="desc">Tomate, mozzarella, jambon de Parme, roquette</small></div>
+        <div class="dish"><span class="name">Geppetto</span><span class="dot"></span><span class="price">9,00</span><small class="desc">Tomate, mozzarella, jambon, bolognaise</small></div>
+        <div class="dish"><span class="name">Adriana</span><span class="dot"></span><span class="price">12,50</span><small class="desc">Tomate, mozzarella, scampis, ail, persil</small></div>
+        <div class="dish"><span class="name">Romina</span><span class="dot"></span><span class="price">13,00</span><small class="desc">Tomate, mozzarella, bresaola, roquette, parmesan</small></div>
+        <div class="dish"><span class="name">Italia</span><span class="dot"></span><span class="price">11,50</span><small class="desc">Tomate, mozzarella, épinards, aubergines, ricotta</small></div>
+        <div class="dish"><span class="name">Dolce Latte</span><span class="dot"></span><span class="price">11,50</span><small class="desc">Tomate, mozzarella, gorgonzola, ricotta, aubergines</small></div>
+        <div class="dish"><span class="name">Mezzo Mezzo</span><span class="dot"></span><span class="price">12,00</span><small class="desc">Tomate, mozzarella, champignons, jambon, pâtes 4 fromages</small></div>
+        <div class="dish"><span class="name">Mafiosa</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomate, mozzarella, jambon, poivrons, olives</small></div>
+        <div class="dish"><span class="name">Carbonara</span><span class="dot"></span><span class="price">10,50</span><small class="desc">Mozzarella, pancetta, crème, parmesan, œuf frais</small></div>
+        <div class="dish"><span class="name">Mont Blanc</span><span class="dot"></span><span class="price">12,00</span><small class="desc">Mozzarella, crème, oignons, saumon</small></div>
+        <div class="dish"><span class="name">Norvégienne</span><span class="dot"></span><span class="price">12,00</span><small class="desc">Tomate, mozzarella, saumon, oignons</small></div>
+        <div class="dish"><span class="name">Liégeoise</span><span class="dot"></span><span class="price">10,00</span><small class="desc">Tomate, mozzarella, lardons, Zwan</small></div>
+        <div class="dish"><span class="name">Bosco</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Tomate, mozzarella, lardons, champignons des bois</small></div>
+        <div class="dish"><span class="name">Carpaccio</span><span class="dot"></span><span class="price">13,00</span><small class="desc">Tomate, mozzarella, carpaccio, champignons, parmesan</small></div>
+        <div class="dish"><span class="name">Poulet Provençal</span><span class="dot"></span><span class="price">12,00</span><small class="desc">Tomate, mozzarella, poulet, poivrons, oignons</small></div>
+        <div class="dish"><span class="name">Poulet Archiduc</span><span class="dot"></span><span class="price">12,00</span><small class="desc">Tomate, mozzarella, poulet, crème, champignons</small></div>
+        <div class="dish"><span class="name">Paysanne</span><span class="dot"></span><span class="price">10,50</span><small class="desc">Tomate, mozzarella, salami, courgettes, oignons</small></div>
+        <div class="dish"><span class="name">Coppa</span><span class="dot"></span><span class="price">14,00</span><small class="desc">Tomate, mozzarella, coppa, roquette, tomates séchées, parmesan</small></div>
       </div>
       <div class="cat-title">Les incontournables</div>
       <div class="dishes">
-        <div class="dish"><span class="name">Pizza Tartufata<small>Sauce tomate, tapenade de truffe, mascarpone, roquette, coppa, copeaux de parmesan</small></span><span class="dot"></span><span class="price">14,00</span></div>
-        <div class="dish"><span class="name">Pizza Burrata<small>Burrata, roquette, coppa, tomates confites</small></span><span class="dot"></span><span class="price">13,50</span></div>
-        <div class="dish"><span class="name">Pizza Bufalina<small>Tomate, mozzarella di bufala cuite, tomates cerises, roquette, coppa</small></span><span class="dot"></span><span class="price">13,50</span></div>
-        <div class="dish"><span class="name">Pizza Bufala<small>Pâte blanche, roquette, tomates cerises, jambon de Parme, mozzarella di bufala</small></span><span class="dot"></span><span class="price">13,50</span></div>
-        <div class="dish"><span class="name">Pizza Nduja<small>Tomate, mozzarella, nduja</small></span><span class="dot"></span><span class="price">13,00</span></div>
-        <div class="dish"><span class="name">Pizza du Patron<small>Tomate, mozzarella, jambon, salami nduja piccante, mozzarella di bufala</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Pizza Primo<small>Tomate, mozzarella, speck, 4 fromages, tomates cerises, roquette</small></span><span class="dot"></span><span class="price">15,00</span></div>
-        <div class="dish"><span class="name">Pizza Antonio<small>Mozzarella, ricotta, speck, truffe</small></span><span class="dot"></span><span class="price">15,50</span></div>
-        <div class="dish"><span class="name">Pizza Primavera<small>Mozzarella, scampis, courgettes, tomates cerises, balsamique</small></span><span class="dot"></span><span class="price">15,50</span></div>
-        <div class="dish"><span class="name">Pizza Tartiflette<small>Mozzarella, roblochon, pommes de terre, lardons (en saison)</small></span><span class="dot"></span><span class="price">13,50</span></div>
+        <div class="dish"><span class="name">Pizza Tartufata</span><span class="dot"></span><span class="price">14,00</span><small class="desc">Sauce tomate, tapenade de truffe, mascarpone, roquette, coppa, copeaux de parmesan</small></div>
+        <div class="dish"><span class="name">Pizza Burrata</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Burrata, roquette, coppa, tomates confites</small></div>
+        <div class="dish"><span class="name">Pizza Bufalina</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Tomate, mozzarella di bufala cuite, tomates cerises, roquette, coppa</small></div>
+        <div class="dish"><span class="name">Pizza Bufala</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Pâte blanche, roquette, tomates cerises, jambon de Parme, mozzarella di bufala</small></div>
+        <div class="dish"><span class="name">Pizza Nduja</span><span class="dot"></span><span class="price">13,00</span><small class="desc">Tomate, mozzarella, nduja</small></div>
+        <div class="dish"><span class="name">Pizza du Patron</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Tomate, mozzarella, jambon, salami nduja piccante, mozzarella di bufala</small></div>
+        <div class="dish"><span class="name">Pizza Primo</span><span class="dot"></span><span class="price">15,00</span><small class="desc">Tomate, mozzarella, speck, 4 fromages, tomates cerises, roquette</small></div>
+        <div class="dish"><span class="name">Pizza Antonio</span><span class="dot"></span><span class="price">15,50</span><small class="desc">Mozzarella, ricotta, speck, truffe</small></div>
+        <div class="dish"><span class="name">Pizza Primavera</span><span class="dot"></span><span class="price">15,50</span><small class="desc">Mozzarella, scampis, courgettes, tomates cerises, balsamique</small></div>
+        <div class="dish"><span class="name">Pizza Tartiflette</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Mozzarella, roblochon, pommes de terre, lardons (en saison)</small></div>
       </div>
       <p class="menu-foot" style="text-align:left;margin-top:20px">Pizza Junior (-14 ans) : <strong style="color:var(--or)">−2,00</strong> à déduire du prix de la pizza choisie.</p>
     </div>
@@ -884,11 +895,11 @@
     <!-- PIZZA BIANCA -->
     <div class="menu-panel" id="bianca">
       <div class="dishes">
-        <div class="dish"><span class="name">Salumi e Formaggi<small>Assortiment de charcuteries, roquette, taleggio, gorgonzola</small></span><span class="dot"></span><span class="price">13,00</span></div>
-        <div class="dish"><span class="name">Bresaola<small>Bresaola, roquette, copeaux de parmesan, crème de truffe</small></span><span class="dot"></span><span class="price">13,00</span></div>
-        <div class="dish"><span class="name">Estate<small>Carpaccio, roquette, tomates séchées, copeaux de parmesan</small></span><span class="dot"></span><span class="price">13,50</span></div>
-        <div class="dish"><span class="name">Bruschetta<small>Tomates fraîches, ail, basilic, origan</small></span><span class="dot"></span><span class="price">9,50</span></div>
-        <div class="dish"><span class="name">Fraicheur<small>Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)</small></span><span class="dot"></span><span class="price">11,00</span></div>
+        <div class="dish"><span class="name">Salumi e Formaggi</span><span class="dot"></span><span class="price">13,00</span><small class="desc">Assortiment de charcuteries, roquette, taleggio, gorgonzola</small></div>
+        <div class="dish"><span class="name">Bresaola</span><span class="dot"></span><span class="price">13,00</span><small class="desc">Bresaola, roquette, copeaux de parmesan, crème de truffe</small></div>
+        <div class="dish"><span class="name">Estate</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Carpaccio, roquette, tomates séchées, copeaux de parmesan</small></div>
+        <div class="dish"><span class="name">Bruschetta</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomates fraîches, ail, basilic, origan</small></div>
+        <div class="dish"><span class="name">Fraicheur</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)</small></div>
       </div>
     </div>
 
@@ -896,14 +907,14 @@
     <div class="menu-panel" id="viandes">
       <p class="panel-note"><strong>Escalopes panées</strong> — escalope panée + accompagnement de pâtes + sauce au choix.</p>
       <div class="dishes">
-        <div class="dish"><span class="name">Parmigiana<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Archiduc<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Napolitaine<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Pizzaiola<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Gorgonzola<small>Escalope panée</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Poivre &amp; crème<small>Escalope panée, poivre vert, crème</small></span><span class="dot"></span><span class="price">14,50</span></div>
-        <div class="dish"><span class="name">Escalope Valdostana<small>Jambon, vin blanc, fromage</small></span><span class="dot"></span><span class="price">14,00</span></div>
-        <div class="dish"><span class="name">Osso Buco Maison<small>Accompagné de pâtes</small></span><span class="dot"></span><span class="price">16,00</span></div>
+        <div class="dish"><span class="name">Parmigiana</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
+        <div class="dish"><span class="name">Archiduc</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
+        <div class="dish"><span class="name">Napolitaine</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
+        <div class="dish"><span class="name">Pizzaiola</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
+        <div class="dish"><span class="name">Gorgonzola</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
+        <div class="dish"><span class="name">Poivre &amp; crème</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, poivre vert, crème</small></div>
+        <div class="dish"><span class="name">Escalope Valdostana</span><span class="dot"></span><span class="price">14,00</span><small class="desc">Jambon, vin blanc, fromage</small></div>
+        <div class="dish"><span class="name">Osso Buco Maison</span><span class="dot"></span><span class="price">16,00</span><small class="desc">Accompagné de pâtes</small></div>
       </div>
     </div>
 
@@ -1310,7 +1321,10 @@
     if(!input) return;
     var dishes = Array.prototype.slice.call(document.querySelectorAll(".menu-panel .dish"));
     function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
-    var index = dishes.map(function(d){ return norm(d.querySelector(".name").textContent); });
+    var index = dishes.map(function(d){
+      var nm = d.querySelector(".name"); var ds = d.querySelector(".desc");
+      return norm((nm ? nm.textContent : "") + " " + (ds ? ds.textContent : ""));
+    });
     var wrap = input.closest(".menu-search");
     var clearBtn = document.getElementById("searchClear");
     var t;
