@@ -71,7 +71,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="images/hero-pizza.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="images/hero-pizza.webp" type="image/webp" fetchpriority="high">
 <style>
   :root{
     --rouge:#e2231a;
@@ -208,6 +208,7 @@
   /* ===== HERO ===== */
   .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
   .hero-bg{position:absolute;inset:-8% 0;background-image:url('images/hero-pizza.jpg');
+    background-image:image-set(url('images/hero-pizza.webp') type('image/webp'),url('images/hero-pizza.jpg') type('image/jpeg'));
     background-size:cover;background-position:center;will-change:transform;z-index:0}
   .hero::before{content:"";position:absolute;inset:0;z-index:1;
     background:linear-gradient(115deg,rgba(10,9,8,.92) 8%,rgba(10,9,8,.6) 48%,rgba(10,9,8,.78) 100%)}
@@ -220,7 +221,7 @@
   .hero-cat::before{content:"";width:36px;height:1px;background:var(--or)}
   .hero h1{font-size:clamp(3rem,8.4vw,6.4rem);font-weight:600;letter-spacing:-.015em;max-width:16ch}
   .hero h1 em{font-style:italic;color:var(--rouge-l)}
-  .hero h1 .gold{font-style:italic}
+  .hero h1 .gold{font-style:italic;background:none;-webkit-text-fill-color:var(--or);color:var(--or)}
   .hero p{font-size:clamp(1.05rem,1.8vw,1.3rem);margin:28px 0 8px;max-width:50ch;color:#ded7ca}
   .rating{display:flex;align-items:center;gap:14px;margin:22px 0 38px;font-size:.98rem;color:#ded7ca;flex-wrap:wrap}
   .stars{color:var(--or);letter-spacing:3px;font-size:1.05rem}
@@ -329,6 +330,7 @@
   .parallax{min-height:480px;display:flex;align-items:center;justify-content:center;text-align:center;
     position:relative;overflow:hidden}
   .parallax .pbg{position:absolute;inset:-12% 0;background-image:url('images/four-bois.jpg');
+    background-image:image-set(url('images/four-bois.webp') type('image/webp'),url('images/four-bois.jpg') type('image/jpeg'));
     background-size:cover;background-position:center;will-change:transform;z-index:0}
   .parallax::after{content:"";position:absolute;inset:0;z-index:1;
     background:radial-gradient(circle at center,rgba(10,9,8,.55),rgba(10,9,8,.82))}
@@ -523,7 +525,8 @@
     .topbar{display:none}
     .hero-status{display:inline-flex}
     body{padding-bottom:64px}
-    .call-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:95;gap:1px}
+    .call-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:95;gap:1px;
+      border-top:1px solid rgba(232,181,74,.35)}
     .call-bar a{flex:1;text-align:center;padding:17px;font-family:"Oswald",sans-serif;text-transform:uppercase;
       letter-spacing:.08em;font-size:.86rem;font-weight:600;text-decoration:none;color:#fff}
     .call-bar .c-tel{background:var(--rouge)}
@@ -858,12 +861,12 @@
     <h2 class="reveal" style="--i:1">L'ambiance &amp; <em>les plats</em></h2>
     <p class="lead reveal" style="--i:2">Photos d'illustration — à remplacer par les vôtres avant la mise en ligne.</p>
     <div class="gal-grid">
-      <div class="gal-item reveal" data-full="images/gal-pizza.jpg"><img loading="lazy" decoding="async" src="images/gal-pizza.jpg" alt="Pizza au feu de bois"><span class="cap">Au feu de bois<small>Nos pizzas signature</small></span></div>
-      <div class="gal-item reveal" style="--i:1" data-full="images/gal-pates.jpg"><img loading="lazy" decoding="async" src="images/gal-pates.jpg" alt="Pâtes fraîches"><span class="cap">Pâtes fraîches<small>Préparées maison</small></span></div>
-      <div class="gal-item reveal" style="--i:2" data-full="images/gal-ossobuco.jpg"><img loading="lazy" decoding="async" src="images/gal-ossobuco.jpg" alt="Spécialités italiennes"><span class="cap">Nos spécialités<small>Osso buco &amp; co.</small></span></div>
-      <div class="gal-item reveal" data-full="images/gal-salle.jpg"><img loading="lazy" decoding="async" src="images/gal-salle.jpg" alt="Salle de restaurant"><span class="cap">La salle<small>Chaleureuse &amp; conviviale</small></span></div>
-      <div class="gal-item reveal" style="--i:1" data-full="images/gal-terrasse.jpg"><img loading="lazy" decoding="async" src="images/gal-terrasse.jpg" alt="Terrasse"><span class="cap">La terrasse<small>Aux beaux jours</small></span></div>
-      <div class="gal-item reveal" style="--i:2" data-full="images/gal-tiramisu.jpg"><img loading="lazy" decoding="async" src="images/gal-tiramisu.jpg" alt="Desserts maison"><span class="cap">Desserts maison<small>Le fameux tiramisù</small></span></div>
+      <div class="gal-item reveal" data-full="images/gal-pizza.jpg"><picture><source type="image/webp" srcset="images/gal-pizza.webp"><img loading="lazy" decoding="async" src="images/gal-pizza.jpg" alt="Pizza au feu de bois"></picture><span class="cap">Au feu de bois<small>Nos pizzas signature</small></span></div>
+      <div class="gal-item reveal" style="--i:1" data-full="images/gal-pates.jpg"><picture><source type="image/webp" srcset="images/gal-pates.webp"><img loading="lazy" decoding="async" src="images/gal-pates.jpg" alt="Pâtes fraîches"></picture><span class="cap">Pâtes fraîches<small>Préparées maison</small></span></div>
+      <div class="gal-item reveal" style="--i:2" data-full="images/gal-ossobuco.jpg"><picture><source type="image/webp" srcset="images/gal-ossobuco.webp"><img loading="lazy" decoding="async" src="images/gal-ossobuco.jpg" alt="Spécialités italiennes"></picture><span class="cap">Nos spécialités<small>Osso buco &amp; co.</small></span></div>
+      <div class="gal-item reveal" data-full="images/gal-salle.jpg"><picture><source type="image/webp" srcset="images/gal-salle.webp"><img loading="lazy" decoding="async" src="images/gal-salle.jpg" alt="Salle de restaurant"></picture><span class="cap">La salle<small>Chaleureuse &amp; conviviale</small></span></div>
+      <div class="gal-item reveal" style="--i:1" data-full="images/gal-terrasse.jpg"><picture><source type="image/webp" srcset="images/gal-terrasse.webp"><img loading="lazy" decoding="async" src="images/gal-terrasse.jpg" alt="Terrasse"></picture><span class="cap">La terrasse<small>Aux beaux jours</small></span></div>
+      <div class="gal-item reveal" style="--i:2" data-full="images/gal-tiramisu.jpg"><picture><source type="image/webp" srcset="images/gal-tiramisu.webp"><img loading="lazy" decoding="async" src="images/gal-tiramisu.jpg" alt="Desserts maison"></picture><span class="cap">Desserts maison<small>Le fameux tiramisù</small></span></div>
     </div>
   </div>
 </section>
@@ -878,28 +881,28 @@
       <a class="insta-tile reveal" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir le reel sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
         <span class="insta-play"><span>▶</span></span>
-        <img loading="lazy" decoding="async" src="images/insta-1.jpg" alt="Reel — ambiance Saint-Valentin">
+        <picture><source type="image/webp" srcset="images/insta-1.webp"><img loading="lazy" decoding="async" src="images/insta-1.jpg" alt="Reel — ambiance Saint-Valentin"></picture>
       </a>
       <a class="insta-tile reveal" style="--i:1" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir le reel sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
         <span class="insta-play"><span>▶</span></span>
-        <img loading="lazy" decoding="async" src="images/insta-2.jpg" alt="Reel — Saint-Valentin chez Pino">
+        <picture><source type="image/webp" srcset="images/insta-2.webp"><img loading="lazy" decoding="async" src="images/insta-2.jpg" alt="Reel — Saint-Valentin chez Pino"></picture>
       </a>
       <a class="insta-tile reveal" style="--i:2" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
-        <img loading="lazy" decoding="async" src="images/gal-pizza.jpg" alt="Pizza au feu de bois">
+        <picture><source type="image/webp" srcset="images/gal-pizza.webp"><img loading="lazy" decoding="async" src="images/gal-pizza.jpg" alt="Pizza au feu de bois"></picture>
       </a>
       <a class="insta-tile reveal" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
-        <img loading="lazy" decoding="async" src="images/gal-ossobuco.jpg" alt="Spécialités italiennes">
+        <picture><source type="image/webp" srcset="images/gal-ossobuco.webp"><img loading="lazy" decoding="async" src="images/gal-ossobuco.jpg" alt="Spécialités italiennes"></picture>
       </a>
       <a class="insta-tile reveal" style="--i:1" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
-        <img loading="lazy" decoding="async" src="images/gal-pates.jpg" alt="Pâtes fraîches">
+        <picture><source type="image/webp" srcset="images/gal-pates.webp"><img loading="lazy" decoding="async" src="images/gal-pates.jpg" alt="Pâtes fraîches"></picture>
       </a>
       <a class="insta-tile reveal" style="--i:2" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
-        <img loading="lazy" decoding="async" src="images/gal-tiramisu.jpg" alt="Desserts maison">
+        <picture><source type="image/webp" srcset="images/gal-tiramisu.webp"><img loading="lazy" decoding="async" src="images/gal-tiramisu.jpg" alt="Desserts maison"></picture>
       </a>
     </div>
     <div class="cta-row reveal" style="justify-content:center;margin-top:42px">
