@@ -393,10 +393,19 @@
   .supp-note{background:none;color:var(--ink);padding:10px 22px;font-size:.74rem;
     font-family:"Oswald",sans-serif;letter-spacing:.16em;border:1px solid var(--hair-ink);border-radius:0;
     display:inline-block;text-transform:uppercase}
+  /* Encadré des infos sous le menu : une ligne par information */
+  .supp-box{list-style:none;display:inline-block;text-align:center;border:1px solid var(--hair-ink);padding:6px 30px;margin:0 auto}
+  .supp-box li{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.74rem;
+    color:var(--ink);padding:10px 0;border-bottom:1px solid var(--hair-ink)}
+  .supp-box li:last-child{border-bottom:0}
+  .supp-box li:first-child{color:var(--rouge);font-weight:600}
 
   /* ===== GALERIE ===== */
   .gallery{background:var(--noir)}
   .gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:56px}
+  /* Vidéo regroupée sous la galerie */
+  .gal-video{margin-top:clamp(44px,7vw,72px);display:flex;flex-direction:column;align-items:center;gap:16px}
+  .gal-video .vid-frame{margin:0 auto}
   .gal-item{position:relative;overflow:hidden;aspect-ratio:4/3;border-radius:0;cursor:pointer;
     border:1px solid var(--hair)}
   .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.7,.2,1),filter .5s}
@@ -715,7 +724,7 @@
   }
   @media(max-width:760px){
     /* hauteur en vw (largeur écran) = stable au scroll, plein écran, contenu qui ne bouge plus */
-    .hero{align-items:center;justify-content:center;padding:0;height:178vw}
+    .hero{align-items:center;justify-content:center;padding:0;height:158vw}
     .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.46),rgba(17,12,8,.86))}
     .hi-cta{display:none}
     /* on force le conteneur à occuper toute la largeur (sinon il se rétrécit au logo et part à gauche) */
@@ -786,7 +795,6 @@
       </div>
     </div>
   </div>
-  <a class="scroll-down" href="#maison" aria-label="Découvrir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></a>
 </section>
 
 <!-- MARQUEE -->
@@ -825,7 +833,7 @@
 <!-- CARTE -->
 <section id="carte" class="menu">
   <div class="wrap center">
-    <p class="eyebrow reveal"><span class="eb-t"><span class="num">02</span> À la carte<br>Tarif à emporter</span></p>
+    <p class="eyebrow reveal"><span class="num">02</span> À la carte</p>
     <h2 class="reveal" style="--i:1">Notre <em>carte</em></h2>
     <p class="lead reveal" style="--i:2">Pâtes fraîches, pizzas au feu de bois, viandes et desserts. Cherchez un plat, ou parcourez par catégorie.</p>
     <div class="menu-search reveal" style="--i:2">
@@ -1006,7 +1014,11 @@
     </div>
 
     <div class="center" style="margin-top:42px">
-      <span class="supp-note">Suppléments de 1,00 à 4,00 € · Beurre d'ail offert</span>
+      <ul class="supp-box">
+        <li>Tarif à emporter</li>
+        <li>Suppléments de 1,00 à 4,00 €</li>
+        <li>Beurre d'ail offert</li>
+      </ul>
       <p class="menu-foot">Commander par téléphone ne supprime pas forcément le délai d'attente sur place : cela dépend de notre planning. Merci de votre compréhension.</p>
       <div class="cta-row" style="justify-content:center;margin-top:26px">
         <a class="btn btn-primary magnet" href="tel:+3285513339"><span>Commander à emporter</span></a>
@@ -1018,7 +1030,7 @@
 <!-- GALERIE -->
 <section id="galerie" class="gallery center">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="num">03</span> En images</p>
+    <p class="eyebrow reveal"><span class="num">03</span> En images &amp; en vidéo</p>
     <h2 class="reveal" style="--i:1">L'ambiance &amp; <em>les plats</em></h2>
     <!-- NOTE : photos d'illustration, à remplacer par les vraies photos du restaurant -->
     <p class="lead reveal" style="--i:2">La salle, la terrasse et nos plats signature — un aperçu de la maison.</p>
@@ -1030,23 +1042,15 @@
       <div class="gal-item reveal" style="--i:1" data-full="images/gal-terrasse.jpg"><picture><source type="image/webp" srcset="images/gal-terrasse.webp"><img loading="lazy" decoding="async" src="images/gal-terrasse.jpg" alt="Terrasse"></picture><span class="cap">La terrasse<small>Aux beaux jours</small></span></div>
       <div class="gal-item reveal" style="--i:2" data-full="images/gal-tiramisu.jpg"><picture><source type="image/webp" srcset="images/gal-tiramisu.webp"><img loading="lazy" decoding="async" src="images/gal-tiramisu.jpg" alt="Desserts maison"></picture><span class="cap">Desserts maison<small>Le fameux tiramisù</small></span></div>
     </div>
-  </div>
-</section>
-
-<!-- VIDÉO OFFICIELLE -->
-<section id="video" class="vidsec">
-  <div class="wrap vid-grid">
-    <div class="vid-copy reveal left">
-      <p class="eyebrow"><span class="num">★</span> L'ambiance en vidéo</p>
-      <h2>Un avant-goût <em>chez Pino</em></h2>
-      <p class="lead">« Une soirée chez Pino, comme si t'y étais. » Envie de vivre l'ambiance en vrai ? Découvre notre vidéo officielle — et on t'attend à Nandrin.</p>
+    <!-- Vidéo officielle (regroupée avec la galerie) -->
+    <div class="gal-video reveal" id="video">
+      <div class="vid-frame">
+        <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
+      </div>
       <span class="badge-off">🎬 Vidéo officielle · @pino.nandrin</span>
-      <div class="cta-row" style="margin-top:26px">
+      <div class="cta-row" style="justify-content:center;margin-top:22px">
         <a class="btn btn-ghost" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Plus de vidéos sur Instagram</span></a>
       </div>
-    </div>
-    <div class="vid-frame reveal right">
-      <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
     </div>
   </div>
 </section>
@@ -1163,7 +1167,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 35</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 36</b></p>
   </div>
 </footer>
 
