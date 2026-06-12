@@ -531,8 +531,7 @@
   footer .social a.ig:hover{background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af)}
   footer .social a.fb:hover{background:#1877f2}
   footer .fine{margin-top:18px;font-size:.74rem;opacity:.7}
-  .ig-line{display:block}
-  .ig-line a{display:flex;align-items:center;gap:7px;margin-top:5px;width:max-content;max-width:100%}
+  .ig-line a{display:inline-flex;align-items:center;gap:6px;vertical-align:middle}
   .ig-line svg{width:18px;height:18px}
 
   /* ===== FLOTTANTS ===== */
@@ -559,6 +558,8 @@
     /* Horaires : jour (+ badge) sur une ligne, plage en dessous sur toute la largeur */
     .hours li{flex-direction:column;align-items:flex-start;gap:7px}
     .hours .hrs{color:var(--gris)}
+    /* Réseaux : sur mobile on empile (libellé puis identifiant) pour éviter les coupures */
+    .ig-line a{display:flex;margin-top:5px;width:max-content;max-width:100%}
     .hero-bg{background-attachment:scroll}
     /* Scroll fluide : pas de flou sur le header collant (backdrop-filter = saccades sur mobile),
        fond solide, et hauteur de header constante (évite le saut quand il rétrécit) */
