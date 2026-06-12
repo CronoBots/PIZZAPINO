@@ -147,8 +147,8 @@
   .gold{background:none;-webkit-text-fill-color:var(--or);color:var(--or)}
 
   /* ===== BARRE DE PROGRESSION ===== */
-  #progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:120;
-    background:linear-gradient(90deg,var(--rouge),var(--or))}
+  #progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:120;
+    background:linear-gradient(90deg,var(--rouge),var(--or));transform:scaleX(0);transform-origin:0 50%;will-change:transform}
 
   /* ===== RÉVÉLATIONS ===== */
   .reveal{opacity:0;transform:translateY(34px);transition:opacity var(--lent),transform var(--lent);
@@ -261,7 +261,7 @@
   .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;
     font-family:"Oswald",sans-serif;text-transform:uppercase;font-weight:600;letter-spacing:.16em;font-size:.86rem;
     padding:18px 38px;border-radius:0;transition:transform .15s,background .25s,color .25s,border-color .25s;
-    overflow:hidden;will-change:transform}
+    overflow:hidden}
   .btn span{position:relative;z-index:1}
   .btn:hover{transform:translateY(-2px)}
   .btn-primary{background:var(--rouge);color:#fff}
@@ -1205,13 +1205,14 @@
   var hdr = document.getElementById("hdr");
   var prog = document.getElementById("progress");
   var toTop = document.getElementById("toTop");
-  var ticking = false;
+  var ticking = false, lastScrolled = null, lastTop = null;
   function onScroll(){
     var y = window.scrollY || window.pageYOffset;
     var h = document.documentElement.scrollHeight - window.innerHeight;
-    prog.style.width = (h>0 ? (y/h*100) : 0) + "%";
-    hdr.classList.toggle("scrolled", y > 40);
-    toTop.classList.toggle("show", y > 600);
+    /* scaleX au lieu de width : composité par le GPU, aucun reflow/repaint par frame */
+    prog.style.transform = "scaleX(" + (h>0 ? (y/h) : 0) + ")";
+    var sc = y > 40; if(sc !== lastScrolled){ hdr.classList.toggle("scrolled", sc); lastScrolled = sc; }
+    var st = y > 600; if(st !== lastTop){ toTop.classList.toggle("show", st); lastTop = st; }
     ticking = false;
   }
   window.addEventListener("scroll", function(){
