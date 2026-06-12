@@ -354,6 +354,25 @@
     background:none;border:0;line-height:1;opacity:.8;transition:.25s}
   #lightbox .lb-close:hover{opacity:1;transform:rotate(90deg)}
 
+  /* ===== INSTAGRAM ===== */
+  .insta{background:var(--noir)}
+  .insta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:48px}
+  .insta-tile{position:relative;aspect-ratio:1/1;border-radius:8px;overflow:hidden;display:block;
+    border:1px solid rgba(255,255,255,.06)}
+  .insta-tile img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+  .insta-tile:hover img{transform:scale(1.08)}
+  .insta-tile::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity .35s;
+    background:linear-gradient(135deg,rgba(245,133,41,.85),rgba(221,42,123,.85),rgba(131,52,175,.85))}
+  .insta-tile:hover::after{opacity:.55}
+  .insta-ico{position:absolute;top:11px;right:11px;z-index:3;color:#fff;opacity:.9;
+    filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}
+  .insta-play{position:absolute;inset:0;display:grid;place-items:center;z-index:3;pointer-events:none}
+  .insta-play span{width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.42);
+    display:grid;place-items:center;color:#fff;font-size:1.15rem;border:1.5px solid rgba(255,255,255,.55);
+    transition:transform .3s;padding-left:4px}
+  .insta-tile:hover .insta-play span{transform:scale(1.14)}
+  @media(max-width:760px){.insta-grid{grid-template-columns:1fr 1fr;gap:10px}}
+
   /* ===== AVIS ===== */
   .reviews{background:linear-gradient(180deg,var(--noir-2),var(--noir))}
   .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:50px;text-align:left}
@@ -778,6 +797,46 @@
       <div class="gal-item reveal" data-full="images/gal-salle.jpg"><img loading="lazy" decoding="async" src="images/gal-salle.jpg" alt="Salle de restaurant"><span class="cap">La salle<small>Chaleureuse &amp; conviviale</small></span></div>
       <div class="gal-item reveal" style="--i:1" data-full="images/gal-terrasse.jpg"><img loading="lazy" decoding="async" src="images/gal-terrasse.jpg" alt="Terrasse"><span class="cap">La terrasse<small>Aux beaux jours</small></span></div>
       <div class="gal-item reveal" style="--i:2" data-full="images/gal-tiramisu.jpg"><img loading="lazy" decoding="async" src="images/gal-tiramisu.jpg" alt="Desserts maison"><span class="cap">Desserts maison<small>Le fameux tiramisù</small></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section id="instagram" class="insta center">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="num">★</span> Sur Instagram</p>
+    <h2 class="reveal" style="--i:1">Suivez <em>@pino.nandrin</em></h2>
+    <p class="lead reveal" style="--i:2">Nos pizzas du moment, l'ambiance et les coulisses. Cliquez sur une vignette pour voir nos vidéos directement sur Instagram.</p>
+    <div class="insta-grid">
+      <a class="insta-tile reveal" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir le reel sur Instagram">
+        <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+        <span class="insta-play"><span>▶</span></span>
+        <img loading="lazy" decoding="async" src="images/insta-1.jpg" alt="Reel — ambiance Saint-Valentin">
+      </a>
+      <a class="insta-tile reveal" style="--i:1" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir le reel sur Instagram">
+        <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+        <span class="insta-play"><span>▶</span></span>
+        <img loading="lazy" decoding="async" src="images/insta-2.jpg" alt="Reel — Saint-Valentin chez Pino">
+      </a>
+      <a class="insta-tile reveal" style="--i:2" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir sur Instagram">
+        <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+        <img loading="lazy" decoding="async" src="images/gal-pizza.jpg" alt="Pizza au feu de bois">
+      </a>
+      <a class="insta-tile reveal" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir sur Instagram">
+        <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+        <img loading="lazy" decoding="async" src="images/gal-ossobuco.jpg" alt="Spécialités italiennes">
+      </a>
+      <a class="insta-tile reveal" style="--i:1" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir sur Instagram">
+        <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+        <img loading="lazy" decoding="async" src="images/gal-pates.jpg" alt="Pâtes fraîches">
+      </a>
+      <a class="insta-tile reveal" style="--i:2" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir sur Instagram">
+        <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+        <img loading="lazy" decoding="async" src="images/gal-tiramisu.jpg" alt="Desserts maison">
+      </a>
+    </div>
+    <div class="cta-row reveal" style="justify-content:center;margin-top:42px">
+      <a class="btn btn-primary" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Voir le profil Instagram</span></a>
     </div>
   </div>
 </section>
