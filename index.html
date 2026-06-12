@@ -248,6 +248,7 @@
   .hero h1{font-size:clamp(3rem,8.4vw,6.4rem);font-weight:600;letter-spacing:-.015em;max-width:16ch}
   .hero h1 em{font-style:italic;color:var(--rouge-l)}
   .hero h1 .gold{font-style:italic;background:none;-webkit-text-fill-color:var(--or);color:var(--or);white-space:nowrap}
+  .hero .hero-lead-mini{display:none}
   .hero p{font-size:clamp(1.05rem,1.8vw,1.3rem);margin:28px 0 8px;max-width:50ch;color:#ded7ca}
   .rating{display:flex;align-items:center;gap:14px;margin:22px 0 38px;font-size:.98rem;color:#ded7ca;flex-wrap:wrap}
   .stars{color:var(--or);letter-spacing:3px;font-size:1.05rem}
@@ -578,7 +579,8 @@
       rgba(10,9,8,.34) 0%,rgba(10,9,8,.12) 24%,rgba(10,9,8,.58) 60%,rgba(10,9,8,.93) 100%)}
     .hero .hero-cat{display:none}
     .hero h1{font-size:clamp(2.4rem,9vw,3.3rem);text-shadow:0 2px 24px rgba(0,0,0,.55)}
-    .hero p{display:none}
+    .hero .hero-lead-full{display:none}
+    .hero .hero-lead-mini{display:block;margin:12px 0 0;font-size:.97rem;line-height:1.5;text-shadow:0 1px 12px rgba(0,0,0,.7);max-width:30ch}
     .rating{margin:16px 0 0;text-shadow:0 1px 12px rgba(0,0,0,.7)}
     .hero-status{margin-top:14px;margin-bottom:0}
     .hero .cta-row{margin-top:24px}
@@ -658,7 +660,8 @@
   <div class="wrap">
     <span class="hero-cat reveal">Restaurant · À emporter · Traiteur</span>
     <h1 class="anim-head">Pâtes fraîches &amp; pizzas au <span class="gold">feu de bois</span>.</h1>
-    <p class="reveal" style="--i:3">La vraie cuisine italienne sur la route du Condroz. Bienvenue chez Pino.</p>
+    <p class="reveal hero-lead-full" style="--i:3">Depuis plus de trente ans, la Pizzeria Pino régale le Condroz avec ses pâtes fraîches et ses pizzas cuites au feu de bois.</p>
+    <p class="reveal hero-lead-mini" style="--i:3">Depuis plus de 30 ans, la vraie cuisine italienne au feu de bois.</p>
     <div class="rating reveal" style="--i:4"><span class="stars">★★★★☆</span> <b>4,2/5</b> · 1 000+ avis Google</div>
     <div class="hero-status reveal" id="heroStatus" style="--i:4"></div>
     <div class="cta-row reveal" style="--i:5">
@@ -684,7 +687,7 @@
   <div class="wrap">
     <p class="eyebrow reveal"><span class="num">01</span> La maison</p>
     <h2 class="reveal" style="--i:1">Une pizzeria comme <em>en Italie</em></h2>
-    <p class="lead reveal" style="--i:2">Depuis plus de trente ans, la Pizzeria Pino régale le Condroz avec ses pâtes fraîches et ses pizzas cuites au feu de bois. Une cuisine généreuse et authentique, préparée avec des produits italiens de première qualité.</p>
+    <p class="lead reveal" style="--i:2">Une cuisine généreuse et authentique, préparée chaque jour avec des produits italiens de première qualité, dans la pure tradition transalpine.</p>
     <div class="values">
       <div class="value tilt reveal"><span class="ico">🔥</span><h3>Pizzas au feu de bois</h3><p>Une pâte cuite au feu de bois et une large carte, des classiques aux incontournables de la maison.</p></div>
       <div class="value tilt reveal" style="--i:1"><span class="ico">🍝</span><h3>Pâtes fraîches</h3><p>Rigatoni, tagliatelle, spaghetti, gnocchi et spécialités préparés maison avec des produits italiens.</p></div>
