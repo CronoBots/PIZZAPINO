@@ -576,19 +576,25 @@
     header{background:#110D0A;padding-top:env(safe-area-inset-top)}
     header.scrolled{background:#110D0A}
     .nav,header.scrolled .nav{padding:14px 0}
-    /* Hero mobile : affiche-poster, contenu ancré en bas */
+    /* Hero mobile : accueil chaleureux et épuré, contenu ancré en bas */
     .scroll-cue{display:none}
-    .hero{min-height:calc(100svh - 72px);align-items:flex-end;padding:0 0 72px}
+    .hero{min-height:calc(100svh - 72px);align-items:flex-end;padding:0 0 56px}
+    /* Dégradé chaud et plus dense vers le bas → le texte reste lisible sur la pizza */
     .hero::before{background:linear-gradient(to bottom,
-      rgba(17,13,10,.34) 0%,rgba(17,13,10,.12) 24%,rgba(17,13,10,.58) 60%,rgba(17,13,10,.94) 100%)}
-    .hero::after{inset:10px;border-color:rgba(198,154,77,.22)}
+      rgba(26,17,11,.55) 0%,rgba(26,17,11,.34) 26%,rgba(22,14,9,.78) 58%,rgba(17,12,8,.97) 100%)}
+    .hero::after{inset:10px;border-color:rgba(198,154,77,.24)}
     .hero .hero-cat{display:none}
-    .hero h1{font-size:clamp(2.4rem,9vw,3.3rem);text-shadow:0 2px 24px rgba(0,0,0,.55)}
+    .hero h1{font-size:clamp(2.4rem,9vw,3.3rem);text-shadow:0 2px 26px rgba(0,0,0,.7)}
     .hero .hero-lead-full{display:none}
-    .hero .hero-lead-mini{display:block;margin:12px 0 0;font-size:.97rem;line-height:1.5;text-shadow:0 1px 12px rgba(0,0,0,.7);max-width:30ch}
-    .rating{margin:16px 0 0;text-shadow:0 1px 12px rgba(0,0,0,.7)}
-    .hero-status{margin-top:14px;margin-bottom:0}
-    .hero .cta-row{margin-top:24px}
+    .hero .hero-lead-mini{display:block;margin:14px 0 0;font-size:1.02rem;line-height:1.55;color:#F0E6D4;
+      text-shadow:0 1px 14px rgba(0,0,0,.85);max-width:32ch}
+    .rating{margin:18px 0 0;text-shadow:0 1px 14px rgba(0,0,0,.9)}
+    .hero-status{margin-top:16px;margin-bottom:0}
+    /* Les boutons du hero font doublon avec la barre du bas (Appeler/La carte) → on les masque pour aérer */
+    .hero .cta-row{display:none}
+    /* Pas de parallaxe / compositing sur mobile (évite les saccades au scroll) */
+    .hero-bg,.parallax .pbg{will-change:auto}
+    .parallax .pbg{inset:0;background-attachment:scroll}
     .topbar{display:none}
     .hero-status{display:inline-flex}
     body{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
