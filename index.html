@@ -645,17 +645,45 @@
     #toTop:hover{transform:none}
     .nav-cta:hover{transform:none}
   }
+
+  /* ===== HERO — OUVERTURE DE MARQUE (intro fusionnée) ===== */
+  .hero{display:flex;align-items:center;justify-content:center;text-align:center;
+    background:radial-gradient(120% 92% at 50% 40%,#1A140F 0%,#110C09 64%)}
+  .hero .hero-bg{opacity:0;animation:heroPhoto 1.7s ease 1.55s forwards}
+  .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.46),rgba(17,12,8,.82))}
+  .hi-center{position:relative;z-index:3;max-width:720px;margin:0 auto;padding:0 22px}
+  .hi-cat{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.42em;
+    font-size:.66rem;color:var(--or);font-weight:500;opacity:0;animation:hiUp .8s ease .3s forwards}
+  .hero .hi-brand{font-family:"Fraunces",serif;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+    font-size:clamp(2.7rem,8.5vw,5.4rem);line-height:1;color:var(--blanc);margin:16px 0 0;max-width:none;
+    text-shadow:0 2px 30px rgba(0,0,0,.5);opacity:0;animation:hiUp .9s cubic-bezier(.2,.7,.2,1) .5s forwards}
+  .hero .hi-brand b{color:var(--rouge);font-weight:600;font-style:italic}
+  .hi-line{display:block;height:1px;width:0;margin:22px auto 16px;
+    background:linear-gradient(90deg,transparent,var(--or),transparent);animation:hiLine 1s ease .9s forwards}
+  .hi-tag{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.3em;
+    font-size:.66rem;color:var(--gris);font-weight:500;opacity:0;animation:hiUp .8s ease 1s forwards}
+  .hi-desc{font-size:clamp(1rem,1.5vw,1.16rem);color:#E4DAC9;max-width:48ch;margin:22px auto 0;line-height:1.6;
+    text-shadow:0 1px 12px rgba(0,0,0,.7);opacity:0;animation:hiUp .9s ease 2s forwards}
+  .hi-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:30px;
+    opacity:0;animation:hiUp .9s ease 2.3s forwards}
+  @keyframes hiUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes hiLine{to{width:min(260px,56vw)}}
+  @keyframes heroPhoto{to{opacity:1}}
+  @media(prefers-reduced-motion:reduce){
+    .hero .hero-bg,.hi-cat,.hero .hi-brand,.hi-tag,.hi-desc,.hi-cta{opacity:1!important;animation:none!important}
+    .hi-line{width:min(260px,56vw);animation:none}
+  }
+  @media(max-width:760px){
+    .hero{align-items:center;justify-content:center;padding:0;height:148vw}
+    .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.46),rgba(17,12,8,.86))}
+    .hi-cta{display:none}
+    .hero .hi-brand{font-size:clamp(2.5rem,13vw,4rem)}
+    .hi-desc{font-size:1.02rem;max-width:32ch;margin-top:18px}
+    .hi-line{margin:18px auto 14px}
+  }
 </style>
 </head>
 <body>
-<!-- Écran d'intro (s'efface après ~1,3s ; ignoré si l'utilisateur réduit les animations) -->
-<div id="intro" aria-hidden="true">
-  <div class="intro-inner">
-    <div class="intro-logo"><span class="intro-pre">Restaurant</span>Pizzeria <b>Pino</b></div>
-    <div class="intro-line"></div>
-    <div class="intro-sub">Pâtes fraîches · Feu de bois · Nandrin</div>
-  </div>
-</div>
 <a class="skip" href="#carte">Aller à la carte</a>
 
 <div id="progress"></div>
@@ -702,18 +730,18 @@
   <canvas class="embers" id="embers" aria-hidden="true"></canvas>
   <div class="spotlight" id="spot"></div>
   <div class="wrap">
-    <span class="hero-cat reveal">Restaurant · À emporter · Traiteur</span>
-    <h1 class="anim-head">Pâtes fraîches &amp; pizzas au <span class="gold">feu de bois</span>.</h1>
-    <p class="reveal hero-lead-full" style="--i:3">Depuis plus de trente ans, la Pizzeria Pino régale le Condroz avec ses pâtes fraîches et ses pizzas cuites au feu de bois.</p>
-    <p class="reveal hero-lead-mini" style="--i:3">Depuis plus de 30 ans, la vraie cuisine italienne au feu de bois.</p>
-    <div class="rating reveal" style="--i:4"><span class="stars">★★★★☆</span> <b>4,2/5</b> · 1 000+ avis Google</div>
-    <div class="hero-status reveal" id="heroStatus" style="--i:4"></div>
-    <div class="cta-row reveal" style="--i:5">
-      <a class="btn btn-primary magnet" href="tel:+3285513339"><span>Réserver une table</span></a>
-      <a class="btn btn-ghost magnet" href="#carte"><span>Voir la carte</span></a>
+    <div class="hi-center">
+      <span class="hi-cat">Restaurant</span>
+      <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
+      <span class="hi-line"></span>
+      <span class="hi-tag">Pâtes fraîches · Feu de bois · Nandrin</span>
+      <p class="hi-desc">Depuis plus de trente ans, la vraie cuisine italienne au feu de bois, sur la route du Condroz.</p>
+      <div class="hi-cta">
+        <a class="btn btn-primary" href="tel:+3285513339"><span>Réserver une table</span></a>
+        <a class="btn btn-ghost" href="#carte"><span>Voir la carte</span></a>
+      </div>
     </div>
   </div>
-  <div class="scroll-cue"><span>Découvrir</span><i></i></div>
 </section>
 
 <!-- MARQUEE -->
@@ -1090,7 +1118,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 23</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 24</b></p>
   </div>
 </footer>
 
