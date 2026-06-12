@@ -597,6 +597,22 @@
     #toTop{bottom:74px}
     .menu-tabs{gap:0 18px}
     .tab{font-size:.72rem;letter-spacing:.1em;padding:10px 2px 12px}
+    /* Espacements resserrés sur mobile (flux plus efficace, moins de scroll) */
+    section{padding:clamp(56px,13vw,84px) 0}
+    .stats{padding:46px 0}
+    h2{font-size:clamp(2.2rem,7.6vw,3rem);margin-bottom:16px}
+    .eyebrow{margin-bottom:18px}
+    .values{margin-top:42px}
+    .gal-grid{margin-top:34px}
+    .insta-grid{margin-top:34px}
+    .menu-panel{margin-top:32px}
+    .menu-search{margin-top:30px}
+    .lead{font-size:1.04rem}
+    .dish .name{font-size:1.02rem}
+    /* Carte : le cadre papier respire un peu moins sur mobile */
+    .menu,.stats,.reviews{border-top-width:5px}
+    .menu,.reviews{border-bottom-width:5px}
+    .quote::before{font-size:14rem;top:-10px}
   }
   @media(max-width:600px){
     .cta-row{justify-content:center}
