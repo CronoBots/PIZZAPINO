@@ -456,6 +456,7 @@
   #toTop.show{opacity:1;visibility:visible;transform:none}
   #toTop:hover{background:var(--rouge-d);transform:translateY(-3px)}
   .call-bar{display:none}
+  .m-status{display:none}
 
   /* ===== RESPONSIVE ===== */
   @media(max-width:920px){
@@ -471,13 +472,20 @@
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
     .hero-bg{background-attachment:scroll}
-    body{padding-bottom:64px}
+    /* On retire la barre d'infos du haut et on la place en bas */
+    .topbar{display:none}
+    body{padding-bottom:98px}
+    .m-status{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+      position:fixed;left:0;right:0;bottom:54px;z-index:94;background:#060504;
+      border-top:1px solid rgba(255,255,255,.06);padding:9px 14px;font-size:.74rem;
+      letter-spacing:.02em;color:var(--gris);text-align:center}
+    .m-status .dot-live{flex:none}
     .call-bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:95;gap:1px}
-    .call-bar a{flex:1;text-align:center;padding:18px;font-family:"Oswald",sans-serif;text-transform:uppercase;
+    .call-bar a{flex:1;text-align:center;padding:17px;font-family:"Oswald",sans-serif;text-transform:uppercase;
       letter-spacing:.08em;font-size:.86rem;font-weight:600;text-decoration:none;color:#fff}
     .call-bar .c-tel{background:var(--rouge)}
     .call-bar .c-menu{background:var(--noir-4)}
-    #toTop{bottom:74px}
+    #toTop{bottom:112px}
   }
 </style>
 </head>
@@ -939,7 +947,8 @@
 <!-- BOUTON RETOUR HAUT -->
 <button id="toTop" aria-label="Remonter">↑</button>
 
-<!-- BARRE D'APPEL MOBILE -->
+<!-- BARRE D'INFOS + APPEL MOBILE (en bas) -->
+<div class="m-status" id="mStatus"></div>
 <div class="call-bar">
   <a class="c-tel" href="tel:+3285513339">📞 Appeler</a>
   <a class="c-menu" href="#carte">🍕 La carte</a>
@@ -1180,6 +1189,13 @@
       pill.className = "status-pill closed";
       pill.textContent = nextOpen!==null ? "● Fermé · ouvre à "+hhmm(nextOpen) : "● Fermé actuellement";
       dot.className = "dot-live closed"; liveTxt.textContent = "Fermé";
+    }
+    // barre d'infos mobile en bas (statut + adresse)
+    var ms = document.getElementById("mStatus");
+    if(ms){
+      var etat = open ? "Ouvert" : ("Fermé" + (nextOpen!==null ? " · ouvre à "+hhmm(nextOpen) : ""));
+      ms.innerHTML = '<span class="dot-live '+(open?"open":"closed")+'"></span>'
+        + '<span><strong style="color:'+(open?"#5fe294":"#ff8a82")+'">'+etat+'</strong> · Route du Condroz 131, Nandrin</span>';
     }
     // surligner la ligne d'horaire du jour
     document.querySelectorAll("#hoursList li").forEach(function(li){
