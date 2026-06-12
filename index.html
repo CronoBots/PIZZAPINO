@@ -496,7 +496,8 @@
   footer .social a.ig:hover{background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af)}
   footer .social a.fb:hover{background:#1877f2}
   footer .fine{margin-top:18px;font-size:.74rem;opacity:.7}
-  .ig-line{display:inline-flex;align-items:center;gap:8px}
+  .ig-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  .ig-line a{display:inline-flex;align-items:center;gap:6px}
   .ig-line svg{width:18px;height:18px}
 
   /* ===== FLOTTANTS ===== */
@@ -521,6 +522,13 @@
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
     .hero-bg{background-attachment:scroll}
+    /* Hero : on masque l'indicateur "Découvrir" (il chevauchait les boutons) et on resserre */
+    .scroll-cue{display:none}
+    .hero{min-height:auto;padding-top:54px;padding-bottom:40px}
+    .hero h1{font-size:clamp(2.4rem,8.5vw,3.2rem)}
+    .hero p{margin:18px 0 6px}
+    .rating{margin:16px 0 16px}
+    .hero-status{margin-bottom:22px}
     /* Haut allégé : la barre d'infos du haut est masquée (le statut passe dans le hero) */
     .topbar{display:none}
     .hero-status{display:inline-flex}
@@ -994,7 +1002,7 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg>
       </a>
     </div>
-    <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none">085 51 33 39</a></p>
+    <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
   </div>
 </footer>
