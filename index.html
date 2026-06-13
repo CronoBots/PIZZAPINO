@@ -326,15 +326,15 @@
   .cat-title::after{flex:1}
   .cat-title:first-child{margin-top:0}
   .dishes{display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px}
-  .dish{display:flex;flex-wrap:wrap;align-items:baseline;padding:14px 0;
+  .dish{display:grid;grid-template-columns:minmax(0,auto) 1fr auto;align-items:baseline;column-gap:8px;padding:14px 0;
     border-bottom:1px solid var(--hair-ink);transition:background .25s}
   .dish:hover{background:rgba(168,38,29,.04)}
-  .dish .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink)}
-  .dish .desc{flex:0 0 100%;width:100%;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
+  .dish .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink);min-width:0}
+  .dish .desc{grid-column:1 / -1;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
     color:var(--ink-mut);margin-top:3px;line-height:1.45}
-  .dish .dot{flex:1;border-bottom:1px dotted rgba(38,32,26,.42);margin:0 8px;transform:translateY(-4px);min-width:24px}
+  .dish .dot{border-bottom:1px dotted rgba(38,32,26,.42);transform:translateY(-4px);min-width:24px;align-self:center}
   .dish .price{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;font-size:1.06rem;white-space:nowrap;
-    transition:color .25s}
+    justify-self:end;transition:color .25s}
   .dish .price::after{content:" €";font-size:.78em;color:var(--ink-mut);font-weight:500}
   .dish:hover .price{color:var(--rouge)}
   .menu-foot{margin-top:32px;font-size:.86rem;color:var(--ink-mut);font-style:italic;text-align:center}
@@ -1076,7 +1076,7 @@
       </a>
     </div>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 52</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 53</b></p>
   </div>
 </footer>
 
