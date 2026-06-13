@@ -245,6 +245,10 @@
   .btn-primary:hover::before{transform:scaleX(1)}
   .btn-ghost{background:transparent;color:var(--blanc);border:1px solid rgba(245,239,228,.4)}
   .btn-ghost:hover{border-color:var(--or);color:var(--or-l)}
+  /* Bouton clair (sur fond crème : carte / avis) */
+  .menu .btn-ghost{color:var(--ink);border-color:rgba(38,32,26,.4)}
+  .menu .btn-ghost:hover{color:var(--rouge);border-color:var(--rouge)}
+  .menu .btn-ghost svg{flex:0 0 auto}
 
   /* ===== MARQUEE ===== */
   .marquee{background:var(--noir);color:var(--or-l);padding:18px 0;overflow:hidden;white-space:nowrap;
@@ -938,6 +942,7 @@
       <p class="menu-foot">Commander par téléphone ne supprime pas forcément le délai d'attente sur place : cela dépend de notre planning. Merci de votre compréhension.</p>
       <div class="cta-row" style="justify-content:center;margin-top:26px">
         <a class="btn btn-primary magnet" href="tel:+3285513339"><span>Commander à emporter</span></a>
+        <a class="btn btn-ghost" href="carte-pizzeria-pino.pdf" download="Carte-Pizzeria-Pino.pdf"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Télécharger la carte (PDF)</span></a>
       </div>
     </div>
   </div>
@@ -1076,7 +1081,7 @@
       </a>
     </div>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 54</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 55</b></p>
   </div>
 </footer>
 
