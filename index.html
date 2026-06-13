@@ -488,30 +488,36 @@
 
   /* ===== INFOS ===== */
   .infos{background:var(--noir)}
-  .infos-grid{display:grid;grid-template-columns:.9fr 1fr 1.25fr;gap:clamp(34px,3.6vw,58px);margin-top:46px;align-items:start}
+  .infos-stack{margin-top:46px}
   .ic-head{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.35rem;color:var(--blanc);
     margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
-  .hours li{list-style:none;display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:15px 4px;
-    border-bottom:1px solid var(--hair);font-size:1rem;transition:background .3s}
-  .hours li.today{background:rgba(198,154,77,.07)}
+  /* Les 2 horaires côte à côte */
+  .hours{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0}
+  .hours li{list-style:none;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:20px 22px;
+    border:1px solid var(--hair);font-size:1rem;transition:background .3s,border-color .3s}
+  .hours li.today{background:rgba(198,154,77,.07);border-color:rgba(198,154,77,.32)}
   .hours li.today .day{color:var(--or)}
-  .hours .day{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.08rem;color:var(--rouge-l);
-    display:inline-flex;align-items:center;gap:10px}
-  .hours .hrs{color:var(--gris)}
+  .hours .day{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.12rem;color:var(--rouge-l);
+    display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .hours .hrs{color:var(--gris);font-size:1.02rem}
   .hours .badge-today{font-size:.6rem;background:var(--or);color:#1a1510;padding:3px 9px;letter-spacing:.1em;
     font-family:"Oswald",sans-serif;font-style:normal;text-transform:uppercase}
   .hours .nb{white-space:nowrap}
-  .feat{margin-top:24px;display:flex;flex-wrap:wrap;gap:9px}
-  .feat span{font-size:.72rem;background:none;color:var(--gris);padding:8px 16px;border-radius:0;
+  /* Badges d'infos répartis en dessous */
+  .feat{margin-top:18px;display:flex;flex-wrap:wrap;gap:9px}
+  .feat span{font-size:.72rem;background:none;color:var(--gris);padding:9px 16px;border-radius:0;
     border:1px solid var(--hair);transition:.25s;font-family:"Oswald",sans-serif;
     text-transform:uppercase;letter-spacing:.12em}
   .feat span:hover{color:var(--blanc);border-color:var(--or)}
-  /* colonne contact (texte clair sur fond sombre) */
-  .ic-contact p{margin-bottom:13px;font-size:1rem;color:var(--gris);line-height:1.6}
-  .ic-contact a{color:var(--or-l);font-weight:600;text-decoration:none}
-  .ic-contact a:hover{text-decoration:underline}
-  .map{border-radius:0;overflow:hidden;border:1px solid var(--hair)}
-  .map iframe{display:block;width:100%;height:300px;border:0;filter:grayscale(.2) contrast(1.02)}
+  /* Contact + carte côte à côte, dans un même cadre */
+  .contact-frame{margin-top:clamp(30px,3.5vw,48px);display:grid;grid-template-columns:1fr 1.3fr;
+    gap:clamp(26px,3.2vw,48px);border:1px solid var(--hair);padding:clamp(24px,2.8vw,38px);align-items:stretch}
+  .cb-info p{margin-bottom:13px;font-size:1rem;color:var(--gris);line-height:1.6}
+  .cb-info a{color:var(--or-l);font-weight:600;text-decoration:none}
+  .cb-info a:hover{text-decoration:underline}
+  .cb-map{display:flex}
+  .map{flex:1;border-radius:0;overflow:hidden;border:1px solid var(--hair)}
+  .map iframe{display:block;width:100%;height:100%;min-height:280px;border:0;filter:grayscale(.2) contrast(1.02)}
 
   /* ===== FOOTER ===== */
   footer{background:#0E0B09;color:var(--gris-d);padding:64px 0 36px;text-align:center;font-size:.86rem;
@@ -540,14 +546,15 @@
     nav.main,.nav-cta{display:none}
     .burger{display:flex}
     .values{grid-template-columns:1fr;gap:0}
-    .infos-grid{grid-template-columns:1fr;gap:34px}
+    .contact-frame{grid-template-columns:1fr;gap:26px}
   }
   @media(max-width:760px){
     .stats .grid{grid-template-columns:repeat(2,1fr);gap:30px 14px}
     .stat:nth-child(2)::after{display:none}
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
-    /* Horaires : jour (+ badge) sur une ligne, plage en dessous */
+    /* Horaires empilés sur mobile (sinon trop étroits côte à côte) */
+    .hours{grid-template-columns:1fr;gap:12px}
     .hours li{flex-direction:column;align-items:flex-start;gap:7px}
     .hours .hrs{color:var(--gris)}
     /* Réseaux : on empile (libellé puis identifiant) pour éviter les coupures */
@@ -1063,8 +1070,8 @@
       <p class="eyebrow reveal"><span class="num">05</span> Infos &amp; contact</p>
       <h2 class="reveal" style="--i:1">Horaires &amp; <em>accès</em></h2>
     </div>
-    <div class="infos-grid">
-      <div class="ic reveal" style="--i:1">
+    <div class="infos-stack">
+      <div class="hours-block reveal" style="--i:1">
         <h3 class="ic-head">Horaires</h3>
         <ul class="hours" id="hoursList">
           <li data-days="1,2,3,4"><span class="day">Lundi → Jeudi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
@@ -1075,17 +1082,18 @@
           <span>Accessible PMR</span><span>Parking gratuit</span><span>Menu enfant</span><span>Groupes</span>
         </div>
       </div>
-      <div class="ic ic-contact reveal" style="--i:2">
-        <h3 class="ic-head">Nous contacter</h3>
-        <p>Route du Condroz 131 (Centre commercial)<br>4550 Nandrin · <a href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener">Itinéraire ↗</a></p>
-        <p>Tél. : <a href="tel:+3285513339">085 51 33 39</a></p>
-        <p class="ig-line">Instagram : <a href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg> @pino.nandrin</a></p>
-        <p class="ig-line">Facebook : <a href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg> Pizzeria Pino</a></p>
-      </div>
-      <div class="ic ic-map reveal" style="--i:3">
-        <h3 class="ic-head">Nous trouver</h3>
-        <div class="map">
-          <iframe loading="lazy" title="Localisation de la Pizzeria Pino sur la carte" src="https://maps.google.com/maps?q=Pizzeria%20Pino%2C%20Route%20du%20Condroz%20131%2C%204550%20Nandrin&hl=fr&z=16&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="contact-frame reveal" style="--i:2">
+        <div class="cb-info">
+          <h3 class="ic-head">Nous contacter</h3>
+          <p>Route du Condroz 131 (Centre commercial)<br>4550 Nandrin · <a href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener">Itinéraire ↗</a></p>
+          <p>Tél. : <a href="tel:+3285513339">085 51 33 39</a></p>
+          <p class="ig-line">Instagram : <a href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg> @pino.nandrin</a></p>
+          <p class="ig-line">Facebook : <a href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg> Pizzeria Pino</a></p>
+        </div>
+        <div class="cb-map">
+          <div class="map">
+            <iframe loading="lazy" title="Localisation de la Pizzeria Pino sur la carte" src="https://maps.google.com/maps?q=Pizzeria%20Pino%2C%20Route%20du%20Condroz%20131%2C%204550%20Nandrin&hl=fr&z=16&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
         </div>
       </div>
     </div>
@@ -1105,7 +1113,7 @@
       </a>
     </div>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 58</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 59</b></p>
   </div>
 </footer>
 
