@@ -106,35 +106,9 @@
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden;
     -webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none;
     touch-action:pan-x pan-y;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
-  body.locked{overflow:hidden}
   /* La saisie reste sélectionnable (champ de recherche) */
   input,textarea,[contenteditable]{-webkit-user-select:text;-moz-user-select:text;user-select:text}
   ::selection{background:var(--rouge);color:#fff}
-
-  /* ===== ÉCRAN D'INTRO ===== */
-  #intro{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;overflow:hidden;
-    background-color:#110D0A;background-image:radial-gradient(120% 90% at 50% 42%,#1A1410 0%,#110D0A 60%);
-    transition:opacity .7s ease,visibility .7s ease}
-  #intro::before{content:"";position:absolute;width:78vmax;height:78vmax;border-radius:50%;pointer-events:none;
-    background:radial-gradient(circle,rgba(198,154,77,.14),rgba(168,38,29,.06) 38%,transparent 64%);
-    animation:introGlow 3s ease-in-out infinite}
-  #intro::after{content:"";position:absolute;inset:16px;border:1px solid rgba(198,154,77,.22);pointer-events:none}
-  .intro-inner{position:relative;text-align:center;padding:0 24px}
-  .intro-logo{font-family:"Fraunces",Georgia,serif;font-weight:600;text-transform:uppercase;letter-spacing:.2em;
-    font-size:clamp(1.7rem,6.5vw,2.9rem);color:var(--blanc);opacity:0;transform:translateY(10px);
-    animation:introUp .9s cubic-bezier(.2,.7,.2,1) .1s forwards}
-  .intro-logo b{color:var(--rouge);font-weight:600}
-  .intro-pre{display:block;font-family:"Oswald",sans-serif;font-weight:500;font-size:.6rem;letter-spacing:.46em;
-    text-transform:uppercase;color:var(--or);margin-bottom:14px}
-  .intro-line{height:1px;width:0;margin:20px auto 16px;background:linear-gradient(90deg,transparent,var(--or),transparent);
-    animation:introLine 1s ease .5s forwards}
-  .intro-sub{font-family:"Oswald",sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.34em;
-    font-size:.6rem;color:var(--gris);opacity:0;animation:introUp .9s ease .55s forwards}
-  body.intro-hide #intro{opacity:0;visibility:hidden;pointer-events:none}
-  @keyframes introUp{to{opacity:1;transform:translateY(0)}}
-  @keyframes introLine{to{width:min(240px,62vw)}}
-  @keyframes introGlow{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.05);opacity:1}}
-  @media(prefers-reduced-motion:reduce){#intro{display:none}}
   img{display:block;max-width:100%}
   a{color:inherit}
 
@@ -274,11 +248,6 @@
   .btn-primary:hover::before{transform:scaleX(1)}
   .btn-ghost{background:transparent;color:var(--blanc);border:1px solid rgba(245,239,228,.4)}
   .btn-ghost:hover{border-color:var(--or);color:var(--or-l)}
-  .scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:3;
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.3em;font-size:.62rem;color:rgba(245,239,228,.5);
-    display:flex;flex-direction:column;align-items:center;gap:8px}
-  .scroll-cue i{width:1px;height:40px;background:linear-gradient(var(--or),transparent);animation:cue 1.8s ease-in-out infinite}
-  @keyframes cue{0%,100%{transform:scaleY(.4);opacity:.4;transform-origin:top}50%{transform:scaleY(1);opacity:1;transform-origin:top}}
 
   /* ===== MARQUEE ===== */
   .marquee{background:var(--noir);color:var(--or-l);padding:18px 0;overflow:hidden;white-space:nowrap;
@@ -310,14 +279,6 @@
     color:rgba(198,154,77,.5);line-height:1;margin-bottom:14px}
   .value h3{font-size:1.35rem;margin-bottom:8px;color:var(--blanc);font-style:italic;font-weight:500}
   .value p{color:var(--gris);font-size:.95rem;max-width:32ch;margin:0 auto}
-  .maison-list li{display:flex;gap:22px;align-items:flex-start;padding:22px 0;border-top:1px solid var(--hair);
-    transition:border-color .4s}
-  .maison-list li:last-child{border-bottom:1px solid var(--hair)}
-  .maison-list li:hover{border-top-color:rgba(198,154,77,.5)}
-  .maison-list .ml-n{font-family:"Fraunces",serif;font-style:italic;font-size:1.7rem;font-weight:500;
-    color:rgba(198,154,77,.55);line-height:1;flex:0 0 auto;min-width:1.4em}
-  .maison-list h3{font-size:1.3rem;margin-bottom:5px;color:var(--blanc);font-style:italic;font-weight:500}
-  .maison-list p{color:var(--gris);font-size:.95rem;max-width:48ch}
 
   /* ===== CARTE — chapitre papier ===== */
   .menu{background:var(--paper);color:var(--ink);
@@ -538,11 +499,7 @@
   footer{background:#0E0B09;color:var(--gris-d);padding:64px 0 36px;text-align:center;font-size:.86rem;
     border-top:1px solid rgba(198,154,77,.2)}
   footer .brand{font-size:1.6rem;margin-bottom:14px}
-  footer .fnav{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin:20px 0 26px;
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:.74rem}
-  footer .fnav a{color:var(--gris);text-decoration:none;transition:color .25s}
-  footer .fnav a:hover{color:var(--or)}
-  footer .social{display:flex;gap:14px;justify-content:center;margin:4px 0 22px}
+  footer .social{display:flex;gap:14px;justify-content:center;margin:18px 0 22px}
   footer .social a{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;
     border:1px solid rgba(255,255,255,.12);color:var(--gris);transition:.28s}
   footer .social a:hover{color:#fff;transform:translateY(-3px);border-color:transparent}
@@ -604,7 +561,6 @@
     .call-bar{display:none!important}
     section[id]{scroll-margin-top:20px}
     /* Hero "affiche" : hauteur basée sur la LARGEUR (vw) = stable au scroll, pas de zoom iOS */
-    .scroll-cue{display:none}
     .hero{height:148vw;min-height:0;align-items:flex-end;padding:0 0 30px}
     /* Dégradé chaud et plus dense vers le bas → le texte reste lisible sur la pizza */
     .hero::before{background:linear-gradient(to bottom,
@@ -700,20 +656,13 @@
   @keyframes hiUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   @keyframes hiLine{to{width:min(260px,56vw)}}
   @keyframes heroPhoto{to{opacity:1}}
-  /* Indicateur "scroll vers le bas" (chevron qui rebondit, en bas du hero) */
-  .scroll-down{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:3;
-    color:rgba(245,239,228,.7);opacity:0;animation:sdIn .8s ease 2.4s forwards,sdBob 1.8s ease-in-out 3.2s infinite}
-  .scroll-down svg{width:28px;height:28px;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))}
-  @keyframes sdIn{to{opacity:1}}
-  @keyframes sdBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
-  /* L'intro remplit tout l'écran comme avant : en-tête masqué pendant ~1,4 s, puis il apparaît avec la photo */
+  /* En-tête masqué pendant ~1,4 s, puis il apparaît avec la photo */
   header,.topbar,.call-bar{animation:chromeIn .7s ease 1.35s both}
   @keyframes chromeIn{from{opacity:0}to{opacity:1}}
   @media(prefers-reduced-motion:reduce){
     .hero .hero-bg,.hi-cat,.hero .hi-brand,.hi-tag,.hi-desc,.hi-cta{opacity:1!important;animation:none!important}
     .hi-line{width:min(260px,56vw);animation:none}
     header,.topbar,.call-bar{animation:none!important;opacity:1}
-    .scroll-down{opacity:1;animation:none}
     #heroStatus,.burger{animation:none!important;opacity:1}
   }
   @media(max-width:760px){
@@ -1068,7 +1017,7 @@
       <div class="stat reveal"><div class="n"><span class="cnt" data-to="30" data-dec="0">0</span><span class="suf">+</span></div><div class="l">Ans d'expérience</div></div>
       <div class="stat reveal" style="--i:1"><div class="n"><span class="cnt" data-to="4.2" data-dec="1">0</span><span class="suf">★</span></div><div class="l">Note Google</div></div>
       <div class="stat reveal" style="--i:2"><div class="n"><span class="cnt" data-to="1000" data-dec="0" data-sep="1">0</span><span class="suf">+</span></div><div class="l">Avis clients</div></div>
-      <div class="stat reveal" style="--i:3"><div class="n"><span class="cnt" data-to="75" data-dec="0">0</span></div><div class="l">Couverts &amp; terrasses</div></div>
+      <div class="stat reveal" style="--i:3"><div class="n"><span class="cnt" data-to="100" data-dec="0">0</span><span class="suf">+</span></div><div class="l">Couverts &amp; terrasses</div></div>
     </div>
   </div>
 </section>
@@ -1146,7 +1095,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.12 · 42</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 43</b></p>
   </div>
 </footer>
 
@@ -1169,62 +1118,6 @@
   "use strict";
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---- Écran d'intro ---- */
-  (function(){
-    var intro = document.getElementById("intro");
-    if(!intro) return;
-    if(reduce){ intro.parentNode && intro.remove(); return; }
-    document.body.classList.add("locked");
-    var hidden = false;
-    function hide(){
-      if(hidden) return; hidden = true;
-      document.body.classList.add("intro-hide");
-      document.body.classList.remove("locked");
-      window.removeEventListener("wheel", onGesture);
-      window.removeEventListener("touchmove", onGesture);
-      setTimeout(function(){ intro.remove(); }, 700);
-    }
-    // L'intro reste affichée ~2,3 s puis s'efface en douceur
-    setTimeout(hide, 2300);
-    // On ne ferme sur un geste qu'après un temps mini (sinon l'intro disparaît trop vite)
-    var armed = false;
-    setTimeout(function(){ armed = true; }, 1300);
-    function onGesture(){ if(armed) hide(); }
-    window.addEventListener("wheel", onGesture, {passive:true});
-    window.addEventListener("touchmove", onGesture, {passive:true});
-    intro.addEventListener("click", function(){ if(armed) hide(); });
-  })();
-
-  /* ---- Titre du hero : découpe en mots animés ---- */
-  (function(){
-    var h = document.querySelector(".anim-head");
-    if(!h) return;
-    var html = h.innerHTML;
-    // on enveloppe chaque "mot" (texte) en gardant les balises <span class=gold>
-    var tmp = document.createElement("div"); tmp.innerHTML = html;
-    var out = ""; var w = 0;
-    function wrapText(text){
-      return text.split(/(\s+)/).map(function(tok){
-        if(/^\s+$/.test(tok)) return tok;
-        if(tok === "") return "";
-        return '<span class="mask"><span style="--w:'+(w++)+'">'+tok+'</span></span>';
-      }).join("");
-    }
-    var res = "";
-    tmp.childNodes.forEach(function(node){
-      if(node.nodeType === 3){ res += wrapText(node.nodeValue); }
-      else if(node.nodeType === 1){
-        // élément (ex: <span class="gold">feu de bois</span>)
-        var inner = wrapText(node.textContent);
-        var clone = node.cloneNode(false); clone.innerHTML = inner;
-        res += clone.outerHTML;
-      }
-    });
-    h.innerHTML = res;
-    h.classList.add("reveal-head");
-    if(reduce){ h.classList.add("in-view"); }
-  })();
-
   /* ---- IntersectionObserver : révélations ---- */
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
@@ -1232,12 +1125,6 @@
     });
   }, {threshold:.14});
   document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
-
-  // titre hero
-  var headIO = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in-view"); headIO.unobserve(e.target);} });
-  }, {threshold:.2});
-  document.querySelectorAll(".anim-head").forEach(function(el){ headIO.observe(el); });
 
   /* ---- Compteurs animés ---- */
   function animateCount(el){
@@ -1285,23 +1172,15 @@
   onScroll();
   toTop.addEventListener("click", function(){ window.scrollTo({top:0, behavior: reduce?"auto":"smooth"}); });
 
-  /* ---- Parallaxe (hero + four) — desktop/souris uniquement (évite le scroll saccadé sur mobile) ---- */
+  /* ---- Parallaxe du hero — desktop/souris uniquement (évite le scroll saccadé sur mobile) ---- */
   var heroBg = document.getElementById("heroBg");
-  var paraBg = document.getElementById("paraBg");
-  if(!reduce && window.matchMedia("(min-width:761px) and (pointer:fine)").matches){
+  if(heroBg && !reduce && window.matchMedia("(min-width:761px) and (pointer:fine)").matches){
     var pTick = false;
     window.addEventListener("scroll", function(){
       if(pTick) return; pTick = true;
       requestAnimationFrame(function(){
         var y = window.scrollY;
-        if(heroBg && y < window.innerHeight*1.2) heroBg.style.transform = "translateY("+(y*0.18)+"px)";
-        if(paraBg){
-          var r = paraBg.parentElement.getBoundingClientRect();
-          if(r.bottom>0 && r.top<window.innerHeight){
-            var off = (window.innerHeight - r.top)*0.08;
-            paraBg.style.transform = "translateY("+(off-40)+"px)";
-          }
-        }
+        if(y < window.innerHeight*1.2) heroBg.style.transform = "translateY("+(y*0.18)+"px)";
         pTick = false;
       });
     }, {passive:true});
