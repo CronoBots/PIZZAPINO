@@ -154,13 +154,12 @@
   @keyframes ping{0%{opacity:.8;transform:scale(.6)}100%{opacity:0;transform:scale(1.8)}}
 
   /* ===== HEADER ===== */
-  header{position:sticky;top:0;z-index:80;transition:background var(--rapide),box-shadow var(--rapide),padding var(--rapide),border-color var(--rapide);
-    background:linear-gradient(180deg,rgba(14,11,9,.62) 0%,rgba(14,11,9,.28) 60%,transparent 100%);
-    border-bottom:1px solid transparent}
-  header.scrolled{background:rgba(15,11,9,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-    box-shadow:0 12px 44px -22px rgba(0,0,0,.9);border-bottom:1px solid var(--hair)}
-  .nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;transition:padding var(--rapide)}
-  header.scrolled .nav{padding:12px 0}
+  /* Apparence compacte/solide dès le départ (desktop) — l'état "scrolled" ne change quasi rien */
+  header{position:sticky;top:0;z-index:80;transition:box-shadow var(--rapide),padding var(--rapide);
+    background:rgba(15,11,9,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--hair)}
+  header.scrolled{box-shadow:0 12px 44px -22px rgba(0,0,0,.9)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:13px 0;transition:padding var(--rapide)}
   .brand{font-family:"Fraunces",Georgia,serif;font-weight:600;text-transform:uppercase;font-size:1.42rem;line-height:1;
     letter-spacing:.16em;color:var(--blanc);text-decoration:none;display:inline-block}
   .brand b{color:var(--rouge);font-weight:600;font-style:italic;letter-spacing:.1em}
@@ -1078,7 +1077,7 @@
     </div>
     <p>Route du Condroz 131, 4550 Nandrin · <a href="tel:+3285513339" style="color:var(--or);text-decoration:none;white-space:nowrap">085 51 33 39</a></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 47</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 48</b></p>
   </div>
 </footer>
 
