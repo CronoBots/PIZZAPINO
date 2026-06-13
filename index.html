@@ -399,20 +399,13 @@
   .cm-x{position:absolute;top:12px;right:16px;font-size:1.7rem;line-height:1;background:none;border:0;color:var(--gris);
     cursor:pointer;transition:color .25s,transform .25s}
   .cm-x:hover{color:var(--blanc);transform:rotate(90deg)}
-  .cm-eyebrow{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.34em;
-    font-size:.62rem;color:var(--or);margin-bottom:10px}
+  .cm-brand{display:inline-block;margin-bottom:16px}
   .cm-title{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:1.7rem;color:var(--blanc);margin:0 0 10px}
   .cm-sub{color:var(--gris);font-size:.95rem;line-height:1.55;margin:0 auto 22px;max-width:30ch}
   .cm-num{display:inline-flex;align-items:center;gap:12px;font-family:"Fraunces",serif;font-weight:600;font-size:1.9rem;
     color:var(--blanc);text-decoration:none;letter-spacing:.02em;transition:color .25s}
   .cm-num svg{width:22px;height:22px;color:var(--or-l)}
   .cm-num:hover{color:var(--or-l)}
-  .cm-copy{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-family:"Oswald",sans-serif;
-    text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;font-weight:500;color:var(--blanc);
-    background:transparent;border:1px solid rgba(245,239,228,.35);padding:11px 22px;cursor:pointer;
-    transition:border-color .25s,color .25s,background .25s}
-  .cm-copy:hover{border-color:var(--or);color:var(--or-l)}
-  .cm-copy.done{border-color:#37c66f;color:#5fe294}
   .cm-status{margin:22px 0 0;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;
     font-size:.72rem;display:inline-flex;align-items:center;gap:8px}
   .cm-status.open{color:#5fe294}.cm-status.closed{color:var(--rouge-l)}
@@ -1113,7 +1106,7 @@
       </a>
     </div>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · Proposition de refonte — maquette de présentation</p>
-    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 56</b></p>
+    <p class="fine" style="margin-top:6px;opacity:.6">Version <b style="color:var(--or)">2026.06.13 · 57</b></p>
   </div>
 </footer>
 
@@ -1124,14 +1117,13 @@
 <div id="callModal" role="dialog" aria-modal="true" aria-labelledby="cmTitle" aria-hidden="true">
   <div class="cm-card" role="document">
     <button class="cm-x" id="cmClose" aria-label="Fermer">×</button>
-    <span class="cm-eyebrow">Pizzeria Pino</span>
+    <span class="brand cm-brand"><span class="brand-pre">Restaurant</span>Pizzeria <b>Pino</b></span>
     <h3 class="cm-title" id="cmTitle">Commander &amp; réserver</h3>
-    <p class="cm-sub">Appelez-nous, on prend votre commande à emporter ou votre réservation avec plaisir.</p>
+    <p class="cm-sub">Appelez-nous, nous prenons votre commande à emporter ou votre réservation avec plaisir.</p>
     <a class="cm-num" href="tel:+3285513339">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       085 51 33 39
     </a>
-    <button class="cm-copy" id="cmCopy" type="button">Copier le numéro</button>
     <p class="cm-status" id="cmStatus"></p>
     <p class="cm-addr">Route du Condroz 131 · 4550 Nandrin</p>
   </div>
@@ -1362,7 +1354,6 @@
   (function(){
     if(!callModal) return;
     var closeBtn = document.getElementById("cmClose");
-    var copyBtn = document.getElementById("cmCopy");
     // appareils tactiles (vrai téléphone) = on laisse l'appel direct ; ordinateur = pop-up
     var canCall = window.matchMedia("(hover:none) and (pointer:coarse)").matches;
     function openCall(){ callModal.classList.add("show"); callModal.setAttribute("aria-hidden","false"); document.body.classList.add("locked"); }
@@ -1373,11 +1364,6 @@
     });
     closeBtn.addEventListener("click", closeCall);
     callModal.addEventListener("click", function(e){ if(e.target===callModal) closeCall(); });
-    copyBtn.addEventListener("click", function(){
-      var num = "085 51 33 39";
-      function done(){ copyBtn.classList.add("done"); copyBtn.textContent = "Numéro copié ✓"; setTimeout(function(){ copyBtn.classList.remove("done"); copyBtn.textContent = "Copier le numéro"; }, 2000); }
-      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(num).then(done, done); } else { done(); }
-    });
   })();
 
   document.addEventListener("keydown", function(e){ if(e.key==="Escape"){ closeLB(); closeMob(); closeCall(); } });
