@@ -339,15 +339,15 @@
   .cat-title::after{flex:1}
   .cat-title:first-child{margin-top:0}
   .dishes{display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px}
-  .dish{display:grid;grid-template-columns:minmax(0,auto) 1fr auto;align-items:baseline;column-gap:8px;padding:14px 0;
+  .dish{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px;padding:14px 0;
     border-bottom:1px solid var(--hair-ink);transition:background .25s}
   .dish:hover{background:rgba(168,38,29,.04)}
-  .dish .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink);min-width:0}
-  .dish .desc{grid-column:1 / -1;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
+  .dish .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink);flex:0 1 auto;min-width:0}
+  .dish .desc{flex:0 0 100%;width:100%;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
     color:var(--ink-mut);margin-top:3px;line-height:1.45}
-  .dish .dot{border-bottom:1px dotted rgba(38,32,26,.42);transform:translateY(-5px);min-width:24px;align-self:baseline}
+  .dish .dot{flex:1 1 24px;min-width:24px;border-bottom:1px dotted rgba(38,32,26,.42);transform:translateY(-5px);align-self:baseline}
   .dish .price{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;font-size:1.06rem;white-space:nowrap;
-    justify-self:end;transition:color .25s}
+    flex:0 0 auto;transition:color .25s}
   .dish .price::after{content:" €";font-size:.78em;color:var(--ink-mut);font-weight:500}
   .dish:hover .price{color:var(--rouge)}
   .menu-foot{margin-top:32px;font-size:.86rem;color:var(--ink-mut);font-style:italic;text-align:center}
@@ -591,7 +591,8 @@
       align-items:center;gap:9px;background:rgba(15,11,8,.82);border:1px solid rgba(198,154,77,.2);
       box-shadow:0 8px 24px -9px rgba(0,0,0,.8);padding:0 16px;height:46px;border-radius:30px;margin:0;
       font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.64rem;font-weight:500;
-      pointer-events:none;animation:chromeIn .7s ease 1.35s both}
+      pointer-events:none;animation:fabIn .7s ease 1.35s both;transition:opacity .3s}
+    #heroStatus:hover,#heroStatus:focus-within,#heroStatus:active{opacity:1!important}
     #heroStatus.open,#heroStatus.closed{background:rgba(15,11,8,.82);border-color:rgba(198,154,77,.2)}
     #heroStatus .hs-call{pointer-events:auto;display:inline-flex;align-items:center;gap:9px;color:inherit;text-decoration:none}
     #heroStatus svg{width:17px;height:17px}
@@ -697,11 +698,12 @@
   /* En-tête masqué pendant ~1,4 s, puis il apparaît avec la photo */
   header,.call-bar{animation:chromeIn .7s ease 1.35s both}
   @keyframes chromeIn{from{opacity:0}to{opacity:1}}
+  @keyframes fabIn{from{opacity:0}to{opacity:var(--fab-opacity)}}
   @media(prefers-reduced-motion:reduce){
     .hero .hero-bg,.hi-cat,.hero .hi-brand,.hi-tag,.hi-desc,.hi-cta{opacity:1!important;animation:none!important}
     .hi-line{width:min(260px,56vw);animation:none}
     header,.call-bar{animation:none!important;opacity:1}
-    #heroStatus,.burger{animation:none!important;opacity:1}
+    #heroStatus,.burger{animation:none!important;opacity:var(--fab-opacity)}
   }
   @media(max-width:760px){
     /* hauteur en vw (largeur écran) = stable au scroll, plein écran, contenu qui ne bouge plus */
