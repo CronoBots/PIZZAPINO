@@ -98,6 +98,7 @@
     --gris-d:#84796A;
     --or:#C69A4D;             /* or bronze */
     --or-l:#E9CE96;
+    --fab-opacity:.62;        /* opacité des boutons flottants (appel, retour-haut, menu) — 0 à 1 */
     --paper:#F1EADB;          /* papier — chapitres clairs */
     --paper-2:#EAE2CF;
     --ink:#26201A;            /* encre sur papier */
@@ -546,7 +547,8 @@
   #toTop{position:fixed;right:22px;bottom:22px;z-index:90;width:48px;height:48px;border-radius:0;
     background:var(--rouge);color:#fff;border:0;cursor:pointer;font-size:1.2rem;opacity:0;visibility:hidden;
     transform:translateY(14px);transition:.35s;box-shadow:0 14px 30px -12px rgba(0,0,0,.55)}
-  #toTop.show{opacity:1;visibility:visible;transform:none}
+  #toTop.show{opacity:var(--fab-opacity);visibility:visible;transform:none}
+  #toTop:hover,#toTop:focus-visible,#toTop:active{opacity:1}
   #toTop:hover{background:var(--rouge-d);transform:translateY(-3px)}
   .call-bar{display:none}
 
@@ -579,7 +581,9 @@
     /* Boutons ronds discrets (même style) : Menu en haut à droite, statut en haut à gauche, Appeler + retour-haut en bas */
     .burger{display:flex;pointer-events:auto;position:fixed;top:calc(15px + env(safe-area-inset-top));right:15px;z-index:110;
       width:46px;height:46px;border-radius:50%;background:rgba(15,11,8,.82);align-items:center;justify-content:center;
-      gap:5px;padding:0;box-shadow:0 8px 24px -9px rgba(0,0,0,.8);border:1px solid rgba(198,154,77,.2)}
+      gap:5px;padding:0;box-shadow:0 8px 24px -9px rgba(0,0,0,.8);border:1px solid rgba(198,154,77,.2);
+      opacity:var(--fab-opacity);transition:opacity .3s,background .3s}
+    .burger:active,.burger.x{opacity:1}
     .burger span{width:18px}
     /* Statut ouvert/fermé : petite pastille discrète en haut à gauche */
     /* Statut combiné en bas à gauche : "Ouvert" + téléphone (cliquable) si ouvert, sinon "Fermé · ouvre à…" */
@@ -618,7 +622,9 @@
     body.resto-open .call-bar{display:flex}
     .call-bar .c-tel{width:48px;height:48px;border-radius:50%;background:rgba(15,11,8,.82);color:#fff;padding:0;gap:0;
       display:flex;align-items:center;justify-content:center;font-size:0;
-      box-shadow:0 8px 24px -9px rgba(0,0,0,.8);border:1px solid rgba(198,154,77,.2)}
+      box-shadow:0 8px 24px -9px rgba(0,0,0,.8);border:1px solid rgba(198,154,77,.2);
+      opacity:var(--fab-opacity);transition:opacity .3s}
+    .call-bar .c-tel:active{opacity:1}
     .call-bar .c-tel svg{width:21px;height:21px}
     .call-bar .c-menu{display:none}
     /* Retour en haut : cercle discret en bas à DROITE */
