@@ -486,7 +486,8 @@
   .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px;text-align:left}
   .rev-card{background:var(--paper);border:1px solid var(--hair-ink);padding:26px 24px 28px;
     display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
-    box-shadow:0 18px 40px -30px rgba(0,0,0,.5)}
+    box-shadow:0 18px 40px -30px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.22,.68,.16,1),box-shadow .35s ease}
+  .rev-card:hover{transform:translateY(-4px);box-shadow:0 28px 54px -28px rgba(0,0,0,.55)}
   .rev-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rouge)}
   .rev-head{display:flex;align-items:center;gap:12px}
   .rev-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
@@ -618,7 +619,7 @@
     .hero{height:148vw;min-height:0;align-items:flex-end;padding:0 0 30px}
     /* Dégradé chaud et plus dense vers le bas → le texte reste lisible sur la pizza */
     .hero::before{background:linear-gradient(to bottom,
-      rgba(26,17,11,.55) 0%,rgba(26,17,11,.34) 26%,rgba(22,14,9,.78) 58%,rgba(17,12,8,.97) 100%)}
+      rgba(26,17,11,.46) 0%,rgba(26,17,11,.26) 26%,rgba(22,14,9,.70) 58%,rgba(17,12,8,.96) 100%)}
     .hero::after{inset:10px;border-color:rgba(198,154,77,.24)}
     .hero .hero-cat{display:none}
     .hero h1{font-size:clamp(2.4rem,9vw,3.3rem);text-shadow:0 2px 26px rgba(0,0,0,.7)}
@@ -691,7 +692,7 @@
   .hero{display:flex;align-items:center;justify-content:center;text-align:center;
     background:radial-gradient(120% 92% at 50% 40%,#1A140F 0%,#110C09 64%)}
   .hero .hero-bg{opacity:0;animation:heroPhoto 1.7s ease 1.55s forwards}
-  .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.46),rgba(17,12,8,.82))}
+  .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.42),rgba(17,12,8,.72))}
   .hi-center{position:relative;z-index:3;max-width:720px;margin:0 auto;padding:0 22px}
   .hi-cat{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.42em;
     font-size:.66rem;color:var(--or);font-weight:500;opacity:0;animation:hiUp .8s ease .3s forwards}
@@ -1065,7 +1066,7 @@
     <div class="grid">
       <div class="stat reveal"><div class="n"><span class="cnt" data-to="30" data-dec="0">0</span><span class="suf">+</span></div><div class="l">Ans d'expérience</div></div>
       <div class="stat reveal" style="--i:1"><div class="n"><span class="cnt" data-to="4.2" data-dec="1">0</span><span class="suf">★</span></div><div class="l">Note Google</div></div>
-      <div class="stat reveal" style="--i:2"><div class="n"><span class="cnt" data-to="1000" data-dec="0" data-sep="1">0</span><span class="suf">+</span></div><div class="l">Avis clients</div></div>
+      <div class="stat reveal" style="--i:2"><div class="n"><span class="cnt" data-to="1200" data-dec="0" data-sep="1">0</span><span class="suf">+</span></div><div class="l">Avis clients</div></div>
       <div class="stat reveal" style="--i:3"><div class="n"><span class="cnt" data-to="100" data-dec="0">0</span><span class="suf">+</span></div><div class="l">Couverts &amp; terrasses</div></div>
     </div>
   </div>
@@ -1076,7 +1077,7 @@
   <div class="wrap">
     <p class="eyebrow reveal"><span class="num">04</span> Ils en parlent</p>
     <h2 class="reveal" style="--i:1">Ce que disent <em>nos clients</em></h2>
-    <p class="lead reveal" style="--i:2"><strong style="color:var(--or)">4,2/5</strong> sur Google (plus de 1 000 avis)<br><strong style="color:var(--or)">4/5</strong> sur Tripadvisor<br>Merci à nos clients !</p>
+    <p class="lead reveal" style="--i:2"><strong style="color:var(--or)">4,2/5</strong> sur Google (plus de 1 200 avis)<br><strong style="color:var(--or)">4/5</strong> sur Tripadvisor<br>Merci à nos clients !</p>
     <!-- Avis Google (intégrés — issus de la fiche Google Pizzeria Pino) -->
     <div class="rev-grid">
       <article class="rev-card reveal">
