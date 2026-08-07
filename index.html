@@ -483,8 +483,14 @@
   .reviews .btn-ghost:hover{border-color:var(--rouge);color:var(--rouge)}
   .ti-embed{margin-top:46px;min-height:140px;text-align:left}
   /* Cartes d'avis intégrées */
-  .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px;text-align:left}
+  .rev-marquee{margin-top:48px;position:relative;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)}
+  .rev-track{display:flex;width:max-content;text-align:left;padding:4px 0 8px;animation:revScroll 65s linear infinite}
+  .rev-marquee:hover .rev-track{animation-play-state:paused}
+  @keyframes revScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
   .rev-card{background:var(--paper);border:1px solid var(--hair-ink);padding:26px 24px 28px;
+    flex:0 0 330px;margin-right:22px;
     display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
     box-shadow:0 18px 40px -30px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.22,.68,.16,1),box-shadow .35s ease}
   .rev-card:hover{transform:translateY(-4px);box-shadow:0 28px 54px -28px rgba(0,0,0,.55)}
@@ -498,8 +504,9 @@
   .rev-g{width:20px;height:20px;flex:0 0 auto;align-self:flex-start;margin-top:2px}
   .rev-stars{color:var(--or);font-size:1.02rem;letter-spacing:3px;line-height:1}
   .rev-text{font-family:"Inter",sans-serif;font-size:.95rem;line-height:1.62;color:var(--ink);margin:0}
-  @media(max-width:980px){.rev-grid{grid-template-columns:repeat(2,1fr);gap:18px}}
-  @media(max-width:640px){.rev-grid{grid-template-columns:1fr;gap:16px;margin-top:36px}}
+  @media(max-width:640px){.rev-marquee{margin-top:36px}.rev-card{flex-basis:80vw;margin-right:16px;padding:22px 20px 24px}}
+  @media(prefers-reduced-motion:reduce){.rev-track{animation:none}.rev-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch;
+    -webkit-mask-image:none;mask-image:none}}
 
   /* ===== CITATION ===== */
   .quote{background:linear-gradient(120deg,var(--rouge-d),var(--rouge));color:#fff;text-align:center;overflow:hidden}
@@ -1117,8 +1124,9 @@
     <h2 class="reveal" style="--i:1">Ce que disent <em>nos clients</em></h2>
     <p class="lead reveal" style="--i:2"><strong style="color:var(--or)">4,2/5</strong> sur Google (plus de 1 200 avis)<br><strong style="color:var(--or)">4/5</strong> sur Tripadvisor<br>Merci à nos clients !</p>
     <!-- Avis Google (intégrés — issus de la fiche Google Pizzeria Pino) -->
-    <div class="rev-grid">
-      <article class="rev-card reveal">
+    <div class="rev-marquee reveal">
+     <div class="rev-track" id="revTrack">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#A8261D">C</span>
           <div class="rev-id"><span class="rev-name">Christine S.</span><span class="rev-when">il y a 3 semaines</span></div>
@@ -1127,7 +1135,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Pizza excellente, le service rapide.</p>
       </article>
-      <article class="rev-card reveal" style="--i:1">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#6E8B6E">S</span>
           <div class="rev-id"><span class="rev-name">Sylvie G.</span><span class="rev-when">il y a 2 mois</span></div>
@@ -1136,7 +1144,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Que ce soit sur place ou à emporter, en salle ou en terrasse quand le temps le permet, c'est toujours délicieux et bien accueilli ! Je recommande +++</p>
       </article>
-      <article class="rev-card reveal" style="--i:2">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#C0532F">K</span>
           <div class="rev-id"><span class="rev-name">Kevin</span><span class="rev-when">il y a 4 mois</span></div>
@@ -1145,7 +1153,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Nous adorons la Pizzeria Pino ! Un restaurant italien convivial, parfait pour manger sur place ou à emporter. La qualité des pizzas est excellente, et c'est toujours rapide et efficace.</p>
       </article>
-      <article class="rev-card reveal" style="--i:3">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#8C6A4A">S</span>
           <div class="rev-id"><span class="rev-name">Sylvain P.</span><span class="rev-when">il y a 7 mois</span></div>
@@ -1154,7 +1162,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Très beau cadre. Cuisine de très bonne qualité à un prix très bas. Personnel souriant, réactif et proactif. Nous y retournerons avec un grand plaisir.</p>
       </article>
-      <article class="rev-card reveal" style="--i:4">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#B04A9A">A</span>
           <div class="rev-id"><span class="rev-name">Anne B.</span><span class="rev-when">il y a 8 mois</span></div>
@@ -1163,7 +1171,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Envie de partager une délicieuse pizza ou de déguster un bon plat de pâtes ? Alors vous êtes au bon endroit. Cadre très accueillant et personnel agréable.</p>
       </article>
-      <article class="rev-card reveal" style="--i:5">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#4E6E8C">C</span>
           <div class="rev-id"><span class="rev-name">Collette J.</span><span class="rev-when">il y a 8 mois</span></div>
@@ -1172,7 +1180,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Le lieu est vraiment superbe, on y mange vraiment très bien et le service est au top. Une expérience que je répéterai régulièrement !</p>
       </article>
-      <article class="rev-card reveal" style="--i:6">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#3E7D6E">C</span>
           <div class="rev-id"><span class="rev-name">Christian G.</span><span class="rev-when">il y a 8 mois</span></div>
@@ -1181,7 +1189,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Très belle découverte, personnel aimable. Cuisine de belle qualité, plats copieux et prix raisonnable.</p>
       </article>
-      <article class="rev-card reveal" style="--i:7">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#B58A2E">L</span>
           <div class="rev-id"><span class="rev-name">Lucien M.</span><span class="rev-when">il y a 6 mois</span></div>
@@ -1190,7 +1198,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Pizza super délicieuse, service impeccable.</p>
       </article>
-      <article class="rev-card reveal" style="--i:8">
+      <article class="rev-card">
         <div class="rev-head">
           <span class="rev-av" style="background:#9A3B4E">C</span>
           <div class="rev-id"><span class="rev-name">Christine F.</span><span class="rev-when">il y a 7 mois</span></div>
@@ -1199,6 +1207,7 @@
         <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
         <p class="rev-text">Très bons moments, même en grand groupe nous avons pu manger tous ensemble et c'était très bon. Je reviendrai très certainement !</p>
       </article>
+     </div>
     </div>
     <div class="cta-row reveal" style="justify-content:center;margin-top:44px">
       <a class="btn btn-primary magnet" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener"><span>Nos avis Google</span></a>
@@ -1699,6 +1708,14 @@
 
   /* ---- Année footer ---- */
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ---- Avis : duplication du contenu pour une boucle horizontale sans couture ---- */
+  (function(){
+    var track = document.getElementById("revTrack");
+    if(!track) return;
+    var cards = Array.prototype.slice.call(track.children);
+    cards.forEach(function(c){ var cl = c.cloneNode(true); cl.setAttribute("aria-hidden","true"); track.appendChild(cl); });
+  })();
 
   /* ---- Consentement cookies + carte Google Maps ---- */
   (function(){
