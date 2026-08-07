@@ -542,7 +542,7 @@
   .cb-info a{color:var(--or-l);font-weight:600;text-decoration:none}
   .cb-info a:hover{text-decoration:underline}
   .cb-map{display:flex}
-  .map{flex:1;border-radius:0;overflow:hidden;border:1px solid var(--hair)}
+  .map{flex:1;border-radius:0;overflow:hidden;border:1px solid var(--hair);position:relative;min-height:280px}
   .map iframe{display:block;width:100%;height:100%;min-height:280px;border:0;filter:grayscale(.2) contrast(1.02)}
 
   /* ===== FOOTER ===== */
@@ -733,6 +733,44 @@
     .hi-desc{font-size:1.02rem;max-width:32ch;margin-top:18px}
     .hi-line{margin:18px auto 14px}
   }
+
+  /* ===== LIENS LÉGAUX (footer) ===== */
+  .legal-links{margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.64rem}
+  .legal-links a,.legal-links .linkbtn{color:var(--gris);text-decoration:none;transition:color .25s}
+  .legal-links a:hover,.legal-links .linkbtn:hover{color:var(--or)}
+  .legal-links .sep{color:var(--gris-d);opacity:.6}
+  .legal-links .linkbtn{background:none;border:0;cursor:pointer;font:inherit;text-transform:uppercase;letter-spacing:.08em;padding:0}
+
+  /* ===== BANDEAU COOKIES ===== */
+  .cookie-banner{position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(15,11,8,.97);
+    border-top:2px solid var(--rouge);box-shadow:0 -14px 40px -18px rgba(0,0,0,.7);
+    padding:18px 0 calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);
+    transition:transform .5s cubic-bezier(.22,.68,.16,1)}
+  .cookie-banner.show{transform:none}
+  .cookie-banner .ck-inner{max-width:1100px;margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:18px 26px;flex-wrap:wrap}
+  .ck-text{flex:1 1 320px;color:var(--gris);font-size:.86rem;line-height:1.55;margin:0}
+  .ck-text a{color:var(--or)}
+  .ck-actions{display:flex;gap:12px;flex:0 0 auto}
+  .ck-btn{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.72rem;
+    padding:12px 22px;cursor:pointer;border:1px solid transparent;transition:.25s;white-space:nowrap}
+  .ck-refuse{background:none;border-color:rgba(198,154,77,.4);color:var(--blanc)}
+  .ck-refuse:hover{border-color:var(--or);color:var(--or)}
+  .ck-accept{background:var(--rouge);color:#fff}
+  .ck-accept:hover{background:var(--rouge-d)}
+  @media(max-width:640px){.cookie-banner .ck-inner{flex-direction:column;align-items:stretch;text-align:center}
+    .ck-actions{justify-content:center}.ck-btn{flex:1 1 auto}}
+
+  /* ===== PLACEHOLDER CARTE ===== */
+  .map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;text-align:center;padding:24px;background:var(--noir-2);color:var(--gris)}
+  .map-ph svg{color:var(--or);opacity:.9}
+  .map-ph p{font-size:.86rem;max-width:34ch;line-height:1.5;color:var(--gris)}
+  .map-load{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.72rem;
+    background:var(--rouge);color:#fff;border:0;padding:11px 22px;cursor:pointer;transition:background .25s}
+  .map-load:hover{background:var(--rouge-d)}
+  .map-alt{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.64rem;color:var(--or);text-decoration:none}
+  .map-alt:hover{color:var(--blanc)}
 </style>
 </head>
 <body>
@@ -1205,8 +1243,13 @@
           <p class="ig-line">Facebook : <a href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg> Pizzeria Pino</a></p>
         </div>
         <div class="cb-map">
-          <div class="map">
-            <iframe loading="lazy" title="Localisation de la Pizzeria Pino sur la carte" src="https://maps.google.com/maps?q=Pizzeria%20Pino%2C%20Route%20du%20Condroz%20131%2C%204550%20Nandrin&hl=fr&z=16&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <div class="map" id="mapWrap" data-src="https://maps.google.com/maps?q=Pizzeria%20Pino%2C%20Route%20du%20Condroz%20131%2C%204550%20Nandrin&hl=fr&z=16&output=embed">
+            <div class="map-ph" id="mapPlaceholder">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <p>Carte Google Maps désactivée tant que les cookies tiers ne sont pas acceptés.</p>
+              <button type="button" class="map-load" id="mapLoad">Afficher la carte</button>
+              <a class="map-alt" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener">Ouvrir dans Google Maps ↗</a>
+            </div>
           </div>
         </div>
       </div>
@@ -1227,8 +1270,30 @@
       </a>
     </div>
     <p class="fine">© <span id="year"></span> Pizzeria Pino</p>
+    <nav class="legal-links" aria-label="Informations légales">
+      <a href="legal.html#mentions">Mentions légales</a>
+      <span class="sep">·</span>
+      <a href="legal.html#cgu">Conditions générales</a>
+      <span class="sep">·</span>
+      <a href="legal.html#confidentialite">Confidentialité</a>
+      <span class="sep">·</span>
+      <a href="legal.html#cookies">Cookies</a>
+      <span class="sep">·</span>
+      <button type="button" id="manageCookies" class="linkbtn">Gérer les cookies</button>
+    </nav>
   </div>
 </footer>
+
+<!-- BANDEAU COOKIES -->
+<div id="cookieBanner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Gestion des cookies" hidden>
+  <div class="ck-inner">
+    <p class="ck-text">Ce site utilise uniquement des cookies nécessaires à son fonctionnement. La carte Google Maps n'est chargée qu'avec votre accord. Aucun cookie publicitaire ni de suivi. <a href="legal.html#cookies">En savoir plus</a>.</p>
+    <div class="ck-actions">
+      <button type="button" class="ck-btn ck-refuse" data-consent="essential">Refuser</button>
+      <button type="button" class="ck-btn ck-accept" data-consent="all">Tout accepter</button>
+    </div>
+  </div>
+</div>
 
 <!-- LIGHTBOX -->
 <div id="lightbox"><button class="lb-close" aria-label="Fermer">×</button><img alt="Agrandissement"></div>
@@ -1634,6 +1699,55 @@
 
   /* ---- Année footer ---- */
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ---- Consentement cookies + carte Google Maps ---- */
+  (function(){
+    var KEY = "pino_cookie_consent";
+    var banner = document.getElementById("cookieBanner");
+    var mapWrap = document.getElementById("mapWrap");
+    var mapPh = document.getElementById("mapPlaceholder");
+    var mapLoaded = false;
+
+    function get(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
+    function set(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
+
+    function loadMap(){
+      if(mapLoaded || !mapWrap) return;
+      var src = mapWrap.getAttribute("data-src");
+      if(!src) return;
+      var f = document.createElement("iframe");
+      f.setAttribute("loading","lazy");
+      f.setAttribute("title","Localisation de la Pizzeria Pino sur la carte");
+      f.setAttribute("referrerpolicy","no-referrer-when-downgrade");
+      f.src = src;
+      if(mapPh) mapPh.remove();
+      mapWrap.appendChild(f);
+      mapLoaded = true;
+    }
+    function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
+    function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
+
+    var choice = get();
+    if(choice === "all"){ loadMap(); }
+    else if(!choice){ showBanner(); }
+
+    if(banner){
+      banner.querySelectorAll(".ck-btn").forEach(function(b){
+        b.addEventListener("click", function(){
+          var c = b.getAttribute("data-consent");
+          set(c);
+          if(c === "all") loadMap();
+          hideBanner();
+        });
+      });
+    }
+    var manage = document.getElementById("manageCookies");
+    if(manage) manage.addEventListener("click", function(e){ e.preventDefault(); showBanner(); });
+
+    // Clic explicite sur "Afficher la carte" = consentement pour Google Maps
+    var mapLoad = document.getElementById("mapLoad");
+    if(mapLoad) mapLoad.addEventListener("click", function(){ set("all"); loadMap(); });
+  })();
 })();
 </script>
 </body>
