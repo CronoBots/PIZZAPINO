@@ -236,7 +236,15 @@
   /* cadre éditorial */
   .hero::after{content:"";position:absolute;inset:clamp(12px,2vw,24px);z-index:2;pointer-events:none;
     border:1px solid rgba(198,154,77,.28)}
-  .embers{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.75}
+  .embers{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.85}
+  /* Lueur de braise qui respire (feu de bois) */
+  .hero-glow{position:absolute;left:50%;bottom:-24%;z-index:1;pointer-events:none;
+    width:min(150vw,1120px);height:min(150vw,1120px);transform:translateX(-50%);
+    background:radial-gradient(circle at 50% 50%,rgba(232,148,52,.30) 0%,rgba(194,69,28,.18) 34%,rgba(125,26,16,.10) 54%,transparent 70%);
+    filter:blur(4px);mix-blend-mode:screen;opacity:0;
+    animation:heroGlowIn 1.8s ease 1.55s forwards,heroBreathe 6.8s ease-in-out 1.55s infinite}
+  @keyframes heroGlowIn{to{opacity:1}}
+  @keyframes heroBreathe{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.07)}}
   .spotlight{position:absolute;inset:0;z-index:1;pointer-events:none;
     background:radial-gradient(420px circle at var(--mx,70%) var(--my,30%),rgba(198,154,77,.1),transparent 70%);
     transition:background .2s}
@@ -644,7 +652,7 @@
     .hero{height:148vw;min-height:0;align-items:flex-end;padding:0 0 30px}
     /* Dégradé chaud et plus dense vers le bas → le texte reste lisible sur la pizza */
     .hero::before{background:linear-gradient(to bottom,
-      rgba(26,17,11,.46) 0%,rgba(26,17,11,.26) 26%,rgba(22,14,9,.70) 58%,rgba(17,12,8,.96) 100%)}
+      rgba(26,17,11,.52) 0%,rgba(26,17,11,.32) 26%,rgba(22,14,9,.74) 58%,rgba(17,12,8,.97) 100%)}
     .hero::after{inset:10px;border-color:rgba(198,154,77,.24)}
     .hero .hero-cat{display:none}
     .hero h1{font-size:clamp(2.4rem,9vw,3.3rem);text-shadow:0 2px 26px rgba(0,0,0,.7)}
@@ -717,7 +725,7 @@
   .hero{display:flex;align-items:center;justify-content:center;text-align:center;
     background:radial-gradient(120% 92% at 50% 40%,#1A140F 0%,#110C09 64%)}
   .hero .hero-bg{opacity:0;animation:heroPhoto 1.7s ease 1.55s forwards}
-  .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.42),rgba(17,12,8,.72))}
+  .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.48),rgba(17,12,8,.80))}
   .hi-center{position:relative;z-index:3;max-width:720px;margin:0 auto;padding:0 22px}
   .hi-cat{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.42em;
     font-size:.66rem;color:var(--or);font-weight:500;opacity:0;animation:hiUp .8s ease .3s forwards}
@@ -745,6 +753,7 @@
     .hi-line{width:min(260px,56vw);animation:none}
     header,.call-bar{animation:none!important;opacity:1}
     #heroStatus,.burger{animation:none!important;opacity:var(--fab-opacity)}
+    .hero-glow{animation:none!important;opacity:.82}
   }
   @media(max-width:760px){
     /* hauteur en vw (largeur écran) = stable au scroll, plein écran, contenu qui ne bouge plus */
@@ -834,6 +843,7 @@
 <!-- HERO -->
 <section class="hero" id="top">
   <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-glow" aria-hidden="true"></div>
   <canvas class="embers" id="embers" aria-hidden="true"></canvas>
   <div class="spotlight" id="spot"></div>
   <div class="wrap">
