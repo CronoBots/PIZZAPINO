@@ -976,8 +976,30 @@
   html.app-mode footer{padding-top:26px}
 
   /* Barre d'onglets du bas (catégories + commande) */
-  html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab,html.app-mode #toTop{display:none!important}
+  html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab{display:none!important}
   html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+
+  /* Titre de catégorie en tête de liste (mode app) */
+  .app-cat-head{display:none}
+  html.app-mode .menu-panel .app-cat-head{
+    display:flex;align-items:center;gap:12px;margin:0 0 20px;
+    font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.5rem;color:var(--ink,#26201A);letter-spacing:.01em;
+  }
+  html.app-mode .menu-panel .app-cat-head .ach-txt{flex:0 0 auto}
+  html.app-mode .menu-panel .app-cat-head .ach-line{flex:1;height:1px;background:var(--hair-ink,rgba(38,32,26,.16))}
+  html.app-mode .menu-panel .app-cat-head .ach-count{flex:0 0 auto;font-family:"Oswald",sans-serif;font-style:normal;font-weight:400;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rouge,#A8261D)}
+  body.searching .app-cat-head{display:none!important}
+
+  /* Vue plus compacte : on retire le paragraphe d'intro */
+  html.app-mode #carte .lead{display:none}
+
+  /* Section Infos allégée : horaires + adresse + itinéraire, sans carte ni superflu */
+  html.app-mode #infos .cb-map,html.app-mode #infos .feat,html.app-mode #infos .ig-line{display:none!important}
+  html.app-mode #infos .contact-frame{grid-template-columns:1fr!important;display:block}
+
+  /* Bouton « remonter » au-dessus de la barre d'onglets */
+  html.app-mode #toTop{display:inline-flex!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;right:16px!important;left:auto!important;z-index:125}
+  html.app-mode.has-order #toTop,html.app-mode body.has-order #toTop{display:inline-flex!important}
   .tabbar{display:none}
   html.app-mode .tabbar{
     display:flex;position:fixed;left:0;right:0;bottom:0;z-index:130;
@@ -2155,11 +2177,11 @@
     <span>Pâtes</span>
   </button>
   <button type="button" class="tb" data-cat="pizzas">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.6 2.6 3.2 3.6 3.2 6.7a3.2 3.2 0 0 1-6.4 0c0-1.6.9-2.4 1.6-3.1.3 1.1 1.6 1.1 1.6-3.6z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.2l8 12.8 8-12.8a19 19 0 0 0-16 0z"/><path d="M6 6.1a19 19 0 0 1 12 0"/><circle cx="12" cy="10" r=".9" fill="currentColor" stroke="none"/><circle cx="9.7" cy="13.4" r=".9" fill="currentColor" stroke="none"/><circle cx="13.9" cy="13.9" r=".9" fill="currentColor" stroke="none"/></svg>
     <span>Pizzas</span>
   </button>
   <button type="button" class="tb" data-cat="bianca">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5l9 14.5 9-14.5a20 20 0 0 0-18 0z"/><circle cx="10" cy="10" r=".7" fill="currentColor" stroke="none"/><circle cx="13.4" cy="12.6" r=".7" fill="currentColor" stroke="none"/><circle cx="11.4" cy="14.6" r=".7" fill="currentColor" stroke="none"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><circle cx="9.6" cy="10" r=".85" fill="currentColor" stroke="none"/><circle cx="14.2" cy="10.8" r=".85" fill="currentColor" stroke="none"/><circle cx="11" cy="14.4" r=".85" fill="currentColor" stroke="none"/><circle cx="14.6" cy="14.4" r=".85" fill="currentColor" stroke="none"/></svg>
     <span>Bianca</span>
   </button>
   <button type="button" class="tb" data-cat="viandes">
@@ -2191,11 +2213,25 @@
   var orderBtn = document.getElementById('tbOrder');
   var carte = document.getElementById('carte');
 
+  // Titre en tête de chaque catégorie
+  var TITLES = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', bianca:'Pizza Bianca', viandes:'Viandes', desserts:'Desserts' };
+  Object.keys(TITLES).forEach(function(id){
+    var panel = document.getElementById(id);
+    if(!panel || panel.querySelector('.app-cat-head')) return;
+    var n = panel.querySelectorAll('.dish').length;
+    var head = document.createElement('div'); head.className = 'app-cat-head';
+    head.innerHTML = '<span class="ach-txt"></span><span class="ach-line"></span><span class="ach-count">' + n + ' plat' + (n>1?'s':'') + '</span>';
+    head.querySelector('.ach-txt').textContent = TITLES[id];
+    panel.insertBefore(head, panel.firstChild);
+  });
+
   function setActiveCat(btn){ catBtns.forEach(function(b){ b.classList.toggle('active', b===btn); }); }
 
   catBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
       var cat = btn.getAttribute('data-cat');
+      // re-toucher l'onglet déjà actif = remonter en haut
+      if(btn.classList.contains('active')){ window.scrollTo({top:0, behavior:'smooth'}); return; }
       var topTab = document.getElementById('tab-'+cat);
       if(topTab) topTab.click();               // réutilise la logique existante des onglets
       setActiveCat(btn);
