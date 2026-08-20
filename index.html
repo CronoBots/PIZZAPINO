@@ -969,14 +969,12 @@
   html.app-mode .app-bar .ab-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
   html.app-mode .app-bar .ab-call svg{width:18px;height:18px}
 
-  /* Recherche : bouton loupe à gauche, champ dévoilé au clic */
-  html.app-mode .app-bar.has-search{flex-direction:column;align-items:stretch;gap:0}
-  html.app-mode .app-bar .ab-top{display:flex;align-items:center;gap:11px}
-  html.app-mode .app-bar .ab-search{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(241,234,219,.09);border:1px solid rgba(198,154,77,.28);color:var(--paper,#F1EADB);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s,border-color .2s,color .2s;padding:0}
-  html.app-mode .app-bar .ab-search svg{width:19px;height:19px}
-  html.app-mode .app-bar.search-open .ab-search{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
-  html.app-mode .app-bar .menu-search{display:none;margin:10px 0 0;max-width:none;opacity:1}
-  html.app-mode .app-bar.search-open .menu-search{display:block}
+  /* Recherche toujours visible dans la barre du haut (marque retirée) */
+  html.app-mode .app-bar.has-search{flex-direction:column;align-items:stretch;gap:9px}
+  html.app-mode .app-bar .ab-top{display:flex;align-items:center;gap:12px}
+  html.app-mode .app-bar .ab-brand{display:none}
+  html.app-mode .app-bar .ab-status{margin-left:0;margin-right:auto}
+  html.app-mode .app-bar .menu-search{display:block;margin:0;max-width:none;opacity:1}
   html.app-mode .app-bar .menu-search input{padding:11px 16px 11px 44px;font-size:16px;background:#F1EADB;border-color:rgba(198,154,77,.28)}
   html.app-mode .app-bar .menu-search input::placeholder{color:#8a7f6d;opacity:1}
   html.app-mode .app-bar .menu-search .s-ico{left:14px;color:#8a7f6d}
@@ -1001,13 +999,10 @@
 
   /* Titre de catégorie en tête de liste (mode app) */
   .app-cat-head{display:none}
-  html.app-mode .menu-panel .app-cat-head{
-    display:flex;align-items:center;gap:12px;margin:0 0 20px;
-    font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.5rem;color:var(--ink,#26201A);letter-spacing:.01em;
-  }
-  html.app-mode .menu-panel .app-cat-head .ach-txt{flex:0 0 auto}
-  html.app-mode .menu-panel .app-cat-head .ach-line{flex:1;height:1px;background:var(--hair-ink,rgba(38,32,26,.16))}
-  html.app-mode .menu-panel .app-cat-head .ach-count{flex:0 0 auto;font-family:"Oswald",sans-serif;font-style:normal;font-weight:400;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rouge,#A8261D)}
+  html.app-mode .menu-panel .app-cat-head{display:block;margin:2px 0 24px}
+  html.app-mode .menu-panel .app-cat-head::before{content:"";display:block;width:42px;height:3px;background:var(--rouge,#A8261D);border-radius:2px;margin-bottom:13px}
+  html.app-mode .menu-panel .app-cat-head .ach-txt{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.95rem;line-height:1.04;color:var(--ink,#26201A);letter-spacing:.004em}
+  html.app-mode .menu-panel .app-cat-head .ach-count{display:block;margin-top:7px;font-family:"Oswald",sans-serif;font-weight:500;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rouge,#A8261D)}
   body.searching .app-cat-head{display:none!important}
 
   /* Vue plus compacte : on retire le paragraphe d'intro */
@@ -1018,7 +1013,7 @@
   html.app-mode #infos .contact-frame{grid-template-columns:1fr!important;display:block}
 
   /* Bouton « remonter » au-dessus de la barre d'onglets */
-  html.app-mode #toTop{display:inline-flex!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;left:16px!important;right:auto!important;z-index:125}
+  html.app-mode #toTop{display:inline-flex!important;align-items:center!important;justify-content:center!important;line-height:1;bottom:calc(84px + env(safe-area-inset-bottom))!important;right:16px!important;left:auto!important;z-index:125}
   html.app-mode.has-order #toTop,html.app-mode body.has-order #toTop{display:inline-flex!important}
   .tabbar{display:none}
   html.app-mode .tabbar{
@@ -2250,27 +2245,17 @@
   var orderBtn = document.getElementById('tbOrder');
   var carte = document.getElementById('carte');
 
-  // Recherche : bouton loupe à gauche, champ dévoilé au clic
+  // Recherche toujours visible dans la barre du haut
   (function(){
     var appbar = document.querySelector('.app-bar');
     var search = document.querySelector('#carte .menu-search');
     if(!(appbar && search) || appbar.classList.contains('has-search')) return;
     var top = document.createElement('div'); top.className = 'ab-top';
     while(appbar.firstChild){ top.appendChild(appbar.firstChild); }
-    var sBtn = document.createElement('button');
-    sBtn.type = 'button'; sBtn.className = 'ab-search';
-    sBtn.setAttribute('aria-label', 'Rechercher un plat'); sBtn.setAttribute('aria-expanded', 'false');
-    sBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>';
-    top.insertBefore(sBtn, top.firstChild);
     appbar.appendChild(top);
     search.classList.remove('reveal');
     appbar.appendChild(search);
     appbar.classList.add('has-search');
-    var input = search.querySelector('input');
-    function openS(){ appbar.classList.add('search-open'); sBtn.setAttribute('aria-expanded', 'true'); if(input) setTimeout(function(){ input.focus(); }, 60); }
-    function closeS(){ appbar.classList.remove('search-open'); sBtn.setAttribute('aria-expanded', 'false'); if(input){ input.value = ''; input.dispatchEvent(new Event('input', { bubbles:true })); input.blur(); } }
-    sBtn.addEventListener('click', function(){ appbar.classList.contains('search-open') ? closeS() : openS(); });
-    if(input) input.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeS(); });
   })();
 
   // Titre en tête de chaque catégorie
@@ -2280,7 +2265,7 @@
     if(!panel || panel.querySelector('.app-cat-head')) return;
     var n = panel.querySelectorAll('.dish').length;
     var head = document.createElement('div'); head.className = 'app-cat-head';
-    head.innerHTML = '<span class="ach-txt"></span><span class="ach-line"></span><span class="ach-count">' + n + ' plat' + (n>1?'s':'') + '</span>';
+    head.innerHTML = '<span class="ach-txt"></span><span class="ach-count">' + n + ' plat' + (n>1?'s':'') + '</span>';
     head.querySelector('.ach-txt').textContent = TITLES[id];
     panel.insertBefore(head, panel.firstChild);
   });
@@ -2295,9 +2280,7 @@
       var topTab = document.getElementById('tab-'+cat);
       if(topTab) topTab.click();               // réutilise la logique existante des onglets
       setActiveCat(btn);
-      // remonter en haut de la carte, sous la barre app
-      var panel = document.getElementById(cat) || carte;
-      if(panel && panel.scrollIntoView) panel.scrollIntoView({behavior:'smooth', block:'start'});
+      window.scrollTo({top:0, behavior:'smooth'}); // remonter tout en haut
     });
   });
 
