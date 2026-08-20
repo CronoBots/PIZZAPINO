@@ -953,6 +953,17 @@
   @media(min-width:761px){.install-bar{display:none!important}}
 
   /* ====== MODE APP (PWA installée) : carte + commande + appel ====== */
+  /* Écran de lancement : logo en fondu */
+  #splash{display:none}
+  html.app-mode #splash{display:flex;position:fixed;inset:0;z-index:2000;background:#0a0908;
+    align-items:center;justify-content:center;opacity:0;pointer-events:none;
+    animation:splashFade 2s ease forwards;will-change:opacity}
+  html.app-mode #splash img{width:min(70vw,320px);height:auto;display:block;
+    -webkit-mask-image:radial-gradient(circle at center, #000 52%, transparent 82%);
+    mask-image:radial-gradient(circle at center, #000 52%, transparent 82%)}
+  @keyframes splashFade{0%{opacity:0}20%{opacity:1}66%{opacity:1}100%{opacity:0;visibility:hidden}}
+  @media(prefers-reduced-motion:reduce){html.app-mode #splash{animation-duration:1s}}
+
   .app-bar{display:none}
   html.app-mode .app-bar{
     display:flex;align-items:center;gap:12px;flex-wrap:nowrap;
@@ -1037,6 +1048,9 @@
 </style>
 </head>
 <body>
+<!-- ÉCRAN DE LANCEMENT (PWA) : logo en fondu -->
+<div id="splash" aria-hidden="true"><img src="icons/icon-512.png" alt="Pizzeria Pino" width="300" height="300"></div>
+<script>(function(){var s=document.getElementById('splash');if(!s)return;if(!document.documentElement.classList.contains('app-mode')){if(s.parentNode)s.parentNode.removeChild(s);return;}var done=function(){if(s&&s.parentNode)s.parentNode.removeChild(s);s=null;};s.addEventListener('animationend',done);setTimeout(done,2600);})();</script>
 <a class="skip" href="#carte">Aller à la carte</a>
 
 <div id="progress"></div>
