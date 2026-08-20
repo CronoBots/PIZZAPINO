@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PIZZERIA PINO">
 
 <!-- Référencement local (Google Business / cartes) -->
@@ -910,7 +910,14 @@
   .cart-status:empty{display:none}
   .cart-status.open{color:#1f9d57}
   .cart-status.closed{color:var(--rouge)}
-  .cart-actions{display:grid;grid-template-columns:1fr;gap:10px}
+  .cart-cat{display:flex;align-items:center;gap:10px;margin:18px 0 2px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.66rem;color:var(--rouge)}
+  .cart-cat::after{content:"";flex:1;height:1px;background:var(--hair-ink)}
+  .cart-cat:first-child{margin-top:2px}
+  .cart-actions{display:flex;gap:10px;align-items:stretch}
+  .cart-actions .ca-call{flex:1 1 auto}
+  .ca-trash{flex:0 0 auto;width:54px;display:inline-flex;align-items:center;justify-content:center;background:#FBF6EB;border:1px solid var(--hair-ink);color:var(--ink-mut);cursor:pointer}
+  .ca-trash svg{width:20px;height:20px}
+  .ca-trash:hover,.ca-trash:focus-visible,.ca-trash:active{border-color:var(--rouge);color:var(--rouge);background:rgba(168,38,29,.06);outline:none}
   .cart-actions a{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;text-decoration:none;transition:.2s;cursor:pointer}
   .cart-actions a svg{width:18px;height:18px}
@@ -919,7 +926,6 @@
   .cart-clear{display:block;margin:13px auto 0;background:none;border:0;color:var(--ink-mut);font-size:.78rem;text-decoration:underline;cursor:pointer;font-family:inherit}
   .cart-clear:hover{color:var(--rouge)}
   .cart-note{margin-top:12px;font-size:.72rem;color:var(--ink-mut);text-align:center;line-height:1.55}
-  @media(max-width:480px){.cart-actions{grid-template-columns:1fr}}
 
 
   /* ===== BANNIÈRE "INSTALLER L'APP" (mobile, bas d'écran, discrète) ===== */
@@ -952,9 +958,10 @@
     display:flex;align-items:center;gap:12px;
     position:sticky;top:0;z-index:120;
     padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
-    background:rgba(13,11,10,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    background:#0d0b0a;
     border-bottom:1px solid rgba(198,154,77,.16);
   }
+  html.app-mode #progress{display:none}
   html.app-mode .app-bar .ab-brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.12rem;color:var(--paper,#F1EADB);letter-spacing:.01em;line-height:1;white-space:nowrap}
   html.app-mode .app-bar .ab-brand b{color:var(--rouge,#A8261D);font-weight:600}
   html.app-mode .app-bar .ab-status{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.66rem;color:#cfc3ad;white-space:nowrap}
@@ -2049,16 +2056,16 @@
   <div class="cart-head"><h3>Ma commande</h3><button type="button" class="cart-close" id="cartClose" aria-label="Fermer">×</button></div>
   <div class="cart-list" id="cartList"></div>
   <div class="cart-foot">
+    <div class="cart-total"><span>Total estimé</span><b id="cartTotal">0,00 €</b></div>
     <div class="cart-remark">
       <label for="cartRemark">Suppléments ou précisions</label>
       <textarea id="cartRemark" rows="2" placeholder="Ex. : mozzarella extra, sans oignon, allergies… (à préciser au téléphone)"></textarea>
     </div>
-    <div class="cart-total"><span>Total estimé</span><b id="cartTotal">0,00 €</b></div>
     <div id="cartStatus" class="cart-status" aria-live="polite"></div>
     <div class="cart-actions">
       <a class="ca-call" id="caCall" href="tel:+3285513339"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Appeler le restaurant</a>
+      <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
-    <button type="button" class="cart-clear" id="cartClear">Vider la commande</button>
     <p class="cart-note">Ceci n'est pas un paiement en ligne&nbsp;: cet outil vous aide à composer votre commande, puis à l'envoyer ou à la dicter au restaurant. Total estimé, à confirmer sur place.</p>
   </div>
 </div>
@@ -2081,19 +2088,20 @@
     var price = parsePrice(priceEl.textContent);
     if(price == null) return;
     var id = 'd' + i, name = nameEl.textContent.trim();
+    var panel = d.closest('.menu-panel'); var cat = panel ? panel.id : '';
     var s = document.createElement('div'); s.className = 'dish-stepper';
     s.innerHTML = '<button type="button" class="ds-minus" aria-label="Retirer un ' + name + '">−</button><span class="ds-qty">0</span><button type="button" class="ds-plus" aria-label="Ajouter un ' + name + '">+</button>';
     d.appendChild(s);
-    var rec = { id:id, name:name, price:price, el:d, qtyEl:s.querySelector('.ds-qty') };
+    var rec = { id:id, name:name, price:price, cat:cat, el:d, qtyEl:s.querySelector('.ds-qty') };
     byId[id] = rec;
-    if(state[id]){ state[id].price = price; state[id].name = name; }
+    if(state[id]){ state[id].price = price; state[id].name = name; state[id].cat = cat; }
     s.querySelector('.ds-plus').addEventListener('click', function(){ change(rec, 1); });
     s.querySelector('.ds-minus').addEventListener('click', function(){ change(rec, -1); });
   });
 
   function change(rec, delta){
     var q = qty(rec.id) + delta; if(q < 0) q = 0;
-    if(q === 0) delete state[rec.id]; else state[rec.id] = { name:rec.name, price:rec.price, qty:q };
+    if(q === 0) delete state[rec.id]; else state[rec.id] = { name:rec.name, price:rec.price, qty:q, cat:rec.cat };
     save(); syncDish(rec.id); render();
   }
   function syncDish(id){
@@ -2115,17 +2123,29 @@
     if(t.n === 0){
       list.innerHTML = '<p class="cart-empty">Votre commande est vide.<br>Ajoutez des plats depuis la carte avec les boutons + et −.</p>';
     } else {
-      for(var k in state){ (function(id){
-        var it = state[id];
-        var row = document.createElement('div'); row.className = 'cart-item';
-        row.innerHTML = '<span class="ci-name"></span><span class="ci-line">' + money(it.qty * it.price) + '</span>' +
-          '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + it.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>';
-        row.querySelector('.ci-name').textContent = it.name;
-        row.querySelector('.ci-m').addEventListener('click', function(){ step(id, -1); });
-        row.querySelector('.ci-p').addEventListener('click', function(){ step(id, 1); });
-        list.appendChild(row);
-      })(k); }
+      var groups = {};
+      for(var k in state){ var c = state[k].cat || (byId[k] && byId[k].cat) || '_autres'; (groups[c] = groups[c] || []).push(k); }
+      var order = CAT_ORDER.filter(function(c){ return groups[c]; });
+      Object.keys(groups).forEach(function(c){ if(order.indexOf(c) < 0) order.push(c); });
+      order.forEach(function(c){
+        var head = document.createElement('div'); head.className = 'cart-cat';
+        head.textContent = CAT_LABEL[c] || 'Autres';
+        list.appendChild(head);
+        groups[c].forEach(function(id){ list.appendChild(renderRow(id)); });
+      });
     }
+  }
+  var CAT_ORDER = ['pates','pizzas','bianca','viandes','desserts'];
+  var CAT_LABEL = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', bianca:'Pizza Bianca', viandes:'Viandes', desserts:'Desserts' };
+  function renderRow(id){
+    var it = state[id];
+    var row = document.createElement('div'); row.className = 'cart-item';
+    row.innerHTML = '<span class="ci-name"></span><span class="ci-line">' + money(it.qty * it.price) + '</span>' +
+      '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + it.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>';
+    row.querySelector('.ci-name').textContent = it.name;
+    row.querySelector('.ci-m').addEventListener('click', function(){ step(id, -1); });
+    row.querySelector('.ci-p').addEventListener('click', function(){ step(id, 1); });
+    return row;
   }
   function step(id, delta){
     if(byId[id]){ change(byId[id], delta); return; }
@@ -2156,7 +2176,11 @@
   fab.addEventListener('click', openPanel);
   document.getElementById('cartClose').addEventListener('click', closePanel);
   ov.addEventListener('click', closePanel);
-  document.getElementById('cartClear').addEventListener('click', function(){ state = {}; save(); if(remark){ remark.value = ''; try{ localStorage.removeItem('pino_order_note'); }catch(e){} } for(var id in byId) syncDish(id); render(); });
+  document.getElementById('cartClear').addEventListener('click', function(){
+    if(!Object.keys(state).length) return;
+    if(!window.confirm('Vider toute la commande ?')) return;
+    state = {}; save(); if(remark){ remark.value = ''; try{ localStorage.removeItem('pino_order_note'); }catch(e){} } for(var id in byId) syncDish(id); render();
+  });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePanel(); });
 
   var toggle = document.getElementById('orderToggle');
