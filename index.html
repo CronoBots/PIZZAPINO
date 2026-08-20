@@ -878,39 +878,39 @@
   .cart-ov.show{opacity:1;visibility:visible}
   .cart-panel{position:fixed;z-index:133;right:0;bottom:0;left:0;max-width:520px;margin:0 auto;
     background:var(--paper);color:var(--ink);border-top:4px solid var(--rouge);
-    max-height:88vh;display:flex;flex-direction:column;transform:translateY(101%);
+    max-height:92vh;display:flex;flex-direction:column;transform:translateY(101%);
     transition:transform .45s cubic-bezier(.22,.68,.16,1);box-shadow:0 -24px 60px -20px rgba(0,0,0,.65)}
   .cart-panel.show{transform:none}
-  .cart-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 14px;border-bottom:1px solid var(--hair-ink)}
+  .cart-head{display:flex;align-items:center;justify-content:space-between;padding:15px 22px 11px;border-bottom:1px solid var(--hair-ink)}
   .cart-head h3{font-family:"Fraunces",serif;font-weight:600;font-size:1.35rem;color:var(--ink)}
   .cart-close{background:none;border:0;font-size:1.7rem;line-height:1;cursor:pointer;color:var(--ink-mut);padding:2px 8px}
   .cart-close:hover{color:var(--rouge)}
   .cart-list{overflow-y:auto;padding:6px 22px;flex:1 1 auto;-webkit-overflow-scrolling:touch}
   .cart-empty{text-align:center;color:var(--ink-mut);padding:42px 12px;font-style:italic;font-family:"Fraunces",serif;line-height:1.6}
-  .cart-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--hair-ink)}
+  .cart-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair-ink)}
   .cart-item .ci-name{flex:1 1 auto;min-width:0;font-family:"Fraunces",serif;font-weight:600;font-size:1rem;color:var(--ink)}
   .cart-item .ci-line{font-family:"Oswald",sans-serif;font-variant-numeric:tabular-nums;color:var(--ink-mut);font-size:.85rem;white-space:nowrap}
   .cart-item .ci-step{display:inline-flex;align-items:center;flex:0 0 auto}
   .cart-item .ci-step button{width:29px;height:29px;border:1px solid var(--hair-ink);background:#FBF6EB;cursor:pointer;font-size:1rem;color:var(--ink);line-height:1}
   .cart-item .ci-step button:hover{border-color:var(--rouge);color:var(--rouge)}
   .cart-item .ci-q{min-width:32px;text-align:center;font-family:"Oswald",sans-serif;font-variant-numeric:tabular-nums;font-size:.9rem}
-  .cart-foot{padding:16px 22px calc(18px + env(safe-area-inset-bottom));border-top:1px solid var(--hair-ink);background:var(--paper-2)}
-  .cart-remark{margin-bottom:14px}
+  .cart-foot{padding:13px 22px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--hair-ink);background:var(--paper-2)}
+  .cart-remark{margin-bottom:11px}
   .cart-remark label{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;
     font-size:.62rem;color:var(--ink-mut);margin-bottom:6px}
   .cart-remark textarea{width:100%;background:#FBF6EB;border:1px solid var(--hair-ink);color:var(--ink);
     font-family:"Inter",system-ui,sans-serif;font-size:16px;padding:10px 12px;resize:vertical;min-height:44px;line-height:1.4}
   .cart-remark textarea:focus{outline:none;border-color:var(--rouge)}
   .cart-remark textarea::placeholder{color:var(--ink-mut);opacity:.8}
-  .cart-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;
+  .cart-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.78rem;color:var(--ink-mut)}
   .cart-total b{font-family:"Fraunces",serif;font-size:1.55rem;color:var(--rouge);letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums}
-  .cart-status{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:14px;
+  .cart-status{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:11px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;font-weight:500}
   .cart-status:empty{display:none}
   .cart-status.open{color:#1f9d57}
   .cart-status.closed{color:var(--rouge)}
-  .cart-cat{display:flex;align-items:center;gap:10px;margin:18px 0 2px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.66rem;color:var(--rouge)}
+  .cart-cat{display:flex;align-items:center;gap:10px;margin:13px 0 0;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.66rem;color:var(--rouge)}
   .cart-cat::after{content:"";flex:1;height:1px;background:var(--hair-ink)}
   .cart-cat:first-child{margin-top:2px}
   .cart-actions{display:flex;gap:10px;align-items:stretch}
@@ -925,7 +925,7 @@
   .cart-actions .ca-call:hover{background:var(--rouge-d)}
   .cart-clear{display:block;margin:13px auto 0;background:none;border:0;color:var(--ink-mut);font-size:.78rem;text-decoration:underline;cursor:pointer;font-family:inherit}
   .cart-clear:hover{color:var(--rouge)}
-  .cart-note{margin-top:12px;font-size:.72rem;color:var(--ink-mut);text-align:center;line-height:1.55}
+  .cart-note{margin-top:10px;font-size:.66rem;color:var(--ink-mut);text-align:center;line-height:1.5}
 
 
   /* ===== BANNIÈRE "INSTALLER L'APP" (mobile, bas d'écran, discrète) ===== */
@@ -2075,7 +2075,7 @@
       <a class="ca-call" id="caCall" href="tel:+3285513339"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Appeler le restaurant</a>
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
-    <p class="cart-note">Ceci n'est pas un paiement en ligne&nbsp;: cet outil vous aide à composer votre commande, puis à l'envoyer ou à la dicter au restaurant. Total estimé, à confirmer sur place.</p>
+    <p class="cart-note">Pas de paiement en ligne&nbsp;: outil d'aide à la commande. Total estimé, à confirmer sur place.</p>
   </div>
 </div>
 <script>
