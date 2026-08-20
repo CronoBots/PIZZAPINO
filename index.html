@@ -969,6 +969,15 @@
   html.app-mode .app-bar .ab-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
   html.app-mode .app-bar .ab-call svg{width:18px;height:18px}
 
+  /* Recherche intégrée à la barre du haut (toujours visible) */
+  html.app-mode .app-bar.has-search{flex-direction:column;align-items:stretch;gap:10px;padding-bottom:12px}
+  html.app-mode .app-bar .ab-top{display:flex;align-items:center;gap:12px}
+  html.app-mode .app-bar .menu-search{margin:0;max-width:none;opacity:1}
+  html.app-mode .app-bar .menu-search input{padding:11px 16px 11px 44px;font-size:16px;background:#F1EADB;border-color:rgba(198,154,77,.28)}
+  html.app-mode .app-bar .menu-search input::placeholder{color:#8a7f6d;opacity:1}
+  html.app-mode .app-bar .menu-search .s-ico{left:14px;color:#8a7f6d}
+  html.app-mode .app-bar .menu-search .search-count{margin-top:7px;color:#d8c49a;text-align:left}
+
   /* Sections marketing masquées en mode app */
   html.app-mode #hdr,html.app-mode #mobnav,html.app-mode .hero,html.app-mode .marquee,
   html.app-mode #maison,html.app-mode #galerie,html.app-mode #instagram,
@@ -1005,7 +1014,7 @@
   html.app-mode #infos .contact-frame{grid-template-columns:1fr!important;display:block}
 
   /* Bouton « remonter » au-dessus de la barre d'onglets */
-  html.app-mode #toTop{display:inline-flex!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;right:16px!important;left:auto!important;z-index:125}
+  html.app-mode #toTop{display:inline-flex!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;left:16px!important;right:auto!important;z-index:125}
   html.app-mode.has-order #toTop,html.app-mode body.has-order #toTop{display:inline-flex!important}
   .tabbar{display:none}
   html.app-mode .tabbar{
@@ -2236,6 +2245,20 @@
   var catBtns = Array.prototype.slice.call(bar.querySelectorAll('.tb[data-cat]'));
   var orderBtn = document.getElementById('tbOrder');
   var carte = document.getElementById('carte');
+
+  // Recherche toujours visible : on la remonte dans la barre du haut
+  (function(){
+    var appbar = document.querySelector('.app-bar');
+    var search = document.querySelector('#carte .menu-search');
+    if(appbar && search && !appbar.classList.contains('has-search')){
+      var top = document.createElement('div'); top.className = 'ab-top';
+      while(appbar.firstChild){ top.appendChild(appbar.firstChild); }
+      appbar.appendChild(top);
+      search.classList.remove('reveal');
+      appbar.appendChild(search);
+      appbar.classList.add('has-search');
+    }
+  })();
 
   // Titre en tête de chaque catégorie
   var TITLES = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', bianca:'Pizza Bianca', viandes:'Viandes', desserts:'Desserts' };
