@@ -956,13 +956,16 @@
   /* Écran de lancement : logo en fondu */
   #splash{display:none}
   html.app-mode #splash{display:flex;position:fixed;inset:0;z-index:2000;background:#0a0908;
-    align-items:center;justify-content:center;opacity:0;pointer-events:none;
-    animation:splashFade 2s ease forwards;will-change:opacity}
-  html.app-mode #splash img{width:min(70vw,320px);height:auto;display:block;
+    align-items:center;justify-content:center;opacity:1;pointer-events:none;
+    animation:splashOut 2s ease forwards;will-change:opacity}
+  html.app-mode #splash img{width:min(70vw,320px);height:auto;display:block;opacity:0;
     -webkit-mask-image:radial-gradient(circle at center, #000 52%, transparent 82%);
-    mask-image:radial-gradient(circle at center, #000 52%, transparent 82%)}
-  @keyframes splashFade{0%{opacity:0}20%{opacity:1}66%{opacity:1}100%{opacity:0;visibility:hidden}}
-  @media(prefers-reduced-motion:reduce){html.app-mode #splash{animation-duration:1s}}
+    mask-image:radial-gradient(circle at center, #000 52%, transparent 82%);
+    animation:splashLogo .9s ease-out forwards}
+  /* le fond couvre le site dès la 1re image ; seul le logo apparaît en fondu, puis l'ensemble disparaît */
+  @keyframes splashOut{0%,66%{opacity:1}100%{opacity:0;visibility:hidden}}
+  @keyframes splashLogo{0%{opacity:0;transform:scale(.95)}100%{opacity:1;transform:scale(1)}}
+  @media(prefers-reduced-motion:reduce){html.app-mode #splash img{animation-duration:.4s}}
 
   .app-bar{display:none}
   html.app-mode .app-bar{
@@ -1050,7 +1053,7 @@
 <body>
 <!-- ÉCRAN DE LANCEMENT (PWA) : logo en fondu -->
 <div id="splash" aria-hidden="true"><img src="icons/icon-512.png" alt="Pizzeria Pino" width="300" height="300"></div>
-<script>(function(){var s=document.getElementById('splash');if(!s)return;if(!document.documentElement.classList.contains('app-mode')){if(s.parentNode)s.parentNode.removeChild(s);return;}var done=function(){if(s&&s.parentNode)s.parentNode.removeChild(s);s=null;};s.addEventListener('animationend',done);setTimeout(done,2600);})();</script>
+<script>(function(){var s=document.getElementById('splash');if(!s)return;if(!document.documentElement.classList.contains('app-mode')){if(s.parentNode)s.parentNode.removeChild(s);return;}var done=function(){if(s&&s.parentNode)s.parentNode.removeChild(s);s=null;};s.addEventListener('animationend',function(e){if(e.target===s)done();});setTimeout(done,2500);})();</script>
 <a class="skip" href="#carte">Aller à la carte</a>
 
 <div id="progress"></div>
@@ -1152,7 +1155,6 @@
     <div class="menu-tabs reveal" style="--i:2">
       <button class="tab active" data-tab="pates">Pâtes fraîches</button>
       <button class="tab" data-tab="pizzas">Pizzas au feu de bois</button>
-      <button class="tab" data-tab="bianca">Pizza Bianca</button>
       <button class="tab" data-tab="viandes">Viandes</button>
       <button class="tab" data-tab="desserts">Desserts</button>
     </div>
@@ -1288,11 +1290,7 @@
         <div class="dish"><span class="name">Pizza Primavera</span><span class="dot"></span><span class="price">15,50</span><small class="desc">Mozzarella, scampis, courgettes, tomates cerises, balsamique</small></div>
         <div class="dish"><span class="name">Pizza Tartiflette</span><span class="dot"></span><span class="price">13,50</span><small class="desc">Mozzarella, roblochon, pommes de terre, lardons (en saison)</small></div>
       </div>
-      <p class="menu-foot" style="text-align:left;margin-top:20px">Pizza Junior (-14 ans) : <strong style="color:var(--or)">−2,00</strong> à déduire du prix de la pizza choisie.</p>
-    </div>
-
-    <!-- PIZZA BIANCA -->
-    <div class="menu-panel" id="bianca">
+      <div class="cat-title">Pizza Bianca</div>
       <div class="dishes">
         <div class="dish"><span class="name">Salumi e Formaggi</span><span class="dot"></span><span class="price">13,00</span><small class="desc">Assortiment de charcuteries, roquette, taleggio, gorgonzola</small></div>
         <div class="dish"><span class="name">Bresaola</span><span class="dot"></span><span class="price">13,00</span><small class="desc">Bresaola, roquette, copeaux de parmesan, crème de truffe</small></div>
@@ -1300,6 +1298,7 @@
         <div class="dish"><span class="name">Bruschetta</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomates fraîches, ail, basilic, origan</small></div>
         <div class="dish"><span class="name">Fraicheur</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)</small></div>
       </div>
+      <p class="menu-foot" style="text-align:left;margin-top:20px">Pizza Junior (-14 ans) : <strong style="color:var(--or)">−2,00</strong> à déduire du prix de la pizza choisie.</p>
     </div>
 
     <!-- VIANDES -->
@@ -2160,8 +2159,8 @@
       });
     }
   }
-  var CAT_ORDER = ['pates','pizzas','bianca','viandes','desserts'];
-  var CAT_LABEL = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', bianca:'Pizza Bianca', viandes:'Viandes', desserts:'Desserts' };
+  var CAT_ORDER = ['pates','pizzas','viandes','desserts'];
+  var CAT_LABEL = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', viandes:'Viandes', desserts:'Desserts' };
   function renderRow(id){
     var it = state[id];
     var row = document.createElement('div'); row.className = 'cart-item';
@@ -2229,10 +2228,6 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.2l8 12.8 8-12.8a19 19 0 0 0-16 0z"/><path d="M6 6.1a19 19 0 0 1 12 0"/><circle cx="12" cy="10" r=".9" fill="currentColor" stroke="none"/><circle cx="9.7" cy="13.4" r=".9" fill="currentColor" stroke="none"/><circle cx="13.9" cy="13.9" r=".9" fill="currentColor" stroke="none"/></svg>
     <span>Pizzas</span>
   </button>
-  <button type="button" class="tb" data-cat="bianca">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><circle cx="9.6" cy="10" r=".85" fill="currentColor" stroke="none"/><circle cx="14.2" cy="10.8" r=".85" fill="currentColor" stroke="none"/><circle cx="11" cy="14.4" r=".85" fill="currentColor" stroke="none"/><circle cx="14.6" cy="14.4" r=".85" fill="currentColor" stroke="none"/></svg>
-    <span>Bianca</span>
-  </button>
   <button type="button" class="tb" data-cat="viandes">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7.5c4-2.2 9-2 12 1s2.8 8-1.2 10-10.6.9-12.4-3c-1.3-2.8-.1-6.5 1.6-8z"/><circle cx="9.6" cy="12" r="2.3"/></svg>
     <span>Viandes</span>
@@ -2263,7 +2258,7 @@
   var carte = document.getElementById('carte');
 
   // Titre de catégorie (centré) + recherche juste en dessous, dans le contenu
-  var TITLES = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', bianca:'Pizza Bianca', viandes:'Viandes', desserts:'Desserts' };
+  var TITLES = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', viandes:'Viandes', desserts:'Desserts' };
   var COUNTS = {};
   Object.keys(TITLES).forEach(function(id){
     var pnl = document.getElementById(id);
