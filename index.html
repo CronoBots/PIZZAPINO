@@ -969,10 +969,14 @@
   html.app-mode .app-bar .ab-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
   html.app-mode .app-bar .ab-call svg{width:18px;height:18px}
 
-  /* Recherche intégrée à la barre du haut (toujours visible) */
-  html.app-mode .app-bar.has-search{flex-direction:column;align-items:stretch;gap:10px;padding-bottom:12px}
-  html.app-mode .app-bar .ab-top{display:flex;align-items:center;gap:12px}
-  html.app-mode .app-bar .menu-search{margin:0;max-width:none;opacity:1}
+  /* Recherche : bouton loupe à gauche, champ dévoilé au clic */
+  html.app-mode .app-bar.has-search{flex-direction:column;align-items:stretch;gap:0}
+  html.app-mode .app-bar .ab-top{display:flex;align-items:center;gap:11px}
+  html.app-mode .app-bar .ab-search{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(241,234,219,.09);border:1px solid rgba(198,154,77,.28);color:var(--paper,#F1EADB);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s,border-color .2s,color .2s;padding:0}
+  html.app-mode .app-bar .ab-search svg{width:19px;height:19px}
+  html.app-mode .app-bar.search-open .ab-search{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
+  html.app-mode .app-bar .menu-search{display:none;margin:10px 0 0;max-width:none;opacity:1}
+  html.app-mode .app-bar.search-open .menu-search{display:block}
   html.app-mode .app-bar .menu-search input{padding:11px 16px 11px 44px;font-size:16px;background:#F1EADB;border-color:rgba(198,154,77,.28)}
   html.app-mode .app-bar .menu-search input::placeholder{color:#8a7f6d;opacity:1}
   html.app-mode .app-bar .menu-search .s-ico{left:14px;color:#8a7f6d}
@@ -2246,18 +2250,27 @@
   var orderBtn = document.getElementById('tbOrder');
   var carte = document.getElementById('carte');
 
-  // Recherche toujours visible : on la remonte dans la barre du haut
+  // Recherche : bouton loupe à gauche, champ dévoilé au clic
   (function(){
     var appbar = document.querySelector('.app-bar');
     var search = document.querySelector('#carte .menu-search');
-    if(appbar && search && !appbar.classList.contains('has-search')){
-      var top = document.createElement('div'); top.className = 'ab-top';
-      while(appbar.firstChild){ top.appendChild(appbar.firstChild); }
-      appbar.appendChild(top);
-      search.classList.remove('reveal');
-      appbar.appendChild(search);
-      appbar.classList.add('has-search');
-    }
+    if(!(appbar && search) || appbar.classList.contains('has-search')) return;
+    var top = document.createElement('div'); top.className = 'ab-top';
+    while(appbar.firstChild){ top.appendChild(appbar.firstChild); }
+    var sBtn = document.createElement('button');
+    sBtn.type = 'button'; sBtn.className = 'ab-search';
+    sBtn.setAttribute('aria-label', 'Rechercher un plat'); sBtn.setAttribute('aria-expanded', 'false');
+    sBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>';
+    top.insertBefore(sBtn, top.firstChild);
+    appbar.appendChild(top);
+    search.classList.remove('reveal');
+    appbar.appendChild(search);
+    appbar.classList.add('has-search');
+    var input = search.querySelector('input');
+    function openS(){ appbar.classList.add('search-open'); sBtn.setAttribute('aria-expanded', 'true'); if(input) setTimeout(function(){ input.focus(); }, 60); }
+    function closeS(){ appbar.classList.remove('search-open'); sBtn.setAttribute('aria-expanded', 'false'); if(input){ input.value = ''; input.dispatchEvent(new Event('input', { bubbles:true })); input.blur(); } }
+    sBtn.addEventListener('click', function(){ appbar.classList.contains('search-open') ? closeS() : openS(); });
+    if(input) input.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeS(); });
   })();
 
   // Titre en tête de chaque catégorie
