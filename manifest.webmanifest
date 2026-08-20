@@ -3,6 +3,7 @@
   "short_name": "Pino",
   "description": "Restaurant italien & pizzas au feu de bois à Nandrin. Carte, avis et commande à composer.",
   "lang": "fr",
+  "id": "/PIZZAPINO/",
   "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",

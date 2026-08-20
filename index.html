@@ -1769,12 +1769,6 @@
       if(open){ cmStatus.className = "cm-status open"; cmStatus.innerHTML = '<span class="dot-live open"></span>Ouvert maintenant'; }
       else { cmStatus.className = "cm-status closed"; cmStatus.innerHTML = '<span class="dot-live closed"></span>' + (nextOpen!==null ? "Fermé · ouvre à "+hhmm(nextOpen) : "Actuellement fermé"); }
     }
-    // statut dans le panneau de commande
-    var cartStatus = document.getElementById("cartStatus");
-    if(cartStatus){
-      if(open){ cartStatus.className = "cart-status open"; cartStatus.innerHTML = '<span class="dot-live open"></span>Ouvert maintenant'; }
-      else { cartStatus.className = "cart-status closed"; cartStatus.innerHTML = '<span class="dot-live closed"></span>' + (nextOpen!==null ? "Fermé · ouvre à "+hhmm(nextOpen) : "Actuellement fermé"); }
-    }
     // surligner la ligne d'horaire du jour
     document.querySelectorAll("#hoursList li").forEach(function(li){
       var days = (li.getAttribute("data-days")||"").split(",");
@@ -2019,11 +2013,6 @@
   var list = document.getElementById('cartList'), totalEl = document.getElementById('cartTotal');
 
   function totals(){ var n=0, s=0; for(var k in state){ n += state[k].qty; s += state[k].qty * state[k].price; } return { n:n, s:s }; }
-  function orderText(){
-    var out = ['Bonjour, voici ma commande pour la Pizzeria Pino :', ''];
-    for(var k in state){ var it = state[k]; out.push('• ' + it.qty + '× ' + it.name + ' — ' + money(it.qty * it.price)); }
-    var t = totals(); out.push('', 'Total estimé : ' + money(t.s)); return out.join('\n');
-  }
   function render(){
     var t = totals();
     cfCount.textContent = t.n; cfTotal.textContent = money(t.s);
