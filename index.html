@@ -845,7 +845,18 @@
   .cart-fab:hover{background:var(--rouge-d)}
   .cart-fab .cf-count{background:#fff;color:var(--rouge);border-radius:50%;min-width:22px;height:22px;
     display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;padding:0 6px}
-  .cart-fab .cf-total{font-weight:600}
+  .cart-fab .cf-total{font-weight:600;white-space:nowrap}
+  .cart-fab > span{white-space:nowrap}
+  /* Mobile : barre pleine largeur en bas, sans chevaucher les boutons de coin */
+  @media(max-width:760px){
+    .cart-fab{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));
+      transform:translateY(180%);justify-content:flex-start;padding:15px 20px;gap:12px}
+    .cart-fab.show{transform:none}
+    .cart-fab .cf-total{margin-left:auto}
+    /* Pendant qu'une commande est en cours, on masque les flottants de coin */
+    body.has-order #toTop,body.has-order #heroStatus,body.has-order .call-bar{display:none!important}
+    body.has-order{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  }
 
   /* Panneau commande (bottom sheet) */
   .cart-ov{position:fixed;inset:0;z-index:132;background:rgba(15,11,8,.55);backdrop-filter:blur(3px);
@@ -1956,6 +1967,7 @@
     var t = totals();
     cfCount.textContent = t.n; cfTotal.textContent = money(t.s);
     fab.classList.toggle('show', t.n > 0);
+    document.body.classList.toggle('has-order', t.n > 0);
     totalEl.textContent = money(t.s);
     list.innerHTML = '';
     if(t.n === 0){
