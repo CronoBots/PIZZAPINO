@@ -955,30 +955,29 @@
   /* ====== MODE APP (PWA installée) : carte + commande + appel ====== */
   .app-bar{display:none}
   html.app-mode .app-bar{
-    display:flex;align-items:center;gap:12px;
+    display:flex;align-items:center;justify-content:center;gap:10px;
     position:sticky;top:0;z-index:120;
-    padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+    padding:calc(9px + env(safe-area-inset-top)) 16px 9px;
     background:#0d0b0a;
     border-bottom:1px solid rgba(198,154,77,.16);
   }
   html.app-mode #progress{display:none}
-  html.app-mode .app-bar .ab-brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.12rem;color:var(--paper,#F1EADB);letter-spacing:.01em;line-height:1;white-space:nowrap}
+  html.app-mode .app-bar .ab-brand{display:inline-flex;align-items:center;gap:10px;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.2rem;color:var(--paper,#F1EADB);letter-spacing:.01em;line-height:1}
   html.app-mode .app-bar .ab-brand b{color:var(--rouge,#A8261D);font-weight:600}
-  html.app-mode .app-bar .ab-status{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.66rem;color:#cfc3ad;white-space:nowrap}
-  html.app-mode .app-bar .ab-status .dot-live{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
-  html.app-mode .app-bar .ab-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
-  html.app-mode .app-bar .ab-call svg{width:18px;height:18px}
+  html.app-mode .app-bar .ab-logo{width:30px;height:30px;border-radius:7px;flex:0 0 auto;object-fit:cover}
 
-  /* Recherche toujours visible dans la barre du haut (marque retirée) */
-  html.app-mode .app-bar.has-search{flex-direction:column;align-items:stretch;gap:9px}
-  html.app-mode .app-bar .ab-top{display:flex;align-items:center;gap:12px}
-  html.app-mode .app-bar .ab-brand{display:none}
-  html.app-mode .app-bar .ab-status{margin-left:0;margin-right:auto}
-  html.app-mode .app-bar .menu-search{display:block;margin:0;max-width:none;opacity:1}
-  html.app-mode .app-bar .menu-search input{padding:11px 16px 11px 44px;font-size:16px;background:#F1EADB;border-color:rgba(198,154,77,.28)}
-  html.app-mode .app-bar .menu-search input::placeholder{color:#8a7f6d;opacity:1}
-  html.app-mode .app-bar .menu-search .s-ico{left:14px;color:#8a7f6d}
-  html.app-mode .app-bar .menu-search .search-count{margin-top:7px;color:#d8c49a;text-align:left}
+  /* Appel + statut ouvert/fermé : coin bas-gauche */
+  .app-call{display:none}
+  html.app-mode .app-call{display:inline-flex;align-items:center;gap:10px;position:fixed;left:14px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:125;
+    background:rgba(15,11,8,.9);border:1px solid rgba(198,154,77,.22);border-radius:999px;padding:5px 5px 5px 14px;
+    box-shadow:0 8px 24px -10px rgba(0,0,0,.8);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+  html.app-mode .app-call .ab-status{display:inline-flex;align-items:center;gap:7px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.64rem;color:#e6dcc7;white-space:nowrap}
+  html.app-mode .app-call .ab-status .dot-live{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+  html.app-mode .app-call .ab-call{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
+  html.app-mode .app-call .ab-call svg{width:17px;height:17px}
+
+  /* Recherche : dans le contenu, juste sous le titre de catégorie */
+  html.app-mode #carte .menu-search{margin:14px auto 0}
 
   /* Sections marketing masquées en mode app */
   html.app-mode #hdr,html.app-mode #mobnav,html.app-mode .hero,html.app-mode .marquee,
@@ -989,7 +988,7 @@
   /* La carte devient le point d'entrée */
   html.app-mode #carte{padding-top:26px}
   html.app-mode #carte .eyebrow{display:none}
-  html.app-mode #carte>.wrap>h2:first-of-type{margin-top:0}
+  html.app-mode #carte>.wrap>h2:first-of-type{display:none}
   html.app-mode #infos{padding-top:14px}
   html.app-mode footer{padding-top:26px}
 
@@ -999,10 +998,10 @@
 
   /* Titre de catégorie en tête de liste (mode app) */
   .app-cat-head{display:none}
-  html.app-mode .menu-panel .app-cat-head{display:block;margin:2px 0 24px}
-  html.app-mode .menu-panel .app-cat-head::before{content:"";display:block;width:42px;height:3px;background:var(--rouge,#A8261D);border-radius:2px;margin-bottom:13px}
-  html.app-mode .menu-panel .app-cat-head .ach-txt{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.95rem;line-height:1.04;color:var(--ink,#26201A);letter-spacing:.004em}
-  html.app-mode .menu-panel .app-cat-head .ach-count{display:block;margin-top:7px;font-family:"Oswald",sans-serif;font-weight:500;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rouge,#A8261D)}
+  html.app-mode .app-cat-head{display:block;text-align:center;margin:6px 0 0}
+  html.app-mode .app-cat-head::before{content:"";display:block;width:42px;height:3px;background:var(--rouge,#A8261D);border-radius:2px;margin:0 auto 12px}
+  html.app-mode .app-cat-head .ach-txt{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.95rem;line-height:1.05;color:var(--ink,#26201A);letter-spacing:.004em}
+  html.app-mode .app-cat-head .ach-count{display:block;margin-top:7px;font-family:"Oswald",sans-serif;font-weight:500;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rouge,#A8261D)}
   body.searching .app-cat-head{display:none!important}
 
   /* Vue plus compacte : on retire le paragraphe d'intro */
@@ -2245,41 +2244,56 @@
   var orderBtn = document.getElementById('tbOrder');
   var carte = document.getElementById('carte');
 
-  // Recherche toujours visible dans la barre du haut
+  // Barre du haut : logo + titre ; appel + statut déplacés dans le coin bas-gauche
   (function(){
     var appbar = document.querySelector('.app-bar');
-    var search = document.querySelector('#carte .menu-search');
-    if(!(appbar && search) || appbar.classList.contains('has-search')) return;
-    var top = document.createElement('div'); top.className = 'ab-top';
-    while(appbar.firstChild){ top.appendChild(appbar.firstChild); }
-    appbar.appendChild(top);
-    search.classList.remove('reveal');
-    appbar.appendChild(search);
-    appbar.classList.add('has-search');
+    if(!appbar || appbar.classList.contains('app-ready')) return;
+    var brand = appbar.querySelector('.ab-brand');
+    if(brand && !brand.querySelector('.ab-logo')){
+      var logo = document.createElement('img');
+      logo.className = 'ab-logo'; logo.src = 'icons/icon-512.png'; logo.alt = ''; logo.width = 30; logo.height = 30;
+      brand.insertBefore(logo, brand.firstChild);
+    }
+    var corner = document.createElement('div'); corner.className = 'app-call';
+    var status = appbar.querySelector('.ab-status'), call = appbar.querySelector('.ab-call');
+    if(status) corner.appendChild(status);
+    if(call) corner.appendChild(call);
+    document.body.appendChild(corner);
+    appbar.classList.add('app-ready');
   })();
 
-  // Titre en tête de chaque catégorie
+  // Titre de catégorie (centré) + recherche juste en dessous, dans le contenu
   var TITLES = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', bianca:'Pizza Bianca', viandes:'Viandes', desserts:'Desserts' };
-  Object.keys(TITLES).forEach(function(id){
-    var panel = document.getElementById(id);
-    if(!panel || panel.querySelector('.app-cat-head')) return;
-    var n = panel.querySelectorAll('.dish').length;
-    var head = document.createElement('div'); head.className = 'app-cat-head';
-    head.innerHTML = '<span class="ach-txt"></span><span class="ach-count">' + n + ' plat' + (n>1?'s':'') + '</span>';
-    head.querySelector('.ach-txt').textContent = TITLES[id];
-    panel.insertBefore(head, panel.firstChild);
-  });
+  var COUNTS = {};
+  Object.keys(TITLES).forEach(function(id){ var pnl = document.getElementById(id); COUNTS[id] = pnl ? pnl.querySelectorAll('.dish').length : 0; });
+  var sharedHead = null;
+  (function(){
+    var search = document.querySelector('#carte .menu-search');
+    if(!search) return;
+    search.classList.remove('reveal');
+    sharedHead = document.createElement('div'); sharedHead.className = 'app-cat-head';
+    sharedHead.innerHTML = '<span class="ach-txt"></span><span class="ach-count"></span>';
+    search.parentNode.insertBefore(sharedHead, search);
+  })();
+  function updateHead(id){
+    if(!sharedHead) return;
+    sharedHead.querySelector('.ach-txt').textContent = TITLES[id] || '';
+    var n = COUNTS[id] || 0;
+    sharedHead.querySelector('.ach-count').textContent = n + ' plat' + (n>1?'s':'');
+  }
+  updateHead('pates');
 
   function setActiveCat(btn){ catBtns.forEach(function(b){ b.classList.toggle('active', b===btn); }); }
 
   catBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
       var cat = btn.getAttribute('data-cat');
-      // re-toucher l'onglet déjà actif = remonter en haut
-      if(btn.classList.contains('active')){ window.scrollTo({top:0, behavior:'smooth'}); return; }
-      var topTab = document.getElementById('tab-'+cat);
-      if(topTab) topTab.click();               // réutilise la logique existante des onglets
-      setActiveCat(btn);
+      if(!btn.classList.contains('active')){
+        var topTab = document.getElementById('tab-'+cat);
+        if(topTab) topTab.click();             // réutilise la logique existante des onglets
+        setActiveCat(btn);
+        updateHead(cat);
+      }
       window.scrollTo({top:0, behavior:'smooth'}); // remonter tout en haut
     });
   });
