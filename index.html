@@ -910,6 +910,31 @@
   .cart-note{margin-top:12px;font-size:.72rem;color:var(--ink-mut);text-align:center;line-height:1.55}
   @media(max-width:480px){.cart-actions{grid-template-columns:1fr}}
 
+
+  /* ===== BANNIÈRE "INSTALLER L'APP" (mobile, bas d'écran, discrète) ===== */
+  .install-bar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:99;
+    background:rgba(15,11,8,.97);border:1px solid rgba(198,154,77,.32);
+    box-shadow:0 16px 44px -16px rgba(0,0,0,.72);transform:translateY(190%);
+    transition:transform .45s cubic-bezier(.22,.68,.16,1)}
+  .install-bar.show{transform:none}
+  .ib-main{display:flex;align-items:center;gap:11px;padding:11px 10px 11px 13px}
+  .ib-ico{width:34px;height:34px;flex:0 0 auto;border-radius:8px;overflow:hidden;box-shadow:0 4px 12px -4px rgba(0,0,0,.6)}
+  .ib-ico img{width:100%;height:100%;display:block}
+  .ib-txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+  .ib-txt b{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;color:#F5EFE4}
+  .ib-txt small{font-size:.66rem;color:#B9AD98}
+  .ib-btn{flex:0 0 auto;background:var(--rouge);color:#fff;border:0;font-family:"Oswald",sans-serif;
+    text-transform:uppercase;letter-spacing:.08em;font-size:.7rem;padding:10px 15px;cursor:pointer;transition:background .2s}
+  .ib-btn:hover{background:var(--rouge-d)}
+  .ib-close{flex:0 0 auto;background:none;border:0;color:#9d907c;font-size:1.35rem;line-height:1;cursor:pointer;padding:2px 5px}
+  .ib-close:hover{color:#F5EFE4}
+  .ib-ios{padding:0 14px 12px;font-size:.74rem;color:#D8CDB9;line-height:1.55}
+  .ib-ios b{color:#EAD09A}
+  .ib-ios svg{width:15px;height:15px;vertical-align:-3px;color:#C69A4D}
+  body.has-order .install-bar{display:none!important}
+  @media(max-width:760px){body.install-open #toTop,body.install-open #heroStatus,body.install-open .call-bar{display:none!important}}
+  @media(min-width:761px){.install-bar{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -2037,6 +2062,56 @@
 
   for(var id in byId) syncDish(id);
   render();
+})();
+</script>
+
+<!-- BANNIÈRE INSTALLER L'APP (mobile) -->
+<div id="installBar" class="install-bar" role="dialog" aria-label="Installer l'application" hidden>
+  <div class="ib-main">
+    <span class="ib-ico"><img src="icons/icon-512.png" alt="" width="34" height="34"></span>
+    <span class="ib-txt"><b>Installer l'app</b><small>Accès direct depuis votre écran d'accueil</small></span>
+    <button type="button" class="ib-btn" id="ibInstall">Installer</button>
+    <button type="button" class="ib-close" id="ibClose" aria-label="Fermer">×</button>
+  </div>
+  <div class="ib-ios" id="ibIos" hidden>
+    Appuyez sur <b>Partager</b> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M8 8l4-4 4 4"/><path d="M20 14v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6"/></svg> puis « <b>Sur l'écran d'accueil</b> ».
+  </div>
+</div>
+<script>
+(function(){
+  var bar = document.getElementById('installBar');
+  if(!bar) return;
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  if(standalone) return;
+  var DKEY = 'pino_install_dismissed';
+  try{ if(localStorage.getItem(DKEY)) return; }catch(e){}
+  if(!(window.matchMedia && matchMedia('(max-width:760px)').matches)) return;
+
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua);
+  var deferred = null, shown = false, tries = 0;
+
+  function cookieChosen(){ try{ return !!localStorage.getItem('pino_cookie_consent'); }catch(e){ return true; } }
+  function show(){ if(shown) return; shown = true; bar.hidden = false; document.body.classList.add('install-open'); requestAnimationFrame(function(){ bar.classList.add('show'); }); }
+  function hide(){ bar.classList.remove('show'); document.body.classList.remove('install-open'); setTimeout(function(){ bar.hidden = true; }, 460); }
+  function dismiss(){ try{ localStorage.setItem(DKEY, '1'); }catch(e){} hide(); }
+
+  document.getElementById('ibClose').addEventListener('click', dismiss);
+  document.getElementById('ibInstall').addEventListener('click', function(){
+    if(deferred){ deferred.prompt(); deferred.userChoice.then(function(){ deferred = null; hide(); }); }
+    else if(isIOS){ document.getElementById('ibIos').hidden = false; }
+    else { hide(); }
+  });
+
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferred = e; maybeShow(); });
+  window.addEventListener('appinstalled', function(){ try{ localStorage.setItem(DKEY, '1'); }catch(e){} hide(); });
+
+  function maybeShow(){
+    if(shown) return;
+    if(!cookieChosen()){ if(tries++ < 40) setTimeout(maybeShow, 1500); return; }
+    if(deferred || isIOS) setTimeout(show, 400);
+  }
+  setTimeout(maybeShow, 3200);
 })();
 </script>
 
