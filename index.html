@@ -1993,7 +1993,6 @@
   toggle.addEventListener('click', function(){
     var on = document.body.classList.toggle('order-mode');
     toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
-    if(on){ var c = document.getElementById('carte'); if(c) c.scrollIntoView({ behavior:'smooth', block:'start' }); }
   });
 
   for(var id in byId) syncDish(id);
