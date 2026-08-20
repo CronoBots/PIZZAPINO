@@ -1005,8 +1005,8 @@
   html.app-mode .app-cat-head{display:block;text-align:center;margin:8px 0 0}
   html.app-mode .app-cat-head .ach-txt{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.95rem;line-height:1.05;color:var(--ink,#26201A);letter-spacing:.004em}
   html.app-mode .app-cat-head .ach-count{display:block;margin-top:7px;font-family:"Oswald",sans-serif;font-weight:500;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rouge,#A8261D)}
-  /* trait rouge : sous la barre de recherche */
-  html.app-mode .app-cat-rule{width:42px;height:3px;background:var(--rouge,#A8261D);border-radius:2px;margin:20px auto 2px}
+  /* trait rouge : au-dessus de la barre de recherche */
+  html.app-mode .app-cat-rule{width:42px;height:3px;background:var(--rouge,#A8261D);border-radius:2px;margin:16px auto 0}
   html.app-mode body.searching .app-cat-rule{display:none}
   /* libellé de catégorie au-dessus des résultats de recherche */
   html.app-mode .menu-panel .cat-search-label{display:none;align-items:center;gap:10px;margin:22px 0 6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:500;color:var(--rouge,#A8261D)}
@@ -2283,7 +2283,7 @@
     sharedHead.innerHTML = '<span class="ach-txt"></span><span class="ach-count"></span>';
     search.parentNode.insertBefore(sharedHead, search);
     var rule = document.createElement('div'); rule.className = 'app-cat-rule';
-    search.parentNode.insertBefore(rule, search.nextSibling);
+    search.parentNode.insertBefore(rule, search); // trait rouge au-dessus de la recherche
   })();
   function updateHead(id){
     if(!sharedHead) return;
