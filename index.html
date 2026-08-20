@@ -11,6 +11,14 @@
 <meta name="theme-color" content="#0d0b0a">
 <link rel="canonical" href="https://cronobots.github.io/PIZZAPINO/">
 
+<!-- PWA : application installable -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Pino">
+
 <!-- Référencement local (Google Business / cartes) -->
 <meta name="geo.region" content="BE-WLG">
 <meta name="geo.placename" content="Nandrin">
@@ -1841,6 +1849,13 @@
 
   /* ---- Année footer ---- */
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ---- PWA : enregistrement du service worker (app installable + hors-ligne) ---- */
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
 
   /* ---- Avis : duplication du contenu pour une boucle horizontale sans couture ---- */
   (function(){
