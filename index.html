@@ -955,26 +955,19 @@
   /* ====== MODE APP (PWA installée) : carte + commande + appel ====== */
   .app-bar{display:none}
   html.app-mode .app-bar{
-    display:flex;align-items:center;justify-content:center;gap:10px;
+    display:flex;align-items:center;gap:12px;flex-wrap:nowrap;
     position:sticky;top:0;z-index:120;
-    padding:calc(9px + env(safe-area-inset-top)) 16px 9px;
+    padding:calc(9px + env(safe-area-inset-top)) 15px 9px;
     background:#0d0b0a;
     border-bottom:1px solid rgba(198,154,77,.16);
   }
   html.app-mode #progress{display:none}
-  html.app-mode .app-bar .ab-brand{display:inline-flex;align-items:center;gap:10px;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.2rem;color:var(--paper,#F1EADB);letter-spacing:.01em;line-height:1}
+  html.app-mode .app-bar .ab-brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.42rem;color:var(--paper,#F1EADB);letter-spacing:.01em;line-height:1;white-space:nowrap}
   html.app-mode .app-bar .ab-brand b{color:var(--rouge,#A8261D);font-weight:600}
-  html.app-mode .app-bar .ab-logo{width:30px;height:30px;border-radius:7px;flex:0 0 auto;object-fit:cover}
-
-  /* Appel + statut ouvert/fermé : coin bas-gauche */
-  .app-call{display:none}
-  html.app-mode .app-call{display:inline-flex;align-items:center;gap:10px;position:fixed;left:14px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:125;
-    background:rgba(15,11,8,.9);border:1px solid rgba(198,154,77,.22);border-radius:999px;padding:5px 5px 5px 14px;
-    box-shadow:0 8px 24px -10px rgba(0,0,0,.8);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-  html.app-mode .app-call .ab-status{display:inline-flex;align-items:center;gap:7px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.64rem;color:#e6dcc7;white-space:nowrap}
-  html.app-mode .app-call .ab-status .dot-live{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
-  html.app-mode .app-call .ab-call{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
-  html.app-mode .app-call .ab-call svg{width:17px;height:17px}
+  html.app-mode .app-bar .ab-status{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.62rem;color:#cfc3ad;white-space:nowrap}
+  html.app-mode .app-bar .ab-status .dot-live{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+  html.app-mode .app-bar .ab-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
+  html.app-mode .app-bar .ab-call svg{width:18px;height:18px}
 
   /* Recherche : dans le contenu, juste sous le titre de catégorie */
   html.app-mode #carte .menu-search{margin:14px auto 0}
@@ -2243,24 +2236,6 @@
   var catBtns = Array.prototype.slice.call(bar.querySelectorAll('.tb[data-cat]'));
   var orderBtn = document.getElementById('tbOrder');
   var carte = document.getElementById('carte');
-
-  // Barre du haut : logo + titre ; appel + statut déplacés dans le coin bas-gauche
-  (function(){
-    var appbar = document.querySelector('.app-bar');
-    if(!appbar || appbar.classList.contains('app-ready')) return;
-    var brand = appbar.querySelector('.ab-brand');
-    if(brand && !brand.querySelector('.ab-logo')){
-      var logo = document.createElement('img');
-      logo.className = 'ab-logo'; logo.src = 'icons/icon-512.png'; logo.alt = ''; logo.width = 30; logo.height = 30;
-      brand.insertBefore(logo, brand.firstChild);
-    }
-    var corner = document.createElement('div'); corner.className = 'app-call';
-    var status = appbar.querySelector('.ab-status'), call = appbar.querySelector('.ab-call');
-    if(status) corner.appendChild(status);
-    if(call) corner.appendChild(call);
-    document.body.appendChild(corner);
-    appbar.classList.add('app-ready');
-  })();
 
   // Titre de catégorie (centré) + recherche juste en dessous, dans le contenu
   var TITLES = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', bianca:'Pizza Bianca', viandes:'Viandes', desserts:'Desserts' };
