@@ -991,10 +991,17 @@
 
   /* Titre de catégorie en tête de liste (mode app) */
   .app-cat-head{display:none}
-  html.app-mode .app-cat-head{display:block;text-align:center;margin:6px 0 0}
-  html.app-mode .app-cat-head::before{content:"";display:block;width:42px;height:3px;background:var(--rouge,#A8261D);border-radius:2px;margin:0 auto 12px}
+  html.app-mode .app-cat-head{display:block;text-align:center;margin:8px 0 0}
   html.app-mode .app-cat-head .ach-txt{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.95rem;line-height:1.05;color:var(--ink,#26201A);letter-spacing:.004em}
   html.app-mode .app-cat-head .ach-count{display:block;margin-top:7px;font-family:"Oswald",sans-serif;font-weight:500;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rouge,#A8261D)}
+  /* trait rouge : sous la barre de recherche */
+  html.app-mode .app-cat-rule{width:42px;height:3px;background:var(--rouge,#A8261D);border-radius:2px;margin:20px auto 2px}
+  html.app-mode body.searching .app-cat-rule{display:none}
+  /* libellé de catégorie au-dessus des résultats de recherche */
+  html.app-mode .menu-panel .cat-search-label{display:none;align-items:center;gap:10px;margin:22px 0 6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:500;color:var(--rouge,#A8261D)}
+  html.app-mode .menu-panel .cat-search-label::after{content:"";flex:1;height:1px;background:var(--hair-ink,rgba(38,32,26,.16))}
+  html.app-mode body.searching .menu-panel:not(.no-results) .cat-search-label{display:flex}
+  html.app-mode body.searching .menu-panel.no-results{display:none}
   body.searching .app-cat-head{display:none!important}
 
   /* Vue plus compacte : on retire le paragraphe d'intro */
@@ -1759,6 +1766,7 @@
       if(!q){
         document.body.classList.remove("searching");
         dishes.forEach(function(d){ d.classList.remove("hide"); });
+        document.querySelectorAll(".menu-panel").forEach(function(pnl){ pnl.classList.remove("no-results"); });
         count.textContent = "";
         return;
       }
@@ -1768,6 +1776,9 @@
         var m = index[i].indexOf(q) > -1;
         d.classList.toggle("hide", !m);
         if(m) n++;
+      });
+      document.querySelectorAll(".menu-panel").forEach(function(pnl){
+        pnl.classList.toggle("no-results", pnl.querySelectorAll(".dish:not(.hide)").length === 0);
       });
       count.textContent = n===0 ? "Aucun plat trouvé" : (n + (n>1?" plats trouvés":" plat trouvé"));
     }
@@ -2240,7 +2251,15 @@
   // Titre de catégorie (centré) + recherche juste en dessous, dans le contenu
   var TITLES = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', bianca:'Pizza Bianca', viandes:'Viandes', desserts:'Desserts' };
   var COUNTS = {};
-  Object.keys(TITLES).forEach(function(id){ var pnl = document.getElementById(id); COUNTS[id] = pnl ? pnl.querySelectorAll('.dish').length : 0; });
+  Object.keys(TITLES).forEach(function(id){
+    var pnl = document.getElementById(id);
+    COUNTS[id] = pnl ? pnl.querySelectorAll('.dish').length : 0;
+    // libellé de catégorie, affiché seulement pendant une recherche
+    if(pnl && !pnl.querySelector('.cat-search-label')){
+      var lbl = document.createElement('div'); lbl.className = 'cat-search-label'; lbl.textContent = TITLES[id];
+      pnl.insertBefore(lbl, pnl.firstChild);
+    }
+  });
   var sharedHead = null;
   (function(){
     var search = document.querySelector('#carte .menu-search');
@@ -2249,6 +2268,8 @@
     sharedHead = document.createElement('div'); sharedHead.className = 'app-cat-head';
     sharedHead.innerHTML = '<span class="ach-txt"></span><span class="ach-count"></span>';
     search.parentNode.insertBefore(sharedHead, search);
+    var rule = document.createElement('div'); rule.className = 'app-cat-rule';
+    search.parentNode.insertBefore(rule, search.nextSibling);
   })();
   function updateHead(id){
     if(!sharedHead) return;
