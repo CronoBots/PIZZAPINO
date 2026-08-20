@@ -975,6 +975,29 @@
   html.app-mode #infos{padding-top:14px}
   html.app-mode footer{padding-top:26px}
 
+  /* Barre d'onglets du bas (catégories + commande) */
+  html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab,html.app-mode #toTop{display:none!important}
+  html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+  .tabbar{display:none}
+  html.app-mode .tabbar{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:130;
+    background:rgba(13,11,10,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-top:1px solid rgba(198,154,77,.18);padding:6px 2px calc(6px + env(safe-area-inset-bottom));
+  }
+  html.app-mode .tabbar .tb{position:relative;flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:4px;
+    background:none;border:0;cursor:pointer;padding:5px 1px;color:#8a8171;-webkit-tap-highlight-color:transparent;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.03em;font-size:.55rem;line-height:1;transition:color .18s}
+  html.app-mode .tabbar .tb svg{width:22px;height:22px}
+  html.app-mode .tabbar .tb.active{color:var(--paper,#F1EADB)}
+  html.app-mode .tabbar .tb.active svg{color:#C69A4D}
+  html.app-mode .tabbar .tb-order.active{color:var(--paper,#F1EADB)}
+  html.app-mode .tabbar .tb-order.active svg{color:#C69A4D}
+  html.app-mode .tabbar .tb-badge{position:absolute;top:-2px;left:calc(50% + 5px);min-width:16px;height:16px;padding:0 4px;border-radius:9px;
+    background:var(--rouge,#A8261D);color:#fff;font-family:"Inter",system-ui,sans-serif;font-size:.6rem;font-weight:700;letter-spacing:0;
+    display:none;align-items:center;justify-content:center;box-shadow:0 0 0 2px rgba(13,11,10,.96)}
+  html.app-mode .tabbar .tb-order.has .tb-badge{display:inline-flex}
+  html.app-mode .menu-panel{scroll-margin-top:84px}
+
 </style>
 </head>
 <body>
@@ -2068,7 +2091,7 @@
     totalEl.textContent = money(t.s);
     list.innerHTML = '';
     if(t.n === 0){
-      list.innerHTML = '<p class="cart-empty">Votre commande est vide.<br>Activez « Composer ma commande » sur la carte, puis ajoutez des plats.</p>';
+      list.innerHTML = '<p class="cart-empty">Votre commande est vide.<br>Ajoutez des plats depuis la carte avec les boutons + et −.</p>';
     } else {
       for(var k in state){ (function(id){
         var it = state[id];
@@ -2122,6 +2145,88 @@
 
   for(var id in byId) syncDish(id);
   render();
+})();
+</script>
+
+<!-- BARRE D'ONGLETS BAS (mode app : catégories + commande) -->
+<nav class="tabbar" id="tabbar" aria-label="Navigation de l'application">
+  <button type="button" class="tb active" data-cat="pates">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M7 9c0-1.6 1-2.6 2-2.6M11 9c0-2.1 1-3.1 2-3.1M15 9c0-1.6 1-2.6 2-2.6"/></svg>
+    <span>Pâtes</span>
+  </button>
+  <button type="button" class="tb" data-cat="pizzas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.6 2.6 3.2 3.6 3.2 6.7a3.2 3.2 0 0 1-6.4 0c0-1.6.9-2.4 1.6-3.1.3 1.1 1.6 1.1 1.6-3.6z"/></svg>
+    <span>Pizzas</span>
+  </button>
+  <button type="button" class="tb" data-cat="bianca">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5l9 14.5 9-14.5a20 20 0 0 0-18 0z"/><circle cx="10" cy="10" r=".7" fill="currentColor" stroke="none"/><circle cx="13.4" cy="12.6" r=".7" fill="currentColor" stroke="none"/><circle cx="11.4" cy="14.6" r=".7" fill="currentColor" stroke="none"/></svg>
+    <span>Bianca</span>
+  </button>
+  <button type="button" class="tb" data-cat="viandes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7.5c4-2.2 9-2 12 1s2.8 8-1.2 10-10.6.9-12.4-3c-1.3-2.8-.1-6.5 1.6-8z"/><circle cx="9.6" cy="12" r="2.3"/></svg>
+    <span>Viandes</span>
+  </button>
+  <button type="button" class="tb" data-cat="desserts">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 9a4.5 4.5 0 0 1 9 0z"/><path d="M7.7 9.5 12 20l4.3-10.5"/></svg>
+    <span>Desserts</span>
+  </button>
+  <button type="button" class="tb tb-order" id="tbOrder" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <span>Commande</span>
+    <b class="tb-badge" id="tbBadge">0</b>
+  </button>
+</nav>
+
+<script>
+/* Barre d'onglets bas (mode app) : catégories + commande */
+(function(){
+  if(!document.documentElement.classList.contains('app-mode')) return;
+  var bar = document.getElementById('tabbar'); if(!bar) return;
+
+  // Mode commande actif d'office dans l'app (steppers +/− visibles)
+  document.body.classList.add('order-mode');
+  var ot = document.getElementById('orderToggle'); if(ot) ot.setAttribute('aria-pressed','true');
+
+  var catBtns = Array.prototype.slice.call(bar.querySelectorAll('.tb[data-cat]'));
+  var orderBtn = document.getElementById('tbOrder');
+  var carte = document.getElementById('carte');
+
+  function setActiveCat(btn){ catBtns.forEach(function(b){ b.classList.toggle('active', b===btn); }); }
+
+  catBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var cat = btn.getAttribute('data-cat');
+      var topTab = document.getElementById('tab-'+cat);
+      if(topTab) topTab.click();               // réutilise la logique existante des onglets
+      setActiveCat(btn);
+      // remonter en haut de la carte, sous la barre app
+      var panel = document.getElementById(cat) || carte;
+      if(panel && panel.scrollIntoView) panel.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  // Onglet Commande : ouvre le panneau (déclenche le FAB masqué)
+  var fab = document.getElementById('cartFab');
+  if(orderBtn && fab) orderBtn.addEventListener('click', function(){ fab.click(); });
+
+  // Pastille du nombre d'articles : miroir du compteur du panier
+  var cfCount = document.getElementById('cfCount'), badge = document.getElementById('tbBadge');
+  function syncBadge(){
+    var n = parseInt((cfCount && cfCount.textContent) || '0', 10) || 0;
+    if(badge) badge.textContent = n > 99 ? '99+' : n;
+    if(orderBtn) orderBtn.classList.toggle('has', n > 0);
+  }
+  if(cfCount && 'MutationObserver' in window){
+    new MutationObserver(syncBadge).observe(cfCount, {childList:true, characterData:true, subtree:true});
+  }
+  syncBadge();
+
+  // Surligne l'onglet Commande tant que le panneau est ouvert
+  var panel = document.getElementById('cartPanel');
+  if(panel && 'MutationObserver' in window){
+    new MutationObserver(function(){ orderBtn.classList.toggle('active', panel.classList.contains('show')); })
+      .observe(panel, {attributes:true, attributeFilter:['class']});
+  }
 })();
 </script>
 
