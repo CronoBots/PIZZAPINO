@@ -389,7 +389,7 @@
   .cat-title::after{flex:1}
   .cat-title:first-child{margin-top:0}
   .dishes{display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px}
-  .dish{display:grid;grid-template-columns:minmax(0,max-content) 1fr auto;
+  .dish{display:grid;grid-template-columns:auto 1fr auto;
     grid-template-areas:"name dot price" "desc desc desc" "step step step";
     align-items:baseline;column-gap:8px;padding:14px 0;
     border-bottom:1px solid var(--hair-ink);transition:background .25s}
@@ -1073,9 +1073,9 @@
   html.app-mode .menu-panel .cat-title{justify-content:center;font-size:1.7rem;gap:16px;margin-top:30px;color:#E9CE96;text-shadow:0 1px 10px #000}
   html.app-mode .menu-panel .cat-title::before,html.app-mode .menu-panel .cat-title::after{flex:1;background:linear-gradient(90deg,transparent,rgba(198,154,77,.5),transparent)}
   /* plats : cartes « verre » sombres */
-  html.app-mode .menu-panel .dishes .dish{background:rgba(14,10,7,.62);border:1px solid rgba(233,206,150,.18);border-radius:13px;
-    box-shadow:0 10px 26px -16px #000;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:14px 16px;margin-bottom:11px}
-  html.app-mode .menu-panel .dishes .dish:hover{background:rgba(14,10,7,.62)}
+  html.app-mode .menu-panel .dishes .dish{background:rgba(15,11,8,.82);border:1px solid rgba(233,206,150,.18);border-radius:13px;
+    box-shadow:0 10px 26px -16px #000;padding:14px 16px;margin-bottom:11px}
+  html.app-mode .menu-panel .dishes .dish:not(.in-order):hover{background:rgba(15,11,8,.82)}
   html.app-mode .menu-panel .dish .name{color:#F5EEDF}
   html.app-mode .menu-panel .dish .desc{color:#c3b7a2}
   html.app-mode .menu-panel .dish .price{color:#EACE90}
@@ -1087,8 +1087,8 @@
   html.app-mode .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
   html.app-mode .dish-stepper .ds-qty{background:rgba(0,0,0,.34);border-color:rgba(233,206,150,.3);color:#F5EEDF}
   /* plat en commande : carte rouge « verre » */
-  html.app-mode body.order-mode .dish.in-order{background:rgba(120,26,20,.42);border-color:rgba(233,120,100,.5);
-    box-shadow:0 10px 26px -14px #000,inset 3px 0 0 var(--rouge,#A8261D)}
+  html.app-mode body.order-mode .dish.in-order{background:rgba(138,30,22,.82);border-color:rgba(233,120,100,.55);
+    box-shadow:0 10px 26px -14px #000,inset 4px 0 0 var(--rouge,#A8261D)}
   html.app-mode body.order-mode .dish.in-order .name{color:#fff}
   html.app-mode body.order-mode .dish.in-order .price{color:#F0D9A6}
   /* bas de carte (tarifs, notes) adaptés au sombre */
@@ -2280,15 +2280,6 @@
   function syncDish(id){
     var rec = byId[id]; if(!rec) return;
     var q = qty(id); rec.qtyEl.textContent = q; rec.el.classList.toggle('in-order', q > 0);
-    nudgeRepaint(rec.el);
-  }
-  /* iOS Safari ne rafraîchit pas le calque backdrop-filter quand la classe change :
-     l'état rouge n'apparaissait qu'au prochain reflow (un clic ailleurs). On force le repeint. */
-  function nudgeRepaint(el){
-    if(!document.documentElement.classList.contains('app-mode')) return;
-    var s = el.style;
-    s.webkitBackdropFilter = s.backdropFilter = 'blur(6px) saturate(1.0001)';
-    requestAnimationFrame(function(){ s.webkitBackdropFilter = s.backdropFilter = ''; });
   }
 
   var fab = document.getElementById('cartFab'), cfCount = document.getElementById('cfCount'), cfTotal = document.getElementById('cfTotal');
