@@ -990,7 +990,7 @@
     border-bottom:1px solid rgba(198,154,77,.16);
   }
   html.app-mode #progress{display:none}
-  html.app-mode .app-bar .ab-brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.42rem;color:var(--paper,#F1EADB);letter-spacing:.01em;line-height:1;white-space:nowrap}
+  html.app-mode .app-bar .ab-brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.36rem;color:var(--paper,#F1EADB);letter-spacing:.03em;line-height:1;white-space:nowrap;text-transform:uppercase}
   html.app-mode .app-bar .ab-brand b{color:var(--rouge,#A8261D);font-weight:600}
   html.app-mode .app-bar .ab-status{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.62rem;color:#cfc3ad;white-space:nowrap}
   html.app-mode .app-bar .ab-status .dot-live{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
@@ -2187,7 +2187,7 @@
     fab.classList.toggle('show', t.n > 0);
     document.body.classList.toggle('has-order', t.n > 0);
     totalEl.textContent = money(t.s);
-    if(cartSub) cartSub.textContent = t.n > 0 ? (t.n + ' article' + (t.n > 1 ? 's' : '')) : '';
+    if(cartSub) cartSub.textContent = t.n > 0 ? (t.n + ' plat' + (t.n > 1 ? 's' : '')) : '';
     list.innerHTML = '';
     if(t.n === 0){
       list.innerHTML = '<p class="cart-empty">Votre commande est vide.<br>Ajoutez des plats depuis la carte avec les boutons + et −.</p>';
