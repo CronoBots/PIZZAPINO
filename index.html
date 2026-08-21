@@ -1017,26 +1017,35 @@
   html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab{display:none!important}
   html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 
-  /* Titre de catégorie en tête de liste (mode app) */
+  /* ===== Ambiance chaleureuse (mode app) ===== */
+  html.app-mode #carte{background:#E9DEC7}
+  /* En-tête de catégorie = bandeau photo */
   .app-cat-head{display:none}
-  html.app-mode .app-cat-head{display:block;text-align:center;margin:8px 0 0}
-  html.app-mode .app-cat-head .ach-txt{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.95rem;line-height:1.05;color:var(--ink,#26201A);letter-spacing:.004em}
-  html.app-mode .app-cat-head .ach-count{display:block;margin-top:7px;font-family:"Oswald",sans-serif;font-weight:500;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rouge,#A8261D)}
-  /* trait rouge : au-dessus de la barre de recherche */
-  html.app-mode .app-cat-rule{width:42px;height:3px;background:var(--rouge,#A8261D);border-radius:2px;margin:16px auto 0}
-  html.app-mode body.searching .app-cat-rule{display:none}
+  html.app-mode .app-cat-head{display:flex;flex-direction:column;justify-content:flex-end;position:relative;
+    min-height:144px;margin:2px 0 2px;border-radius:14px;overflow:hidden;text-align:left;
+    background:#1a130d center center/cover no-repeat;box-shadow:0 12px 28px -16px rgba(60,40,20,.7)}
+  html.app-mode .app-cat-head::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,13,8,.05) 0%,rgba(20,13,8,.34) 52%,rgba(20,13,8,.9) 100%)}
+  html.app-mode .app-cat-head .ach-count{position:relative;order:-1;padding:0 18px 3px;font-family:"Oswald",sans-serif;font-weight:600;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:#F0D9A6;text-shadow:0 1px 8px rgba(0,0,0,.85)}
+  html.app-mode .app-cat-head .ach-txt{position:relative;padding:0 18px 15px;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.9rem;line-height:1.02;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+  html.app-mode .app-cat-rule{display:none}
   /* libellé de catégorie au-dessus des résultats de recherche */
   html.app-mode .menu-panel .cat-search-label{display:none;align-items:center;gap:10px;margin:22px 0 6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:500;color:var(--rouge,#A8261D)}
   html.app-mode .menu-panel .cat-search-label::after{content:"";flex:1;height:1px;background:var(--hair-ink,rgba(38,32,26,.16))}
   html.app-mode body.searching .menu-panel:not(.no-results) .cat-search-label{display:flex}
   html.app-mode body.searching .menu-panel.no-results{display:none}
   /* sous-titres (Les incontournables, Pizza Bianca) : plus grands et centrés */
-  html.app-mode .menu-panel .cat-title{justify-content:center;font-size:1.72rem;gap:16px}
+  html.app-mode .menu-panel .cat-title{justify-content:center;font-size:1.72rem;gap:16px;margin-top:30px}
   html.app-mode .menu-panel .cat-title::before,html.app-mode .menu-panel .cat-title::after{flex:1}
-  /* plats ajoutés à la commande : mise en évidence forte */
+  /* plats posés sur des cartes chaleureuses */
+  html.app-mode .menu-panel .dishes .dish{background:#FBF6EA;border:1px solid rgba(38,32,26,.08);border-radius:12px;
+    box-shadow:0 6px 16px -13px rgba(90,60,30,.65);padding:14px 16px;margin-bottom:11px}
+  html.app-mode .menu-panel .dishes .dish:hover{background:#FBF6EA}
+  html.app-mode .menu-panel .dish .price{color:var(--rouge,#A8261D)}
+  html.app-mode .menu-panel .dish .dot{border-bottom-color:rgba(38,32,26,.24)}
+  /* plats ajoutés à la commande : carte mise en évidence */
   html.app-mode body.order-mode .dish.in-order{
-    background:rgba(168,38,29,.09);margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;
-    border-radius:3px;box-shadow:inset 3px 0 0 var(--rouge)}
+    background:#F7E7E0;border-color:rgba(168,38,29,.4);
+    box-shadow:0 6px 16px -12px rgba(140,30,20,.5),inset 3px 0 0 var(--rouge,#A8261D)}
   html.app-mode body.order-mode .dish.in-order .name,
   html.app-mode body.order-mode .dish.in-order .price{color:var(--rouge)}
   body.searching .app-cat-head{display:none!important}
@@ -2343,11 +2352,14 @@
     var rule = document.createElement('div'); rule.className = 'app-cat-rule';
     search.parentNode.insertBefore(rule, search); // trait rouge au-dessus de la recherche
   })();
+  var CAT_IMG = { pates:'gal-pates', pizzas:'gal-pizza', viandes:'gal-ossobuco', desserts:'gal-tiramisu' };
   function updateHead(id){
     if(!sharedHead) return;
     sharedHead.querySelector('.ach-txt').textContent = TITLES[id] || '';
     var n = COUNTS[id] || 0;
-    sharedHead.querySelector('.ach-count').textContent = n + ' plat' + (n>1?'s':'');
+    sharedHead.querySelector('.ach-count').textContent = 'La carte · ' + n + ' plat' + (n>1?'s':'');
+    var img = CAT_IMG[id];
+    if(img) sharedHead.style.backgroundImage = "url('images/" + img + ".jpg')";
   }
   updateHead('pates');
 
