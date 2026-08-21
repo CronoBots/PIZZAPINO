@@ -1161,7 +1161,7 @@
 </head>
 <body>
 <!-- ÉCRAN DE LANCEMENT (PWA) : logo en fondu -->
-<div id="splash" aria-hidden="true"><img src="icons/icon-512.png" alt="Pizzeria Pino" width="300" height="300"></div>
+<div id="splash" aria-hidden="true" style="position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;background:#0a0908"><img src="icons/icon-512.png" alt="Pizzeria Pino" width="300" height="300" style="opacity:0"></div>
 <script>(function(){var s=document.getElementById('splash');if(!s)return;if(!document.documentElement.classList.contains('app-mode')){if(s.parentNode)s.parentNode.removeChild(s);return;}var done=function(){if(s&&s.parentNode)s.parentNode.removeChild(s);s=null;};s.addEventListener('animationend',function(e){if(e.target===s)done();});setTimeout(done,2500);})();</script>
 <a class="skip" href="#carte">Aller à la carte</a>
 
