@@ -2378,14 +2378,18 @@
     var rule = document.createElement('div'); rule.className = 'app-cat-rule';
     search.parentNode.insertBefore(rule, search); // trait rouge au-dessus de la recherche
   })();
-  var CAT_IMG = { pates:'gal-pates', pizzas:'gal-pizza', viandes:'gal-ossobuco', desserts:'gal-tiramisu' };
+  var CAT_IMG = { pates:'bg-pates', pizzas:'gal-pizza', viandes:'gal-ossobuco', desserts:'gal-tiramisu' };
+  var CAT_HD = { pates:true }; // photos HD dédiées (peu de flou) ; les autres restent floutées
   function updateHead(id){
     if(!sharedHead) return;
     sharedHead.querySelector('.ach-txt').textContent = TITLES[id] || '';
     var n = COUNTS[id] || 0;
     sharedHead.querySelector('.ach-count').textContent = 'La carte · ' + n + ' plat' + (n>1?'s':'');
     var img = CAT_IMG[id];
-    if(img && appBg) appBg.style.backgroundImage = "url('images/" + img + ".jpg')";
+    if(img && appBg){
+      appBg.style.backgroundImage = "url('images/" + img + ".jpg')";
+      appBg.style.filter = (CAT_HD[id] ? 'blur(3px)' : 'blur(26px)') + ' saturate(1.12)';
+    }
   }
   updateHead('pates');
 
