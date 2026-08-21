@@ -390,7 +390,7 @@
   .cat-title:first-child{margin-top:0}
   .dishes{display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px}
   .dish{display:grid;grid-template-columns:minmax(0,max-content) 1fr auto;
-    grid-template-areas:"name dot price" "desc desc desc";
+    grid-template-areas:"name dot price" "desc desc desc" "step step step";
     align-items:baseline;column-gap:8px;padding:14px 0;
     border-bottom:1px solid var(--hair-ink);transition:background .25s}
   .dish:hover{background:rgba(168,38,29,.04)}
@@ -855,7 +855,7 @@
 
   /* Stepper par plat (invisible hors mode commande → menu identique) */
   .dish-stepper{display:none}
-  body.order-mode .dish-stepper{display:inline-flex;flex:0 0 100%;justify-content:flex-end;align-items:center;margin-top:9px}
+  body.order-mode .dish-stepper{display:inline-flex;grid-area:step;justify-self:end;justify-content:flex-end;align-items:center;margin-top:9px}
   .dish-stepper button{width:33px;height:33px;border:1px solid var(--hair-ink);background:#FBF6EB;color:var(--ink);
     font-size:1.15rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;font-family:inherit}
   .dish-stepper button:hover{border-color:var(--rouge);color:var(--rouge)}
