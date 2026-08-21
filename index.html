@@ -1022,10 +1022,10 @@
   html.app-mode #carte{background:transparent}
   html.app-mode #carte .cta-row .btn-ghost{border-color:rgba(233,206,150,.42);color:#EFE7D6}
   /* calque photo fixe derrière tout le contenu */
-  #appBg{display:none}
-  html.app-mode #appBg{display:block;position:fixed;inset:-48px;z-index:-1;pointer-events:none;
-    background:#0d0b0a center center/cover no-repeat;filter:blur(26px) saturate(1.12)}
-  html.app-mode #appBg::after{content:"";position:absolute;inset:0;
+  .app-bg-layer,#appScrim{display:none}
+  html.app-mode .app-bg-layer{display:block;position:fixed;inset:-40px;z-index:-2;pointer-events:none;
+    background:#0d0b0a center center/cover no-repeat;opacity:0;transition:opacity .6s ease;will-change:opacity}
+  html.app-mode #appScrim{display:block;position:fixed;inset:0;z-index:-1;pointer-events:none;
     background:linear-gradient(180deg,rgba(9,7,5,.34),rgba(9,7,5,.42) 45%,rgba(9,7,5,.6))}
   /* En-tête de catégorie : texte sur la photo */
   .app-cat-head{display:none}
@@ -2364,9 +2364,22 @@
       pnl.insertBefore(lbl, pnl.firstChild);
     }
   });
-  // calque photo fixe en fond (Concept C)
-  var appBg = document.getElementById('appBg');
-  if(!appBg){ appBg = document.createElement('div'); appBg.id = 'appBg'; appBg.setAttribute('aria-hidden','true'); document.body.appendChild(appBg); }
+  // calques photo fixes en fond, avec fondu enchaîné (Concept C)
+  var bgLayers = [], bgActive = 0;
+  (function(){
+    for(var i=0;i<2;i++){ var l = document.createElement('div'); l.className = 'app-bg-layer'; l.setAttribute('aria-hidden','true'); document.body.appendChild(l); bgLayers.push(l); }
+    var sc = document.createElement('div'); sc.id = 'appScrim'; sc.setAttribute('aria-hidden','true'); document.body.appendChild(sc);
+  })();
+  function setBg(img, hd){
+    if(!bgLayers.length) return;
+    var next = bgLayers[1 - bgActive];
+    next.style.backgroundImage = "url('images/" + img + ".jpg')";
+    next.style.filter = (hd ? '' : 'blur(24px)') + ' saturate(1.08)';
+    void next.offsetWidth; // reflow → déclenche la transition
+    next.style.opacity = '1';
+    bgLayers[bgActive].style.opacity = '0';
+    bgActive = 1 - bgActive;
+  }
   var sharedHead = null;
   (function(){
     var search = document.querySelector('#carte .menu-search');
@@ -2380,16 +2393,14 @@
   })();
   var CAT_IMG = { pates:'bg-pates', pizzas:'bg-pizzas', viandes:'bg-viandes', desserts:'bg-desserts' };
   var CAT_HD = { pates:true, pizzas:true, viandes:true, desserts:true }; // photos HD dédiées → flou léger
+  Object.keys(CAT_IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + CAT_IMG[k] + '.jpg'; }); // préchargement des fonds
   function updateHead(id){
     if(!sharedHead) return;
     sharedHead.querySelector('.ach-txt').textContent = TITLES[id] || '';
     var n = COUNTS[id] || 0;
     sharedHead.querySelector('.ach-count').textContent = 'La carte · ' + n + ' plat' + (n>1?'s':'');
     var img = CAT_IMG[id];
-    if(img && appBg){
-      appBg.style.backgroundImage = "url('images/" + img + ".jpg')";
-      appBg.style.filter = (CAT_HD[id] ? '' : 'blur(24px)') + ' saturate(1.08)';
-    }
+    if(img) setBg(img, !!CAT_HD[id]);
   }
   updateHead('pates');
 
