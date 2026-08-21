@@ -2378,8 +2378,8 @@
     var rule = document.createElement('div'); rule.className = 'app-cat-rule';
     search.parentNode.insertBefore(rule, search); // trait rouge au-dessus de la recherche
   })();
-  var CAT_IMG = { pates:'bg-pates', pizzas:'gal-pizza', viandes:'gal-ossobuco', desserts:'gal-tiramisu' };
-  var CAT_HD = { pates:true }; // photos HD dédiées (peu de flou) ; les autres restent floutées
+  var CAT_IMG = { pates:'bg-pates', pizzas:'bg-pizzas', viandes:'bg-viandes', desserts:'bg-desserts' };
+  var CAT_HD = { pates:true, pizzas:true, viandes:true, desserts:true }; // photos HD dédiées → flou léger
   function updateHead(id){
     if(!sharedHead) return;
     sharedHead.querySelector('.ach-txt').textContent = TITLES[id] || '';
