@@ -1032,11 +1032,11 @@
     background:linear-gradient(180deg,rgba(9,7,5,.34),rgba(9,7,5,.42) 45%,rgba(9,7,5,.6))}
   /* En-tête de catégorie : texte sur la photo */
   .app-cat-head{display:none}
-  html.app-mode .app-cat-head{display:flex;flex-direction:column;position:relative;background:none;box-shadow:none;
-    min-height:0;border-radius:0;overflow:visible;padding:8px 2px 2px;margin:0;text-align:left}
+  html.app-mode .app-cat-head{display:block;position:relative;background:none;box-shadow:none;
+    min-height:0;border-radius:0;overflow:visible;padding:12px 6px 2px;margin:0;text-align:center}
   html.app-mode .app-cat-head::before{display:none}
-  html.app-mode .app-cat-head .ach-count{order:-1;padding:0;font-family:"Oswald",sans-serif;font-weight:600;font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:#F0D9A6;text-shadow:0 1px 10px rgba(0,0,0,.9)}
-  html.app-mode .app-cat-head .ach-txt{padding:0;margin-top:5px;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:2.1rem;line-height:1;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.75)}
+  html.app-mode .app-cat-head .ach-txt{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:2.15rem;line-height:1.02;color:#F7F1E5;text-shadow:0 2px 20px rgba(0,0,0,.92),0 1px 3px rgba(0,0,0,.7)}
+  html.app-mode .app-cat-head .ach-count{display:block;margin-top:7px;font-family:"Oswald",sans-serif;font-weight:600;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:#E9CE96;text-shadow:0 1px 12px rgba(0,0,0,.95)}
   html.app-mode .app-cat-rule{display:none}
   /* recherche : champ « verre » sombre */
   html.app-mode #carte .menu-search input{background:rgba(20,14,10,.5);border-color:rgba(233,206,150,.28);color:#EFE7D6;border-radius:13px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
@@ -2434,7 +2434,7 @@
     if(!sharedHead) return;
     sharedHead.querySelector('.ach-txt').textContent = TITLES[id] || '';
     var n = COUNTS[id] || 0;
-    sharedHead.querySelector('.ach-count').textContent = 'La carte · ' + n + ' plat' + (n>1?'s':'');
+    sharedHead.querySelector('.ach-count').textContent = n + ' plat' + (n>1?'s':'');
     var img = CAT_IMG[id];
     if(img) setBg(img, !!CAT_HD[id]);
   }
