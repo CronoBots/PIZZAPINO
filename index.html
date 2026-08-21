@@ -1017,37 +1017,60 @@
   html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab{display:none!important}
   html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 
-  /* ===== Ambiance chaleureuse (mode app) ===== */
-  html.app-mode #carte{background:#E9DEC7}
-  /* En-tête de catégorie = bandeau photo */
+  /* ===== Concept C : fond photo immersif (mode app) ===== */
+  html.app-mode body{background:#0d0b0a}
+  html.app-mode #carte{background:transparent}
+  html.app-mode #carte .cta-row .btn-ghost{border-color:rgba(233,206,150,.42);color:#EFE7D6}
+  /* calque photo fixe derrière tout le contenu */
+  #appBg{display:none}
+  html.app-mode #appBg{display:block;position:fixed;inset:-12px;z-index:-1;pointer-events:none;
+    background:#0d0b0a center center/cover no-repeat;filter:blur(2px)}
+  html.app-mode #appBg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(9,7,5,.56),rgba(9,7,5,.7) 55%,rgba(9,7,5,.82))}
+  /* En-tête de catégorie : texte sur la photo */
   .app-cat-head{display:none}
-  html.app-mode .app-cat-head{display:flex;flex-direction:column;justify-content:flex-end;position:relative;
-    min-height:144px;margin:2px 0 2px;border-radius:14px;overflow:hidden;text-align:left;
-    background:#1a130d center center/cover no-repeat;box-shadow:0 12px 28px -16px rgba(60,40,20,.7)}
-  html.app-mode .app-cat-head::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,13,8,.05) 0%,rgba(20,13,8,.34) 52%,rgba(20,13,8,.9) 100%)}
-  html.app-mode .app-cat-head .ach-count{position:relative;order:-1;padding:0 18px 3px;font-family:"Oswald",sans-serif;font-weight:600;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:#F0D9A6;text-shadow:0 1px 8px rgba(0,0,0,.85)}
-  html.app-mode .app-cat-head .ach-txt{position:relative;padding:0 18px 15px;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:1.9rem;line-height:1.02;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+  html.app-mode .app-cat-head{display:flex;flex-direction:column;position:relative;background:none;box-shadow:none;
+    min-height:0;border-radius:0;overflow:visible;padding:8px 2px 2px;margin:0;text-align:left}
+  html.app-mode .app-cat-head::before{display:none}
+  html.app-mode .app-cat-head .ach-count{order:-1;padding:0;font-family:"Oswald",sans-serif;font-weight:600;font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:#F0D9A6;text-shadow:0 1px 10px rgba(0,0,0,.9)}
+  html.app-mode .app-cat-head .ach-txt{padding:0;margin-top:5px;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:2.1rem;line-height:1;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.75)}
   html.app-mode .app-cat-rule{display:none}
+  /* recherche : champ « verre » sombre */
+  html.app-mode #carte .menu-search input{background:rgba(20,14,10,.5);border-color:rgba(233,206,150,.28);color:#EFE7D6;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  html.app-mode #carte .menu-search input::placeholder{color:#b9ac96}
+  html.app-mode #carte .menu-search .s-ico{color:#c0b39c}
+  html.app-mode #carte .search-count{color:#E9CE96}
   /* libellé de catégorie au-dessus des résultats de recherche */
-  html.app-mode .menu-panel .cat-search-label{display:none;align-items:center;gap:10px;margin:22px 0 6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:500;color:var(--rouge,#A8261D)}
-  html.app-mode .menu-panel .cat-search-label::after{content:"";flex:1;height:1px;background:var(--hair-ink,rgba(38,32,26,.16))}
+  html.app-mode .menu-panel .cat-search-label{display:none;align-items:center;gap:10px;margin:22px 0 6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:600;color:#E9CE96;text-shadow:0 1px 8px #000}
+  html.app-mode .menu-panel .cat-search-label::after{content:"";flex:1;height:1px;background:rgba(233,206,150,.22)}
   html.app-mode body.searching .menu-panel:not(.no-results) .cat-search-label{display:flex}
   html.app-mode body.searching .menu-panel.no-results{display:none}
-  /* sous-titres (Les incontournables, Pizza Bianca) : plus grands et centrés */
-  html.app-mode .menu-panel .cat-title{justify-content:center;font-size:1.72rem;gap:16px;margin-top:30px}
-  html.app-mode .menu-panel .cat-title::before,html.app-mode .menu-panel .cat-title::after{flex:1}
-  /* plats posés sur des cartes chaleureuses */
-  html.app-mode .menu-panel .dishes .dish{background:#FBF6EA;border:1px solid rgba(38,32,26,.08);border-radius:12px;
-    box-shadow:0 6px 16px -13px rgba(90,60,30,.65);padding:14px 16px;margin-bottom:11px}
-  html.app-mode .menu-panel .dishes .dish:hover{background:#FBF6EA}
-  html.app-mode .menu-panel .dish .price{color:var(--rouge,#A8261D)}
-  html.app-mode .menu-panel .dish .dot{border-bottom-color:rgba(38,32,26,.24)}
-  /* plats ajoutés à la commande : carte mise en évidence */
-  html.app-mode body.order-mode .dish.in-order{
-    background:#F7E7E0;border-color:rgba(168,38,29,.4);
-    box-shadow:0 6px 16px -12px rgba(140,30,20,.5),inset 3px 0 0 var(--rouge,#A8261D)}
-  html.app-mode body.order-mode .dish.in-order .name,
-  html.app-mode body.order-mode .dish.in-order .price{color:var(--rouge)}
+  /* sous-titres (Les incontournables, Pizza Bianca) : or, centrés */
+  html.app-mode .menu-panel .cat-title{justify-content:center;font-size:1.7rem;gap:16px;margin-top:30px;color:#E9CE96;text-shadow:0 1px 10px #000}
+  html.app-mode .menu-panel .cat-title::before,html.app-mode .menu-panel .cat-title::after{flex:1;background:linear-gradient(90deg,transparent,rgba(198,154,77,.5),transparent)}
+  /* plats : cartes « verre » sombres */
+  html.app-mode .menu-panel .dishes .dish{background:rgba(18,13,9,.5);border:1px solid rgba(233,206,150,.16);border-radius:13px;
+    box-shadow:0 10px 26px -16px #000;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:14px 16px;margin-bottom:11px}
+  html.app-mode .menu-panel .dishes .dish:hover{background:rgba(18,13,9,.5)}
+  html.app-mode .menu-panel .dish .name{color:#F5EEDF}
+  html.app-mode .menu-panel .dish .desc{color:#c3b7a2}
+  html.app-mode .menu-panel .dish .price{color:#EACE90}
+  html.app-mode .menu-panel .dish .price::after{color:#b09a6f}
+  html.app-mode .menu-panel .dish .dot{border-bottom-color:rgba(233,206,150,.36)}
+  /* steppers sur fond sombre */
+  html.app-mode .dish-stepper button{background:rgba(0,0,0,.28);border-color:rgba(233,206,150,.3);color:#EFE7D6}
+  html.app-mode .dish-stepper button:hover{border-color:var(--rouge);color:#fff}
+  html.app-mode .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
+  html.app-mode .dish-stepper .ds-qty{background:rgba(0,0,0,.34);border-color:rgba(233,206,150,.3);color:#F5EEDF}
+  /* plat en commande : carte rouge « verre » */
+  html.app-mode body.order-mode .dish.in-order{background:rgba(120,26,20,.42);border-color:rgba(233,120,100,.5);
+    box-shadow:0 10px 26px -14px #000,inset 3px 0 0 var(--rouge,#A8261D)}
+  html.app-mode body.order-mode .dish.in-order .name{color:#fff}
+  html.app-mode body.order-mode .dish.in-order .price{color:#F0D9A6}
+  /* bas de carte (tarifs, notes) adaptés au sombre */
+  html.app-mode #carte .supp-box{border-color:rgba(233,206,150,.3);color:#EFE7D6;background:rgba(18,13,9,.4);backdrop-filter:blur(6px)}
+  html.app-mode #carte .supp-box li{border-color:rgba(233,206,150,.15)}
+  html.app-mode #carte .menu-foot,html.app-mode #carte .panel-note{color:#c3b7a2}
   body.searching .app-cat-head{display:none!important}
 
   /* Vue plus compacte : on retire le paragraphe d'intro */
@@ -2341,6 +2364,9 @@
       pnl.insertBefore(lbl, pnl.firstChild);
     }
   });
+  // calque photo fixe en fond (Concept C)
+  var appBg = document.getElementById('appBg');
+  if(!appBg){ appBg = document.createElement('div'); appBg.id = 'appBg'; appBg.setAttribute('aria-hidden','true'); document.body.appendChild(appBg); }
   var sharedHead = null;
   (function(){
     var search = document.querySelector('#carte .menu-search');
@@ -2359,7 +2385,7 @@
     var n = COUNTS[id] || 0;
     sharedHead.querySelector('.ach-count').textContent = 'La carte · ' + n + ' plat' + (n>1?'s':'');
     var img = CAT_IMG[id];
-    if(img) sharedHead.style.backgroundImage = "url('images/" + img + ".jpg')";
+    if(img && appBg) appBg.style.backgroundImage = "url('images/" + img + ".jpg')";
   }
   updateHead('pates');
 
