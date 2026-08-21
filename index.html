@@ -15,7 +15,7 @@
 <script>/* Mode « app » : vue épurée (carte + commande) quand lancé depuis l'écran d'accueil */
 (function(){try{
   var pwa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true||/[?&]source=pwa/.test(location.search);
-  if(pwa)document.documentElement.classList.add('app-mode');
+  if(pwa){document.documentElement.classList.add('app-mode');document.documentElement.style.background='#0a0908';}
 }catch(e){}})();</script>
 <link rel="icon" type="image/png" href="icons/icon-512.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -1733,6 +1733,21 @@
 (function(){
   "use strict";
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- Préfixe « Pizza » devant les pizzas qui ne l'ont pas (hors Pizza Bianca) ---- */
+  (function(){
+    var panel = document.getElementById("pizzas"); if(!panel) return;
+    var stop = false;
+    Array.prototype.forEach.call(panel.children, function(node){
+      if(!node.classList) return;
+      if(node.classList.contains("cat-title") && /bianca/i.test(node.textContent)) stop = true;
+      if(stop || !node.classList.contains("dishes")) return;
+      node.querySelectorAll(".dish .name").forEach(function(nm){
+        var t = nm.textContent.trim();
+        if(!/^pizza\b/i.test(t)) nm.textContent = "Pizza " + t;
+      });
+    });
+  })();
 
   /* ---- IntersectionObserver : révélations ---- */
   var io = new IntersectionObserver(function(entries){
