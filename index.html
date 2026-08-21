@@ -15,7 +15,7 @@
 <script>/* Mode « app » : vue épurée (carte + commande) quand lancé depuis l'écran d'accueil */
 (function(){try{
   var pwa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true||/[?&]source=pwa/.test(location.search);
-  if(pwa){document.documentElement.classList.add('app-mode');document.documentElement.style.background='#0a0908';}
+  if(pwa)document.documentElement.classList.add('app-mode');
 }catch(e){}})();</script>
 <link rel="icon" type="image/png" href="icons/icon-512.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -24,6 +24,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PIZZERIA PINO">
+<!-- iOS : écrans de lancement (supprime le flash blanc natif au démarrage) -->
+<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="startup/launch-750x1334.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1242x2208.png">
+<link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1125x2436.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="startup/launch-828x1792.png">
+<link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1242x2688.png">
+<link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1170x2532.png">
+<link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1284x2778.png">
+<link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1179x2556.png">
+<link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1290x2796.png">
+<link rel="apple-touch-startup-image" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1206x2622.png">
+<link rel="apple-touch-startup-image" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="startup/launch-1320x2868.png">
 
 <!-- Référencement local (Google Business / cartes) -->
 <meta name="geo.region" content="BE-WLG">
@@ -377,15 +389,17 @@
   .cat-title::after{flex:1}
   .cat-title:first-child{margin-top:0}
   .dishes{display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px}
-  .dish{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px;padding:14px 0;
+  .dish{display:grid;grid-template-columns:minmax(0,max-content) 1fr auto;
+    grid-template-areas:"name dot price" "desc desc desc";
+    align-items:baseline;column-gap:8px;padding:14px 0;
     border-bottom:1px solid var(--hair-ink);transition:background .25s}
   .dish:hover{background:rgba(168,38,29,.04)}
-  .dish .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink);flex:0 1 auto;min-width:0}
-  .dish .desc{flex:0 0 100%;width:100%;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
+  .dish .name{grid-area:name;font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink);min-width:0}
+  .dish .desc{grid-area:desc;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
     color:var(--ink-mut);margin-top:3px;line-height:1.45}
-  .dish .dot{flex:1 1 24px;min-width:24px;border-bottom:1px dotted rgba(38,32,26,.42);transform:translateY(-5px);align-self:baseline}
-  .dish .price{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;font-size:1.06rem;white-space:nowrap;
-    flex:0 0 auto;transition:color .25s}
+  .dish .dot{grid-area:dot;min-width:24px;border-bottom:1px dotted rgba(38,32,26,.42);transform:translateY(-5px);align-self:baseline}
+  .dish .price{grid-area:price;font-family:"Fraunces",serif;color:var(--ink);font-weight:600;font-size:1.06rem;white-space:nowrap;
+    transition:color .25s}
   .dish .price::after{content:" €";font-size:.78em;color:var(--ink-mut);font-weight:500}
   .dish:hover .price{color:var(--rouge)}
   .menu-foot{margin-top:32px;font-size:.86rem;color:var(--ink-mut);font-style:italic;text-align:center}
