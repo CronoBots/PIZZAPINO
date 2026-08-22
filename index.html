@@ -262,17 +262,13 @@
   /* cadre éditorial */
   .hero::after{content:"";position:absolute;inset:clamp(12px,2vw,24px);z-index:2;pointer-events:none;
     border:1px solid rgba(198,154,77,.28)}
-  .embers{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.85}
-  /* Lueur de braise qui respire (feu de bois) */
+  /* Aucun effet sur le hero : braises, spotlight et lueur mobile retirés — image totalement figée */
+  .embers{display:none!important}
+  .spotlight{display:none!important}
   .hero-glow{position:absolute;left:50%;bottom:-24%;z-index:1;pointer-events:none;
     width:min(150vw,1120px);height:min(150vw,1120px);transform:translateX(-50%);
     background:radial-gradient(circle at 50% 50%,rgba(232,148,52,.30) 0%,rgba(194,69,28,.18) 34%,rgba(125,26,16,.10) 54%,transparent 70%);
-    filter:blur(4px);mix-blend-mode:screen;opacity:0;
-    animation:heroGlowIn 1.8s ease 1.55s forwards}
-  @keyframes heroGlowIn{to{opacity:1}}
-  .spotlight{position:absolute;inset:0;z-index:1;pointer-events:none;
-    background:radial-gradient(420px circle at var(--mx,70%) var(--my,30%),rgba(198,154,77,.1),transparent 70%);
-    transition:background .2s}
+    filter:blur(4px);mix-blend-mode:screen;opacity:1}
   .hero .wrap{position:relative;z-index:3;max-width:1060px;width:100%}
   .hero-cat{display:inline-flex;align-items:center;gap:14px;font-family:"Oswald",sans-serif;text-transform:uppercase;
     letter-spacing:.34em;font-size:.7rem;color:var(--or);margin-bottom:30px;font-weight:500}
@@ -757,7 +753,7 @@
   /* ===== HERO — éditorial premium ===== */
   .hero{min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;background:#0c0a08}
   /* image du hero : fixe, sans parallaxe ni zoom (simple fondu à l'apparition) */
-  .hero .hero-bg{opacity:0;background-position:center 44%;transform:none;animation:heroPhoto 1.6s ease .2s forwards}
+  .hero .hero-bg{opacity:1;background-position:center 44%;transform:none;animation:none}
   .hero::before{background:
     radial-gradient(118% 82% at 50% 40%,rgba(8,6,4,.24),rgba(8,6,4,.66) 84%),
     linear-gradient(180deg,rgba(8,6,4,.76) 0%,rgba(8,6,4,.16) 26%,rgba(8,6,4,.34) 58%,rgba(8,6,4,.9) 100%)}
