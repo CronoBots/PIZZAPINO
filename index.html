@@ -257,6 +257,12 @@
   .hero-bg{position:absolute;inset:-8% 0;background-image:url('images/hero-feast.jpg');
     background-image:image-set(url('images/hero-feast.webp') type('image/webp'),url('images/hero-feast.jpg') type('image/jpeg'));
     background-size:cover;background-position:center;z-index:0}
+  /* Vidéo en fond du hero : mobile uniquement (remplace la photo) */
+  .hero-video{display:none}
+  @media(max-width:760px){
+    .hero-video{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#0c0a08}
+    .hero .hero-bg{display:none}
+  }
   .hero::before{content:"";position:absolute;inset:0;z-index:1;
     background:linear-gradient(110deg,rgba(17,13,10,.93) 10%,rgba(17,13,10,.55) 52%,rgba(17,13,10,.8) 100%)}
   /* cadre éditorial */
@@ -1390,6 +1396,7 @@
 <!-- HERO -->
 <section class="hero" id="top">
   <div class="hero-bg" id="heroBg"></div>
+  <video class="hero-video" id="heroVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
   <div class="hero-glow" aria-hidden="true"></div>
   <canvas class="embers" id="embers" aria-hidden="true"></canvas>
   <div class="spotlight" id="spot"></div>
@@ -2235,6 +2242,18 @@
       });
     }, {threshold:.4});
     vio.observe(v);
+  })();
+
+  /* ---- Vidéo en fond du hero (mobile uniquement) ---- */
+  (function(){
+    var v = document.getElementById("heroVideo");
+    if(!v) return;
+    var mobile = window.matchMedia && window.matchMedia("(max-width:760px)").matches;
+    if(!mobile || reduce) return; // desktop ou mouvement réduit : on garde la photo (aucun téléchargement)
+    v.src = "media/pino-soiree.mp4";
+    var play = function(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); };
+    v.addEventListener("loadeddata", play, {once:true});
+    v.load();
   })();
 
   /* ---- Braises du four à bois (hero) ---- */
