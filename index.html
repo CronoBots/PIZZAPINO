@@ -758,7 +758,7 @@
   /* ===== HERO — OUVERTURE DE MARQUE (intro fusionnée) ===== */
   .hero{display:flex;align-items:center;justify-content:center;text-align:center;
     background:radial-gradient(120% 92% at 50% 40%,#1A140F 0%,#110C09 64%)}
-  .hero .hero-bg{opacity:0;animation:heroPhoto 1.7s ease 1.55s forwards}
+  .hero .hero-bg{opacity:0;animation:heroPhoto 1.7s ease 1.55s forwards,heroKen 38s ease-in-out 3.4s infinite alternate}
   .hero::before{background:radial-gradient(circle at 50% 44%,rgba(17,12,8,.48),rgba(17,12,8,.80))}
   .hi-center{position:relative;z-index:3;max-width:720px;margin:0 auto;padding:0 22px}
   .hi-cat{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.42em;
@@ -778,6 +778,7 @@
   @keyframes hiUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   @keyframes hiLine{to{width:min(260px,56vw)}}
   @keyframes heroPhoto{to{opacity:1}}
+  @keyframes heroKen{from{transform:scale(1.03)}to{transform:scale(1.12)}}
   /* En-tête masqué pendant ~1,4 s, puis il apparaît avec la photo */
   header,.call-bar{animation:chromeIn .7s ease 1.35s both}
   @keyframes chromeIn{from{opacity:0}to{opacity:1}}
@@ -1044,6 +1045,73 @@
   html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab{display:none!important}
   html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 
+  /* ===== Site web : section « carte » immersive (photo fixe par catégorie) ===== */
+  html:not(.app-mode) #carte{position:relative;background:#0c0a08;color:#EFE7D6}
+  /* fond photo « collant » : reste en place pendant que la carte défile, confiné à la section */
+  html:not(.app-mode) .menu-live-bg{position:sticky;top:0;height:100vh;margin-bottom:-100vh;z-index:0;overflow:hidden;pointer-events:none}
+  html:not(.app-mode) .menu-live-bg span{position:absolute;background-size:cover;background-position:center}
+  html:not(.app-mode) .menu-live-bg .mlb-a,html:not(.app-mode) .menu-live-bg .mlb-b{inset:-46px;opacity:0;transition:opacity .7s ease;will-change:opacity,transform;animation:bgKen 32s ease-in-out infinite alternate}
+  html:not(.app-mode) .menu-live-bg .mlb-scrim{inset:0;background:linear-gradient(180deg,rgba(9,7,5,.5),rgba(9,7,5,.6) 42%,rgba(9,7,5,.82))}
+  html:not(.app-mode) #carte>.wrap{position:relative;z-index:1}
+  @media(prefers-reduced-motion:reduce){html:not(.app-mode) .menu-live-bg .mlb-a,html:not(.app-mode) .menu-live-bg .mlb-b{animation:none}}
+  /* en-tête clair sur sombre */
+  html:not(.app-mode) #carte .eyebrow{color:#E9CE96}
+  html:not(.app-mode) #carte .eyebrow .num{color:#8f8168}
+  html:not(.app-mode) #carte h2{color:#F7F1E5}
+  html:not(.app-mode) #carte h2 em{color:#E9CE96}
+  html:not(.app-mode) #carte .lead{color:#cabda6}
+  html:not(.app-mode) #carte .menu-tabs{border-bottom-color:rgba(233,206,150,.2)}
+  html:not(.app-mode) #carte .tab{color:#b9ac96}
+  html:not(.app-mode) #carte .tab:hover{color:#F5EEDF}
+  html:not(.app-mode) #carte .tab.active{color:#E9CE96;border-color:#E9CE96}
+  html:not(.app-mode) #carte .order-toggle{color:#EFE7D6;border-color:rgba(233,206,150,.4)}
+  html:not(.app-mode) #carte .order-toggle:hover{border-color:var(--rouge);color:#fff}
+  html:not(.app-mode) #carte .order-hint{color:#b0a48c}
+  /* recherche : champ « verre » sombre */
+  html:not(.app-mode) #carte .menu-search input{background:rgba(20,14,10,.5);border-color:rgba(233,206,150,.28);color:#EFE7D6;border-radius:13px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  html:not(.app-mode) #carte .menu-search input::placeholder{color:#b9ac96}
+  html:not(.app-mode) #carte .menu-search .s-ico{color:#c0b39c}
+  html:not(.app-mode) #carte .search-count{color:#E9CE96}
+  /* sous-titres (Les incontournables, Pizza Bianca) : or, centrés */
+  html:not(.app-mode) #carte .cat-title{justify-content:center;font-size:1.7rem;gap:16px;margin-top:30px;color:#E9CE96;text-shadow:0 1px 10px #000}
+  html:not(.app-mode) #carte .cat-title::before,html:not(.app-mode) #carte .cat-title::after{flex:1;background:linear-gradient(90deg,transparent,rgba(198,154,77,.5),transparent)}
+  html:not(.app-mode) #carte .cat-note{color:#d0c2a8;text-shadow:0 1px 10px #000}
+  /* plats : cartes « verre » sombres */
+  html:not(.app-mode) #carte .menu-panel .dishes .dish{background:rgba(15,11,8,.82);border:1px solid rgba(233,206,150,.18);border-radius:13px;box-shadow:0 10px 26px -16px #000;padding:14px 16px;margin-bottom:11px}
+  html:not(.app-mode) #carte .menu-panel .dishes .dish:not(.in-order):hover{background:rgba(15,11,8,.82)}
+  html:not(.app-mode) #carte .menu-panel .dish .name{color:#F5EEDF}
+  html:not(.app-mode) #carte .menu-panel .dish .desc{color:#c3b7a2}
+  html:not(.app-mode) #carte .menu-panel .dish .price{color:#EACE90}
+  html:not(.app-mode) #carte .menu-panel .dish .price::after{color:#b09a6f}
+  html:not(.app-mode) #carte .menu-panel .dish .dot{border-bottom-color:rgba(233,206,150,.36)}
+  /* steppers sur fond sombre (mode commande du site) */
+  html:not(.app-mode) #carte .dish-stepper button{background:rgba(0,0,0,.28);border-color:rgba(233,206,150,.3);color:#EFE7D6}
+  html:not(.app-mode) #carte .dish-stepper button:hover{border-color:var(--rouge);color:#fff}
+  html:not(.app-mode) #carte .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
+  html:not(.app-mode) #carte .dish-stepper .ds-qty{background:rgba(0,0,0,.34);border-color:rgba(233,206,150,.3);color:#F5EEDF}
+  /* plat en commande : carte claire, liseré rouge */
+  html:not(.app-mode) body.order-mode #carte .dish.in-order{background:rgba(246,239,225,.96);border-color:rgba(201,154,77,.7);box-shadow:0 14px 30px -14px #000,inset 4px 0 0 var(--rouge,#A8261D)}
+  html:not(.app-mode) body.order-mode #carte .dish.in-order .name{color:#241b12}
+  html:not(.app-mode) body.order-mode #carte .dish.in-order .desc{color:#6c5c45}
+  html:not(.app-mode) body.order-mode #carte .dish.in-order .price{color:#8a5713}
+  html:not(.app-mode) body.order-mode #carte .dish.in-order .price::after{color:#a67c3c}
+  html:not(.app-mode) body.order-mode #carte .dish.in-order .dot{border-bottom-color:rgba(120,95,55,.55)}
+  html:not(.app-mode) body.order-mode #carte .dish.in-order .dish-stepper button{background:rgba(36,27,18,.06);border-color:rgba(120,95,55,.45);color:#33260f}
+  html:not(.app-mode) body.order-mode #carte .dish.in-order .dish-stepper .ds-qty{background:rgba(36,27,18,.05);border-color:rgba(120,95,55,.45);color:#241b12}
+  html:not(.app-mode) body.order-mode #carte .dish.in-order .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
+  /* bas de carte (tarifs, notes, boutons) adaptés au sombre */
+  html:not(.app-mode) #carte .supp-box{border-color:rgba(233,206,150,.32);color:#EFE7D6;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);border-radius:13px}
+  html:not(.app-mode) #carte .supp-box li{border-color:rgba(233,206,150,.16);color:#EFE7D6}
+  html:not(.app-mode) #carte .menu-foot,html:not(.app-mode) #carte .panel-note{color:#cabda6}
+  html:not(.app-mode) #carte .panel-note strong,html:not(.app-mode) #carte .menu-foot strong{color:#E9CE96}
+  html:not(.app-mode) #carte .junior-note{border-color:rgba(233,206,150,.4);background:rgba(14,10,7,.66)}
+  html:not(.app-mode) #carte .junior-note .jn-label{color:#F5EEDF}
+  html:not(.app-mode) #carte .junior-note .jn-age{color:#c7b89e}
+  html:not(.app-mode) #carte .junior-note strong{color:#F0C36B}
+  html:not(.app-mode) #carte .junior-note .jn-sub{color:#c7b89e}
+  html:not(.app-mode) #carte .cta-row .btn-ghost{border-color:rgba(233,206,150,.42);color:#EFE7D6}
+  html:not(.app-mode) #carte .cta-row .btn-ghost:hover{border-color:var(--rouge);color:#fff}
+
   /* ===== Concept C : fond photo immersif (mode app) ===== */
   html.app-mode body{background:#0d0b0a}
   html.app-mode #carte{background:transparent}
@@ -1289,6 +1357,7 @@
 
 <!-- CARTE -->
 <section id="carte" class="menu">
+  <div class="menu-live-bg" aria-hidden="true"><span class="mlb-a"></span><span class="mlb-b"></span><span class="mlb-scrim"></span></div>
   <div class="wrap center">
     <p class="eyebrow reveal"><span class="num">02</span> À la carte</p>
     <h2 class="reveal" style="--i:1">Notre <em>carte</em></h2>
@@ -1897,6 +1966,7 @@
     var panel = document.getElementById(tab.dataset.tab);
     if(panel){ panel.classList.add("show");
       panel.querySelectorAll(".dish").forEach(function(d,idx){ d.style.setProperty("--d", idx%18); }); }
+    if(window.setWebBg) setWebBg(tab.dataset.tab);
   }
   tabEls.forEach(function(tab){
     tab.setAttribute("role","tab");
@@ -1916,6 +1986,28 @@
     });
   });
   document.querySelectorAll(".menu-panel.show .dish").forEach(function(d,idx){ d.style.setProperty("--d", idx%18); });
+
+  /* ---- Site web : fond photo immersif par catégorie (change au clic d'onglet) ---- */
+  (function(){
+    if(document.documentElement.classList.contains('app-mode')) return;
+    var host = document.querySelector('.menu-live-bg'); if(!host) return;
+    var layers = [host.querySelector('.mlb-a'), host.querySelector('.mlb-b')];
+    if(!layers[0] || !layers[1]) return;
+    var active = 0;
+    var IMG = {pates:'bg-pates',pizzas:'bg-pizzas',viandes:'bg-viandes',desserts:'bg-desserts'};
+    Object.keys(IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + IMG[k] + '.jpg'; });
+    window.setWebBg = function(cat){
+      var img = IMG[cat]; if(!img) return;
+      var next = layers[1 - active];
+      next.style.backgroundImage = "url('images/" + img + ".jpg')";
+      void next.offsetWidth;
+      next.style.opacity = '1';
+      layers[active].style.opacity = '0';
+      active = 1 - active;
+    };
+    var act = document.querySelector('.menu-tabs .tab.active');
+    setWebBg(act ? act.dataset.tab : 'pates');
+  })();
 
   /* ---- Recherche dans la carte (nom + ingrédients) ---- */
   (function(){
