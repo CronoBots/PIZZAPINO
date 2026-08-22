@@ -440,6 +440,8 @@
   /* Vidéo regroupée sous la galerie */
   .gal-video{margin-top:clamp(44px,7vw,72px);display:flex;flex-direction:column;align-items:center;gap:16px}
   .gal-video .vid-frame{margin:0 auto}
+  /* Sur mobile/PWA la vidéo est déjà en fond du héros → on ne la répète pas sous la galerie */
+  @media(max-width:760px){.gal-video{display:none!important}}
   .gal-item{position:relative;overflow:hidden;aspect-ratio:4/3;border-radius:0;cursor:pointer;
     border:1px solid var(--hair)}
   .gal-item img{width:100%;height:100%;object-fit:cover;transition:filter .5s}
