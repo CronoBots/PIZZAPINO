@@ -1185,38 +1185,38 @@
   html.app-mode #carte .junior-note .jn-sub{color:#c7b89e}
   body.searching .app-cat-head{display:none!important}
 
-  /* ===== Panier « Ma commande » en thème sombre (mode app) ===== */
-  html.app-mode .cart-ov{background:rgba(6,4,3,.66)}
-  html.app-mode .cart-panel{background:#17110d;border-top-color:var(--rouge,#A8261D)}
-  html.app-mode .cart-head{border-bottom-color:rgba(233,206,150,.14)}
-  html.app-mode .cart-head h3{color:#F5EEDF}
-  html.app-mode .cart-close{color:#b9ac96}
-  html.app-mode .cart-close:hover{color:#e0574b}
-  html.app-mode .cart-sub{color:#E9CE96}
-  html.app-mode .cart-empty{color:#b3a693}
-  html.app-mode .cart-cat{color:#E9CE96}
-  html.app-mode .cart-cat::after{background:rgba(233,206,150,.18)}
-  html.app-mode .cart-item{border-bottom-color:rgba(233,206,150,.12)}
-  html.app-mode .cart-item .ci-name{color:#F5EEDF}
-  html.app-mode .cart-item .ci-unit{color:#b3a693}
-  html.app-mode .cart-item .ci-line{color:#c3b7a2}
-  html.app-mode .cart-item .ci-step button{background:rgba(0,0,0,.3);border-color:rgba(233,206,150,.28);color:#EFE7D6}
-  html.app-mode .cart-item .ci-step button:hover{border-color:var(--rouge);color:#fff}
-  html.app-mode .cart-item .ci-q{color:#F5EEDF}
-  html.app-mode .cart-foot{background:#100b08;border-top-color:rgba(233,206,150,.16)}
-  html.app-mode .cart-total{color:#EFE7D6}
-  html.app-mode .cart-total b{color:#E9CE96}
-  html.app-mode .remark-toggle{color:#E9CE96}
-  html.app-mode .remark-toggle small{color:#b3a693}
-  html.app-mode .remark-toggle .rt-plus{border-color:#E9CE96}
-  html.app-mode .remark-toggle:hover .rt-plus{border-color:#f0d9a6}
-  html.app-mode .cart-remark label{color:#b9ac96}
-  html.app-mode .cart-remark textarea{background:rgba(0,0,0,.3);border-color:rgba(233,206,150,.25);color:#EFE7D6}
-  html.app-mode .cart-remark textarea::placeholder{color:#8a7f6d}
-  html.app-mode .cart-remark textarea:focus{border-color:var(--rouge)}
-  html.app-mode .ca-trash{background:rgba(0,0,0,.28);border-color:rgba(233,206,150,.28);color:#c3b7a2}
-  html.app-mode .ca-trash:hover{border-color:var(--rouge);color:#fff;background:rgba(168,38,29,.22)}
-  html.app-mode .cart-note{color:#9a8e79}
+  /* ===== Panier « Ma commande » en thème sombre (site + app) ===== */
+  .cart-ov{background:rgba(6,4,3,.66)}
+  .cart-panel{background:#17110d;border-top-color:var(--rouge,#A8261D)}
+  .cart-head{border-bottom-color:rgba(233,206,150,.14)}
+  .cart-head h3{color:#F5EEDF}
+  .cart-close{color:#b9ac96}
+  .cart-close:hover{color:#e0574b}
+  .cart-sub{color:#E9CE96}
+  .cart-empty{color:#b3a693}
+  .cart-cat{color:#E9CE96}
+  .cart-cat::after{background:rgba(233,206,150,.18)}
+  .cart-item{border-bottom-color:rgba(233,206,150,.12)}
+  .cart-item .ci-name{color:#F5EEDF}
+  .cart-item .ci-unit{color:#b3a693}
+  .cart-item .ci-line{color:#c3b7a2}
+  .cart-item .ci-step button{background:rgba(0,0,0,.3);border-color:rgba(233,206,150,.28);color:#EFE7D6}
+  .cart-item .ci-step button:hover{border-color:var(--rouge);color:#fff}
+  .cart-item .ci-q{color:#F5EEDF}
+  .cart-foot{background:#100b08;border-top-color:rgba(233,206,150,.16)}
+  .cart-total{color:#EFE7D6}
+  .cart-total b{color:#E9CE96}
+  .remark-toggle{color:#E9CE96}
+  .remark-toggle small{color:#b3a693}
+  .remark-toggle .rt-plus{border-color:#E9CE96}
+  .remark-toggle:hover .rt-plus{border-color:#f0d9a6}
+  .cart-remark label{color:#b9ac96}
+  .cart-remark textarea{background:rgba(0,0,0,.3);border-color:rgba(233,206,150,.25);color:#EFE7D6}
+  .cart-remark textarea::placeholder{color:#8a7f6d}
+  .cart-remark textarea:focus{border-color:var(--rouge)}
+  .ca-trash{background:rgba(0,0,0,.28);border-color:rgba(233,206,150,.28);color:#c3b7a2}
+  .ca-trash:hover{border-color:var(--rouge);color:#fff;background:rgba(168,38,29,.22)}
+  .cart-note{color:#9a8e79}
 
   /* Vue plus compacte : on retire le paragraphe d'intro */
   html.app-mode #carte .lead{display:none}
@@ -1361,7 +1361,13 @@
   <div class="wrap center">
     <p class="eyebrow reveal"><span class="num">02</span> À la carte</p>
     <h2 class="reveal" style="--i:1">Notre <em>carte</em></h2>
-    <p class="lead reveal" style="--i:2">Pâtes fraîches, pizzas au feu de bois, viandes et desserts. Cherchez un plat, ou parcourez par catégorie.</p>
+    <p class="lead reveal" style="--i:2">Pâtes fraîches, pizzas au feu de bois, viandes et desserts.<br>Cherchez un plat, ou parcourez par catégorie.</p>
+    <div class="menu-tabs reveal" style="--i:2">
+      <button class="tab active" data-tab="pates">Pâtes fraîches</button>
+      <button class="tab" data-tab="pizzas">Pizzas au feu de bois</button>
+      <button class="tab" data-tab="viandes">Viandes</button>
+      <button class="tab" data-tab="desserts">Desserts</button>
+    </div>
     <div class="menu-search reveal" style="--i:2">
       <div class="search-field">
         <span class="s-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></span>
@@ -1369,19 +1375,6 @@
         <button type="button" class="s-clear" id="searchClear" aria-label="Effacer la recherche">×</button>
       </div>
       <span class="search-count" id="searchCount" aria-live="polite"></span>
-    </div>
-    <div class="menu-tabs reveal" style="--i:2">
-      <button class="tab active" data-tab="pates">Pâtes fraîches</button>
-      <button class="tab" data-tab="pizzas">Pizzas au feu de bois</button>
-      <button class="tab" data-tab="viandes">Viandes</button>
-      <button class="tab" data-tab="desserts">Desserts</button>
-    </div>
-    <div class="order-bar reveal" style="--i:2">
-      <button type="button" id="orderToggle" class="order-toggle" aria-pressed="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span class="ot-off">Composer ma commande</span><span class="ot-on">Terminer</span>
-      </button>
-      <span class="order-hint">Touchez + / − sur les plats, puis partagez ou appelez</span>
     </div>
 
   </div>
@@ -1566,12 +1559,12 @@
     <p class="lead reveal" style="--i:2">La salle, la terrasse et nos plats signature — un aperçu de la maison.</p>
     <p class="reveal" style="--i:2;margin:16px auto 0;display:inline-flex;align-items:center;gap:9px;font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;font-weight:500;color:var(--or);border:1px solid rgba(198,154,77,.35);padding:8px 16px">📷 Photos d'illustration — à remplacer par les photos officielles du restaurant</p>
     <div class="gal-grid">
-      <div class="gal-item reveal" data-full="images/gal-pizza.jpg"><picture><source type="image/webp" srcset="images/gal-pizza.webp"><img loading="lazy" decoding="async" width="800" height="600" src="images/gal-pizza.jpg" alt="Pizza au feu de bois"></picture><span class="cap">Au feu de bois<small>Nos pizzas signature</small></span></div>
-      <div class="gal-item reveal" style="--i:1" data-full="images/gal-pates.jpg"><picture><source type="image/webp" srcset="images/gal-pates.webp"><img loading="lazy" decoding="async" width="800" height="600" src="images/gal-pates.jpg" alt="Pâtes fraîches"></picture><span class="cap">Pâtes fraîches<small>Préparées maison</small></span></div>
-      <div class="gal-item reveal" style="--i:2" data-full="images/gal-ossobuco.jpg"><picture><source type="image/webp" srcset="images/gal-ossobuco.webp"><img loading="lazy" decoding="async" width="800" height="600" src="images/gal-ossobuco.jpg" alt="Spécialités italiennes"></picture><span class="cap">Nos spécialités<small>Osso buco &amp; co.</small></span></div>
+      <div class="gal-item reveal" data-full="images/bg-pizzas.jpg"><img loading="lazy" decoding="async" width="900" height="1200" src="images/bg-pizzas.jpg" alt="Pizza au feu de bois"><span class="cap">Au feu de bois<small>Nos pizzas signature</small></span></div>
+      <div class="gal-item reveal" style="--i:1" data-full="images/bg-pates.jpg"><img loading="lazy" decoding="async" width="900" height="1200" src="images/bg-pates.jpg" alt="Pâtes fraîches"><span class="cap">Pâtes fraîches<small>Préparées maison</small></span></div>
+      <div class="gal-item reveal" style="--i:2" data-full="images/bg-viandes.jpg"><img loading="lazy" decoding="async" width="900" height="1200" src="images/bg-viandes.jpg" alt="Spécialités italiennes"><span class="cap">Nos spécialités<small>Osso buco &amp; co.</small></span></div>
       <div class="gal-item reveal" data-full="images/gal-salle.jpg"><picture><source type="image/webp" srcset="images/gal-salle.webp"><img loading="lazy" decoding="async" width="800" height="600" src="images/gal-salle.jpg" alt="Salle de restaurant"></picture><span class="cap">La salle<small>Chaleureuse &amp; conviviale</small></span></div>
       <div class="gal-item reveal" style="--i:1" data-full="images/gal-terrasse.jpg"><picture><source type="image/webp" srcset="images/gal-terrasse.webp"><img loading="lazy" decoding="async" width="800" height="600" src="images/gal-terrasse.jpg" alt="Terrasse"></picture><span class="cap">La terrasse<small>Aux beaux jours</small></span></div>
-      <div class="gal-item reveal" style="--i:2" data-full="images/gal-tiramisu.jpg"><picture><source type="image/webp" srcset="images/gal-tiramisu.webp"><img loading="lazy" decoding="async" width="800" height="600" src="images/gal-tiramisu.jpg" alt="Desserts maison"></picture><span class="cap">Desserts maison<small>Le fameux tiramisù</small></span></div>
+      <div class="gal-item reveal" style="--i:2" data-full="images/bg-desserts.jpg"><img loading="lazy" decoding="async" width="900" height="1200" src="images/bg-desserts.jpg" alt="Desserts maison"><span class="cap">Desserts maison<small>Le fameux tiramisù</small></span></div>
     </div>
     <!-- Vidéo officielle (regroupée avec la galerie) -->
     <div class="gal-video reveal" id="video">
@@ -2480,11 +2473,8 @@
   });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePanel(); });
 
-  var toggle = document.getElementById('orderToggle');
-  toggle.addEventListener('click', function(){
-    var on = document.body.classList.toggle('order-mode');
-    toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
-  });
+  /* Mode « composer ma commande » actif d'office (site + app) : les +/− sont toujours visibles */
+  document.body.classList.add('order-mode');
 
   for(var id in byId) syncDish(id);
   render();
@@ -2536,8 +2526,7 @@
     if(!info) return;
     info.innerHTML =
       '<div class="app-infos-actions">'
-      + '<a class="aia aia-primary" href="tel:+3285513339"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Appeler</a>'
-      + '<a class="aia" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Itinéraire</a>'
+      + '<a class="aia aia-primary" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Itinéraire</a>'
       + '</div>'
       + '<p class="app-addr">Route du Condroz 131 · 4550 Nandrin</p>';
   })();
