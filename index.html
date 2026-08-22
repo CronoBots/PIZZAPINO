@@ -423,6 +423,7 @@
   .supp-box li:first-child{color:var(--rouge);font-weight:600}
 
   /* ===== GALERIE ===== */
+  .maison{background:var(--noir)}
   .gallery{background:var(--noir)}
   .gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:56px}
   /* Vidéo regroupée sous la galerie */
@@ -758,8 +759,8 @@
 
   /* ===== HERO — éditorial premium ===== */
   .hero{min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;background:#0c0a08}
-  .hero .hero-bg{opacity:0;background-position:center 44%;
-    animation:heroPhoto 2s ease .25s forwards,heroKen 32s ease-in-out 2.2s infinite alternate}
+  /* image du hero : fixe, sans parallaxe ni zoom (simple fondu à l'apparition) */
+  .hero .hero-bg{opacity:0;background-position:center 44%;transform:none;animation:heroPhoto 1.6s ease .2s forwards}
   .hero::before{background:
     radial-gradient(118% 82% at 50% 40%,rgba(8,6,4,.24),rgba(8,6,4,.66) 84%),
     linear-gradient(180deg,rgba(8,6,4,.76) 0%,rgba(8,6,4,.16) 26%,rgba(8,6,4,.34) 58%,rgba(8,6,4,.9) 100%)}
@@ -1068,12 +1069,13 @@
   html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 
   /* ===== Site web : section « carte » immersive (photo fixe par catégorie) ===== */
-  html:not(.app-mode) #carte{position:relative;background:#0c0a08;color:#EFE7D6}
-  /* fond photo fixe (background-attachment:fixed) : reste posé pendant que la carte défile,
-     naturellement confiné à la section (aucune fuite sur les sections voisines) */
-  html:not(.app-mode) .menu-live-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  /* #carte transparent : la photo (calque fixe en z-index négatif) transparaît uniquement ici ;
+     le fond sombre du body sert de repli, les autres sections opaques masquent la photo.
+     Approche identique au mode app → réellement fixe ET compatible mobile (pas de background-attachment). */
+  html:not(.app-mode) #carte{position:relative;background:transparent;color:#EFE7D6}
+  html:not(.app-mode) .menu-live-bg{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
   html:not(.app-mode) .menu-live-bg span{position:absolute;inset:0}
-  html:not(.app-mode) .menu-live-bg .mlb-a,html:not(.app-mode) .menu-live-bg .mlb-b{background-size:cover;background-position:center;background-attachment:fixed;opacity:0;transition:opacity .7s ease}
+  html:not(.app-mode) .menu-live-bg .mlb-a,html:not(.app-mode) .menu-live-bg .mlb-b{background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease}
   html:not(.app-mode) .menu-live-bg .mlb-scrim{background:linear-gradient(180deg,rgba(9,7,5,.5),rgba(9,7,5,.6) 42%,rgba(9,7,5,.82))}
   html:not(.app-mode) #carte>.wrap{position:relative;z-index:1}
   /* en-tête clair sur sombre */
@@ -1350,7 +1352,7 @@
         <a class="btn btn-primary" href="#carte"><span>Découvrir la carte</span></a>
         <a class="btn btn-ghost" href="tel:+3285513339"><span>Réserver une table</span></a>
       </div>
-      <p class="hi-rating"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5 · plus de 1 000 avis Google</p>
+      <p class="hi-rating"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5<br>plus de 1 000 avis Google</p>
     </div>
   </div>
   <a class="hi-scroll" href="#maison" aria-label="Découvrir la maison"><span class="hs-mouse"><span class="hs-wheel"></span></span></a>
