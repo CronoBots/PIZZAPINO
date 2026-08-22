@@ -810,8 +810,7 @@
       radial-gradient(122% 80% at 50% 42%,rgba(8,6,4,.30),rgba(8,6,4,.72) 88%),
       linear-gradient(180deg,rgba(8,6,4,.72) 0%,rgba(8,6,4,.24) 30%,rgba(8,6,4,.42) 62%,rgba(8,6,4,.92) 100%)}
     /* on garde l'action principale seule (l'appel est déjà dans la barre du bas) */
-    .hi-cta{display:flex;margin-top:26px}
-    .hi-cta .btn-ghost{display:none}
+    .hi-cta{display:flex;justify-content:center;margin-top:26px}
     /* on force le conteneur à occuper toute la largeur (sinon il se rétrécit au logo et part à gauche) */
     .hero .wrap{flex:1 1 100%;width:100%;min-width:0;margin:0;max-width:100%}
     .hi-center{padding:0 20px;width:100%;max-width:100%;margin:0}
@@ -1069,9 +1068,11 @@
      le fond sombre du body sert de repli, les autres sections opaques masquent la photo.
      Approche identique au mode app → réellement fixe ET compatible mobile (pas de background-attachment). */
   html:not(.app-mode) #carte{position:relative;background:transparent;color:#EFE7D6}
-  html:not(.app-mode) .menu-live-bg{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+  /* hauteur stable (100lvh) au lieu de inset:0 → la barre d'URL mobile ne redimensionne plus
+     le calque (fini les saccades/parallaxe à l'entrée) ; translateZ(0) = compositing GPU fluide */
+  html:not(.app-mode) .menu-live-bg{position:fixed;top:0;left:0;right:0;height:100vh;height:100lvh;z-index:-2;overflow:hidden;pointer-events:none;transform:translateZ(0)}
   html:not(.app-mode) .menu-live-bg span{position:absolute;inset:0}
-  html:not(.app-mode) .menu-live-bg .mlb-a,html:not(.app-mode) .menu-live-bg .mlb-b{background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease}
+  html:not(.app-mode) .menu-live-bg .mlb-a,html:not(.app-mode) .menu-live-bg .mlb-b{background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease;transform:translateZ(0);backface-visibility:hidden}
   html:not(.app-mode) .menu-live-bg .mlb-scrim{background:linear-gradient(180deg,rgba(9,7,5,.5),rgba(9,7,5,.6) 42%,rgba(9,7,5,.82))}
   html:not(.app-mode) #carte>.wrap{position:relative;z-index:1}
   /* en-tête clair sur sombre */
@@ -1340,10 +1341,9 @@
       <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
       <p class="hi-sub">La vraie Italie, au feu de bois</p>
       <span class="hi-line"></span>
-      <p class="hi-desc">Pâtes fraîches préparées maison, pizzas au feu de bois et spécialités italiennes, sur la route du Condroz — depuis plus de trente ans.</p>
+      <p class="hi-desc">Pâtes fraîches préparées maison, pizzas au feu de bois et spécialités italiennes, sur la route du Condroz, depuis plus de trente ans.</p>
       <div class="hi-cta">
-        <a class="btn btn-primary" href="#carte"><span>Découvrir la carte</span></a>
-        <a class="btn btn-ghost" href="tel:+3285513339"><span>Réserver une table</span></a>
+        <a class="btn btn-primary" href="tel:+3285513339"><span>Réserver une table</span></a>
       </div>
       <p class="hi-rating"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5<br>plus de 1 000 avis Google</p>
     </div>
@@ -1366,11 +1366,11 @@
   <div class="wrap">
     <p class="eyebrow reveal"><span class="num">01</span> La maison</p>
     <h2 class="reveal" style="--i:1">Une pizzeria comme <em>en Italie</em></h2>
-    <p class="lead reveal" style="--i:2">Depuis plus de trente ans, la vraie cuisine italienne sur la route du Condroz à Nandrin : une pâte travaillée chaque jour et cuite au feu de bois, des pâtes fraîches préparées maison, dans une ambiance chaleureuse et familiale.</p>
+    <p class="lead reveal" style="--i:2">Une maison familiale qui régale Nandrin et le Condroz depuis plus de trente ans. On y cuisine à l'italienne, avec passion et générosité, comme à la maison.</p>
     <div class="values reveal" style="--i:3">
-      <div class="value"><span class="vnum">01</span><h3>Pizzas au feu de bois</h3><p>Une large carte, des classiques aux incontournables de la maison.</p></div>
-      <div class="value"><span class="vnum">02</span><h3>Pâtes fraîches</h3><p>Rigatoni, tagliatelle, gnocchi et spécialités préparés maison.</p></div>
-      <div class="value"><span class="vnum">03</span><h3>Salles &amp; terrasses</h3><p>Deux salles et deux terrasses, jusqu'à près de 100 couverts.</p></div>
+      <div class="value"><span class="vnum">01</span><h3>Fait maison</h3><p>Pâte travaillée et cuite au feu de bois chaque jour, pâtes fraîches et desserts préparés maison.</p></div>
+      <div class="value"><span class="vnum">02</span><h3>Ambiance familiale</h3><p>Deux salles et deux terrasses chaleureuses, pour tous vos moments à partager.</p></div>
+      <div class="value"><span class="vnum">03</span><h3>À emporter &amp; traiteur</h3><p>La cuisine de Pino chez vous, ou pour vos événements et réceptions.</p></div>
     </div>
   </div>
 </section>
