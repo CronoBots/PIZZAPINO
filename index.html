@@ -1135,6 +1135,9 @@
   /* Barre d'onglets du bas (catégories + commande) */
   html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab{display:none!important}
   html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+  /* Bandeau cookies : au-dessus de la barre d'onglets en PWA (sinon masqué derrière) */
+  html.app-mode .cookie-banner{bottom:calc(70px + env(safe-area-inset-bottom));z-index:131;
+    padding:16px 0;border-bottom:1px solid rgba(198,154,77,.18)}
 
   /* ===== Accueil (mode app) : vue « site » (hero + sections) en thème sombre ===== */
   /* onglet Accueil dans la barre du bas : même style que les autres (rien à ajouter) */
