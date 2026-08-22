@@ -985,6 +985,27 @@
   .cart-cat:first-child{margin-top:2px}
   .cart-actions{display:flex;gap:10px;align-items:stretch}
   .cart-actions .ca-call{flex:1 1 auto}
+  /* Confirmation maison « vider la commande » (thème sombre) */
+  .confirm-ov{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:26px;
+    background:rgba(6,4,3,.74);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:cfIn .2s ease}
+  .confirm-ov[hidden]{display:none}
+  .confirm-box{width:100%;max-width:340px;background:#17110d;border:1px solid rgba(233,206,150,.22);border-radius:16px;
+    padding:26px 24px 20px;text-align:center;box-shadow:0 30px 70px -20px #000;animation:cfPop .22s cubic-bezier(.2,.7,.2,1)}
+  .confirm-ico{width:50px;height:50px;margin:0 auto 15px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(168,38,29,.14);border:1px solid rgba(168,38,29,.42);color:#e0574b}
+  .confirm-ico svg{width:22px;height:22px}
+  .confirm-box h3{font-family:"Fraunces",serif;font-weight:600;font-size:1.34rem;color:#F5EEDF;margin:0 0 7px}
+  .confirm-box p{font-family:"Inter",sans-serif;font-size:.9rem;color:#b3a693;margin:0 0 21px;line-height:1.5}
+  .confirm-actions{display:flex;gap:10px}
+  .confirm-actions button{flex:1;padding:13px 10px;border-radius:11px;font-family:"Oswald",sans-serif;text-transform:uppercase;
+    letter-spacing:.08em;font-size:.76rem;font-weight:600;cursor:pointer;transition:.2s;border:1px solid transparent}
+  .cf-cancel{background:transparent;border-color:rgba(233,206,150,.32);color:#EFE7D6}
+  .cf-cancel:hover{border-color:#E9CE96;color:#fff}
+  .cf-ok{background:var(--rouge);border-color:var(--rouge);color:#fff}
+  .cf-ok:hover{background:var(--rouge-d)}
+  @keyframes cfIn{from{opacity:0}to{opacity:1}}
+  @keyframes cfPop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.confirm-ov,.confirm-box{animation:none}}
   .ca-trash{flex:0 0 auto;width:54px;display:inline-flex;align-items:center;justify-content:center;background:#FBF6EB;border:1px solid var(--hair-ink);color:var(--ink-mut);cursor:pointer}
   .ca-trash svg{width:20px;height:20px}
   .ca-trash:hover,.ca-trash:focus-visible,.ca-trash:active{border-color:var(--rouge);color:var(--rouge);background:rgba(168,38,29,.06);outline:none}
@@ -2390,6 +2411,19 @@
     <p class="cart-note">Pas de paiement en ligne&nbsp;: outil d'aide à la commande.<br>Total estimé, à confirmer sur place.</p>
   </div>
 </div>
+
+<!-- Confirmation « vider la commande » (maison, remplace la fenêtre native) -->
+<div class="confirm-ov" id="confirmOv" hidden>
+  <div class="confirm-box" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
+    <span class="confirm-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></span>
+    <h3 id="confirmTitle">Vider la commande ?</h3>
+    <p id="confirmMsg">Tous les plats sélectionnés seront retirés.</p>
+    <div class="confirm-actions">
+      <button type="button" class="cf-cancel" id="confirmCancel">Annuler</button>
+      <button type="button" class="cf-ok" id="confirmOk">Vider</button>
+    </div>
+  </div>
+</div>
 <script>
 (function(){
   var dishes = Array.prototype.slice.call(document.querySelectorAll('.menu-panel .dish'));
@@ -2518,12 +2552,28 @@
   fab.addEventListener('click', openPanel);
   document.getElementById('cartClose').addEventListener('click', closePanel);
   ov.addEventListener('click', closePanel);
+  /* Confirmation « vider la commande » : dialogue maison (pas la fenêtre native du navigateur) */
+  var confirmOv = document.getElementById('confirmOv');
+  var confirmOk = document.getElementById('confirmOk');
+  var confirmCancel = document.getElementById('confirmCancel');
+  function confirmOpen(){ return confirmOv && !confirmOv.hidden; }
+  function closeConfirm(){ if(confirmOv) confirmOv.hidden = true; }
+  function doClear(){
+    state = {}; save(); if(remark){ remark.value = ''; try{ localStorage.removeItem('pino_order_note'); }catch(e){} } hideRemark(); for(var id in byId) syncDish(id); render();
+  }
   document.getElementById('cartClear').addEventListener('click', function(){
     if(!Object.keys(state).length) return;
-    if(!window.confirm('Vider toute la commande ?')) return;
-    state = {}; save(); if(remark){ remark.value = ''; try{ localStorage.removeItem('pino_order_note'); }catch(e){} } hideRemark(); for(var id in byId) syncDish(id); render();
+    if(confirmOv){ confirmOv.hidden = false; if(confirmCancel) confirmCancel.focus(); }
+    else { doClear(); } // repli
   });
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePanel(); });
+  if(confirmOk) confirmOk.addEventListener('click', function(){ doClear(); closeConfirm(); });
+  if(confirmCancel) confirmCancel.addEventListener('click', closeConfirm);
+  if(confirmOv) confirmOv.addEventListener('click', function(e){ if(e.target === confirmOv) closeConfirm(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    if(confirmOpen()){ closeConfirm(); return; } // Échap ferme d'abord la confirmation
+    closePanel();
+  });
 
   /* Mode « composer ma commande » actif d'office (site + app) : les +/− sont toujours visibles */
   document.body.classList.add('order-mode');
