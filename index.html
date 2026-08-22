@@ -882,13 +882,12 @@
   /* Sélecteur discret : « Ajouter » au repos, compteur une fois le plat choisi */
   .dish-stepper{display:none}
   body.order-mode .dish-stepper{display:flex;justify-content:flex-end;align-items:center;margin-top:10px}
-  /* état repos : bouton « Ajouter » discret (contour doré) */
-  .dish-stepper .ds-add{display:inline-flex;align-items:center;gap:7px;cursor:pointer;background:transparent;
-    border:1px solid rgba(233,206,150,.34);border-radius:999px;padding:8px 16px 8px 13px;color:#E9CE96;
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.66rem;font-weight:600;
+  /* état repos : simple « + » rond, discret (contour doré) dans le coin inférieur droit */
+  .dish-stepper .ds-add{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;
+    width:38px;height:38px;border:1px solid rgba(233,206,150,.4);border-radius:50%;padding:0;color:#E9CE96;
     transition:border-color .2s,color .2s,background .2s}
-  .dish-stepper .ds-add svg{width:13px;height:13px}
-  .dish-stepper .ds-add:hover{border-color:var(--rouge);color:#fff;background:rgba(168,38,29,.16)}
+  .dish-stepper .ds-add svg{width:17px;height:17px}
+  .dish-stepper .ds-add:hover{border-color:var(--rouge);color:#fff;background:var(--rouge,#A8261D)}
   /* état choisi : compteur en pilule */
   .dish-stepper .ds-count{display:none;align-items:center;border:1px solid rgba(233,206,150,.32);border-radius:999px;
     overflow:hidden;background:rgba(0,0,0,.18)}
@@ -2420,7 +2419,7 @@
     }
     var s = document.createElement('div'); s.className = 'dish-stepper';
     s.innerHTML = '<button type="button" class="ds-add" aria-label="Ajouter un ' + name + '">'
-        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button>'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'
       + '<span class="ds-count">'
         + '<button type="button" class="ds-minus" aria-label="Retirer un ' + name + '">−</button>'
         + '<span class="ds-qty">0</span>'
