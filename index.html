@@ -882,17 +882,17 @@
   /* Sélecteur discret : « Ajouter » au repos, compteur une fois le plat choisi */
   .dish-stepper{display:none}
   body.order-mode .dish-stepper{display:flex;justify-content:flex-end;align-items:center;margin-top:10px}
-  /* état repos : petit « + » rond discret (contour doré), ancré en bas à droite au niveau des ingrédients */
+  /* état repos : petit « + » rond discret (contour doré), au niveau de la description */
   .dish-stepper .ds-add{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;
-    width:30px;height:30px;border:1px solid rgba(233,206,150,.42);border-radius:50%;padding:0;color:#E9CE96;
+    width:26px;height:26px;border:1px solid rgba(233,206,150,.42);border-radius:50%;padding:0;color:#E9CE96;
     transition:border-color .2s,color .2s,background .2s}
-  .dish-stepper .ds-add svg{width:14px;height:14px}
+  .dish-stepper .ds-add svg{width:12px;height:12px}
   .dish-stepper .ds-add:hover{border-color:var(--rouge);color:#fff;background:var(--rouge,#A8261D)}
-  /* le « + » au repos remonte au niveau de la description (carte compacte, pas de ligne en plus) */
+  /* le « + » au repos s'aligne sur la ligne des ingrédients (bas droite), dégagé du prix */
   body.order-mode .dish{position:relative}
-  body.order-mode .dish:not(.in-order){min-height:76px}
-  body.order-mode .dish:not(.in-order) .dish-stepper{position:absolute;right:16px;bottom:12px;margin:0}
-  body.order-mode .dish:not(.in-order) .desc{padding-right:44px}
+  body.order-mode .dish:not(.in-order){min-height:88px}
+  body.order-mode .dish:not(.in-order) .dish-stepper{position:absolute;right:16px;bottom:10px;margin:0}
+  body.order-mode .dish:not(.in-order) .desc{padding-right:38px}
   /* état choisi : compteur en pilule */
   .dish-stepper .ds-count{display:none;align-items:center;border:1px solid rgba(233,206,150,.32);border-radius:999px;
     overflow:hidden;background:rgba(0,0,0,.18)}
