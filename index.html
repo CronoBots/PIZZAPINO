@@ -1063,21 +1063,22 @@
   html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab{display:none!important}
   html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 
-  /* ===== Accueil (mode app) : bouton + bascule des sections du site en thème sombre ===== */
-  .ab-home{display:none}
-  html.app-mode .ab-home{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;
-    border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(233,206,150,.24);color:#EFE7D6;cursor:pointer;padding:0}
-  html.app-mode .ab-home svg{width:19px;height:19px}
-  html.app-mode .ab-home[aria-pressed="true"]{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
-  html.app-mode .app-bar .ab-brand{font-size:1.24rem}
-  /* bascule menu <-> accueil */
+  /* ===== Accueil (mode app) : vue « site » (hero + sections) en thème sombre ===== */
+  /* onglet Accueil dans la barre du bas : même style que les autres (rien à ajouter) */
+  /* bascule carte <-> accueil */
   html.app-mode body.app-home #carte,html.app-mode body.app-home .app-cat-head,html.app-mode body.app-home .menu-live-bg{display:none!important}
-  html.app-mode body.app-home #maison,html.app-mode body.app-home #galerie,html.app-mode body.app-home #instagram,
-  html.app-mode body.app-home .stats,html.app-mode body.app-home #avis,html.app-mode body.app-home .quote{display:block!important}
+  html.app-mode body.app-home .hero,html.app-mode body.app-home #maison,html.app-mode body.app-home #galerie,
+  html.app-mode body.app-home #instagram,html.app-mode body.app-home .stats,html.app-mode body.app-home #avis,
+  html.app-mode body.app-home .quote{display:block!important}
   html.app-mode body.app-home .reveal{opacity:1!important;transform:none!important}
-  /* onglet catégorie neutralisé quand on est sur l'accueil */
-  html.app-mode body.app-home .tabbar .tb[data-cat]{color:#8a8171}
-  html.app-mode body.app-home .tabbar .tb.active{color:#8a8171}
+  /* hero dans l'app : plein écran entre la barre d'app et la barre d'onglets, sans indicateur de scroll */
+  html.app-mode .hero{min-height:calc(100svh - 128px)}
+  html.app-mode .hero .hi-scroll{display:none}
+  html.app-mode .hero-frame{inset:12px}
+  /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
+  html.app-mode .hi-cat,html.app-mode .hero .hi-brand,html.app-mode .hi-sub,html.app-mode .hi-desc,
+  html.app-mode .hi-cta,html.app-mode .hi-rating,html.app-mode .hero-frame,html.app-mode .hero .hero-bg{opacity:1!important;animation:none!important}
+  html.app-mode .hi-line{width:min(300px,62vw)!important;animation:none!important}
   /* stats en sombre */
   html.app-mode .stats{background:#100b08}
   html.app-mode .stats .stat .n{color:#F5EEDF}
@@ -1328,7 +1329,6 @@
 
 <!-- BARRE APP (visible uniquement en PWA installée) -->
 <div class="app-bar" role="banner">
-  <button type="button" class="ab-home" id="abHome" aria-label="Accueil" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h3.5v-6h5v6H18a1 1 0 0 0 1-1V9.5"/></svg></button>
   <span class="ab-brand">Pizzeria <b>Pino</b></span>
   <span class="ab-status" id="abStatus" aria-live="polite"></span>
   <a class="ab-call" href="tel:+3285513339" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
@@ -2524,7 +2524,11 @@
 
 <!-- BARRE D'ONGLETS BAS (mode app : catégories + commande) -->
 <nav class="tabbar" id="tabbar" aria-label="Navigation de l'application">
-  <button type="button" class="tb active" data-cat="pates">
+  <button type="button" class="tb tb-home active" id="tbHome" aria-pressed="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h3.5v-6h5v6H18a1 1 0 0 0 1-1V9.5"/></svg>
+    <span>Accueil</span>
+  </button>
+  <button type="button" class="tb" data-cat="pates">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M7 9c0-1.6 1-2.6 2-2.6M11 9c0-2.1 1-3.1 2-3.1M15 9c0-1.6 1-2.6 2-2.6"/></svg>
     <span>Pâtes</span>
   </button>
@@ -2626,25 +2630,22 @@
 
   function setActiveCat(btn){ catBtns.forEach(function(b){ b.classList.toggle('active', b===btn); }); }
 
-  /* Bouton Accueil : bascule entre la carte et les sections « site » (histoire, galerie, avis…) */
-  var abHome = document.getElementById('abHome');
+  /* Onglet Accueil : vue « site » (hero + histoire + galerie + avis…), vue par défaut au lancement */
+  var tbHome = document.getElementById('tbHome');
   function setHome(on){
     document.body.classList.toggle('app-home', on);
-    if(abHome) abHome.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if(tbHome){ tbHome.classList.toggle('active', on); tbHome.setAttribute('aria-pressed', on ? 'true' : 'false'); }
+    if(on){ catBtns.forEach(function(b){ b.classList.remove('active'); }); if(orderBtn) orderBtn.classList.remove('active'); }
   }
-  if(abHome){
-    abHome.addEventListener('click', function(){
-      var on = !document.body.classList.contains('app-home');
-      setHome(on);
-      window.scrollTo({top:0, behavior:'auto'});
-    });
+  if(tbHome){
+    tbHome.addEventListener('click', function(){ setHome(true); window.scrollTo({top:0, behavior:'auto'}); });
   }
 
   catBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
       var cat = btn.getAttribute('data-cat');
       var wasHome = document.body.classList.contains('app-home');
-      if(wasHome) setHome(false);              // retour à la carte
+      if(wasHome) setHome(false);              // quitte l'accueil pour la carte
       if(wasHome || !btn.classList.contains('active')){
         var topTab = document.getElementById('tab-'+cat);
         if(topTab) topTab.click();             // réutilise la logique existante des onglets
@@ -2654,6 +2655,8 @@
       window.scrollTo({top:0, behavior:'smooth'}); // remonter tout en haut
     });
   });
+
+  setHome(true); // Accueil = vue par défaut
 
   // Onglet Commande : ouvre le panneau (déclenche le FAB masqué)
   var fab = document.getElementById('cartFab');
