@@ -16,6 +16,16 @@
 (function(){try{
   var pwa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true||/[?&]source=pwa/.test(location.search);
   if(pwa)document.documentElement.classList.add('app-mode');
+}catch(e){}})();
+/* Hauteur du hero FIGÉE en pixels au chargement (= taille de l'écran), recalculée uniquement
+   à la rotation — jamais au scroll. La barre d'URL mobile ne redimensionne donc plus le cadre
+   du hero (fini l'effet de zoom/recadrage sur la vidéo). */
+(function(){try{
+  var d=document.documentElement, lastW=0;
+  function set(){ var w=window.innerWidth; if(w===lastW) return; lastW=w; d.style.setProperty('--hvh', window.innerHeight+'px'); }
+  set();
+  window.addEventListener('orientationchange', function(){ lastW=0; setTimeout(set,250); });
+  window.addEventListener('resize', set); /* ne met à jour que si la LARGEUR change (rotation), pas la barre d'URL */
 }catch(e){}})();</script>
 <link rel="icon" type="image/png" href="icons/icon-512.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -757,7 +767,7 @@
   }
 
   /* ===== HERO — éditorial premium ===== */
-  .hero{min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;background:#0c0a08}
+  .hero{min-height:var(--hvh,100svh);display:flex;align-items:center;justify-content:center;text-align:center;background:#0c0a08}
   /* image du hero : fixe, sans parallaxe ni zoom (simple fondu à l'apparition) */
   .hero .hero-bg{opacity:1;background-position:center 44%;transform:none;animation:none}
   .hero::before{background:
@@ -778,8 +788,25 @@
     background:linear-gradient(90deg,transparent,var(--or),transparent);animation:hiLine 1s ease 1.25s forwards}
   .hi-desc{font-size:clamp(1rem,1.4vw,1.14rem);color:#E9DFCE;max-width:52ch;margin:0 auto;line-height:1.62;
     text-shadow:0 1px 14px rgba(0,0,0,.72);opacity:0;animation:hiUp .9s ease 1.5s forwards}
-  .hi-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:32px;
+  .hi-cta{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:34px;
     opacity:0;animation:hiUp .9s ease 1.8s forwards}
+  /* Bouton hero premium : liseré doré sur fond sombre, remplissage doré au survol */
+  .hi-btn{position:relative;display:inline-flex;align-items:center;gap:16px;text-decoration:none;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.24em;font-weight:500;font-size:.82rem;
+    color:#F4E9CF;padding:18px 20px 18px 34px;border-radius:2px;
+    background:linear-gradient(180deg,rgba(42,28,17,.5),rgba(18,12,8,.58));
+    border:1px solid rgba(233,206,150,.5);
+    box-shadow:0 14px 34px -18px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05);
+    transition:color .3s,background .3s,border-color .3s,box-shadow .35s,transform .2s}
+  .hi-btn .hb-ico{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 auto;
+    border-radius:50%;border:1px solid rgba(233,206,150,.4);color:#E9CE96;transition:transform .3s,border-color .3s,color .3s,background .3s}
+  .hi-btn .hb-ico svg{width:16px;height:16px}
+  .hi-btn:hover{transform:translateY(-2px);color:#1d130a;border-color:transparent;
+    background:linear-gradient(180deg,#F1D28C,#D6A354);
+    box-shadow:0 20px 44px -18px rgba(201,154,77,.7),0 0 30px -12px rgba(233,206,150,.55)}
+  .hi-btn:hover .hb-ico{background:rgba(29,19,10,.14);border-color:rgba(29,19,10,.35);color:#1d130a;transform:translateX(3px)}
+  .hi-cta-note{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:.62rem;
+    color:#b9ab90;text-shadow:0 1px 10px rgba(0,0,0,.7)}
   .hi-rating{margin-top:22px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.13em;
     font-size:.72rem;color:#cdbfa6;opacity:0;animation:hiUp .9s ease 2.05s forwards}
   .hi-rating b{color:#F7F1E5;font-weight:600}
@@ -807,12 +834,14 @@
     .hs-wheel{animation:none}
   }
   @media(max-width:760px){
-    .hero{align-items:center;justify-content:center;min-height:100svh;height:auto;padding:96px 0 46px}
+    .hero{align-items:center;justify-content:center;min-height:var(--hvh,100svh);height:auto;padding:96px 0 46px}
     .hero::before{background:
       radial-gradient(122% 80% at 50% 42%,rgba(8,6,4,.30),rgba(8,6,4,.72) 88%),
       linear-gradient(180deg,rgba(8,6,4,.72) 0%,rgba(8,6,4,.24) 30%,rgba(8,6,4,.42) 62%,rgba(8,6,4,.92) 100%)}
     /* on garde l'action principale seule (l'appel est déjà dans la barre du bas) */
-    .hi-cta{display:flex;justify-content:center;margin-top:26px}
+    .hi-cta{margin-top:26px}
+    .hi-btn{font-size:.76rem;letter-spacing:.2em;padding:15px 16px 15px 26px}
+    .hi-btn .hb-ico{width:30px;height:30px}
     /* on force le conteneur à occuper toute la largeur (sinon il se rétrécit au logo et part à gauche) */
     .hero .wrap{flex:1 1 100%;width:100%;min-width:0;margin:0;max-width:100%}
     .hi-center{padding:0 20px;width:100%;max-width:100%;margin:0}
@@ -1114,9 +1143,11 @@
   html.app-mode body.app-home .hero,html.app-mode body.app-home #maison,html.app-mode body.app-home #galerie,
   html.app-mode body.app-home #instagram,html.app-mode body.app-home .stats,html.app-mode body.app-home #avis,
   html.app-mode body.app-home .quote{display:block!important}
+  /* bannière défilante sous le hero, aussi en PWA (vue Accueil) */
+  html.app-mode body.app-home .marquee{display:block!important}
   html.app-mode body.app-home .reveal{opacity:1!important;transform:none!important}
   /* hero dans l'app : plein écran entre la barre d'app et la barre d'onglets, sans indicateur de scroll */
-  html.app-mode .hero{min-height:calc(100svh - 128px)}
+  html.app-mode .hero{min-height:calc(var(--hvh,100svh) - 128px)}
   html.app-mode .hero .hi-scroll{display:none}
   html.app-mode .hero-frame{inset:12px}
   /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
@@ -1409,7 +1440,11 @@
       <span class="hi-line"></span>
       <p class="hi-desc">Pâtes fraîches préparées maison, pizzas au feu de bois et spécialités italiennes, sur la route du Condroz, depuis plus de trente ans.</p>
       <div class="hi-cta">
-        <a class="btn btn-primary" href="tel:+3285513339"><span>Réserver une table</span></a>
+        <a class="hi-btn" href="tel:+3285513339">
+          <span class="hb-txt">Réserver une table</span>
+          <span class="hb-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <span class="hi-cta-note">Sur réservation · 085 51 33 39</span>
       </div>
       <p class="hi-rating"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5<br>plus de 1 000 avis Google</p>
     </div>
@@ -2585,7 +2620,7 @@
     if(confirmOv){ confirmOv.hidden = false; if(confirmCancel) confirmCancel.focus(); }
     else { doClear(); } // repli
   });
-  if(confirmOk) confirmOk.addEventListener('click', function(){ doClear(); closeConfirm(); });
+  if(confirmOk) confirmOk.addEventListener('click', function(){ doClear(); closeConfirm(); closePanel(); });
   if(confirmCancel) confirmCancel.addEventListener('click', closeConfirm);
   if(confirmOv) confirmOv.addEventListener('click', function(e){ if(e.target === confirmOv) closeConfirm(); });
   document.addEventListener('keydown', function(e){
