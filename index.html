@@ -376,7 +376,7 @@
     text-transform:uppercase;font-size:.76rem;color:var(--rouge)}
   body.searching .menu-tabs{opacity:.4;pointer-events:none}
   body.searching .menu-panel{display:block;margin-top:30px}
-  body.searching .menu-panel .cat-title,body.searching .menu-panel .menu-foot{display:none}
+  body.searching .menu-panel .cat-title,body.searching .menu-panel .menu-foot,body.searching .menu-panel .cat-note,body.searching .menu-panel .junior-note{display:none}
   .dish.hide{display:none}
   .menu-panel{display:none;margin-top:30px}
   .menu-panel.show{display:block}
@@ -388,18 +388,24 @@
   .cat-title::before,.cat-title::after{content:"";height:1px;background:var(--hair-ink);flex:0 0 34px}
   .cat-title::after{flex:1}
   .cat-title:first-child{margin-top:0}
+  .cat-note{text-align:center;font-family:"Fraunces",serif;font-style:italic;color:var(--ink-mut);font-size:.95rem;margin:-2px 0 14px;line-height:1.45}
+  .junior-note{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;margin:30px auto 0;max-width:440px;
+    padding:16px 22px;border:1px solid var(--hair-ink);border-radius:14px;background:rgba(168,38,29,.045)}
+  .junior-note .jn-label{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink)}
+  .junior-note .jn-age{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.62em;color:var(--ink-mut);vertical-align:middle;margin-left:4px}
+  .junior-note strong{font-family:"Fraunces",serif;font-weight:600;font-size:1.7rem;color:var(--rouge);line-height:1}
+  .junior-note .jn-sub{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.66rem;color:var(--ink-mut)}
   .dishes{display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px}
-  .dish{display:grid;grid-template-columns:auto 1fr auto;
-    grid-template-areas:"name dot price" "desc desc desc" "step step step";
-    align-items:baseline;column-gap:8px;padding:14px 0;
-    border-bottom:1px solid var(--hair-ink);transition:background .25s}
+  .dish{padding:14px 0;border-bottom:1px solid var(--hair-ink);transition:background .25s}
   .dish:hover{background:rgba(168,38,29,.04)}
-  .dish .name{grid-area:name;font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink);min-width:0}
-  .dish .desc{grid-area:desc;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
+  /* ligne nom · pointillés · prix : jamais de retour à la ligne du prix (le nom se replie tout seul) */
+  .dish-line{display:flex;flex-wrap:nowrap;align-items:baseline;column-gap:8px}
+  .dish .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:var(--ink);flex:0 1 auto;min-width:0;overflow-wrap:anywhere}
+  .dish .desc{display:block;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:.88rem;
     color:var(--ink-mut);margin-top:3px;line-height:1.45}
-  .dish .dot{grid-area:dot;min-width:24px;border-bottom:1px dotted rgba(38,32,26,.42);transform:translateY(-5px);align-self:baseline}
-  .dish .price{grid-area:price;font-family:"Fraunces",serif;color:var(--ink);font-weight:600;font-size:1.06rem;white-space:nowrap;
-    transition:color .25s}
+  .dish .dot{flex:1 1 24px;min-width:24px;border-bottom:1px dotted rgba(38,32,26,.42);transform:translateY(-5px);align-self:baseline}
+  .dish .price{font-family:"Fraunces",serif;color:var(--ink);font-weight:600;font-size:1.06rem;white-space:nowrap;
+    flex:0 0 auto;transition:color .25s}
   .dish .price::after{content:" €";font-size:.78em;color:var(--ink-mut);font-weight:500}
   .dish:hover .price{color:var(--rouge)}
   .menu-foot{margin-top:32px;font-size:.86rem;color:var(--ink-mut);font-style:italic;text-align:center}
@@ -855,7 +861,7 @@
 
   /* Stepper par plat (invisible hors mode commande → menu identique) */
   .dish-stepper{display:none}
-  body.order-mode .dish-stepper{display:inline-flex;grid-area:step;justify-self:end;justify-content:flex-end;align-items:center;margin-top:9px}
+  body.order-mode .dish-stepper{display:flex;justify-content:flex-end;align-items:center;margin-top:9px}
   .dish-stepper button{width:33px;height:33px;border:1px solid var(--hair-ink);background:#FBF6EB;color:var(--ink);
     font-size:1.15rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;font-family:inherit}
   .dish-stepper button:hover{border-color:var(--rouge);color:var(--rouge)}
@@ -1086,16 +1092,29 @@
   html.app-mode .dish-stepper button:hover{border-color:var(--rouge);color:#fff}
   html.app-mode .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
   html.app-mode .dish-stepper .ds-qty{background:rgba(0,0,0,.34);border-color:rgba(233,206,150,.3);color:#F5EEDF}
-  /* plat en commande : carte rouge « verre » */
-  html.app-mode body.order-mode .dish.in-order{background:rgba(138,30,22,.82);border-color:rgba(233,120,100,.55);
-    box-shadow:0 10px 26px -14px #000,inset 4px 0 0 var(--rouge,#A8261D)}
-  html.app-mode body.order-mode .dish.in-order .name{color:#fff}
-  html.app-mode body.order-mode .dish.in-order .price{color:#F0D9A6}
+  /* plat en commande : carte claire (crème) qui ressort sur le fond sombre */
+  html.app-mode body.order-mode .dish.in-order{background:rgba(246,239,225,.96);border-color:rgba(201,154,77,.7);
+    box-shadow:0 14px 30px -14px #000,inset 4px 0 0 var(--or,#C69A4D)}
+  html.app-mode body.order-mode .dish.in-order .name{color:#241b12}
+  html.app-mode body.order-mode .dish.in-order .desc{color:#6c5c45}
+  html.app-mode body.order-mode .dish.in-order .price{color:#8a5713}
+  html.app-mode body.order-mode .dish.in-order .price::after{color:#a67c3c}
+  html.app-mode body.order-mode .dish.in-order .dot{border-bottom-color:rgba(120,95,55,.55)}
+  /* sélecteur +/− sur carte claire : contraste foncé sur clair */
+  html.app-mode body.order-mode .dish.in-order .dish-stepper button{background:rgba(36,27,18,.06);border-color:rgba(120,95,55,.45);color:#33260f}
+  html.app-mode body.order-mode .dish.in-order .dish-stepper .ds-qty{background:rgba(36,27,18,.05);border-color:rgba(120,95,55,.45);color:#241b12}
+  html.app-mode body.order-mode .dish.in-order .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
   /* bas de carte (tarifs, notes) adaptés au sombre */
   html.app-mode #carte .supp-box{border-color:rgba(233,206,150,.32);color:#EFE7D6;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);border-radius:13px}
   html.app-mode #carte .supp-box li{border-color:rgba(233,206,150,.16);color:#EFE7D6}
   html.app-mode #carte .menu-foot,html.app-mode #carte .panel-note{color:#cabda6}
   html.app-mode #carte .panel-note strong,html.app-mode #carte .menu-foot strong{color:#E9CE96}
+  html.app-mode #carte .cat-note{color:#d0c2a8;text-shadow:0 1px 10px #000}
+  html.app-mode #carte .junior-note{border-color:rgba(233,206,150,.4);background:rgba(14,10,7,.66)}
+  html.app-mode #carte .junior-note .jn-label{color:#F5EEDF}
+  html.app-mode #carte .junior-note .jn-age{color:#c7b89e}
+  html.app-mode #carte .junior-note strong{color:#F0C36B}
+  html.app-mode #carte .junior-note .jn-sub{color:#c7b89e}
   body.searching .app-cat-head{display:none!important}
 
   /* ===== Panier « Ma commande » en thème sombre (mode app) ===== */
@@ -1428,20 +1447,24 @@
         <div class="dish"><span class="name">Bruschetta</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomates fraîches, ail, basilic, origan</small></div>
         <div class="dish"><span class="name">Fraicheur</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)</small></div>
       </div>
-      <p class="menu-foot" style="text-align:left;margin-top:20px">Pizza Junior (-14 ans) : <strong style="color:var(--or)">−2,00</strong> à déduire du prix de la pizza choisie.</p>
+      <p class="junior-note"><span class="jn-label">Pizza Junior <span class="jn-age">−14 ans</span></span><strong>−2,00 €</strong><span class="jn-sub">à déduire du prix de la pizza choisie</span></p>
     </div>
 
     <!-- VIANDES -->
     <div class="menu-panel" id="viandes">
-      <p class="panel-note"><strong>Escalopes panées</strong> — escalope panée + accompagnement de pâtes + sauce au choix.</p>
+      <div class="cat-title">Escalopes panées</div>
+      <p class="cat-note">Escalope panée + accompagnement de pâtes + sauce au choix</p>
       <div class="dishes">
-        <div class="dish"><span class="name">Parmigiana</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
-        <div class="dish"><span class="name">Archiduc</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
-        <div class="dish"><span class="name">Napolitaine</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
-        <div class="dish"><span class="name">Pizzaiola</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
-        <div class="dish"><span class="name">Gorgonzola</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée</small></div>
-        <div class="dish"><span class="name">Poivre &amp; crème</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, poivre vert, crème</small></div>
+        <div class="dish"><span class="name">Parmigiana</span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Archiduc</span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Napolitaine</span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Pizzaiola</span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Gorgonzola</span><span class="dot"></span><span class="price">14,50</span></div>
+        <div class="dish"><span class="name">Poivre &amp; crème</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Poivre vert, crème</small></div>
         <div class="dish"><span class="name">Escalope Valdostana</span><span class="dot"></span><span class="price">14,00</span><small class="desc">Jambon, vin blanc, fromage</small></div>
+      </div>
+      <div class="cat-title">Spécialité</div>
+      <div class="dishes">
         <div class="dish"><span class="name">Osso Buco Maison</span><span class="dot"></span><span class="price">16,00</span><small class="desc">Accompagné de pâtes</small></div>
       </div>
     </div>
@@ -2262,6 +2285,13 @@
     if(price == null) return;
     var id = 'd' + i, name = nameEl.textContent.trim();
     var panel = d.closest('.menu-panel'); var cat = panel ? panel.id : '';
+    /* regroupe nom · pointillés · prix dans une ligne sans retour (prix toujours à droite) */
+    if(!d.querySelector('.dish-line')){
+      var dotEl = d.querySelector('.dot');
+      var line = document.createElement('div'); line.className = 'dish-line';
+      d.insertBefore(line, nameEl);
+      line.appendChild(nameEl); if(dotEl) line.appendChild(dotEl); line.appendChild(priceEl);
+    }
     var s = document.createElement('div'); s.className = 'dish-stepper';
     s.innerHTML = '<button type="button" class="ds-minus" aria-label="Retirer un ' + name + '">−</button><span class="ds-qty">0</span><button type="button" class="ds-plus" aria-label="Ajouter un ' + name + '">+</button>';
     d.appendChild(s);
