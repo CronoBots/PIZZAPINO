@@ -879,15 +879,33 @@
   body.order-mode .order-hint{opacity:1;max-height:2em}
 
   /* Stepper par plat (invisible hors mode commande → menu identique) */
+  /* Sélecteur discret : « Ajouter » au repos, compteur une fois le plat choisi */
   .dish-stepper{display:none}
-  body.order-mode .dish-stepper{display:flex;justify-content:flex-end;align-items:center;margin-top:9px}
-  .dish-stepper button{width:33px;height:33px;border:1px solid var(--hair-ink);background:#FBF6EB;color:var(--ink);
-    font-size:1.15rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;font-family:inherit}
-  .dish-stepper button:hover{border-color:var(--rouge);color:var(--rouge)}
-  .dish-stepper .ds-plus{background:var(--rouge);color:#fff;border-color:var(--rouge)}
-  .dish-stepper .ds-plus:hover{background:var(--rouge-d);color:#fff}
-  .dish-stepper .ds-qty{min-width:40px;text-align:center;font-family:"Oswald",sans-serif;font-weight:600;font-size:.95rem;
-    font-variant-numeric:tabular-nums;border-top:1px solid var(--hair-ink);border-bottom:1px solid var(--hair-ink);height:33px;line-height:33px;background:#fff}
+  body.order-mode .dish-stepper{display:flex;justify-content:flex-end;align-items:center;margin-top:10px}
+  /* état repos : bouton « Ajouter » discret (contour doré) */
+  .dish-stepper .ds-add{display:inline-flex;align-items:center;gap:7px;cursor:pointer;background:transparent;
+    border:1px solid rgba(233,206,150,.34);border-radius:999px;padding:8px 16px 8px 13px;color:#E9CE96;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.66rem;font-weight:600;
+    transition:border-color .2s,color .2s,background .2s}
+  .dish-stepper .ds-add svg{width:13px;height:13px}
+  .dish-stepper .ds-add:hover{border-color:var(--rouge);color:#fff;background:rgba(168,38,29,.16)}
+  /* état choisi : compteur en pilule */
+  .dish-stepper .ds-count{display:none;align-items:center;border:1px solid rgba(233,206,150,.32);border-radius:999px;
+    overflow:hidden;background:rgba(0,0,0,.18)}
+  .dish-stepper .ds-count button{width:36px;height:32px;background:transparent;border:0;color:#EFE7D6;font-size:1.2rem;
+    line-height:1;cursor:pointer;font-family:"Oswald",sans-serif;padding:0;transition:color .2s}
+  .dish-stepper .ds-count button:hover{color:#fff}
+  .dish-stepper .ds-count .ds-qty{min-width:30px;height:32px;display:inline-flex;align-items:center;justify-content:center;
+    color:#F5EEDF;font-family:"Oswald",sans-serif;font-weight:600;font-size:1rem;font-variant-numeric:tabular-nums;
+    border-left:1px solid rgba(233,206,150,.2);border-right:1px solid rgba(233,206,150,.2)}
+  /* bascule Ajouter <-> compteur */
+  .dish.in-order .dish-stepper .ds-add{display:none}
+  .dish.in-order .dish-stepper .ds-count{display:inline-flex}
+  /* compteur sur la carte crème (plat choisi) : contraste foncé sur clair */
+  .dish.in-order .dish-stepper .ds-count{border-color:rgba(120,95,55,.4);background:rgba(36,27,18,.05)}
+  .dish.in-order .dish-stepper .ds-count button{color:#6a4f2b}
+  .dish.in-order .dish-stepper .ds-count button:hover{color:var(--rouge)}
+  .dish.in-order .dish-stepper .ds-count .ds-qty{color:#241b12;border-color:rgba(120,95,55,.28)}
   body.order-mode .dish.in-order{background:rgba(168,38,29,.055)}
   body.order-mode .dish.in-order .name{color:var(--rouge)}
 
@@ -1140,10 +1158,7 @@
   html:not(.app-mode) #carte .menu-panel .dish .price::after{color:#b09a6f}
   html:not(.app-mode) #carte .menu-panel .dish .dot{border-bottom-color:rgba(233,206,150,.36)}
   /* steppers sur fond sombre (mode commande du site) */
-  html:not(.app-mode) #carte .dish-stepper button{background:rgba(0,0,0,.28);border-color:rgba(233,206,150,.3);color:#EFE7D6}
-  html:not(.app-mode) #carte .dish-stepper button:hover{border-color:var(--rouge);color:#fff}
-  html:not(.app-mode) #carte .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
-  html:not(.app-mode) #carte .dish-stepper .ds-qty{background:rgba(0,0,0,.34);border-color:rgba(233,206,150,.3);color:#F5EEDF}
+  /* (sélecteur : styles communs définis plus haut, valables site + app) */
   /* plat en commande : carte claire, liseré rouge */
   html:not(.app-mode) body.order-mode #carte .dish.in-order{background:rgba(246,239,225,.96);border-color:rgba(201,154,77,.7);box-shadow:0 14px 30px -14px #000,inset 4px 0 0 var(--rouge,#A8261D)}
   html:not(.app-mode) body.order-mode #carte .dish.in-order .name{color:#241b12}
@@ -1151,9 +1166,6 @@
   html:not(.app-mode) body.order-mode #carte .dish.in-order .price{color:#8a5713}
   html:not(.app-mode) body.order-mode #carte .dish.in-order .price::after{color:#a67c3c}
   html:not(.app-mode) body.order-mode #carte .dish.in-order .dot{border-bottom-color:rgba(120,95,55,.55)}
-  html:not(.app-mode) body.order-mode #carte .dish.in-order .dish-stepper button{background:rgba(36,27,18,.06);border-color:rgba(120,95,55,.45);color:#33260f}
-  html:not(.app-mode) body.order-mode #carte .dish.in-order .dish-stepper .ds-qty{background:rgba(36,27,18,.05);border-color:rgba(120,95,55,.45);color:#241b12}
-  html:not(.app-mode) body.order-mode #carte .dish.in-order .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
   /* bas de carte (tarifs, notes, boutons) adaptés au sombre */
   html:not(.app-mode) #carte .supp-box{border-color:rgba(233,206,150,.32);color:#EFE7D6;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);border-radius:13px}
   html:not(.app-mode) #carte .supp-box li{border-color:rgba(233,206,150,.16);color:#EFE7D6}
@@ -1208,10 +1220,6 @@
   html.app-mode .menu-panel .dish .price::after{color:#b09a6f}
   html.app-mode .menu-panel .dish .dot{border-bottom-color:rgba(233,206,150,.36)}
   /* steppers sur fond sombre */
-  html.app-mode .dish-stepper button{background:rgba(0,0,0,.28);border-color:rgba(233,206,150,.3);color:#EFE7D6}
-  html.app-mode .dish-stepper button:hover{border-color:var(--rouge);color:#fff}
-  html.app-mode .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
-  html.app-mode .dish-stepper .ds-qty{background:rgba(0,0,0,.34);border-color:rgba(233,206,150,.3);color:#F5EEDF}
   /* plat en commande : carte claire (crème) qui ressort sur le fond sombre */
   html.app-mode body.order-mode .dish.in-order{background:rgba(246,239,225,.96);border-color:rgba(201,154,77,.7);
     box-shadow:0 14px 30px -14px #000,inset 4px 0 0 var(--rouge,#A8261D)}
@@ -1221,9 +1229,6 @@
   html.app-mode body.order-mode .dish.in-order .price::after{color:#a67c3c}
   html.app-mode body.order-mode .dish.in-order .dot{border-bottom-color:rgba(120,95,55,.55)}
   /* sélecteur +/− sur carte claire : contraste foncé sur clair */
-  html.app-mode body.order-mode .dish.in-order .dish-stepper button{background:rgba(36,27,18,.06);border-color:rgba(120,95,55,.45);color:#33260f}
-  html.app-mode body.order-mode .dish.in-order .dish-stepper .ds-qty{background:rgba(36,27,18,.05);border-color:rgba(120,95,55,.45);color:#241b12}
-  html.app-mode body.order-mode .dish.in-order .dish-stepper .ds-plus{background:var(--rouge,#A8261D);border-color:var(--rouge,#A8261D);color:#fff}
   /* bas de carte (tarifs, notes) adaptés au sombre */
   html.app-mode #carte .supp-box{border-color:rgba(233,206,150,.32);color:#EFE7D6;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);border-radius:13px}
   html.app-mode #carte .supp-box li{border-color:rgba(233,206,150,.16);color:#EFE7D6}
@@ -2414,11 +2419,18 @@
       line.appendChild(nameEl); if(dotEl) line.appendChild(dotEl); line.appendChild(priceEl);
     }
     var s = document.createElement('div'); s.className = 'dish-stepper';
-    s.innerHTML = '<button type="button" class="ds-minus" aria-label="Retirer un ' + name + '">−</button><span class="ds-qty">0</span><button type="button" class="ds-plus" aria-label="Ajouter un ' + name + '">+</button>';
+    s.innerHTML = '<button type="button" class="ds-add" aria-label="Ajouter un ' + name + '">'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button>'
+      + '<span class="ds-count">'
+        + '<button type="button" class="ds-minus" aria-label="Retirer un ' + name + '">−</button>'
+        + '<span class="ds-qty">0</span>'
+        + '<button type="button" class="ds-plus" aria-label="Ajouter un ' + name + '">+</button>'
+      + '</span>';
     d.appendChild(s);
     var rec = { id:id, name:name, price:price, cat:cat, el:d, qtyEl:s.querySelector('.ds-qty') };
     byId[id] = rec;
     if(state[id]){ state[id].price = price; state[id].name = name; state[id].cat = cat; }
+    s.querySelector('.ds-add').addEventListener('click', function(){ change(rec, 1); });
     s.querySelector('.ds-plus').addEventListener('click', function(){ change(rec, 1); });
     s.querySelector('.ds-minus').addEventListener('click', function(){ change(rec, -1); });
   });
