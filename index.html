@@ -1049,17 +1049,19 @@
   .ci-supp-x{flex:0 0 auto;width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;
     border:1px solid var(--hair-ink);border-radius:50%;background:none;cursor:pointer;color:var(--ink-mut);font-size:.85rem;line-height:1;padding:0}
   .ci-supp-x:hover{border-color:var(--rouge);color:var(--rouge)}
-  .ci-add{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .ci-supp-sel{flex:1 1 auto;min-width:140px;-webkit-appearance:none;appearance:none;background:#FBF6EB;border:1px solid var(--hair-ink);
-    color:var(--rouge);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.68rem;
-    padding:7px 26px 7px 11px;border-radius:999px;cursor:pointer;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A8261D' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-size:12px}
-  .ci-supp-sel:focus{outline:none;border-color:var(--rouge)}
-  .ci-junior{flex:0 0 auto;-webkit-appearance:none;appearance:none;background:none;border:1px solid var(--hair-ink);
-    color:var(--ink-mut);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.68rem;
-    padding:7px 13px;border-radius:999px;cursor:pointer}
-  .ci-junior:hover{border-color:#1f9d57;color:#1f9d57}
-  .ci-junior.on{background:#1f9d57;border-color:#1f9d57;color:#fff}
+  .ci-add{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:1px}
+  /* Contrôles discrets : petits liens texte plutôt que gros boutons */
+  .ci-supp-sel{flex:0 0 auto;-webkit-appearance:none;appearance:none;background:transparent;border:0;
+    color:var(--gold2);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.63rem;
+    padding:3px 18px 3px 0;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C69A4D' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 2px center;background-size:10px}
+  .ci-supp-sel:hover{color:var(--rouge)}
+  .ci-supp-sel:focus{outline:none}
+  .ci-junior{flex:0 0 auto;-webkit-appearance:none;appearance:none;background:none;border:0;border-bottom:1px solid transparent;
+    color:var(--ink-mut);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.63rem;
+    padding:3px 1px;cursor:pointer}
+  .ci-junior:hover{color:#1f9d57}
+  .ci-junior.on{color:#1f9d57;border-bottom-color:#1f9d57}
   .cart-foot{padding:20px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--hair-ink);background:var(--paper-2)}
   .cart-remark{margin-bottom:13px}
   .remark-toggle{display:inline-flex;align-items:center;gap:8px;background:none;border:0;cursor:pointer;padding:4px 0;
@@ -1227,7 +1229,7 @@
   html.app-mode body.app-home .hero{display:flex!important;flex-direction:column}
   html.app-mode .hero .wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;width:100%}
   html.app-mode .hi-center{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;
-    padding-top:30px;padding-bottom:30px}
+    padding-top:58px;padding-bottom:52px}
   html.app-mode .hi-desc{margin-top:0}
   html.app-mode .hi-cta{margin-top:0}
   /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
@@ -1406,11 +1408,13 @@
   .ci-supp.junior .cs-mk,.ci-supp.junior .cs-price{color:#7fd39a}
   .ci-supp-x{border-color:rgba(233,206,150,.28);color:#b3a693}
   .ci-supp-x:hover{border-color:var(--rouge);color:#fff}
-  .ci-supp-sel{background-color:rgba(0,0,0,.3);border-color:rgba(233,206,150,.28);color:#E9CE96;
+  .ci-supp-sel{background-color:transparent;color:#E9CE96;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E9CE96' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+  .ci-supp-sel:hover{color:#F4E9CF}
   .ci-supp-sel option{background:#211812;color:#F5EEDF}
-  .ci-junior{border-color:rgba(233,206,150,.28);color:#c3b7a2}
-  .ci-junior.on{background:#1f9d57;border-color:#1f9d57;color:#fff}
+  .ci-junior{color:#b3a693}
+  .ci-junior:hover{color:#7fd39a}
+  .ci-junior.on{color:#7fd39a;border-bottom-color:#7fd39a}
   .cart-foot{background:#100b08;border-top-color:rgba(233,206,150,.16)}
   .cart-total{color:#EFE7D6}
   .cart-total b{color:#E9CE96}
@@ -2702,13 +2706,15 @@
     d.lines = merged;
     if(!d.lines.length) delete state[id];
   }
-  /* garantit une ligne à qty 1 à modifier (scinde une unité si la ligne en compte plusieurs) */
+  /* garantit une ligne à qty 1 à modifier (scinde une unité si la ligne en compte plusieurs).
+     L'unité modifiée reste « cette ligne » ; le reste non modifié est inséré JUSTE AU-DESSUS. */
   function ensureSingle(id, li){
     var d = state[id], line = d.lines[li];
     if(line.qty <= 1) return li;
-    line.qty -= 1;
-    d.lines.push({ qty:1, supps:(line.supps||[]).map(function(s){ return {name:s.name, price:s.price}; }), junior: line.junior });
-    return d.lines.length - 1;
+    var remainder = { qty: line.qty - 1, supps:(line.supps||[]).map(function(s){ return {name:s.name, price:s.price}; }), junior: line.junior };
+    line.qty = 1;                 // cette ligne devient l'unité modifiée
+    d.lines.splice(li, 0, remainder); // le reste (non modifié) passe au-dessus
+    return li + 1;                // la ligne modifiée est désormais juste en dessous du reste
   }
 
   var byId = {};
