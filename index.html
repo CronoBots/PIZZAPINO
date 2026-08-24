@@ -14,8 +14,12 @@
 <!-- PWA : application installable -->
 <script>/* Mode « app » : vue épurée (carte + commande) quand lancé depuis l'écran d'accueil */
 (function(){try{
-  var pwa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true||/[?&]source=pwa/.test(location.search);
-  if(pwa)document.documentElement.classList.add('app-mode');
+  var standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+  var pwa=standalone||/[?&]source=pwa/.test(location.search);
+  /* Le site mobile adopte l'apparence de la PWA (barre d'app + onglets + thème immersif) */
+  var mobile=window.matchMedia&&matchMedia('(max-width:760px)').matches;
+  if(pwa||mobile)document.documentElement.classList.add('app-mode');
+  if(standalone)document.documentElement.classList.add('standalone');
 }catch(e){}})();
 /* Hauteur du hero FIGÉE en pixels au chargement (= taille de l'écran), recalculée uniquement
    à la rotation — jamais au scroll. La barre d'URL mobile ne redimensionne donc plus le cadre
@@ -2859,6 +2863,8 @@
 (function(){
   var bar = document.getElementById('installBar');
   if(!bar) return;
+  /* apparence app (PWA installée OU site mobile) : pas de bandeau d'installation (il chevaucherait la barre d'onglets) */
+  if(document.documentElement.classList.contains('app-mode')) return;
   var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
   if(standalone) return;
   var DKEY = 'pino_install_dismissed';
