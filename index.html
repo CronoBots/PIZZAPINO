@@ -1132,6 +1132,9 @@
   html.app-mode .stats,html.app-mode #avis,html.app-mode .quote,
   html.app-mode .call-bar,html.app-mode #heroStatus,html.app-mode .install-bar{display:none!important}
 
+  /* Accueil app : libellés de section sans numéro (la carte « 02 » est un onglet séparé,
+     on éviterait sinon un enchaînement 01, 03, 04… peu premium) */
+  html.app-mode .eyebrow .num{display:none}
   /* La carte devient le point d'entrée */
   html.app-mode #carte{padding-top:26px}
   html.app-mode #carte .eyebrow{display:none}
@@ -1692,9 +1695,8 @@
   <div class="wrap">
     <p class="eyebrow reveal"><span class="num">03</span> En images &amp; en vidéo</p>
     <h2 class="reveal" style="--i:1">L'ambiance &amp; <em>les plats</em></h2>
-    <!-- NOTE : photos d'illustration, à remplacer par les vraies photos du restaurant -->
+    <!-- NOTE (interne, non visible) : photos d'illustration à remplacer par les vraies photos du restaurant -->
     <p class="lead reveal" style="--i:2">La salle, la terrasse et nos plats signature — un aperçu de la maison.</p>
-    <p class="reveal" style="--i:2;margin:16px auto 0;display:inline-flex;align-items:center;gap:9px;font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;font-weight:500;color:var(--or);border:1px solid rgba(198,154,77,.35);padding:8px 16px">📷 Photos d'illustration — à remplacer par les photos officielles du restaurant</p>
     <div class="gal-grid">
       <div class="gal-item reveal" data-full="images/bg-pizzas.jpg"><img loading="lazy" decoding="async" width="900" height="1200" src="images/bg-pizzas.jpg" alt="Pizza au feu de bois"><span class="cap">Au feu de bois<small>Nos pizzas signature</small></span></div>
       <div class="gal-item reveal" style="--i:1" data-full="images/bg-pates.jpg"><img loading="lazy" decoding="async" width="900" height="1200" src="images/bg-pates.jpg" alt="Pâtes fraîches"><span class="cap">Pâtes fraîches<small>Préparées maison</small></span></div>
@@ -1708,7 +1710,7 @@
       <div class="vid-frame">
         <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
       </div>
-      <span class="badge-off">🎬 Vidéo officielle · @pino.nandrin</span>
+      <span class="badge-off"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-right:7px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Vidéo officielle · @pino.nandrin</span>
     </div>
   </div>
 </section>
@@ -1743,7 +1745,7 @@
     <div class="grid">
       <div class="stat reveal"><div class="n"><span class="cnt" data-to="30" data-dec="0">0</span><span class="suf">+</span></div><div class="l">Ans d'expérience</div></div>
       <div class="stat reveal" style="--i:1"><div class="n"><span class="cnt" data-to="4.2" data-dec="1">0</span><span class="suf">★</span></div><div class="l">Note Google</div></div>
-      <div class="stat reveal" style="--i:2"><div class="n"><span class="cnt" data-to="1200" data-dec="0" data-sep="1">0</span><span class="suf">+</span></div><div class="l">Avis clients</div></div>
+      <div class="stat reveal" style="--i:2"><div class="n"><span class="cnt" data-to="1000" data-dec="0" data-sep="1">0</span><span class="suf">+</span></div><div class="l">Avis clients</div></div>
       <div class="stat reveal" style="--i:3"><div class="n"><span class="cnt" data-to="100" data-dec="0">0</span><span class="suf">+</span></div><div class="l">Couverts &amp; terrasses</div></div>
     </div>
   </div>
@@ -1754,7 +1756,7 @@
   <div class="wrap">
     <p class="eyebrow reveal"><span class="num">04</span> Ils en parlent</p>
     <h2 class="reveal" style="--i:1">Ce que disent <em>nos clients</em></h2>
-    <p class="lead reveal" style="--i:2"><strong style="color:var(--or)">4,2/5</strong> sur Google (plus de 1 200 avis)<br><strong style="color:var(--or)">4/5</strong> sur Tripadvisor<br>Merci à nos clients !</p>
+    <p class="lead reveal" style="--i:2"><strong style="color:var(--or)">4,2/5</strong> sur Google · plus de 1 000 avis<br><strong style="color:var(--or)">4/5</strong> sur Tripadvisor<br>Merci à celles et ceux qui nous font confiance.</p>
     <!-- Avis Google (intégrés — issus de la fiche Google Pizzeria Pino) -->
     <div class="rev-marquee reveal">
      <div class="rev-track" id="revTrack">
