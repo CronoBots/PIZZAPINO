@@ -313,6 +313,7 @@
     padding:18px 38px;border-radius:0;transition:transform .15s,background .25s,color .25s,border-color .25s;
     overflow:hidden}
   .btn span{position:relative;z-index:1}
+  .btn svg{position:relative;z-index:1;flex:0 0 auto}
   .btn:hover{transform:translateY(-2px)}
   .btn-primary{background:var(--rouge);color:#fff}
   .btn-primary::before{content:"";position:absolute;inset:0;z-index:0;background:var(--rouge-d);
@@ -582,6 +583,8 @@
   .rev-stars{color:var(--or);font-size:1.02rem;letter-spacing:3px;line-height:1}
   .rev-text{font-family:"Inter",sans-serif;font-size:.95rem;line-height:1.62;color:var(--ink);margin:0}
   @media(max-width:640px){.rev-marquee{margin-top:36px}.rev-card{flex-basis:80vw;margin-right:16px;padding:22px 20px 24px}}
+  /* mobile : défilement des avis nettement plus lent (cartes larges = trop rapide sinon) */
+  @media(max-width:760px){.rev-track{animation-duration:130s}}
   @media(prefers-reduced-motion:reduce){.rev-track{animation:none}.rev-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch;
     -webkit-mask-image:none;mask-image:none}}
 
@@ -1721,9 +1724,9 @@
 <!-- INSTAGRAM -->
 <section id="instagram" class="insta center">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="num">★</span> Sur Instagram</p>
-    <h2 class="reveal" style="--i:1">Suivez <em>@pino.nandrin</em></h2>
-    <p class="lead reveal" style="--i:2">Nos reels, l'ambiance et les coulisses de la maison, au quotidien.</p>
+    <p class="eyebrow reveal"><span class="num">★</span> Réseaux sociaux</p>
+    <h2 class="reveal" style="--i:1">Suivez-nous <em>en ligne</em></h2>
+    <p class="lead reveal" style="--i:2">Nos reels, l'ambiance et les coulisses de la maison — sur Instagram et Facebook.</p>
     <div class="insta-grid">
       <a class="insta-tile reveal" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir le reel sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
@@ -1736,8 +1739,9 @@
         <picture><source type="image/webp" srcset="images/insta-2.webp"><img loading="lazy" decoding="async" width="800" height="1000" src="images/insta-2.jpg" alt="Reel — Saint-Valentin chez Pino"></picture>
       </a>
     </div>
-    <div class="cta-row reveal" style="justify-content:center;margin-top:42px">
-      <a class="btn btn-primary" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><span>Voir le profil Instagram</span></a>
+    <div class="cta-row reveal" style="justify-content:center;margin-top:42px;flex-wrap:wrap;gap:14px">
+      <a class="btn btn-primary" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg><span>Instagram</span></a>
+      <a class="btn btn-ghost" href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg><span>Facebook</span></a>
     </div>
   </div>
 </section>
