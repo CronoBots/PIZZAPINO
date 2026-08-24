@@ -1049,19 +1049,25 @@
   .ci-supp-x{flex:0 0 auto;width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;
     border:1px solid var(--hair-ink);border-radius:50%;background:none;cursor:pointer;color:var(--ink-mut);font-size:.85rem;line-height:1;padding:0}
   .ci-supp-x:hover{border-color:var(--rouge);color:var(--rouge)}
-  .ci-add{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:1px}
-  /* Contrôles discrets : petits liens texte plutôt que gros boutons */
-  .ci-supp-sel{flex:0 0 auto;-webkit-appearance:none;appearance:none;background:transparent;border:0;
-    color:var(--gold2);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.63rem;
-    padding:3px 18px 3px 0;cursor:pointer;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C69A4D' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 2px center;background-size:10px}
-  .ci-supp-sel:hover{color:var(--rouge)}
-  .ci-supp-sel:focus{outline:none}
-  .ci-junior{flex:0 0 auto;-webkit-appearance:none;appearance:none;background:none;border:0;border-bottom:1px solid transparent;
-    color:var(--ink-mut);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.63rem;
-    padding:3px 1px;cursor:pointer}
-  .ci-junior:hover{color:#1f9d57}
-  .ci-junior.on{color:#1f9d57;border-bottom-color:#1f9d57}
+  .ci-add{display:flex;align-items:center;gap:10px;margin-top:7px}
+  /* Sélecteur de supplément : champ large (occupe la largeur, comme la ligne du plat) */
+  .ci-supp-sel{flex:1 1 auto;min-width:0;-webkit-appearance:none;appearance:none;cursor:pointer;
+    background:rgba(255,255,255,.035);border:1px solid var(--hair-ink);border-radius:10px;
+    color:var(--gold2);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.66rem;
+    padding:9px 30px 9px 13px;text-overflow:ellipsis;transition:border-color .2s,color .2s;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C69A4D' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:12px}
+  .ci-supp-sel:hover{border-color:var(--gold2);color:var(--gold)}
+  .ci-supp-sel:focus{outline:none;border-color:var(--gold2)}
+  .ci-supp-sel option{background:#211812;color:#F5EEDF}
+  /* Junior : bouton toggle à activer (voyant + fond vert une fois activé) */
+  .ci-junior{flex:0 0 auto;-webkit-appearance:none;appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+    background:transparent;border:1px solid var(--hair-ink);border-radius:10px;
+    color:var(--ink-mut);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.66rem;
+    padding:9px 14px;transition:background .2s,border-color .2s,color .2s}
+  .ci-junior::before{content:"";width:8px;height:8px;border-radius:50%;border:1.5px solid currentColor;background:transparent;transition:background .2s,border-color .2s}
+  .ci-junior:hover{border-color:#2ec173;color:#2ec173}
+  .ci-junior.on{background:#1f9d57;border-color:#1f9d57;color:#fff}
+  .ci-junior.on::before{background:#fff;border-color:#fff}
   .cart-foot{padding:20px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--hair-ink);background:var(--paper-2)}
   .cart-remark{margin-bottom:13px}
   .remark-toggle{display:inline-flex;align-items:center;gap:8px;background:none;border:0;cursor:pointer;padding:4px 0;
@@ -1229,7 +1235,7 @@
   html.app-mode body.app-home .hero{display:flex!important;flex-direction:column}
   html.app-mode .hero .wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;width:100%}
   html.app-mode .hi-center{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;
-    padding-top:58px;padding-bottom:52px}
+    padding-top:94px;padding-bottom:78px}
   html.app-mode .hi-desc{margin-top:0}
   html.app-mode .hi-cta{margin-top:0}
   /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
@@ -1408,13 +1414,14 @@
   .ci-supp.junior .cs-mk,.ci-supp.junior .cs-price{color:#7fd39a}
   .ci-supp-x{border-color:rgba(233,206,150,.28);color:#b3a693}
   .ci-supp-x:hover{border-color:var(--rouge);color:#fff}
-  .ci-supp-sel{background-color:transparent;color:#E9CE96;
+  .ci-supp-sel{background-color:rgba(255,255,255,.04);border-color:rgba(233,206,150,.24);color:#E9CE96;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E9CE96' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
-  .ci-supp-sel:hover{color:#F4E9CF}
+  .ci-supp-sel:hover{border-color:rgba(233,206,150,.5);color:#F4E9CF}
   .ci-supp-sel option{background:#211812;color:#F5EEDF}
-  .ci-junior{color:#b3a693}
-  .ci-junior:hover{color:#7fd39a}
-  .ci-junior.on{color:#7fd39a;border-bottom-color:#7fd39a}
+  .ci-junior{border-color:rgba(233,206,150,.24);color:#c3b7a2}
+  .ci-junior:hover{border-color:#2ec173;color:#7fd39a}
+  .ci-junior.on{background:#1f9d57;border-color:#1f9d57;color:#fff}
+  .ci-junior.on::before{background:#fff;border-color:#fff}
   .cart-foot{background:#100b08;border-top-color:rgba(233,206,150,.16)}
   .cart-total{color:#EFE7D6}
   .cart-total b{color:#E9CE96}
@@ -2812,9 +2819,9 @@
     /* --- ligne principale --- */
     var top = document.createElement('div'); top.className = 'ci-top';
     var unit = line.qty > 1 ? '<span class="ci-unit">' + line.qty + ' × ' + money(u) + '</span>' : '';
-    top.innerHTML = '<span class="ci-main"><span class="ci-name"></span>' + unit + '</span>' +
-      '<span class="ci-line">' + money(line.qty * u) + '</span>' +
-      '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + line.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>';
+    top.innerHTML = '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + line.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>' +
+      '<span class="ci-main"><span class="ci-name"></span>' + unit + '</span>' +
+      '<span class="ci-line">' + money(line.qty * u) + '</span>';
     top.querySelector('.ci-name').textContent = d.name;
     top.querySelector('.ci-m').addEventListener('click', function(){ stepLine(id, li, -1); });
     top.querySelector('.ci-p').addEventListener('click', function(){ stepLine(id, li, 1); });
