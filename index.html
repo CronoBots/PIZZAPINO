@@ -627,19 +627,7 @@
   .cb-map{display:flex}
   .map{flex:1;border-radius:0;overflow:hidden;border:1px solid var(--hair);position:relative;min-height:280px}
   .map iframe{display:block;width:100%;height:100%;min-height:280px;border:0;filter:grayscale(.2) contrast(1.02)}
-  /* Carte OpenStreetMap (sans cookie) — masquée par défaut (desktop = Google), montrée sur mobile/PWA */
-  .osm-map{display:none;position:relative;flex:1;height:240px;min-height:240px;border:1px solid var(--hair);overflow:hidden;background:#14100d}
-  .osm-map iframe{display:block;width:100%;height:100%;min-height:240px;border:0}
-  .map-dir{position:absolute;right:12px;bottom:12px;z-index:2;display:inline-flex;align-items:center;gap:8px;
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.09em;font-size:.74rem;font-weight:500;
-    background:var(--rouge);color:#fff;padding:11px 18px;text-decoration:none;
-    box-shadow:0 10px 26px -8px rgba(0,0,0,.75);transition:background .25s,transform .2s}
-  .map-dir:hover{background:var(--rouge-d);transform:translateY(-1px)}
-  @media(max-width:760px){
-    .cb-map{flex-direction:column}
-    .map{display:none}         /* Google (cookies tiers) masqué sur mobile */
-    .osm-map{display:block}     /* OpenStreetMap (sans cookie) affiché sur mobile */
-  }
+  @media(max-width:760px){.cb-map{flex-direction:column}}
 
   /* ===== FOOTER ===== */
   footer{background:#0E0B09;color:var(--gris-d);padding:64px 0 36px;text-align:center;font-size:.86rem;
@@ -1363,10 +1351,10 @@
   /* Section Infos allégée : horaires + adresse + itinéraire, sans carte ni superflu */
   /* Infos & contact en mode app : écran épuré, façon application */
   html.app-mode #infos .feat,html.app-mode #infos .ig-line{display:none!important}
-  /* Carte OpenStreetMap visible en PWA, sous l'adresse */
+  /* Carte Google visible en PWA, sous l'adresse */
   html.app-mode #infos .cb-map{margin-top:16px}
-  html.app-mode #infos .osm-map{min-height:220px;border-radius:12px}
-  html.app-mode #infos .osm-map iframe{min-height:220px}
+  html.app-mode #infos .map{min-height:220px;border-radius:12px}
+  html.app-mode #infos .map iframe{min-height:220px}
   html.app-mode #infos .center .eyebrow{display:none}
   html.app-mode #infos .center h2{font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:600;font-size:1.9rem;color:var(--paper);text-align:center;line-height:1.06}
   html.app-mode #infos .center h2::before{content:"";display:block;width:42px;height:3px;background:var(--rouge);border-radius:2px;margin:0 auto 12px}
@@ -1664,12 +1652,12 @@
     <!-- VIANDES -->
     <div class="menu-panel" id="viandes">
       <div class="dishes">
-        <div class="dish"><span class="name">Escalope Parmigiana</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnement de pâtes</small></div>
-        <div class="dish"><span class="name">Escalope Archiduc</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnement de pâtes</small></div>
-        <div class="dish"><span class="name">Escalope Napolitaine</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnement de pâtes</small></div>
-        <div class="dish"><span class="name">Escalope Pizzaiola</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnement de pâtes</small></div>
-        <div class="dish"><span class="name">Escalope Gorgonzola</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnement de pâtes</small></div>
-        <div class="dish"><span class="name">Escalope Poivre &amp; crème</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, poivre vert, crème, accompagnement de pâtes</small></div>
+        <div class="dish"><span class="name">Escalope Parmigiana</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnée de pâtes</small></div>
+        <div class="dish"><span class="name">Escalope Archiduc</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnée de pâtes</small></div>
+        <div class="dish"><span class="name">Escalope Napolitaine</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnée de pâtes</small></div>
+        <div class="dish"><span class="name">Escalope Pizzaiola</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnée de pâtes</small></div>
+        <div class="dish"><span class="name">Escalope Gorgonzola</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, accompagnée de pâtes</small></div>
+        <div class="dish"><span class="name">Escalope Poivre &amp; crème</span><span class="dot"></span><span class="price">14,50</span><small class="desc">Escalope panée, poivre vert, crème, accompagnée de pâtes</small></div>
         <div class="dish"><span class="name">Escalope Valdostana</span><span class="dot"></span><span class="price">14,00</span><small class="desc">Escalope panée, jambon, vin blanc, fromage</small></div>
         <div class="dish"><span class="name">Osso Buco Maison</span><span class="dot"></span><span class="price">16,00</span><small class="desc">Accompagné de pâtes</small></div>
       </div>
@@ -1903,10 +1891,6 @@
               <button type="button" class="map-load" id="mapLoad">Afficher la carte</button>
               <a class="map-alt" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener">Ouvrir dans Google Maps ↗</a>
             </div>
-          </div>
-          <!-- Carte OpenStreetMap (sans cookie ni consentement) affichée sur mobile / PWA -->
-          <div class="osm-map" id="osmMap" role="img" aria-label="Carte de localisation de la Pizzeria Pino, Route du Condroz 131 à Nandrin">
-            <a class="map-dir" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg> Itinéraire</a>
           </div>
         </div>
       </div>
@@ -2468,24 +2452,6 @@
     // Clic explicite sur "Afficher la carte" = consentement pour Google Maps
     var mapLoad = document.getElementById("mapLoad");
     if(mapLoad) mapLoad.addEventListener("click", function(){ set("all"); loadMap(); });
-
-    // Carte OpenStreetMap (sans cookie ni consentement) — injectée sur mobile/PWA uniquement
-    (function(){
-      var wrap = document.getElementById("osmMap");
-      if(!wrap) return;
-      var mobile = window.matchMedia && window.matchMedia("(max-width:760px)").matches;
-      if(!mobile) return;                 // desktop : on garde Google Maps (avec consentement)
-      if(wrap.querySelector("iframe")) return;
-      var lat = 50.5093, lon = 5.4246;    // Route du Condroz 131, 4550 Nandrin
-      var dLon = 0.0075, dLat = 0.0042;
-      var bbox = (lon-dLon).toFixed(5)+","+(lat-dLat).toFixed(5)+","+(lon+dLon).toFixed(5)+","+(lat+dLat).toFixed(5);
-      var src = "https://www.openstreetmap.org/export/embed.html?bbox="+bbox+"&layer=mapnik&marker="+lat.toFixed(5)+","+lon.toFixed(5);
-      var f = document.createElement("iframe");
-      f.setAttribute("title","Localisation de la Pizzeria Pino sur OpenStreetMap");
-      f.setAttribute("referrerpolicy","no-referrer-when-downgrade");
-      wrap.insertBefore(f, wrap.firstChild);
-      f.src = src; // src défini APRÈS insertion (chargement fiable sur iOS Safari, pas de lazy)
-    })();
   })();
 })();
 </script>
