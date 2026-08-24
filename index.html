@@ -1160,7 +1160,7 @@
   html.app-mode body.app-home .marquee{display:block!important}
   html.app-mode body.app-home .reveal{opacity:1!important;transform:none!important}
   /* hero dans l'app : plein écran entre la barre d'app et la barre d'onglets, sans indicateur de scroll */
-  html.app-mode .hero{min-height:calc(var(--hvh,100svh) - 128px)}
+  html.app-mode .hero{min-height:var(--hero-app-h, calc(var(--hvh,100svh) - 128px))}
   html.app-mode .hero .hi-scroll{display:none}
   html.app-mode .hero-frame{inset:12px}
   /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
@@ -1458,7 +1458,7 @@
       <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
       <p class="hi-sub">La vraie Italie, au feu de bois</p>
       <span class="hi-line"></span>
-      <p class="hi-desc">Pâtes fraîches préparées maison, pizzas au feu de bois et spécialités italiennes, sur la route du Condroz, depuis plus de trente ans.</p>
+      <p class="hi-desc">Pâtes fraîches maison, pizzas au feu de bois et spécialités italiennes — sur la route du Condroz depuis plus de trente ans.</p>
       <div class="hi-cta">
         <a class="hi-btn" href="tel:+3285513339">
           <span class="hb-txt">Réserver une table</span>
@@ -2308,6 +2308,24 @@
     var play = function(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); };
     v.addEventListener("loadeddata", play, {once:true});
     v.load();
+  })();
+
+  /* ---- Hauteur du hero en mode app : espace EXACT entre la barre d'app et la barre
+          d'onglets (les 128px fixes ignoraient les safe-areas iPhone → cadre coupé). ---- */
+  (function(){
+    var root = document.documentElement;
+    if(!root.classList.contains("app-mode")) return;
+    function fit(){
+      var ab = document.querySelector(".app-bar");
+      var tb = document.querySelector(".tabbar");
+      var abH = ab ? ab.offsetHeight : 0;
+      var tbH = tb ? tb.offsetHeight : 0;
+      var h = window.innerHeight - abH - tbH;
+      if(h > 260) root.style.setProperty("--hero-app-h", h + "px");
+    }
+    fit();
+    window.addEventListener("load", fit);
+    window.addEventListener("orientationchange", function(){ setTimeout(fit, 300); });
   })();
 
   /* ---- Braises du four à bois (hero) ---- */
