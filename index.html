@@ -324,7 +324,7 @@
   .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;
     font-family:"Oswald",sans-serif;text-transform:uppercase;font-weight:600;letter-spacing:.16em;font-size:.86rem;
     padding:18px 38px;border-radius:0;transition:transform .15s,background .25s,color .25s,border-color .25s;
-    overflow:hidden}
+    overflow:hidden;-webkit-appearance:none;appearance:none;border:0;cursor:pointer;background:none}
   .btn span{position:relative;z-index:1}
   .btn svg{position:relative;z-index:1;flex:0 0 auto}
   .btn:hover{transform:translateY(-2px)}
@@ -849,8 +849,9 @@
     color:#b9ab90;text-shadow:0 1px 10px rgba(0,0,0,.7)}
   .hi-cta-note a{color:#E9CE96;text-decoration:none;border-bottom:1px solid rgba(233,206,150,.4);padding-bottom:1px}
   .hi-cta-note a:hover{color:#F4E9CF;border-color:var(--or)}
-  .hi-rating{margin-top:22px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.13em;
-    font-size:.72rem;color:#cdbfa6;opacity:0;animation:hiUp .9s ease 2.05s forwards}
+  .hi-rating{display:block;margin-top:22px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.13em;
+    font-size:.72rem;color:#cdbfa6;text-decoration:none;cursor:pointer;transition:color .25s;opacity:0;animation:hiUp .9s ease 2.05s forwards}
+  .hi-rating:hover,.hi-rating:focus-visible{color:#F4E9CF}
   .hi-rating b{color:#F7F1E5;font-weight:600}
   .hi-stars{color:#E9CE96;letter-spacing:2px;margin-right:7px}
   .hi-stars .st-dim{color:rgba(233,206,150,.42)}
@@ -1026,8 +1027,9 @@
   .ch-title{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
   .cart-sub{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.68rem;color:var(--rouge)}
   .cart-sub:empty{display:none}
-  .cart-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair-ink)}
+  .cart-item{display:flex;flex-direction:column;gap:7px;padding:11px 0;border-bottom:1px solid var(--hair-ink)}
   .cart-list .cart-item:last-child{border-bottom:0}
+  .cart-item .ci-top{display:flex;align-items:center;gap:12px}
   .cart-item .ci-main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
   .cart-item .ci-name{min-width:0;font-family:"Fraunces",serif;font-weight:600;font-size:1rem;color:var(--ink)}
   .cart-item .ci-unit{font-family:"Oswald",sans-serif;font-size:.72rem;letter-spacing:.03em;color:var(--ink-mut);font-variant-numeric:tabular-nums}
@@ -1036,6 +1038,28 @@
   .cart-item .ci-step button{width:29px;height:29px;border:1px solid var(--hair-ink);background:#FBF6EB;cursor:pointer;font-size:1rem;color:var(--ink);line-height:1}
   .cart-item .ci-step button:hover{border-color:var(--rouge);color:var(--rouge)}
   .cart-item .ci-q{min-width:32px;text-align:center;font-family:"Oswald",sans-serif;font-variant-numeric:tabular-nums;font-size:.9rem}
+  /* Suppléments & option Junior par plat */
+  .ci-extras{display:flex;flex-direction:column;gap:5px;margin:1px 0 0}
+  .ci-supp{display:flex;align-items:center;gap:8px;font-family:"Inter",system-ui,sans-serif;font-size:.78rem;color:var(--ink-mut);line-height:1.3}
+  .ci-supp .cs-mk{flex:0 0 auto;color:var(--rouge);font-weight:700}
+  .ci-supp .cs-name{flex:1 1 auto;min-width:0}
+  .ci-supp .cs-price{flex:0 0 auto;font-family:"Oswald",sans-serif;font-size:.72rem;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .ci-supp.junior .cs-mk{color:#1f9d57}
+  .ci-supp.junior .cs-price{color:#1f9d57}
+  .ci-supp-x{flex:0 0 auto;width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;
+    border:1px solid var(--hair-ink);border-radius:50%;background:none;cursor:pointer;color:var(--ink-mut);font-size:.85rem;line-height:1;padding:0}
+  .ci-supp-x:hover{border-color:var(--rouge);color:var(--rouge)}
+  .ci-add{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ci-supp-sel{flex:1 1 auto;min-width:140px;-webkit-appearance:none;appearance:none;background:#FBF6EB;border:1px solid var(--hair-ink);
+    color:var(--rouge);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.68rem;
+    padding:7px 26px 7px 11px;border-radius:999px;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A8261D' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-size:12px}
+  .ci-supp-sel:focus{outline:none;border-color:var(--rouge)}
+  .ci-junior{flex:0 0 auto;-webkit-appearance:none;appearance:none;background:none;border:1px solid var(--hair-ink);
+    color:var(--ink-mut);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.68rem;
+    padding:7px 13px;border-radius:999px;cursor:pointer}
+  .ci-junior:hover{border-color:#1f9d57;color:#1f9d57}
+  .ci-junior.on{background:#1f9d57;border-color:#1f9d57;color:#fff}
   .cart-foot{padding:20px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--hair-ink);background:var(--paper-2)}
   .cart-remark{margin-bottom:13px}
   .remark-toggle{display:inline-flex;align-items:center;gap:8px;background:none;border:0;cursor:pointer;padding:4px 0;
@@ -1368,6 +1392,17 @@
   .cart-item .ci-step button{background:rgba(0,0,0,.3);border-color:rgba(233,206,150,.28);color:#EFE7D6}
   .cart-item .ci-step button:hover{border-color:var(--rouge);color:#fff}
   .cart-item .ci-q{color:#F5EEDF}
+  .ci-supp{color:#c3b7a2}
+  .ci-supp .cs-mk{color:#E9CE96}
+  .ci-supp .cs-price{color:#F5EEDF}
+  .ci-supp.junior .cs-mk,.ci-supp.junior .cs-price{color:#7fd39a}
+  .ci-supp-x{border-color:rgba(233,206,150,.28);color:#b3a693}
+  .ci-supp-x:hover{border-color:var(--rouge);color:#fff}
+  .ci-supp-sel{background-color:rgba(0,0,0,.3);border-color:rgba(233,206,150,.28);color:#E9CE96;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E9CE96' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+  .ci-supp-sel option{background:#211812;color:#F5EEDF}
+  .ci-junior{border-color:rgba(233,206,150,.28);color:#c3b7a2}
+  .ci-junior.on{background:#1f9d57;border-color:#1f9d57;color:#fff}
   .cart-foot{background:#100b08;border-top-color:rgba(233,206,150,.16)}
   .cart-total{color:#EFE7D6}
   .cart-total b{color:#E9CE96}
@@ -1493,7 +1528,7 @@
       <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
       <p class="hi-sub">Cuisine italienne au feu de bois</p>
       <span class="hi-line"></span>
-      <p class="hi-desc">Pâtes fraîches maison, pizzas au feu de bois et spécialités italiennes — sur la route du Condroz depuis 1995.</p>
+      <p class="hi-desc">Pâtes fraîches maison, pizzas au feu de bois et spécialités italiennes, sur la route du Condroz depuis 1995.</p>
       <div class="hi-cta">
         <a class="hi-btn" href="#carte" id="heroMenuBtn">
           <span class="hb-txt">Voir la carte</span>
@@ -1501,7 +1536,7 @@
         </a>
         <span class="hi-cta-note">Ou réservez au <a href="tel:+3285513339">085 51 33 39</a></span>
       </div>
-      <p class="hi-rating"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5<br>plus de 1 000 avis Google</p>
+      <a class="hi-rating" href="#avis" aria-label="Voir les avis Google"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5<br>plus de 1 000 avis Google</a>
     </div>
   </div>
   <a class="hi-scroll" href="#maison" aria-label="Découvrir la maison"><span class="hs-mouse"><span class="hs-wheel"></span></span></a>
@@ -1730,8 +1765,8 @@
       </div>
       <p class="menu-foot">Commander par téléphone ne supprime pas forcément le délai d'attente sur place : cela dépend de notre planning. Merci de votre compréhension.</p>
       <div class="cta-row" style="justify-content:center;margin-top:26px">
-        <a class="btn btn-primary magnet" href="tel:+3285513339"><span>Commander à emporter</span></a>
-        <a class="btn btn-ghost" href="carte-pizzeria-pino.pdf" download="Carte-Pizzeria-Pino.pdf"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Télécharger la carte (PDF)</span></a>
+        <button type="button" class="btn btn-primary magnet" id="orderNowBtn"><span>Commander à emporter</span></button>
+        <a class="btn btn-ghost" href="carte-pizzeria-pino.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Voir la carte (PDF)</span></a>
       </div>
     </div>
   </div>
@@ -2311,6 +2346,17 @@
     if(ab){
       if(open){ ab.className = "ab-status open"; ab.innerHTML = '<span class="dot-live open"></span>Ouvert'; }
       else { ab.className = "ab-status closed"; ab.innerHTML = '<span class="dot-live closed"></span>' + (nextOpen!==null ? "Ouvre à "+hhmm(nextOpen) : "Fermé"); }
+      // Appuyer sur le statut → amène aux horaires en bas de page
+      if(!ab.__wiredHours){
+        ab.__wiredHours = true;
+        ab.style.cursor = "pointer";
+        ab.setAttribute("role","button");
+        ab.setAttribute("tabindex","0");
+        ab.setAttribute("aria-label","Voir les horaires");
+        var goHours = function(){ var el = document.getElementById("infos"); if(el) el.scrollIntoView({behavior:"smooth", block:"start"}); };
+        ab.addEventListener("click", goHours);
+        ab.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goHours(); } });
+      }
     }
     // statut dans le pop-up appel/commande
     var cmStatus = document.getElementById("cmStatus");
@@ -2538,10 +2584,10 @@
   <div class="cart-foot">
     <div class="cart-total"><span>Total estimé</span><b id="cartTotal">0,00 €</b></div>
     <div class="cart-remark" id="remarkWrap">
-      <button type="button" class="remark-toggle" id="remarkToggle"><span class="rt-plus" aria-hidden="true">+</span> Ajouter une note <small>suppléments, allergies…</small></button>
+      <button type="button" class="remark-toggle" id="remarkToggle"><span class="rt-plus" aria-hidden="true">+</span> Ajouter une note <small>allergies, précisions…</small></button>
       <div class="remark-field" id="remarkField" hidden>
-        <label for="cartRemark">Suppléments ou précisions</label>
-        <textarea id="cartRemark" rows="2" placeholder="Ex. : mozzarella extra, sans oignon, allergies…"></textarea>
+        <label for="cartRemark">Précisions</label>
+        <textarea id="cartRemark" rows="2" placeholder="Ex. : sans oignon, cuisson, allergies…"></textarea>
       </div>
     </div>
     <div id="cartStatus" class="cart-status" aria-live="polite"></div>
@@ -2577,6 +2623,27 @@
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
   function qty(id){ return state[id] ? state[id].qty : 0; }
 
+  /* Liste des suppléments (source unique : le bloc « Suppléments » de la carte) */
+  var SUPPS = [];
+  Array.prototype.slice.call(document.querySelectorAll('.supplements .supp-grid li')).forEach(function(li){
+    var nEl = li.querySelector('span'), pEl = li.querySelector('b');
+    if(!nEl || !pEl) return;
+    var nm = nEl.textContent.trim();
+    if(/tout autre/i.test(nm)) return; // règle de prix, pas un ingrédient choisissable
+    var p = parsePrice(pEl.textContent); if(p == null) p = 0; // « Offert » -> 0
+    SUPPS.push({ name: nm, price: p });
+  });
+  var JUNIOR = { name: 'Formule Junior (−14 ans)', price: -2 };
+  function suppOf(id){ var it = state[id]; return (it && it.supps) ? it.supps : []; }
+  function isJunior(id){ var it = state[id]; return !!(it && it.junior); }
+  /* prix unitaire = base + suppléments (+ éventuelle remise Junior sur pizzas) */
+  function unitPrice(it){
+    var u = it.price;
+    if(it.supps) it.supps.forEach(function(s){ u += s.price; });
+    if(it.junior && it.cat === 'pizzas') u += JUNIOR.price;
+    return u;
+  }
+
   var byId = {};
   dishes.forEach(function(d, i){
     var nameEl = d.querySelector('.name'), priceEl = d.querySelector('.price');
@@ -2611,7 +2678,12 @@
 
   function change(rec, delta){
     var q = qty(rec.id) + delta; if(q < 0) q = 0;
-    if(q === 0) delete state[rec.id]; else state[rec.id] = { name:rec.name, price:rec.price, qty:q, cat:rec.cat };
+    if(q === 0){ delete state[rec.id]; }
+    else {
+      var ex = state[rec.id];
+      state[rec.id] = { name:rec.name, price:rec.price, qty:q, cat:rec.cat,
+        supps: (ex && ex.supps) ? ex.supps : [], junior: ex ? !!ex.junior : false };
+    }
     save(); syncDish(rec.id); render();
   }
   function syncDish(id){
@@ -2622,7 +2694,7 @@
   var fab = document.getElementById('cartFab'), cfCount = document.getElementById('cfCount'), cfTotal = document.getElementById('cfTotal');
   var list = document.getElementById('cartList'), totalEl = document.getElementById('cartTotal'), cartSub = document.getElementById('cartSub');
 
-  function totals(){ var n=0, s=0; for(var k in state){ n += state[k].qty; s += state[k].qty * state[k].price; } return { n:n, s:s }; }
+  function totals(){ var n=0, s=0; for(var k in state){ n += state[k].qty; s += state[k].qty * unitPrice(state[k]); } return { n:n, s:s }; }
   function render(){
     var t = totals();
     cfCount.textContent = t.n; cfTotal.textContent = money(t.s);
@@ -2648,16 +2720,85 @@
   }
   var CAT_ORDER = ['pates','pizzas','viandes','desserts'];
   var CAT_LABEL = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', viandes:'Viandes', desserts:'Desserts' };
+  function fmtSupp(p){ return p === 0 ? 'offert' : (p > 0 ? '+' : '−') + money(Math.abs(p)); }
   function renderRow(id){
     var it = state[id];
+    var u = unitPrice(it);
+    var supps = it.supps || [];
     var row = document.createElement('div'); row.className = 'cart-item';
-    var unit = it.qty > 1 ? '<span class="ci-unit">' + it.qty + ' × ' + money(it.price) + '</span>' : '';
-    row.innerHTML = '<span class="ci-main"><span class="ci-name"></span>' + unit + '</span><span class="ci-line">' + money(it.qty * it.price) + '</span>' +
+
+    /* --- ligne principale --- */
+    var top = document.createElement('div'); top.className = 'ci-top';
+    var unit = it.qty > 1 ? '<span class="ci-unit">' + it.qty + ' × ' + money(u) + '</span>' : '';
+    top.innerHTML = '<span class="ci-main"><span class="ci-name"></span>' + unit + '</span>' +
+      '<span class="ci-line">' + money(it.qty * u) + '</span>' +
       '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + it.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>';
-    row.querySelector('.ci-name').textContent = it.name;
-    row.querySelector('.ci-m').addEventListener('click', function(){ step(id, -1); });
-    row.querySelector('.ci-p').addEventListener('click', function(){ step(id, 1); });
+    top.querySelector('.ci-name').textContent = it.name;
+    top.querySelector('.ci-m').addEventListener('click', function(){ step(id, -1); });
+    top.querySelector('.ci-p').addEventListener('click', function(){ step(id, 1); });
+    row.appendChild(top);
+
+    var showJunior = it.junior && it.cat === 'pizzas';
+    /* --- suppléments choisis + option Junior --- */
+    if(supps.length || showJunior){
+      var ex = document.createElement('div'); ex.className = 'ci-extras';
+      supps.forEach(function(s, i){
+        var line = document.createElement('div'); line.className = 'ci-supp';
+        line.innerHTML = '<span class="cs-mk" aria-hidden="true">＋</span><span class="cs-name"></span>' +
+          '<span class="cs-price">' + fmtSupp(s.price) + '</span>' +
+          '<button type="button" class="ci-supp-x" aria-label="Retirer le supplément">×</button>';
+        line.querySelector('.cs-name').textContent = s.name;
+        line.querySelector('.ci-supp-x').addEventListener('click', function(){ removeSupp(id, i); });
+        ex.appendChild(line);
+      });
+      if(showJunior){
+        var jl = document.createElement('div'); jl.className = 'ci-supp junior';
+        jl.innerHTML = '<span class="cs-mk" aria-hidden="true">★</span><span class="cs-name">' + JUNIOR.name + '</span>' +
+          '<span class="cs-price">' + fmtSupp(JUNIOR.price) + '</span>' +
+          '<button type="button" class="ci-supp-x" aria-label="Retirer l\'option Junior">×</button>';
+        jl.querySelector('.ci-supp-x').addEventListener('click', function(){ toggleJunior(id); });
+        ex.appendChild(jl);
+      }
+      row.appendChild(ex);
+    }
+
+    /* --- contrôles d'ajout (pas sur les desserts) --- */
+    if(it.cat !== 'desserts' && (SUPPS.length || it.cat === 'pizzas')){
+      var add = document.createElement('div'); add.className = 'ci-add';
+      if(SUPPS.length){
+        var sel = document.createElement('select'); sel.className = 'ci-supp-sel'; sel.setAttribute('aria-label', 'Ajouter un supplément');
+        var opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = '+ Supplément…'; sel.appendChild(opt0);
+        SUPPS.forEach(function(s, i){
+          var o = document.createElement('option'); o.value = String(i);
+          o.textContent = s.name + '  ' + fmtSupp(s.price);
+          sel.appendChild(o);
+        });
+        sel.addEventListener('change', function(){ var v = sel.value; if(v !== ''){ addSupp(id, parseInt(v, 10)); } sel.value = ''; });
+        add.appendChild(sel);
+      }
+      if(it.cat === 'pizzas'){
+        var jb = document.createElement('button'); jb.type = 'button'; jb.className = 'ci-junior' + (it.junior ? ' on' : '');
+        jb.textContent = 'Junior −2 €'; jb.setAttribute('aria-pressed', it.junior ? 'true' : 'false');
+        jb.addEventListener('click', function(){ toggleJunior(id); });
+        add.appendChild(jb);
+      }
+      row.appendChild(add);
+    }
     return row;
+  }
+  function addSupp(id, si){
+    var it = state[id]; if(!it || !SUPPS[si]) return;
+    if(!it.supps) it.supps = [];
+    it.supps.push({ name: SUPPS[si].name, price: SUPPS[si].price });
+    save(); render();
+  }
+  function removeSupp(id, i){
+    var it = state[id]; if(!it || !it.supps) return;
+    it.supps.splice(i, 1); save(); render();
+  }
+  function toggleJunior(id){
+    var it = state[id]; if(!it || it.cat !== 'pizzas') return;
+    it.junior = !it.junior; save(); render();
   }
   function step(id, delta){
     if(byId[id]){ change(byId[id], delta); return; }
@@ -2691,6 +2832,8 @@
   function openPanel(){ syncCartStatus(); ov.classList.add('show'); panel.classList.add('show'); }
   function closePanel(){ ov.classList.remove('show'); panel.classList.remove('show'); }
   fab.addEventListener('click', openPanel);
+  var orderNowBtn = document.getElementById('orderNowBtn');
+  if(orderNowBtn) orderNowBtn.addEventListener('click', openPanel);
   document.getElementById('cartClose').addEventListener('click', closePanel);
   ov.addEventListener('click', closePanel);
   /* Confirmation « vider la commande » : dialogue maison (pas la fenêtre native du navigateur) */
