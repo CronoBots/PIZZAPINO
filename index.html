@@ -84,6 +84,7 @@
   "name": "Pizzeria Pino",
   "description": "Restaurant italien à Nandrin : pâtes fraîches et pizzas au feu de bois, produits italiens de première qualité. Sur place, à emporter et traiteur.",
   "servesCuisine": ["Italienne", "Pizza"],
+  "foundingDate": "1995",
   "priceRange": "€€",
   "currenciesAccepted": "EUR",
   "paymentAccepted": "Espèces, Carte bancaire",
@@ -814,6 +815,8 @@
   .hi-btn:hover .hb-ico{background:rgba(29,19,10,.14);border-color:rgba(29,19,10,.35);color:#1d130a;transform:translateX(3px)}
   .hi-cta-note{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:.62rem;
     color:#b9ab90;text-shadow:0 1px 10px rgba(0,0,0,.7)}
+  .hi-cta-note a{color:#E9CE96;text-decoration:none;border-bottom:1px solid rgba(233,206,150,.4);padding-bottom:1px}
+  .hi-cta-note a:hover{color:#F4E9CF;border-color:var(--or)}
   .hi-rating{margin-top:22px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.13em;
     font-size:.72rem;color:#cdbfa6;opacity:0;animation:hiUp .9s ease 2.05s forwards}
   .hi-rating b{color:#F7F1E5;font-weight:600}
@@ -1458,13 +1461,13 @@
       <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
       <p class="hi-sub">La vraie Italie, au feu de bois</p>
       <span class="hi-line"></span>
-      <p class="hi-desc">Pâtes fraîches maison, pizzas au feu de bois et spécialités italiennes — sur la route du Condroz depuis plus de trente ans.</p>
+      <p class="hi-desc">Pâtes fraîches maison, pizzas au feu de bois et spécialités italiennes — sur la route du Condroz depuis 1995.</p>
       <div class="hi-cta">
-        <a class="hi-btn" href="tel:+3285513339">
-          <span class="hb-txt">Réserver une table</span>
+        <a class="hi-btn" href="#carte" id="heroMenuBtn">
+          <span class="hb-txt">Voir la carte</span>
           <span class="hb-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </a>
-        <span class="hi-cta-note">Sur réservation · 085 51 33 39</span>
+        <span class="hi-cta-note">Ou réservez au <a href="tel:+3285513339">085 51 33 39</a></span>
       </div>
       <p class="hi-rating"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5<br>plus de 1 000 avis Google</p>
     </div>
@@ -2805,6 +2808,16 @@
       window.scrollTo({top:0, behavior:'smooth'}); // remonter tout en haut
     });
   });
+
+  // Bouton hero « Voir la carte » : bascule vers la carte (onglet Pizzas) en mode app
+  var heroMenuBtn = document.getElementById('heroMenuBtn');
+  if(heroMenuBtn){
+    heroMenuBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      var t = bar.querySelector('.tb[data-cat="pizzas"]') || bar.querySelector('.tb[data-cat]');
+      if(t) t.click();
+    });
+  }
 
   setHome(true); // Accueil = vue par défaut
 
