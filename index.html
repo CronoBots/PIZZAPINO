@@ -451,6 +451,20 @@
     color:var(--ink);padding:10px 0;border-bottom:1px solid var(--hair-ink)}
   .supp-box li:last-child{border-bottom:0}
   .supp-box li:first-child{color:var(--rouge);font-weight:600}
+  /* Suppléments (liste détaillée sous la carte) */
+  .supplements{max-width:660px;margin:0 auto;border:1px solid rgba(233,206,150,.32);border-radius:14px;
+    padding:22px 28px 18px;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  .supp-h{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:1.35rem;color:#F7F1E5;margin:0 0 14px}
+  .supp-grid{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 38px;text-align:left}
+  @media(max-width:560px){.supp-grid{grid-template-columns:1fr}}
+  .supp-grid li{display:flex;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(233,206,150,.12);
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.73rem;color:#EFE7D6}
+  .supp-grid li i{flex:1;border-bottom:1px dotted rgba(233,206,150,.35);margin:0 6px;transform:translateY(-3px)}
+  .supp-grid li b{flex:0 0 auto;color:#E9CE96;font-weight:600}
+  .supp-grid li b::after{content:" €";font-size:.82em;color:#c69a4d}
+  .supp-grid li.free b{color:#7fd39a}
+  .supp-grid li.free b::after{content:""}
+  .supp-note{margin:14px 0 0;font-family:"Inter",sans-serif;font-size:.82rem;color:#b9ac96;font-style:italic;text-transform:none;letter-spacing:0}
 
   /* ===== GALERIE ===== */
   .maison{background:var(--noir)}
@@ -1695,11 +1709,23 @@
     </div>
 
     <div class="center" style="margin-top:42px">
-      <ul class="supp-box">
-        <li>Tarif à emporter</li>
-        <li>Suppléments de 1,00 à 4,00 €</li>
-        <li>Beurre d'ail offert</li>
-      </ul>
+      <div class="supplements">
+        <p class="supp-h">Suppléments</p>
+        <ul class="supp-grid">
+          <li><span>Bresaola</span><i></i><b>2,50</b></li>
+          <li><span>Jambon de Parme</span><i></i><b>2,50</b></li>
+          <li><span>Roquette</span><i></i><b>2,50</b></li>
+          <li><span>Fruits de mer</span><i></i><b>2,50</b></li>
+          <li><span>Scampis</span><i></i><b>2,50</b></li>
+          <li><span>Merguez</span><i></i><b>2,50</b></li>
+          <li><span>Coppa</span><i></i><b>2,50</b></li>
+          <li><span>Nduja</span><i></i><b>2,00</b></li>
+          <li><span>Burrata</span><i></i><b>4,00</b></li>
+          <li><span>Tout autre supplément</span><i></i><b>1,00</b></li>
+          <li class="free"><span>Beurre d'ail</span><i></i><b>Offert</b></li>
+        </ul>
+        <p class="supp-note">Tarifs à emporter · les suppléments s'ajoutent au prix du plat.</p>
+      </div>
       <p class="menu-foot">Commander par téléphone ne supprime pas forcément le délai d'attente sur place : cela dépend de notre planning. Merci de votre compréhension.</p>
       <div class="cta-row" style="justify-content:center;margin-top:26px">
         <a class="btn btn-primary magnet" href="tel:+3285513339"><span>Commander à emporter</span></a>
