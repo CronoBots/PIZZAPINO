@@ -802,7 +802,7 @@
   .hi-center{position:relative;z-index:3;max-width:780px;margin:0 auto;padding:0 24px}
   .hi-cat{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.4em;
     font-size:.68rem;color:var(--or);font-weight:500;text-shadow:0 1px 12px rgba(0,0,0,.8);opacity:0;animation:hiUp .8s ease .5s forwards}
-  .hero .hi-brand{font-family:"Fraunces",serif;font-weight:600;letter-spacing:.005em;text-transform:none;
+  .hero .hi-brand{font-family:"Fraunces",serif;font-weight:600;letter-spacing:.015em;text-transform:uppercase;
     font-size:clamp(3rem,9vw,5.6rem);line-height:.98;color:#F7F1E5;margin:14px 0 0;max-width:none;
     text-shadow:0 4px 42px rgba(0,0,0,.55);opacity:0;animation:hiUp 1s cubic-bezier(.2,.7,.2,1) .7s forwards}
   .hero .hi-brand b{color:var(--rouge);font-weight:600;font-style:italic}
@@ -1475,7 +1475,7 @@
     <div class="hi-center">
       <span class="hi-cat">Restaurant italien · Nandrin</span>
       <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
-      <p class="hi-sub">La vraie Italie, au feu de bois</p>
+      <p class="hi-sub">Cuisine italienne au feu de bois</p>
       <span class="hi-line"></span>
       <p class="hi-desc">Pâtes fraîches maison, pizzas au feu de bois et spécialités italiennes — sur la route du Condroz depuis 1995.</p>
       <div class="hi-cta">
@@ -1944,7 +1944,7 @@
       <span class="sep">·</span>
       <button type="button" id="manageCookies" class="linkbtn">Gérer les cookies</button>
     </nav>
-    <p class="credit">Réalisation : <a href="https://digitalconcept.be" target="_blank" rel="noopener">Digital Concept · digitalconcept.be</a></p>
+    <p class="credit">Réalisation : <a href="https://digitalconcept.be" target="_blank" rel="noopener">Digital Concept</a></p>
   </div>
 </footer>
 
@@ -2805,7 +2805,9 @@
   function setHome(on){
     document.body.classList.toggle('app-home', on);
     if(tbHome){ tbHome.classList.toggle('active', on); tbHome.setAttribute('aria-pressed', on ? 'true' : 'false'); }
-    if(on){ catBtns.forEach(function(b){ b.classList.remove('active'); }); if(orderBtn) orderBtn.classList.remove('active'); }
+    if(on){ catBtns.forEach(function(b){ b.classList.remove('active'); }); if(orderBtn) orderBtn.classList.remove('active');
+      /* la photo de catégorie n'appartient qu'à la carte : on l'efface sur l'accueil (sinon elle transparaît en bas) */
+      bgLayers.forEach(function(l){ l.style.opacity = '0'; }); }
   }
   if(tbHome){
     tbHome.addEventListener('click', function(){ setHome(true); window.scrollTo({top:0, behavior:'auto'}); });
