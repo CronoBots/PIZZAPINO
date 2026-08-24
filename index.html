@@ -831,20 +831,16 @@
   .hi-cta{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:34px;
     opacity:0;animation:hiUp .9s ease 1.8s forwards}
   /* Bouton hero premium : liseré doré sur fond sombre, remplissage doré au survol */
-  .hi-btn{position:relative;display:inline-flex;align-items:center;gap:16px;text-decoration:none;
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.24em;font-weight:500;font-size:.82rem;
-    color:#F4E9CF;padding:18px 20px 18px 34px;border-radius:2px;
-    background:linear-gradient(180deg,rgba(42,28,17,.5),rgba(18,12,8,.58));
-    border:1px solid rgba(233,206,150,.5);
-    box-shadow:0 14px 34px -18px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05);
-    transition:color .3s,background .3s,border-color .3s,box-shadow .35s,transform .2s}
-  .hi-btn .hb-ico{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 auto;
-    border-radius:50%;border:1px solid rgba(233,206,150,.4);color:#E9CE96;transition:transform .3s,border-color .3s,color .3s,background .3s}
-  .hi-btn .hb-ico svg{width:16px;height:16px}
-  .hi-btn:hover{transform:translateY(-2px);color:#1d130a;border-color:transparent;
-    background:linear-gradient(180deg,#F1D28C,#D6A354);
-    box-shadow:0 20px 44px -18px rgba(201,154,77,.7),0 0 30px -12px rgba(233,206,150,.55)}
-  .hi-btn:hover .hb-ico{background:rgba(29,19,10,.14);border-color:rgba(29,19,10,.35);color:#1d130a;transform:translateX(3px)}
+  /* CTA héros discret : lien texte élégant + flèche cerclée, sans cadre plein */
+  .hi-btn{position:relative;display:inline-flex;align-items:center;gap:13px;text-decoration:none;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.26em;font-weight:500;font-size:.78rem;
+    color:#E7DCC6;padding:8px 2px;background:none;border:0;box-shadow:none;
+    transition:color .3s,gap .3s}
+  .hi-btn .hb-ico{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;flex:0 0 auto;
+    border-radius:50%;border:1px solid rgba(233,206,150,.38);color:#E9CE96;transition:transform .3s,border-color .3s,color .3s}
+  .hi-btn .hb-ico svg{width:15px;height:15px}
+  .hi-btn:hover{transform:none;color:#F7EFDD;gap:17px}
+  .hi-btn:hover .hb-ico{border-color:var(--or);color:#F4E9CF;transform:translateX(2px)}
   .hi-cta-note{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:.62rem;
     color:#b9ab90;text-shadow:0 1px 10px rgba(0,0,0,.7)}
   .hi-cta-note a{color:#E9CE96;text-decoration:none;border-bottom:1px solid rgba(233,206,150,.4);padding-bottom:1px}
@@ -883,8 +879,8 @@
       linear-gradient(180deg,rgba(8,6,4,.72) 0%,rgba(8,6,4,.24) 30%,rgba(8,6,4,.42) 62%,rgba(8,6,4,.92) 100%)}
     /* on garde l'action principale seule (l'appel est déjà dans la barre du bas) */
     .hi-cta{margin-top:26px}
-    .hi-btn{font-size:.76rem;letter-spacing:.2em;padding:15px 16px 15px 26px}
-    .hi-btn .hb-ico{width:30px;height:30px}
+    .hi-btn{font-size:.74rem;letter-spacing:.22em;padding:8px 2px}
+    .hi-btn .hb-ico{width:29px;height:29px}
     /* on force le conteneur à occuper toute la largeur (sinon il se rétrécit au logo et part à gauche) */
     .hero .wrap{flex:1 1 100%;width:100%;min-width:0;margin:0;max-width:100%}
     .hi-center{padding:0 20px;width:100%;max-width:100%;margin:0}
@@ -1034,10 +1030,12 @@
   .cart-item .ci-name{min-width:0;font-family:"Fraunces",serif;font-weight:600;font-size:1rem;color:var(--ink)}
   .cart-item .ci-unit{font-family:"Oswald",sans-serif;font-size:.72rem;letter-spacing:.03em;color:var(--ink-mut);font-variant-numeric:tabular-nums}
   .cart-item .ci-line{font-family:"Oswald",sans-serif;font-variant-numeric:tabular-nums;color:var(--ink-mut);font-size:.85rem;white-space:nowrap}
-  .cart-item .ci-step{display:inline-flex;align-items:center;flex:0 0 auto}
-  .cart-item .ci-step button{width:29px;height:29px;border:1px solid var(--hair-ink);background:#FBF6EB;cursor:pointer;font-size:1rem;color:var(--ink);line-height:1}
-  .cart-item .ci-step button:hover{border-color:var(--rouge);color:var(--rouge)}
-  .cart-item .ci-q{min-width:32px;text-align:center;font-family:"Oswald",sans-serif;font-variant-numeric:tabular-nums;font-size:.9rem}
+  .cart-item .ci-step{display:inline-flex;align-items:center;flex:0 0 auto;
+    border:1px solid var(--hair-ink);border-radius:9px;overflow:hidden}
+  .cart-item .ci-step button{width:30px;height:30px;border:0;background:transparent;cursor:pointer;font-size:1rem;color:var(--ink-mut);line-height:1;transition:background .15s,color .15s}
+  .cart-item .ci-step button:hover{background:rgba(233,206,150,.1);color:var(--gold)}
+  .cart-item .ci-q{min-width:30px;text-align:center;font-family:"Oswald",sans-serif;font-variant-numeric:tabular-nums;font-size:.86rem;
+    border-left:1px solid var(--hair-ink);border-right:1px solid var(--hair-ink)}
   /* Suppléments & option Junior par plat */
   .ci-extras{display:flex;flex-direction:column;gap:5px;margin:1px 0 0}
   .ci-supp{display:flex;align-items:center;gap:8px;font-family:"Inter",system-ui,sans-serif;font-size:.78rem;color:var(--ink-mut);line-height:1.3}
@@ -1405,9 +1403,10 @@
   .cart-item .ci-name{color:#F5EEDF}
   .cart-item .ci-unit{color:#b3a693}
   .cart-item .ci-line{color:#c3b7a2}
-  .cart-item .ci-step button{background:rgba(0,0,0,.3);border-color:rgba(233,206,150,.28);color:#EFE7D6}
-  .cart-item .ci-step button:hover{border-color:var(--rouge);color:#fff}
-  .cart-item .ci-q{color:#F5EEDF}
+  .cart-item .ci-step{border-color:rgba(233,206,150,.26)}
+  .cart-item .ci-step button{background:transparent;color:#cabda6}
+  .cart-item .ci-step button:hover{background:rgba(233,206,150,.12);color:#F4E9CF}
+  .cart-item .ci-q{color:#F5EEDF;border-color:rgba(233,206,150,.26)}
   .ci-supp{color:#c3b7a2}
   .ci-supp .cs-mk{color:#E9CE96}
   .ci-supp .cs-price{color:#F5EEDF}
@@ -2819,8 +2818,8 @@
     /* --- ligne principale --- */
     var top = document.createElement('div'); top.className = 'ci-top';
     var unit = line.qty > 1 ? '<span class="ci-unit">' + line.qty + ' × ' + money(u) + '</span>' : '';
-    top.innerHTML = '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + line.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>' +
-      '<span class="ci-main"><span class="ci-name"></span>' + unit + '</span>' +
+    top.innerHTML = '<span class="ci-main"><span class="ci-name"></span>' + unit + '</span>' +
+      '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + line.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>' +
       '<span class="ci-line">' + money(line.qty * u) + '</span>';
     top.querySelector('.ci-name').textContent = d.name;
     top.querySelector('.ci-m').addEventListener('click', function(){ stepLine(id, li, -1); });
