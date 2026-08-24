@@ -1029,7 +1029,10 @@
   .cart-item .ci-main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
   .cart-item .ci-name{min-width:0;font-family:"Fraunces",serif;font-weight:600;font-size:1rem;color:var(--ink)}
   .cart-item .ci-unit{font-family:"Oswald",sans-serif;font-size:.72rem;letter-spacing:.03em;color:var(--ink-mut);font-variant-numeric:tabular-nums}
-  .cart-item .ci-line{font-family:"Oswald",sans-serif;font-variant-numeric:tabular-nums;color:var(--ink-mut);font-size:.85rem;white-space:nowrap}
+  .cart-item .ci-line{display:flex;flex-direction:column;align-items:flex-end;flex:0 0 auto;line-height:1.18;white-space:nowrap;
+    font-family:"Oswald",sans-serif;font-variant-numeric:tabular-nums}
+  .cart-item .cl-base{font-size:.68rem;color:var(--ink-mut);opacity:.85}
+  .cart-item .cl-net{font-size:.9rem;color:var(--ink)}
   .cart-item .ci-step{display:inline-flex;align-items:center;flex:0 0 auto;
     border:1px solid var(--hair-ink);border-radius:9px;overflow:hidden}
   .cart-item .ci-step button{width:30px;height:30px;border:0;background:transparent;cursor:pointer;font-size:1rem;color:var(--ink-mut);line-height:1;transition:background .15s,color .15s}
@@ -1402,7 +1405,8 @@
   .cart-item{border-bottom-color:rgba(233,206,150,.12)}
   .cart-item .ci-name{color:#F5EEDF}
   .cart-item .ci-unit{color:#b3a693}
-  .cart-item .ci-line{color:#c3b7a2}
+  .cart-item .cl-base{color:#8f8371}
+  .cart-item .cl-net{color:#EBD9B4}
   .cart-item .ci-step{border-color:rgba(233,206,150,.26)}
   .cart-item .ci-step button{background:transparent;color:#cabda6}
   .cart-item .ci-step button:hover{background:rgba(233,206,150,.12);color:#F4E9CF}
@@ -2813,20 +2817,25 @@
     var d = state[id], line = d.lines[li];
     var u = unitPrice(d, line);
     var supps = line.supps || [];
+    var showJunior = line.junior && d.cat === 'pizzas';
+    var hasExtras = supps.length > 0 || showJunior;
+    var baseTotal = d.price * line.qty;      // prix de base (sans suppléments)
+    var netTotal = u * line.qty;             // prix avec tous les suppléments
     var row = document.createElement('div'); row.className = 'cart-item';
 
-    /* --- ligne principale --- */
+    /* --- ligne principale : nom · prix (base + suppléments) · quantité --- */
     var top = document.createElement('div'); top.className = 'ci-top';
     var unit = line.qty > 1 ? '<span class="ci-unit">' + line.qty + ' × ' + money(u) + '</span>' : '';
+    var priceHtml = hasExtras
+      ? '<span class="cl-base" title="Prix de base">' + money(baseTotal) + '</span><span class="cl-net" title="Avec suppléments">' + money(netTotal) + '</span>'
+      : '<span class="cl-net">' + money(netTotal) + '</span>';
     top.innerHTML = '<span class="ci-main"><span class="ci-name"></span>' + unit + '</span>' +
-      '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + line.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>' +
-      '<span class="ci-line">' + money(line.qty * u) + '</span>';
+      '<span class="ci-line">' + priceHtml + '</span>' +
+      '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + line.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>';
     top.querySelector('.ci-name').textContent = d.name;
     top.querySelector('.ci-m').addEventListener('click', function(){ stepLine(id, li, -1); });
     top.querySelector('.ci-p').addEventListener('click', function(){ stepLine(id, li, 1); });
     row.appendChild(top);
-
-    var showJunior = line.junior && d.cat === 'pizzas';
     /* --- suppléments choisis + option Junior (propres à cette unité) --- */
     if(supps.length || showJunior){
       var ex = document.createElement('div'); ex.className = 'ci-extras';
