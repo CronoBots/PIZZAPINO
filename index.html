@@ -338,6 +338,21 @@
   .menu .btn-ghost{color:var(--ink);border-color:rgba(38,32,26,.4)}
   .menu .btn-ghost:hover{color:var(--rouge);border-color:var(--rouge)}
   .menu .btn-ghost svg{flex:0 0 auto}
+  /* Boutons premium du bas de carte (Commander / Voir la carte PDF) */
+  .menu-cta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:30px}
+  .mcta{display:inline-flex;align-items:center;justify-content:center;gap:11px;text-decoration:none;cursor:pointer;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.15em;font-weight:600;font-size:.8rem;
+    padding:16px 30px;border-radius:13px;border:1px solid transparent;-webkit-appearance:none;appearance:none;
+    transition:transform .2s,box-shadow .3s,background .3s,border-color .3s,color .3s}
+  .mcta svg{width:18px;height:18px;flex:0 0 auto}
+  .mcta-order{background:linear-gradient(180deg,#C33A2E,#9E1E15);color:#fff;
+    box-shadow:0 16px 34px -16px rgba(168,38,29,.75),inset 0 1px 0 rgba(255,255,255,.13)}
+  .mcta-order:hover{transform:translateY(-2px);box-shadow:0 22px 46px -16px rgba(168,38,29,.85),inset 0 1px 0 rgba(255,255,255,.16)}
+  .mcta-pdf{background:transparent;border-color:rgba(176,129,47,.5);color:#9A5B2C}
+  .mcta-pdf:hover{border-color:var(--or,#C69A4D);color:var(--rouge);background:rgba(176,129,47,.07)}
+  html.app-mode .mcta-pdf{border-color:rgba(233,206,150,.42);color:#EFE3C8}
+  html.app-mode .mcta-pdf:hover{border-color:var(--or,#C69A4D);color:#F7EFDD;background:rgba(233,206,150,.08)}
+  @media(max-width:520px){.menu-cta{flex-direction:column}.mcta{width:100%}}
 
   /* ===== MARQUEE ===== */
   .marquee{background:var(--noir);color:var(--or-l);padding:18px 0;overflow:hidden;white-space:nowrap;
@@ -1240,7 +1255,7 @@
     position:sticky;top:0;z-index:120;
     padding:calc(9px + env(safe-area-inset-top)) 15px 9px;
     background:#0d0b0a;
-    border-bottom:1px solid rgba(198,154,77,.16);
+    border-bottom:2px solid rgba(198,154,77,.28);
   }
   html.app-mode #progress{display:none}
   html.app-mode .app-bar .ab-brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.36rem;color:var(--paper,#F1EADB);letter-spacing:.03em;line-height:1;white-space:nowrap;text-transform:uppercase}
@@ -1256,7 +1271,7 @@
   /* Sections marketing masquées en mode app */
   html.app-mode #hdr,html.app-mode #mobnav,html.app-mode .hero,html.app-mode .marquee,
   html.app-mode #maison,html.app-mode #galerie,html.app-mode #instagram,
-  html.app-mode .stats,html.app-mode #avis,html.app-mode .quote,
+  html.app-mode .stats,html.app-mode #avis,html.app-mode .quote,html.app-mode #infos,html.app-mode footer,
   html.app-mode .call-bar,html.app-mode #heroStatus,html.app-mode .install-bar{display:none!important}
 
   /* Accueil app : libellés de section sans numéro (la carte « 02 » est un onglet séparé,
@@ -1282,7 +1297,7 @@
   html.app-mode body.app-home #carte,html.app-mode body.app-home .app-cat-head,html.app-mode body.app-home .menu-live-bg{display:none!important}
   html.app-mode body.app-home .hero,html.app-mode body.app-home #maison,html.app-mode body.app-home #galerie,
   html.app-mode body.app-home #instagram,html.app-mode body.app-home .stats,html.app-mode body.app-home #avis,
-  html.app-mode body.app-home .quote{display:block!important}
+  html.app-mode body.app-home .quote,html.app-mode body.app-home #infos,html.app-mode body.app-home footer{display:block!important}
   /* bannière défilante sous le hero, aussi en PWA (vue Accueil) */
   html.app-mode body.app-home .marquee{display:block!important}
   html.app-mode body.app-home .reveal{opacity:1!important;transform:none!important}
@@ -1534,7 +1549,7 @@
   html.app-mode .tabbar{
     display:flex;position:fixed;left:0;right:0;bottom:0;z-index:130;
     background:rgba(13,11,10,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-    border-top:1px solid rgba(198,154,77,.18);padding:6px 2px calc(6px + env(safe-area-inset-bottom));
+    border-top:2px solid rgba(198,154,77,.30);padding:6px 2px calc(6px + env(safe-area-inset-bottom));
   }
   html.app-mode .tabbar .tb{position:relative;flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:4px;
     background:none;border:0;cursor:pointer;padding:5px 1px;color:#8a8171;-webkit-tap-highlight-color:transparent;
@@ -1849,9 +1864,9 @@
         <p class="supp-note">Tarifs à emporter · les suppléments s'ajoutent au prix du plat.</p>
       </div>
       <p class="menu-foot">Commander par téléphone ne supprime pas forcément le délai d'attente sur place : cela dépend de notre planning. Merci de votre compréhension.</p>
-      <div class="cta-row" style="justify-content:center;margin-top:26px">
-        <button type="button" class="btn btn-primary magnet" id="orderNowBtn"><span>Commander à emporter</span></button>
-        <a class="btn btn-ghost" href="carte-pizzeria-pino.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Voir la carte (PDF)</span></a>
+      <div class="menu-cta">
+        <button type="button" class="mcta mcta-order magnet" id="orderNowBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span>Commander à emporter</span></button>
+        <a class="mcta mcta-pdf" href="carte-pizzeria-pino.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Voir la carte (PDF)</span></a>
       </div>
     </div>
   </div>
@@ -1863,14 +1878,10 @@
     <p class="eyebrow reveal"><span class="num">03</span> En images &amp; en vidéo</p>
     <h2 class="reveal" style="--i:1">L'ambiance <em>de la maison</em></h2>
     <p class="lead reveal" style="--i:2">Dehors : la façade, l'entrée et la terrasse suspendue. Dedans : le bar à vins et nos deux salles.</p>
-    <p class="gal-groupe reveal" style="--i:2">Extérieur</p>
     <div class="gal-grid">
       <div class="gal-item reveal" data-full="images/etab-facade.jpg"><picture><source type="image/webp" srcset="images/etab-facade.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-facade.jpg" alt="Façade du Restaurant Pizzeria Pino à Nandrin"></picture><span class="cap">La façade<small>Bienvenue chez Pino</small></span></div>
       <div class="gal-item reveal" style="--i:1" data-full="images/etab-entree.jpg"><picture><source type="image/webp" srcset="images/etab-entree.webp"><img loading="lazy" decoding="async" width="851" height="638" src="images/etab-entree.jpg" alt="Entrée à emporter de la Pizzeria Pino"></picture><span class="cap">L'entrée<small>Pizzeria à emporter</small></span></div>
       <div class="gal-item reveal" style="--i:2" data-full="images/etab-terrasse.jpg"><picture><source type="image/webp" srcset="images/etab-terrasse.webp"><img loading="lazy" decoding="async" width="960" height="1276" src="images/etab-terrasse.jpg" alt="Terrasse du restaurant Pizzeria Pino"></picture><span class="cap">La terrasse<small>Aux beaux jours</small></span></div>
-    </div>
-    <p class="gal-groupe reveal">Intérieur</p>
-    <div class="gal-grid">
       <div class="gal-item reveal" data-full="images/etab-bar.jpg"><picture><source type="image/webp" srcset="images/etab-bar.webp"><img loading="lazy" decoding="async" width="1200" height="895" src="images/etab-bar.jpg" alt="Bar à vins et salle de la Pizzeria Pino"></picture><span class="cap">Le bar à vins<small>Notre cave</small></span></div>
       <div class="gal-item reveal" style="--i:1" data-full="images/etab-salle.jpg"><picture><source type="image/webp" srcset="images/etab-salle.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-salle.jpg" alt="Salle du restaurant Pizzeria Pino"></picture><span class="cap">La salle<small>Chaleureuse &amp; conviviale</small></span></div>
       <div class="gal-item reveal" style="--i:2" data-full="images/etab-salle2.jpg"><picture><source type="image/webp" srcset="images/etab-salle2.webp"><img loading="lazy" decoding="async" width="960" height="1280" src="images/etab-salle2.jpg" alt="Intérieur de la Pizzeria Pino"></picture><span class="cap">L'intérieur<small>Ambiance feutrée</small></span></div>
@@ -2507,7 +2518,13 @@
         ab.setAttribute("role","button");
         ab.setAttribute("tabindex","0");
         ab.setAttribute("aria-label","Voir les horaires");
-        var goHours = function(){ scrollToSection("infos"); };
+        var goHours = function(){
+          if(!document.body.classList.contains("app-home")){
+            var hb = document.getElementById("tbHome");
+            if(hb){ hb.click(); setTimeout(function(){ scrollToSection("infos"); }, 70); return; }
+          }
+          scrollToSection("infos");
+        };
         ab.addEventListener("click", goHours);
         ab.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goHours(); } });
       }
@@ -3204,6 +3221,16 @@
   }
   if(tbHome){
     tbHome.addEventListener('click', function(){ setHome(true); window.scrollTo({top:0, behavior:'auto'}); });
+    // Le nom « Pizzeria Pino » de la barre du haut ramène à l'accueil
+    var abBrand = document.querySelector('.app-bar .ab-brand');
+    if(abBrand){
+      abBrand.style.cursor = 'pointer';
+      abBrand.setAttribute('role', 'button');
+      abBrand.setAttribute('tabindex', '0');
+      abBrand.setAttribute('aria-label', "Retour à l'accueil");
+      abBrand.addEventListener('click', function(){ tbHome.click(); });
+      abBrand.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); tbHome.click(); } });
+    }
   }
 
   catBtns.forEach(function(btn){
