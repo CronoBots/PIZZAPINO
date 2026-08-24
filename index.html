@@ -1219,14 +1219,15 @@
   html.app-mode body.app-home .marquee{display:block!important}
   html.app-mode body.app-home .reveal{opacity:1!important;transform:none!important}
   /* hero dans l'app : plein écran entre la barre d'app et la barre d'onglets, sans indicateur de scroll */
-  html.app-mode .hero{min-height:var(--hero-app-h, calc(var(--hvh,100svh) - 128px))}
+  html.app-mode .hero{min-height:var(--hero-app-h, calc(var(--hvh,100svh) - 128px));padding:0!important}
   html.app-mode .hero .hi-scroll{display:none}
   html.app-mode .hero-frame{inset:12px}
-  /* Répartition verticale : identité en haut, description au centre, actions en bas */
+  /* Répartition verticale : identité en haut, description au centre, actions en bas.
+     La barre d'app gère déjà l'encoche : pas de safe-area ici (sinon vide en haut). */
   html.app-mode body.app-home .hero{display:flex!important;flex-direction:column}
   html.app-mode .hero .wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;width:100%}
   html.app-mode .hi-center{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;
-    padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:22px}
+    padding-top:30px;padding-bottom:30px}
   html.app-mode .hi-desc{margin-top:0}
   html.app-mode .hi-cta{margin-top:0}
   /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
@@ -2323,6 +2324,17 @@
 
   document.addEventListener("keydown", function(e){ if(e.key==="Escape"){ closeLB(); closeMob(); closeCall(); } });
 
+  /* ---- Défilement vers le DÉBUT d'une section, sous la barre fixe (app-bar / header) ---- */
+  function scrollToSection(id){
+    var el = document.getElementById(id); if(!el) return;
+    var off = 8;
+    var ab = document.querySelector(".app-bar");
+    if(ab && getComputedStyle(ab).display !== "none"){ off += ab.offsetHeight; }
+    else { var hd = document.getElementById("hdr"); if(hd){ var pos = getComputedStyle(hd).position; if(pos==="fixed"||pos==="sticky") off += hd.offsetHeight; } }
+    var y = el.getBoundingClientRect().top + window.pageYOffset - off;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }
+
   /* ---- Statut Ouvert / Fermé en temps réel ---- */
   (function(){
     var schedule = { // jour (0=dim) -> créneaux [début, fin] en minutes
@@ -2357,17 +2369,23 @@
     if(ab){
       if(open){ ab.className = "ab-status open"; ab.innerHTML = '<span class="dot-live open"></span>Ouvert'; }
       else { ab.className = "ab-status closed"; ab.innerHTML = '<span class="dot-live closed"></span>' + (nextOpen!==null ? "Ouvre à "+hhmm(nextOpen) : "Fermé"); }
-      // Appuyer sur le statut → amène aux horaires en bas de page
+      // Appuyer sur le statut → amène au DÉBUT de la section horaires (sous la barre d'app)
       if(!ab.__wiredHours){
         ab.__wiredHours = true;
         ab.style.cursor = "pointer";
         ab.setAttribute("role","button");
         ab.setAttribute("tabindex","0");
         ab.setAttribute("aria-label","Voir les horaires");
-        var goHours = function(){ var el = document.getElementById("infos"); if(el) el.scrollIntoView({behavior:"smooth", block:"start"}); };
+        var goHours = function(){ scrollToSection("infos"); };
         ab.addEventListener("click", goHours);
         ab.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goHours(); } });
       }
+    }
+    // Avis du héros → début de la section Avis (même logique d'offset)
+    var heroRating = document.querySelector(".hi-rating");
+    if(heroRating && !heroRating.__wiredAvis){
+      heroRating.__wiredAvis = true;
+      heroRating.addEventListener("click", function(e){ e.preventDefault(); scrollToSection("avis"); });
     }
     // statut dans le pop-up appel/commande
     var cmStatus = document.getElementById("cmStatus");
@@ -2628,11 +2646,22 @@
   if(!dishes.length) return;
   var KEY = 'pino_order', state = {};
   try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  /* Migration vers le modèle « lignes » (une ligne = une configuration : qty + suppléments + junior),
+     ce qui permet des suppléments différents sur des plats identiques. */
+  Object.keys(state).forEach(function(id){
+    var it = state[id]; if(!it) { delete state[id]; return; }
+    if(!it.lines){
+      var q = it.qty || 0;
+      if(q <= 0){ delete state[id]; return; }
+      state[id] = { name: it.name, price: it.price, cat: it.cat,
+        lines: [ { qty: q, supps: it.supps || [], junior: !!it.junior } ] };
+    }
+  });
 
   function parsePrice(t){ if(!t) return null; var m = t.replace(/\s/g,'').match(/(\d+(?:[.,]\d{1,2})?)/); return m ? parseFloat(m[1].replace(',','.')) : null; }
   function money(n){ return n.toFixed(2).replace('.',',') + ' €'; }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
-  function qty(id){ return state[id] ? state[id].qty : 0; }
+  function qty(id){ var d = state[id]; if(!d || !d.lines) return 0; var q = 0; d.lines.forEach(function(l){ q += l.qty; }); return q; }
 
   /* Liste des suppléments (source unique : le bloc « Suppléments » de la carte) */
   var SUPPS = [];
@@ -2645,14 +2674,41 @@
     SUPPS.push({ name: nm, price: p });
   });
   var JUNIOR = { name: 'Formule Junior (−14 ans)', price: -2 };
-  function suppOf(id){ var it = state[id]; return (it && it.supps) ? it.supps : []; }
-  function isJunior(id){ var it = state[id]; return !!(it && it.junior); }
-  /* prix unitaire = base + suppléments (+ éventuelle remise Junior sur pizzas) */
-  function unitPrice(it){
-    var u = it.price;
-    if(it.supps) it.supps.forEach(function(s){ u += s.price; });
-    if(it.junior && it.cat === 'pizzas') u += JUNIOR.price;
+  /* prix unitaire d'une ligne = base du plat + suppléments (+ remise Junior sur pizzas) */
+  function unitPrice(dish, line){
+    var u = dish.price;
+    (line.supps || []).forEach(function(s){ u += s.price; });
+    if(line.junior && dish.cat === 'pizzas') u += JUNIOR.price;
     return u;
+  }
+  function baseLineIndex(d){
+    for(var i=0;i<d.lines.length;i++){ var l=d.lines[i]; if((!l.supps||!l.supps.length) && !l.junior) return i; }
+    return -1;
+  }
+  function lineSig(l){
+    var names = (l.supps||[]).map(function(s){ return s.name; }).sort();
+    return (l.junior ? 'J|' : '') + names.join('|');
+  }
+  /* regroupe les lignes de configuration identique (qty additionnées) */
+  function mergeLines(id){
+    var d = state[id]; if(!d) return;
+    var seen = {}, merged = [];
+    d.lines.forEach(function(l){
+      if(l.qty <= 0) return;
+      var sig = lineSig(l);
+      if(seen[sig]){ seen[sig].qty += l.qty; }
+      else { seen[sig] = l; merged.push(l); }
+    });
+    d.lines = merged;
+    if(!d.lines.length) delete state[id];
+  }
+  /* garantit une ligne à qty 1 à modifier (scinde une unité si la ligne en compte plusieurs) */
+  function ensureSingle(id, li){
+    var d = state[id], line = d.lines[li];
+    if(line.qty <= 1) return li;
+    line.qty -= 1;
+    d.lines.push({ qty:1, supps:(line.supps||[]).map(function(s){ return {name:s.name, price:s.price}; }), junior: line.junior });
+    return d.lines.length - 1;
   }
 
   var byId = {};
@@ -2688,12 +2744,18 @@
   });
 
   function change(rec, delta){
-    var q = qty(rec.id) + delta; if(q < 0) q = 0;
-    if(q === 0){ delete state[rec.id]; }
-    else {
-      var ex = state[rec.id];
-      state[rec.id] = { name:rec.name, price:rec.price, qty:q, cat:rec.cat,
-        supps: (ex && ex.supps) ? ex.supps : [], junior: ex ? !!ex.junior : false };
+    var d = state[rec.id];
+    if(delta > 0){
+      if(!d){ d = state[rec.id] = { name:rec.name, price:rec.price, cat:rec.cat, lines:[] }; }
+      else { d.name = rec.name; d.price = rec.price; d.cat = rec.cat; }
+      var bi = baseLineIndex(d);
+      if(bi < 0){ d.lines.push({ qty:1, supps:[], junior:false }); }
+      else { d.lines[bi].qty += 1; }
+    } else if(d){
+      var bi2 = baseLineIndex(d);
+      var idx = bi2 >= 0 ? bi2 : d.lines.length - 1;
+      if(idx >= 0){ d.lines[idx].qty -= 1; if(d.lines[idx].qty <= 0) d.lines.splice(idx, 1); }
+      if(!d.lines.length) delete state[rec.id];
     }
     save(); syncDish(rec.id); render();
   }
@@ -2705,7 +2767,7 @@
   var fab = document.getElementById('cartFab'), cfCount = document.getElementById('cfCount'), cfTotal = document.getElementById('cfTotal');
   var list = document.getElementById('cartList'), totalEl = document.getElementById('cartTotal'), cartSub = document.getElementById('cartSub');
 
-  function totals(){ var n=0, s=0; for(var k in state){ n += state[k].qty; s += state[k].qty * unitPrice(state[k]); } return { n:n, s:s }; }
+  function totals(){ var n=0, s=0; for(var k in state){ var d=state[k]; (d.lines||[]).forEach(function(l){ n += l.qty; s += l.qty * unitPrice(d, l); }); } return { n:n, s:s }; }
   function render(){
     var t = totals();
     cfCount.textContent = t.n; cfTotal.textContent = money(t.s);
@@ -2725,96 +2787,104 @@
         var head = document.createElement('div'); head.className = 'cart-cat';
         head.textContent = CAT_LABEL[c] || 'Autres';
         list.appendChild(head);
-        groups[c].forEach(function(id){ list.appendChild(renderRow(id)); });
+        groups[c].forEach(function(id){
+          (state[id].lines || []).forEach(function(l, li){ list.appendChild(renderLine(id, li)); });
+        });
       });
     }
   }
   var CAT_ORDER = ['pates','pizzas','viandes','desserts'];
   var CAT_LABEL = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', viandes:'Viandes', desserts:'Desserts' };
   function fmtSupp(p){ return p === 0 ? 'offert' : (p > 0 ? '+' : '−') + money(Math.abs(p)); }
-  function renderRow(id){
-    var it = state[id];
-    var u = unitPrice(it);
-    var supps = it.supps || [];
+  function renderLine(id, li){
+    var d = state[id], line = d.lines[li];
+    var u = unitPrice(d, line);
+    var supps = line.supps || [];
     var row = document.createElement('div'); row.className = 'cart-item';
 
     /* --- ligne principale --- */
     var top = document.createElement('div'); top.className = 'ci-top';
-    var unit = it.qty > 1 ? '<span class="ci-unit">' + it.qty + ' × ' + money(u) + '</span>' : '';
+    var unit = line.qty > 1 ? '<span class="ci-unit">' + line.qty + ' × ' + money(u) + '</span>' : '';
     top.innerHTML = '<span class="ci-main"><span class="ci-name"></span>' + unit + '</span>' +
-      '<span class="ci-line">' + money(it.qty * u) + '</span>' +
-      '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + it.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>';
-    top.querySelector('.ci-name').textContent = it.name;
-    top.querySelector('.ci-m').addEventListener('click', function(){ step(id, -1); });
-    top.querySelector('.ci-p').addEventListener('click', function(){ step(id, 1); });
+      '<span class="ci-line">' + money(line.qty * u) + '</span>' +
+      '<span class="ci-step"><button type="button" class="ci-m" aria-label="Retirer">−</button><span class="ci-q">' + line.qty + '</span><button type="button" class="ci-p" aria-label="Ajouter">+</button></span>';
+    top.querySelector('.ci-name').textContent = d.name;
+    top.querySelector('.ci-m').addEventListener('click', function(){ stepLine(id, li, -1); });
+    top.querySelector('.ci-p').addEventListener('click', function(){ stepLine(id, li, 1); });
     row.appendChild(top);
 
-    var showJunior = it.junior && it.cat === 'pizzas';
-    /* --- suppléments choisis + option Junior --- */
+    var showJunior = line.junior && d.cat === 'pizzas';
+    /* --- suppléments choisis + option Junior (propres à cette unité) --- */
     if(supps.length || showJunior){
       var ex = document.createElement('div'); ex.className = 'ci-extras';
       supps.forEach(function(s, i){
-        var line = document.createElement('div'); line.className = 'ci-supp';
-        line.innerHTML = '<span class="cs-mk" aria-hidden="true">＋</span><span class="cs-name"></span>' +
+        var sl = document.createElement('div'); sl.className = 'ci-supp';
+        sl.innerHTML = '<span class="cs-mk" aria-hidden="true">＋</span><span class="cs-name"></span>' +
           '<span class="cs-price">' + fmtSupp(s.price) + '</span>' +
           '<button type="button" class="ci-supp-x" aria-label="Retirer le supplément">×</button>';
-        line.querySelector('.cs-name').textContent = s.name;
-        line.querySelector('.ci-supp-x').addEventListener('click', function(){ removeSupp(id, i); });
-        ex.appendChild(line);
+        sl.querySelector('.cs-name').textContent = s.name;
+        sl.querySelector('.ci-supp-x').addEventListener('click', function(){ removeSupp(id, li, i); });
+        ex.appendChild(sl);
       });
       if(showJunior){
         var jl = document.createElement('div'); jl.className = 'ci-supp junior';
         jl.innerHTML = '<span class="cs-mk" aria-hidden="true">★</span><span class="cs-name">' + JUNIOR.name + '</span>' +
           '<span class="cs-price">' + fmtSupp(JUNIOR.price) + '</span>' +
           '<button type="button" class="ci-supp-x" aria-label="Retirer l\'option Junior">×</button>';
-        jl.querySelector('.ci-supp-x').addEventListener('click', function(){ toggleJunior(id); });
+        jl.querySelector('.ci-supp-x').addEventListener('click', function(){ toggleJunior(id, li); });
         ex.appendChild(jl);
       }
       row.appendChild(ex);
     }
 
     /* --- contrôles d'ajout (pas sur les desserts) --- */
-    if(it.cat !== 'desserts' && (SUPPS.length || it.cat === 'pizzas')){
+    if(d.cat !== 'desserts' && (SUPPS.length || d.cat === 'pizzas')){
       var add = document.createElement('div'); add.className = 'ci-add';
       if(SUPPS.length){
         var sel = document.createElement('select'); sel.className = 'ci-supp-sel'; sel.setAttribute('aria-label', 'Ajouter un supplément');
-        var opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = '+ Supplément…'; sel.appendChild(opt0);
+        var opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = line.qty > 1 ? '+ Supplément (1 unité)…' : '+ Supplément…'; sel.appendChild(opt0);
         SUPPS.forEach(function(s, i){
           var o = document.createElement('option'); o.value = String(i);
           o.textContent = s.name + '  ' + fmtSupp(s.price);
           sel.appendChild(o);
         });
-        sel.addEventListener('change', function(){ var v = sel.value; if(v !== ''){ addSupp(id, parseInt(v, 10)); } sel.value = ''; });
+        sel.addEventListener('change', function(){ var v = sel.value; if(v !== ''){ addSupp(id, li, parseInt(v, 10)); } sel.value = ''; });
         add.appendChild(sel);
       }
-      if(it.cat === 'pizzas'){
-        var jb = document.createElement('button'); jb.type = 'button'; jb.className = 'ci-junior' + (it.junior ? ' on' : '');
-        jb.textContent = 'Junior −2 €'; jb.setAttribute('aria-pressed', it.junior ? 'true' : 'false');
-        jb.addEventListener('click', function(){ toggleJunior(id); });
+      if(d.cat === 'pizzas'){
+        var jb = document.createElement('button'); jb.type = 'button'; jb.className = 'ci-junior' + (line.junior ? ' on' : '');
+        jb.textContent = 'Junior −2 €'; jb.setAttribute('aria-pressed', line.junior ? 'true' : 'false');
+        jb.addEventListener('click', function(){ toggleJunior(id, li); });
         add.appendChild(jb);
       }
       row.appendChild(add);
     }
     return row;
   }
-  function addSupp(id, si){
-    var it = state[id]; if(!it || !SUPPS[si]) return;
-    if(!it.supps) it.supps = [];
-    it.supps.push({ name: SUPPS[si].name, price: SUPPS[si].price });
-    save(); render();
+  function addSupp(id, li, si){
+    var d = state[id]; if(!d || !SUPPS[si]) return;
+    var t = ensureSingle(id, li);
+    if(!d.lines[t].supps) d.lines[t].supps = [];
+    d.lines[t].supps.push({ name: SUPPS[si].name, price: SUPPS[si].price });
+    mergeLines(id); save(); render();
   }
-  function removeSupp(id, i){
-    var it = state[id]; if(!it || !it.supps) return;
-    it.supps.splice(i, 1); save(); render();
+  function removeSupp(id, li, i){
+    var d = state[id]; if(!d) return; var line = d.lines[li]; if(!line || !line.supps) return;
+    line.supps.splice(i, 1);
+    mergeLines(id); save(); render();
   }
-  function toggleJunior(id){
-    var it = state[id]; if(!it || it.cat !== 'pizzas') return;
-    it.junior = !it.junior; save(); render();
+  function toggleJunior(id, li){
+    var d = state[id]; if(!d || d.cat !== 'pizzas') return; var line = d.lines[li]; if(!line) return;
+    if(!line.junior){ var t = ensureSingle(id, li); d.lines[t].junior = true; }
+    else { line.junior = false; }
+    mergeLines(id); save(); render();
   }
-  function step(id, delta){
-    if(byId[id]){ change(byId[id], delta); return; }
-    var it = state[id]; if(!it) return; it.qty += delta;
-    if(it.qty <= 0) delete state[id]; save(); render();
+  function stepLine(id, li, delta){
+    var d = state[id]; if(!d) return; var line = d.lines[li]; if(!line) return;
+    line.qty += delta;
+    if(line.qty <= 0) d.lines.splice(li, 1);
+    if(!d.lines.length) delete state[id]; else mergeLines(id);
+    save(); syncDish(id); render();
   }
 
   var remark = document.getElementById('cartRemark');
