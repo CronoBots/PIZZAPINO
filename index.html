@@ -1089,13 +1089,13 @@
   /* Écran de lancement : prolonge sans rupture l'écran de démarrage iOS
      (même logo, même taille, même fondu radial), puis se dissout pour révéler l'app. */
   #splash{display:none}
-  html.app-mode #splash{display:flex;position:fixed;inset:0;z-index:2000;background:#0a0908;
+  html.standalone #splash{display:flex;position:fixed;inset:0;z-index:2000;background:#0a0908;
     align-items:center;justify-content:center;pointer-events:none;
     animation:splashOut .8s ease 1s forwards;will-change:opacity}
-  html.app-mode #splash::before{content:"";position:absolute;width:82vw;max-width:560px;aspect-ratio:1;
+  html.standalone #splash::before{content:"";position:absolute;width:82vw;max-width:560px;aspect-ratio:1;
     border-radius:50%;background:radial-gradient(circle,rgba(201,154,77,.18),transparent 66%);
     opacity:0;animation:splashGlow 1.8s ease forwards;will-change:opacity,transform}
-  html.app-mode #splash img{position:relative;width:42vw;max-width:300px;height:auto;display:block;
+  html.standalone #splash img{position:relative;width:42vw;max-width:300px;height:auto;display:block;
     -webkit-mask-image:radial-gradient(circle at center,#000 52%,transparent 82%);
     mask-image:radial-gradient(circle at center,#000 52%,transparent 82%);
     animation:splashLogo 1.8s cubic-bezier(.45,0,.15,1) forwards;will-change:transform,opacity}
@@ -1103,8 +1103,8 @@
   @keyframes splashGlow{0%{opacity:0;transform:scale(.82)}42%{opacity:1}100%{opacity:0;transform:scale(1.28)}}
   @keyframes splashLogo{0%{transform:scale(1);opacity:1}30%{transform:scale(1.02);opacity:1}100%{transform:scale(1.16);opacity:0}}
   @media(prefers-reduced-motion:reduce){
-    html.app-mode #splash{animation:splashOut .5s ease .6s forwards}
-    html.app-mode #splash img,html.app-mode #splash::before{animation:none}
+    html.standalone #splash{animation:splashOut .5s ease .6s forwards}
+    html.standalone #splash img,html.standalone #splash::before{animation:none}
   }
 
   .app-bar{display:none}
@@ -1404,7 +1404,7 @@
 <body>
 <!-- ÉCRAN DE LANCEMENT (PWA) : logo en fondu -->
 <div id="splash" aria-hidden="true" style="position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;background:#0a0908"><img src="icons/icon-512.png" alt="Pizzeria Pino" width="300" height="300" style="width:42vw;max-width:300px;height:auto"></div>
-<script>(function(){var s=document.getElementById('splash');if(!s)return;if(!document.documentElement.classList.contains('app-mode')){if(s.parentNode)s.parentNode.removeChild(s);return;}var done=function(){if(s&&s.parentNode)s.parentNode.removeChild(s);s=null;};s.addEventListener('animationend',function(e){if(e.target===s)done();});setTimeout(done,2500);})();</script>
+<script>(function(){var s=document.getElementById('splash');if(!s)return;/* écran de lancement uniquement en PWA installée (pas sur le site mobile) */if(!document.documentElement.classList.contains('standalone')){if(s.parentNode)s.parentNode.removeChild(s);return;}var done=function(){if(s&&s.parentNode)s.parentNode.removeChild(s);s=null;};s.addEventListener('animationend',function(e){if(e.target===s)done();});setTimeout(done,2500);})();</script>
 <a class="skip" href="#carte">Aller à la carte</a>
 
 <div id="progress"></div>
