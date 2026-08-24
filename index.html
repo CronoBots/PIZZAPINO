@@ -465,6 +465,8 @@
   .supp-grid li.free b{color:#7fd39a}
   .supp-grid li.free b::after{content:""}
   .supp-note{margin:14px 0 0;font-family:"Inter",sans-serif;font-size:.82rem;color:#b9ac96;font-style:italic;text-transform:none;letter-spacing:0}
+  /* Les suppléments ne concernent pas les desserts */
+  body[data-menucat="desserts"]:not(.searching) .supplements{display:none}
 
   /* ===== GALERIE ===== */
   .maison{background:var(--noir)}
@@ -2133,7 +2135,9 @@
     if(panel){ panel.classList.add("show");
       panel.querySelectorAll(".dish").forEach(function(d,idx){ d.style.setProperty("--d", idx%18); }); }
     if(window.setWebBg) setWebBg(tab.dataset.tab);
+    document.body.setAttribute('data-menucat', tab.dataset.tab || '');
   }
+  (function(){ var a = document.querySelector('.menu-tabs .tab.active'); document.body.setAttribute('data-menucat', a ? (a.dataset.tab||'') : 'pates'); })();
   tabEls.forEach(function(tab){
     tab.setAttribute("role","tab");
     tab.id = "tab-"+tab.dataset.tab;
