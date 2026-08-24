@@ -567,6 +567,23 @@
     transition:transform .3s;padding-left:4px}
   .insta-tile:hover .insta-play span{transform:scale(1.12)}
   @media(max-width:760px){.insta-grid{grid-template-columns:1fr 1fr;gap:10px}}
+  /* Boutons réseaux sociaux premium */
+  .social-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:44px}
+  .social-btn{display:inline-flex;align-items:center;gap:14px;text-decoration:none;min-width:236px;
+    background:rgba(255,255,255,.035);border:1px solid rgba(233,206,150,.22);border-radius:16px;padding:13px 18px 13px 14px;
+    box-shadow:0 12px 30px -22px rgba(0,0,0,.9);transition:transform .28s var(--rapide,ease),border-color .28s,background .28s}
+  .social-btn:hover{transform:translateY(-3px);border-color:rgba(233,206,150,.5);background:rgba(255,255,255,.06)}
+  .social-btn .sb-ico{width:46px;height:46px;border-radius:13px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;color:#fff}
+  .social-btn .sb-ico svg{width:24px;height:24px}
+  .social-btn.ig .sb-ico{background:radial-gradient(120% 120% at 28% 108%,#FEDA75 0%,#FA7E1E 26%,#D62976 54%,#962FBF 78%,#4F5BD5 100%)}
+  .social-btn.fb .sb-ico{background:#1877F2}
+  .social-btn .sb-txt{display:flex;flex-direction:column;line-height:1.18;text-align:left}
+  .social-btn .sb-name{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.06rem;color:#F1EADB}
+  .social-btn .sb-handle{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.09em;font-size:.62rem;color:#C69A4D;margin-top:2px}
+  .social-btn .sb-arrow{margin-left:auto;padding-left:8px;color:#8f8371;display:inline-flex;transition:transform .28s,color .28s}
+  .social-btn .sb-arrow svg{width:17px;height:17px}
+  .social-btn:hover .sb-arrow{color:#E9CE96;transform:translateX(3px)}
+  @media(max-width:760px){.social-row{gap:12px}.social-btn{min-width:min(320px,86vw);flex:0 1 auto}}
 
   /* ===== STATS + AVIS — chapitre papier (livre d'or) ===== */
   .stats{background:var(--paper-2);color:var(--ink);border-top:6px solid var(--rouge);
@@ -1802,15 +1819,15 @@
 <section id="galerie" class="gallery center">
   <div class="wrap">
     <p class="eyebrow reveal"><span class="num">03</span> En images &amp; en vidéo</p>
-    <h2 class="reveal" style="--i:1">L'ambiance &amp; <em>les plats</em></h2>
-    <p class="lead reveal" style="--i:2">La façade, nos deux salles, la terrasse et nos plats signature — un aperçu de la maison.</p>
+    <h2 class="reveal" style="--i:1">L'ambiance <em>de la maison</em></h2>
+    <p class="lead reveal" style="--i:2">La façade, l'entrée, le bar à vins, nos deux salles et la terrasse suspendue — bienvenue chez Pino.</p>
     <div class="gal-grid">
-      <div class="gal-item reveal" data-full="images/etab-facade.jpg"><picture><source type="image/webp" srcset="images/etab-facade.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-facade.jpg" alt="Façade du Restaurant Pizzeria Pino à Nandrin"></picture><span class="cap">Notre établissement<small>Bienvenue chez Pino</small></span></div>
-      <div class="gal-item reveal" style="--i:1" data-full="images/etab-salle.jpg"><picture><source type="image/webp" srcset="images/etab-salle.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-salle.jpg" alt="Salle du restaurant Pizzeria Pino"></picture><span class="cap">La salle<small>Chaleureuse &amp; conviviale</small></span></div>
+      <div class="gal-item reveal" data-full="images/etab-facade.jpg"><picture><source type="image/webp" srcset="images/etab-facade.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-facade.jpg" alt="Façade du Restaurant Pizzeria Pino à Nandrin"></picture><span class="cap">La façade<small>Bienvenue chez Pino</small></span></div>
+      <div class="gal-item reveal" style="--i:1" data-full="images/etab-entree.jpg"><picture><source type="image/webp" srcset="images/etab-entree.webp"><img loading="lazy" decoding="async" width="852" height="639" src="images/etab-entree.jpg" alt="Entrée et terrasse suspendue de la Pizzeria Pino"></picture><span class="cap">L'entrée<small>Terrasse suspendue &amp; à emporter</small></span></div>
+      <div class="gal-item reveal" style="--i:2" data-full="images/etab-bar.jpg"><picture><source type="image/webp" srcset="images/etab-bar.webp"><img loading="lazy" decoding="async" width="1200" height="895" src="images/etab-bar.jpg" alt="Bar à vins et salle de la Pizzeria Pino"></picture><span class="cap">Le bar à vins<small>Notre cave</small></span></div>
+      <div class="gal-item reveal" data-full="images/etab-salle.jpg"><picture><source type="image/webp" srcset="images/etab-salle.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-salle.jpg" alt="Salle du restaurant Pizzeria Pino"></picture><span class="cap">La salle<small>Chaleureuse &amp; conviviale</small></span></div>
+      <div class="gal-item reveal" style="--i:1" data-full="images/etab-salle2.jpg"><picture><source type="image/webp" srcset="images/etab-salle2.webp"><img loading="lazy" decoding="async" width="960" height="1280" src="images/etab-salle2.jpg" alt="Intérieur de la Pizzeria Pino"></picture><span class="cap">L'intérieur<small>Ambiance feutrée</small></span></div>
       <div class="gal-item reveal" style="--i:2" data-full="images/etab-terrasse.jpg"><picture><source type="image/webp" srcset="images/etab-terrasse.webp"><img loading="lazy" decoding="async" width="960" height="1276" src="images/etab-terrasse.jpg" alt="Terrasse du restaurant Pizzeria Pino"></picture><span class="cap">La terrasse<small>Aux beaux jours</small></span></div>
-      <div class="gal-item reveal" data-full="images/etab-salle2.jpg"><picture><source type="image/webp" srcset="images/etab-salle2.webp"><img loading="lazy" decoding="async" width="960" height="1280" src="images/etab-salle2.jpg" alt="Intérieur et bar à vins de la Pizzeria Pino"></picture><span class="cap">L'intérieur<small>Cave &amp; bar à vins</small></span></div>
-      <div class="gal-item reveal" style="--i:1" data-full="images/bg-pizzas.jpg"><img loading="lazy" decoding="async" width="900" height="1200" src="images/bg-pizzas.jpg" alt="Pizza au feu de bois"><span class="cap">Au feu de bois<small>Nos pizzas signature</small></span></div>
-      <div class="gal-item reveal" style="--i:2" data-full="images/bg-desserts.jpg"><img loading="lazy" decoding="async" width="900" height="1200" src="images/bg-desserts.jpg" alt="Desserts maison"><span class="cap">Desserts maison<small>Le fameux tiramisù</small></span></div>
     </div>
     <!-- Vidéo officielle (regroupée avec la galerie) -->
     <div class="gal-video reveal" id="video">
@@ -1840,9 +1857,17 @@
         <picture><source type="image/webp" srcset="images/insta-2.webp"><img loading="lazy" decoding="async" width="800" height="1000" src="images/insta-2.jpg" alt="Reel — Saint-Valentin chez Pino"></picture>
       </a>
     </div>
-    <div class="cta-row reveal" style="justify-content:center;margin-top:42px;flex-wrap:wrap;gap:14px">
-      <a class="btn btn-primary" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg><span>Instagram</span></a>
-      <a class="btn btn-ghost" href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg><span>Facebook</span></a>
+    <div class="social-row reveal">
+      <a class="social-btn ig" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Suivre la Pizzeria Pino sur Instagram">
+        <span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+        <span class="sb-txt"><span class="sb-name">Instagram</span><span class="sb-handle">@pino.nandrin</span></span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a class="social-btn fb" href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener" aria-label="Suivre la Pizzeria Pino sur Facebook">
+        <span class="sb-ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg></span>
+        <span class="sb-txt"><span class="sb-name">Facebook</span><span class="sb-handle">Pizzeria Pino</span></span>
+        <span class="sb-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
     </div>
   </div>
 </section>
