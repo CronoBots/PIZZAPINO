@@ -1222,6 +1222,13 @@
   html.app-mode .hero{min-height:var(--hero-app-h, calc(var(--hvh,100svh) - 128px))}
   html.app-mode .hero .hi-scroll{display:none}
   html.app-mode .hero-frame{inset:12px}
+  /* Répartition verticale : identité en haut, description au centre, actions en bas */
+  html.app-mode body.app-home .hero{display:flex!important;flex-direction:column}
+  html.app-mode .hero .wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;width:100%}
+  html.app-mode .hi-center{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;
+    padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:22px}
+  html.app-mode .hi-desc{margin-top:0}
+  html.app-mode .hi-cta{margin-top:0}
   /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
   html.app-mode .hi-cat,html.app-mode .hero .hi-brand,html.app-mode .hi-sub,html.app-mode .hi-desc,
   html.app-mode .hi-cta,html.app-mode .hi-rating,html.app-mode .hero-frame,html.app-mode .hero .hero-bg{opacity:1!important;animation:none!important}
@@ -1524,19 +1531,23 @@
   <span class="hero-frame" aria-hidden="true"></span>
   <div class="wrap">
     <div class="hi-center">
-      <span class="hi-cat">Restaurant italien · Nandrin</span>
-      <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
-      <p class="hi-sub">Cuisine italienne au feu de bois</p>
-      <span class="hi-line"></span>
-      <p class="hi-desc">Pâtes fraîches maison, pizzas au feu de bois et spécialités italiennes, sur la route du Condroz depuis 1995.</p>
-      <div class="hi-cta">
-        <a class="hi-btn" href="#carte" id="heroMenuBtn">
-          <span class="hb-txt">Voir la carte</span>
-          <span class="hb-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </a>
-        <span class="hi-cta-note">Ou réservez au <a href="tel:+3285513339">085 51 33 39</a></span>
+      <div class="hi-top">
+        <span class="hi-cat">Restaurant italien · Nandrin</span>
+        <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
+        <p class="hi-sub">Cuisine italienne au feu de bois</p>
+        <span class="hi-line"></span>
       </div>
-      <a class="hi-rating" href="#avis" aria-label="Voir les avis Google"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5<br>plus de 1 000 avis Google</a>
+      <p class="hi-desc">Pâtes fraîches maison, pizzas au feu de bois et spécialités italiennes, sur la route du Condroz depuis 1995.</p>
+      <div class="hi-bot">
+        <div class="hi-cta">
+          <a class="hi-btn" href="#carte" id="heroMenuBtn">
+            <span class="hb-txt">Voir la carte</span>
+            <span class="hb-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <span class="hi-cta-note">Ou réservez au <a href="tel:+3285513339">085 51 33 39</a></span>
+        </div>
+        <a class="hi-rating" href="#avis" aria-label="Voir les avis Google"><span class="hi-stars" aria-hidden="true">★★★★<span class="st-dim">★</span></span> <b>4,2</b>/5<br>plus de 1 000 avis Google</a>
+      </div>
     </div>
   </div>
   <a class="hi-scroll" href="#maison" aria-label="Découvrir la maison"><span class="hs-mouse"><span class="hs-wheel"></span></span></a>
