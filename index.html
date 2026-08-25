@@ -1088,8 +1088,10 @@
   .cart-panel{position:fixed;z-index:133;right:0;bottom:0;left:0;max-width:520px;margin:0 auto;
     background:var(--paper);color:var(--ink);border-top:4px solid var(--rouge);
     max-height:92vh;display:flex;flex-direction:column;transform:translateY(101%);
-    transition:transform .45s cubic-bezier(.22,.68,.16,1);box-shadow:0 -24px 60px -20px rgba(0,0,0,.65)}
-  .cart-panel.show{transform:none}
+    visibility:hidden;pointer-events:none;
+    transition:transform .45s cubic-bezier(.22,.68,.16,1),visibility 0s linear .45s;box-shadow:0 -24px 60px -20px rgba(0,0,0,.65)}
+  .cart-panel.show{transform:none;visibility:visible;pointer-events:auto;
+    transition:transform .45s cubic-bezier(.22,.68,.16,1),visibility 0s}
   .cart-head{display:flex;align-items:center;justify-content:space-between;padding:15px 22px 11px;border-bottom:1px solid var(--hair-ink)}
   .cart-head h3{font-family:"Fraunces",serif;font-weight:600;font-size:1.35rem;color:var(--ink)}
   .cart-close{background:none;border:0;font-size:1.7rem;line-height:1;cursor:pointer;color:var(--ink-mut);padding:2px 8px}
