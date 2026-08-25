@@ -5,7 +5,7 @@ var CORE = [
   './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png',
   './fonts/fraunces-normal-400_700.woff2', './fonts/inter-normal-400.woff2', './fonts/oswald-normal-400.woff2',
   './images/hero-feast.webp',
-  './images/bg-pates.jpg', './images/bg-pizzas.jpg', './images/bg-viandes.jpg', './images/bg-desserts.jpg'
+  './images/bg-pates.webp', './images/bg-pizzas.webp', './images/bg-viandes.webp', './images/bg-desserts.webp'
 ];
 
 self.addEventListener('install', function(e){

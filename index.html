@@ -2346,11 +2346,12 @@
     if(!layers[0] || !layers[1]) return;
     var active = 0;
     var IMG = {pates:'bg-pates',pizzas:'bg-pizzas',viandes:'bg-viandes',desserts:'bg-desserts'};
-    Object.keys(IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + IMG[k] + '.jpg'; });
+    var warmBg = function(){ Object.keys(IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + IMG[k] + '.webp'; }); };
+    if('requestIdleCallback' in window){ requestIdleCallback(warmBg, {timeout:3000}); } else { setTimeout(warmBg, 1400); } // préchargement différé
     window.setWebBg = function(cat){
       var img = IMG[cat]; if(!img) return;
       var next = layers[1 - active];
-      next.style.backgroundImage = "url('images/" + img + ".jpg')";
+      next.style.backgroundImage = "url('images/" + img + ".webp')";
       void next.offsetWidth;
       next.style.opacity = '1';
       layers[active].style.opacity = '0';
@@ -3299,7 +3300,7 @@
   function setBg(img, hd){
     if(!bgLayers.length) return;
     var next = bgLayers[1 - bgActive];
-    next.style.backgroundImage = "url('images/" + img + ".jpg')";
+    next.style.backgroundImage = "url('images/" + img + ".webp')";
     next.style.filter = (hd ? '' : 'blur(24px)') + ' saturate(1.08)';
     void next.offsetWidth; // reflow → déclenche la transition
     next.style.opacity = '1';
@@ -3319,7 +3320,8 @@
   })();
   var CAT_IMG = { pates:'bg-pates', pizzas:'bg-pizzas', viandes:'bg-viandes', desserts:'bg-desserts' };
   var CAT_HD = { pates:true, pizzas:true, viandes:true, desserts:true }; // photos HD dédiées → flou léger
-  Object.keys(CAT_IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + CAT_IMG[k] + '.jpg'; }); // préchargement des fonds
+  var warmCat = function(){ Object.keys(CAT_IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + CAT_IMG[k] + '.webp'; }); };
+  if('requestIdleCallback' in window){ requestIdleCallback(warmCat, {timeout:3000}); } else { setTimeout(warmCat, 1400); } // préchargement différé des fonds
   function updateHead(id){
     if(!sharedHead) return;
     sharedHead.querySelector('.ach-txt').innerHTML = TITLES_HTML[id] || TITLES[id] || '';
