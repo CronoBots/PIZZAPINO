@@ -1207,13 +1207,14 @@
   .cart-actions a svg{width:18px;height:18px}
   .cart-actions .ca-call{background:var(--rouge);color:#fff}
   .cart-actions .ca-call:hover{background:var(--rouge-d)}
-  /* Bouton « Envoyer ma commande » : action premium (liseré doré), pleine largeur au-dessus de l'appel */
-  .ca-send{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-bottom:10px;padding:14px;cursor:pointer;
-    background:linear-gradient(180deg,rgba(233,206,150,.14),rgba(233,206,150,.06));border:1px solid var(--gold2);
-    color:var(--gold);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.09em;font-size:.78rem;font-weight:600;
+  /* Bouton « Envoyer ma commande » : action premium (liseré doré), à gauche de « Appeler » */
+  .ca-send{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:9px;padding:14px 10px;cursor:pointer;
+    background:linear-gradient(180deg,rgba(233,206,150,.2),rgba(233,206,150,.08));border:1px solid rgba(233,206,150,.55);
+    color:#EEDBAC;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;font-weight:600;
     transition:background .2s,border-color .2s,color .2s}
+  .cart-actions .ca-call{flex:1 1 0}
   .ca-send svg{width:18px;height:18px}
-  .ca-send:hover{background:rgba(233,206,150,.2);border-color:var(--gold);color:#fff}
+  .ca-send:hover{background:rgba(233,206,150,.28);border-color:#E9CE96;color:#fff}
   .ca-send.copied{background:#1f9d57;border-color:#1f9d57;color:#fff}
   .ca-send[hidden]{display:none}
   /* Dégradé de défilement : indique qu'il y a plus de plats au-dessus / en dessous */
@@ -1493,6 +1494,16 @@
   html.app-mode #carte .junior-note strong{color:#F0C36B}
   html.app-mode #carte .junior-note .jn-sub{color:#c7b89e}
   body.searching .app-cat-head{display:none!important}
+
+  /* ===== Commande = onglet plein écran (mode app) : ni feuille glissante ni fond assombri ===== */
+  html.app-mode #cartOv{display:none!important}
+  html.app-mode .cart-close{display:none}
+  html.app-mode #cartPanel{position:static;transform:none!important;visibility:visible;pointer-events:auto;
+    max-width:none;margin:0;max-height:none;border-top:0;box-shadow:none;display:none}
+  html.app-mode body.app-cart #cartPanel{display:flex;min-height:calc(100svh - 128px)}
+  html.app-mode body.app-cart #carte,html.app-mode body.app-cart .app-cat-head,html.app-mode body.app-cart .menu-live-bg{display:none!important}
+  html.app-mode #cartPanel .cart-list{overflow:visible;max-height:none;-webkit-mask-image:none;mask-image:none}
+  html.app-mode #cartPanel .cart-head{padding-top:18px}
 
   /* ===== Panier « Ma commande » en thème sombre (site + app) ===== */
   .cart-ov{background:rgba(6,4,3,.66)}
@@ -2781,9 +2792,9 @@
       </div>
     </div>
     <div id="cartStatus" class="cart-status" aria-live="polite"></div>
-    <button type="button" class="ca-send" id="cartSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg><span class="cs-label">Envoyer ma commande</span></button>
     <div class="cart-actions">
-      <a class="ca-call" id="caCall" href="tel:+3285513339"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Appeler le restaurant</a>
+      <button type="button" class="ca-send" id="cartSend" aria-label="Envoyer ma commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg><span class="cs-label">Envoyer</span></button>
+      <a class="ca-call" id="caCall" href="tel:+3285513339" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Appeler</a>
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
     <p class="cart-note">Pas de paiement en ligne&nbsp;: outil d'aide à la commande.<br>Total estimé, à confirmer sur place.</p>
@@ -3099,8 +3110,32 @@
       cs.innerHTML = '<span class="dot-live closed"></span>' + (m ? 'Fermé · ouvre à ' + m[1] : 'Actuellement fermé');
     }
   }
-  function openPanel(){ syncCartStatus(); ov.classList.add('show'); panel.classList.add('show'); setTimeout(updateFade, 60); }
-  function closePanel(){ ov.classList.remove('show'); panel.classList.remove('show'); }
+  var IS_APP = document.documentElement.classList.contains('app-mode');
+  function setOrderTabActive(on){
+    var bar = document.getElementById('tabbar'); if(!bar) return;
+    if(on){ Array.prototype.forEach.call(bar.querySelectorAll('.tb'), function(b){ b.classList.remove('active'); }); }
+    var o = document.getElementById('tbOrder'); if(o) o.classList.toggle('active', on);
+  }
+  function openPanel(){
+    syncCartStatus();
+    if(IS_APP){
+      document.body.classList.remove('app-home');
+      document.body.classList.add('app-cart');
+      setOrderTabActive(true);
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      setTimeout(updateFade, 60);
+    } else {
+      ov.classList.add('show'); panel.classList.add('show'); setTimeout(updateFade, 60);
+    }
+  }
+  function closePanel(){
+    if(IS_APP){
+      document.body.classList.remove('app-cart');
+      var h = document.getElementById('tbHome'); if(h) h.click(); // l'onglet Commande se referme vers l'accueil
+    } else {
+      ov.classList.remove('show'); panel.classList.remove('show');
+    }
+  }
 
   /* Génère le texte propre de la commande (pour SMS / WhatsApp / mail / copie) */
   function buildOrderText(){
@@ -3301,6 +3336,7 @@
   var tbHome = document.getElementById('tbHome');
   function setHome(on){
     document.body.classList.toggle('app-home', on);
+    if(on) document.body.classList.remove('app-cart');
     if(tbHome){ tbHome.classList.toggle('active', on); tbHome.setAttribute('aria-pressed', on ? 'true' : 'false'); }
     if(on){ catBtns.forEach(function(b){ b.classList.remove('active'); }); if(orderBtn) orderBtn.classList.remove('active');
       /* la photo de catégorie n'appartient qu'à la carte : on l'efface sur l'accueil (sinon elle transparaît en bas) */
@@ -3324,8 +3360,11 @@
     btn.addEventListener('click', function(){
       var cat = btn.getAttribute('data-cat');
       var wasHome = document.body.classList.contains('app-home');
+      var wasCart = document.body.classList.contains('app-cart');
+      document.body.classList.remove('app-cart');   // quitte la vue Commande
+      if(orderBtn) orderBtn.classList.remove('active');
       if(wasHome) setHome(false);              // quitte l'accueil pour la carte
-      if(wasHome || !btn.classList.contains('active')){
+      if(wasHome || wasCart || !btn.classList.contains('active')){
         var topTab = document.getElementById('tab-'+cat);
         if(topTab) topTab.click();             // réutilise la logique existante des onglets
         setActiveCat(btn);
