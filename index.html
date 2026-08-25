@@ -1366,7 +1366,7 @@
   html:not(.app-mode) #carte .order-toggle:hover{border-color:var(--rouge);color:#fff}
   html:not(.app-mode) #carte .order-hint{color:#b0a48c}
   /* recherche : champ « verre » sombre */
-  html:not(.app-mode) #carte .menu-search input{background:rgba(20,14,10,.5);border-color:rgba(233,206,150,.28);color:#EFE7D6;border-radius:13px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  html:not(.app-mode) #carte .menu-search input{background:rgba(13,9,6,.55);border-color:rgba(233,206,150,.18);color:#EFE7D6;border-radius:16px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
   html:not(.app-mode) #carte .menu-search input::placeholder{color:#b9ac96}
   html:not(.app-mode) #carte .menu-search .s-ico{color:#c0b39c}
   html:not(.app-mode) #carte .search-count{color:#E9CE96}
@@ -1422,10 +1422,11 @@
     min-height:0;border-radius:0;overflow:visible;padding:12px 6px 2px;margin:0;text-align:center}
   html.app-mode .app-cat-head::before{display:none}
   html.app-mode .app-cat-head .ach-txt{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-style:italic;font-size:2.15rem;line-height:1.02;color:#F7F1E5;text-shadow:0 2px 20px rgba(0,0,0,.92),0 1px 3px rgba(0,0,0,.7)}
+  html.app-mode .app-cat-head .ach-txt em{color:#E9CE96;font-style:italic}
   html.app-mode .app-cat-head .ach-count{display:block;margin-top:7px;font-family:"Oswald",sans-serif;font-weight:600;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:#E9CE96;text-shadow:0 1px 12px rgba(0,0,0,.95)}
   html.app-mode .app-cat-rule{display:none}
   /* recherche : champ « verre » sombre */
-  html.app-mode #carte .menu-search input{background:rgba(20,14,10,.5);border-color:rgba(233,206,150,.28);color:#EFE7D6;border-radius:13px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  html.app-mode #carte .menu-search input{background:rgba(13,9,6,.55);border-color:rgba(233,206,150,.18);color:#EFE7D6;border-radius:16px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
   html.app-mode #carte .menu-search input::placeholder{color:#b9ac96}
   html.app-mode #carte .menu-search .s-ico{color:#c0b39c}
   html.app-mode #carte .search-count{color:#E9CE96}
@@ -3145,6 +3146,7 @@
 
   // Titre de catégorie (centré) + recherche juste en dessous, dans le contenu
   var TITLES = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', viandes:'Viandes', desserts:'Desserts' };
+  var TITLES_HTML = { pates:'Pâtes <em>fraîches</em>', pizzas:'Pizzas <em>au feu de bois</em>', viandes:'Viandes', desserts:'Desserts' };
   var COUNTS = {};
   Object.keys(TITLES).forEach(function(id){
     var pnl = document.getElementById(id);
@@ -3187,7 +3189,7 @@
   Object.keys(CAT_IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + CAT_IMG[k] + '.jpg'; }); // préchargement des fonds
   function updateHead(id){
     if(!sharedHead) return;
-    sharedHead.querySelector('.ach-txt').textContent = TITLES[id] || '';
+    sharedHead.querySelector('.ach-txt').innerHTML = TITLES_HTML[id] || TITLES[id] || '';
     var n = COUNTS[id] || 0;
     sharedHead.querySelector('.ach-count').textContent = n + ' plat' + (n>1?'s':'');
     var img = CAT_IMG[id];
