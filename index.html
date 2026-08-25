@@ -1128,16 +1128,18 @@
   .ci-supp-x{flex:0 0 auto;width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;
     border:1px solid var(--hair-ink);border-radius:50%;background:none;cursor:pointer;color:var(--ink-mut);font-size:.85rem;line-height:1;padding:0}
   .ci-supp-x:hover{border-color:var(--rouge);color:var(--rouge)}
-  .ci-add{display:flex;align-items:center;gap:10px;margin-top:7px}
-  /* Sélecteur de supplément : champ large (occupe la largeur, comme la ligne du plat) */
-  .ci-supp-sel{flex:1 1 auto;min-width:0;-webkit-appearance:none;appearance:none;cursor:pointer;
-    background:rgba(255,255,255,.035);border:1px solid var(--hair-ink);border-radius:10px;
-    color:var(--gold2);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.66rem;
-    padding:9px 30px 9px 13px;text-overflow:ellipsis;transition:border-color .2s,color .2s;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C69A4D' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:12px}
-  .ci-supp-sel:hover{border-color:var(--gold2);color:var(--gold)}
-  .ci-supp-sel:focus{outline:none;border-color:var(--gold2)}
+  .ci-add{display:flex;align-items:center;gap:16px;margin-top:6px;flex-wrap:wrap}
+  /* Sélecteur de supplément : lien discret « + ajouter un supplément » (déploie le choix natif) */
+  .ci-supp-sel{flex:0 1 auto;min-width:0;-webkit-appearance:none;appearance:none;cursor:pointer;
+    background:transparent;border:0;border-radius:0;
+    color:var(--gold2);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;
+    padding:5px 19px 5px 0;text-overflow:ellipsis;transition:color .2s;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C69A4D' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right center;background-size:11px}
+  .ci-supp-sel:hover{color:var(--gold)}
+  .ci-supp-sel:focus{outline:none;color:var(--gold)}
   .ci-supp-sel option{background:#211812;color:#F5EEDF}
+  /* Junior : version allégée (pilule fine, en ligne avec le lien supplément) */
+  .ci-add .ci-junior{padding:6px 13px;font-size:.64rem}
   /* Junior : bouton toggle à activer (voyant + fond vert une fois activé) */
   .ci-junior{flex:0 0 auto;-webkit-appearance:none;appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
     background:transparent;border:1px solid var(--hair-ink);border-radius:10px;
@@ -1163,6 +1165,9 @@
   .cart-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:1.05rem;font-weight:500;color:var(--ink)}
   .cart-total b{font-family:"Fraunces",serif;font-size:1.6rem;color:var(--rouge);letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums;line-height:1}
+  .cart-total-sub{margin:-4px 0 12px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.62rem;color:var(--ink-mut)}
+  .cart-total-sub:empty{display:none}
+  .cart-total-sub .cts-junior{color:#1f9d57}
   .cart-status{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:11px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;font-weight:500}
   .cart-status:empty{display:none}
@@ -1202,6 +1207,21 @@
   .cart-actions a svg{width:18px;height:18px}
   .cart-actions .ca-call{background:var(--rouge);color:#fff}
   .cart-actions .ca-call:hover{background:var(--rouge-d)}
+  /* Bouton « Envoyer ma commande » : action premium (liseré doré), pleine largeur au-dessus de l'appel */
+  .ca-send{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-bottom:10px;padding:14px;cursor:pointer;
+    background:linear-gradient(180deg,rgba(233,206,150,.14),rgba(233,206,150,.06));border:1px solid var(--gold2);
+    color:var(--gold);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.09em;font-size:.78rem;font-weight:600;
+    transition:background .2s,border-color .2s,color .2s}
+  .ca-send svg{width:18px;height:18px}
+  .ca-send:hover{background:rgba(233,206,150,.2);border-color:var(--gold);color:#fff}
+  .ca-send.copied{background:#1f9d57;border-color:#1f9d57;color:#fff}
+  .ca-send[hidden]{display:none}
+  /* Dégradé de défilement : indique qu'il y a plus de plats au-dessus / en dessous */
+  .cart-list{--mt:1;--mb:1;
+    -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,var(--mt)) 0,#000 22px,#000 calc(100% - 22px),rgba(0,0,0,var(--mb)) 100%);
+    mask-image:linear-gradient(to bottom,rgba(0,0,0,var(--mt)) 0,#000 22px,#000 calc(100% - 22px),rgba(0,0,0,var(--mb)) 100%)}
+  .cart-empty .ce-ico{display:block;width:46px;height:46px;margin:0 auto 16px;color:var(--hair-strong,rgba(233,206,150,.5));opacity:.6}
+  .cart-empty .ce-ico svg{width:100%;height:100%}
   .cart-clear{display:block;margin:13px auto 0;background:none;border:0;color:var(--ink-mut);font-size:.78rem;text-decoration:underline;cursor:pointer;font-family:inherit}
   .cart-clear:hover{color:var(--rouge)}
   .cart-note{margin-top:10px;font-size:.66rem;color:var(--ink-mut);text-align:center;line-height:1.5}
@@ -1500,9 +1520,9 @@
   .ci-supp.junior .cs-mk,.ci-supp.junior .cs-price{color:#7fd39a}
   .ci-supp-x{border-color:rgba(233,206,150,.28);color:#b3a693}
   .ci-supp-x:hover{border-color:var(--rouge);color:#fff}
-  .ci-supp-sel{background-color:rgba(255,255,255,.04);border-color:rgba(233,206,150,.24);color:#E9CE96;
+  .ci-supp-sel{background-color:transparent;border:0;color:#E9CE96;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E9CE96' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
-  .ci-supp-sel:hover{border-color:rgba(233,206,150,.5);color:#F4E9CF}
+  .ci-supp-sel:hover{color:#F4E9CF}
   .ci-supp-sel option{background:#211812;color:#F5EEDF}
   .ci-junior{border-color:rgba(233,206,150,.24);color:#c3b7a2}
   .ci-junior:hover{border-color:#2ec173;color:#7fd39a}
@@ -1511,6 +1531,8 @@
   .cart-foot{background:#100b08;border-top-color:rgba(233,206,150,.16)}
   .cart-total{color:#EFE7D6}
   .cart-total b{color:#E9CE96}
+  .cart-total-sub{color:#a99c86}
+  .cart-total-sub .cts-junior{color:#7fd39a}
   .remark-toggle{color:#E9CE96}
   .remark-toggle small{color:#b3a693}
   .remark-toggle .rt-plus{border-color:#E9CE96}
@@ -2750,6 +2772,7 @@
   <div class="cart-list" id="cartList"></div>
   <div class="cart-foot">
     <div class="cart-total"><span>Total estimé</span><b id="cartTotal">0,00 €</b></div>
+    <p class="cart-total-sub" id="cartTotalSub"></p>
     <div class="cart-remark" id="remarkWrap">
       <button type="button" class="remark-toggle" id="remarkToggle"><span class="rt-plus" aria-hidden="true">+</span> Ajouter une note <small>allergies, précisions…</small></button>
       <div class="remark-field" id="remarkField" hidden>
@@ -2758,6 +2781,7 @@
       </div>
     </div>
     <div id="cartStatus" class="cart-status" aria-live="polite"></div>
+    <button type="button" class="ca-send" id="cartSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg><span class="cs-label">Envoyer ma commande</span></button>
     <div class="cart-actions">
       <a class="ca-call" id="caCall" href="tel:+3285513339"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Appeler le restaurant</a>
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
@@ -2907,6 +2931,18 @@
 
   var fab = document.getElementById('cartFab'), cfCount = document.getElementById('cfCount'), cfTotal = document.getElementById('cfTotal');
   var list = document.getElementById('cartList'), totalEl = document.getElementById('cartTotal'), cartSub = document.getElementById('cartSub');
+  var subEl = document.getElementById('cartTotalSub'), sendBtn = document.getElementById('cartSend');
+
+  /* Dégradé de défilement : fond opaque/transparent selon la position dans la liste */
+  function updateFade(){
+    if(!list) return;
+    var top = list.scrollTop > 3;
+    var bottom = list.scrollTop + list.clientHeight < list.scrollHeight - 3;
+    list.style.setProperty('--mt', top ? '0' : '1');
+    list.style.setProperty('--mb', bottom ? '0' : '1');
+  }
+  if(list) list.addEventListener('scroll', updateFade, { passive: true });
+  window.addEventListener('resize', updateFade);
 
   function totals(){ var n=0, s=0; for(var k in state){ var d=state[k]; (d.lines||[]).forEach(function(l){ n += l.qty; s += l.qty * unitPrice(d, l); }); } return { n:n, s:s }; }
   function render(){
@@ -2916,9 +2952,15 @@
     document.body.classList.toggle('has-order', t.n > 0);
     totalEl.textContent = money(t.s);
     if(cartSub) cartSub.textContent = t.n > 0 ? (t.n + ' plat' + (t.n > 1 ? 's' : '')) : '';
+    if(sendBtn) sendBtn.hidden = t.n === 0;
+    if(subEl){
+      var jd = 0;
+      for(var jk in state){ var jdsh = state[jk]; if(jdsh.cat === 'pizzas'){ (jdsh.lines || []).forEach(function(l){ if(l.junior) jd += Math.abs(JUNIOR.price) * l.qty; }); } }
+      subEl.innerHTML = jd > 0 ? '<span class="cts-junior">Dont −' + money(jd) + ' de remise Junior</span>' : '';
+    }
     list.innerHTML = '';
     if(t.n === 0){
-      list.innerHTML = '<p class="cart-empty">Votre commande est vide.<br>Ajoutez des plats depuis la carte avec les boutons + et −.</p>';
+      list.innerHTML = '<div class="cart-empty"><span class="ce-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>Votre commande est vide.<br>Ajoutez des plats depuis la carte avec les boutons + et −.</div>';
     } else {
       var groups = {};
       for(var k in state){ var c = state[k].cat || (byId[k] && byId[k].cat) || '_autres'; (groups[c] = groups[c] || []).push(k); }
@@ -2933,6 +2975,7 @@
         });
       });
     }
+    updateFade();
   }
   var CAT_ORDER = ['pizzas','pates','viandes','desserts'];
   var CAT_LABEL = { pates:'Pâtes fraîches', pizzas:'Pizzas au feu de bois', viandes:'Viandes', desserts:'Desserts' };
@@ -2988,7 +3031,7 @@
       var add = document.createElement('div'); add.className = 'ci-add';
       if(SUPPS.length){
         var sel = document.createElement('select'); sel.className = 'ci-supp-sel'; sel.setAttribute('aria-label', 'Ajouter un supplément');
-        var opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = line.qty > 1 ? '+ Supplément (1 unité)…' : '+ Supplément…'; sel.appendChild(opt0);
+        var opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = line.qty > 1 ? '+ ajouter un supplément (1 unité)' : '+ ajouter un supplément'; sel.appendChild(opt0);
         SUPPS.forEach(function(s, i){
           var o = document.createElement('option'); o.value = String(i);
           o.textContent = s.name + '  ' + fmtSupp(s.price);
@@ -3056,8 +3099,61 @@
       cs.innerHTML = '<span class="dot-live closed"></span>' + (m ? 'Fermé · ouvre à ' + m[1] : 'Actuellement fermé');
     }
   }
-  function openPanel(){ syncCartStatus(); ov.classList.add('show'); panel.classList.add('show'); }
+  function openPanel(){ syncCartStatus(); ov.classList.add('show'); panel.classList.add('show'); setTimeout(updateFade, 60); }
   function closePanel(){ ov.classList.remove('show'); panel.classList.remove('show'); }
+
+  /* Génère le texte propre de la commande (pour SMS / WhatsApp / mail / copie) */
+  function buildOrderText(){
+    var lines = ['Bonjour, voici ma commande — Pizzeria Pino :', ''];
+    var groups = {};
+    for(var k in state){ var c = state[k].cat || (byId[k] && byId[k].cat) || '_autres'; (groups[c] = groups[c] || []).push(k); }
+    var order = CAT_ORDER.filter(function(c){ return groups[c]; });
+    Object.keys(groups).forEach(function(c){ if(order.indexOf(c) < 0) order.push(c); });
+    order.forEach(function(c){
+      lines.push((CAT_LABEL[c] || 'Autres').toUpperCase());
+      groups[c].forEach(function(id){
+        var d = state[id];
+        (d.lines || []).forEach(function(l){
+          lines.push('• ' + l.qty + ' × ' + d.name + '  (' + money(l.qty * unitPrice(d, l)) + ')');
+          (l.supps || []).forEach(function(s){ lines.push('    + ' + s.name + ' (' + fmtSupp(s.price) + ')'); });
+          if(l.junior && d.cat === 'pizzas') lines.push('    ★ ' + JUNIOR.name + ' (' + fmtSupp(JUNIOR.price) + ')');
+        });
+      });
+      lines.push('');
+    });
+    if(remark && remark.value.trim()) lines.push('Note : ' + remark.value.trim(), '');
+    lines.push('Total estimé : ' + money(totals().s) + ' (à confirmer sur place)');
+    return lines.join('\n');
+  }
+  function flashSend(ok){
+    if(!sendBtn) return;
+    var lbl = sendBtn.querySelector('.cs-label'), old = lbl ? lbl.textContent : '';
+    sendBtn.classList.add('copied'); if(lbl) lbl.textContent = ok ? 'Commande copiée !' : 'Copie impossible';
+    setTimeout(function(){ sendBtn.classList.remove('copied'); if(lbl) lbl.textContent = old || 'Envoyer ma commande'; }, 2200);
+  }
+  function copyOrder(text){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ flashSend(true); }, function(){ legacyCopy(text); });
+    } else { legacyCopy(text); }
+  }
+  function legacyCopy(text){
+    try{
+      var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly','');
+      ta.style.position = 'absolute'; ta.style.left = '-9999px'; document.body.appendChild(ta);
+      ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); flashSend(ok);
+    }catch(e){ flashSend(false); }
+  }
+  function shareOrder(){
+    if(!Object.keys(state).length) return;
+    var text = buildOrderText();
+    if(navigator.share){
+      navigator.share({ title: 'Ma commande — Pizzeria Pino', text: text }).catch(function(err){
+        if(err && (err.name === 'AbortError')) return; // l'utilisateur a annulé le partage
+        copyOrder(text);
+      });
+    } else { copyOrder(text); }
+  }
+  if(sendBtn) sendBtn.addEventListener('click', shareOrder);
   fab.addEventListener('click', openPanel);
   var orderNowBtn = document.getElementById('orderNowBtn');
   if(orderNowBtn) orderNowBtn.addEventListener('click', openPanel);
