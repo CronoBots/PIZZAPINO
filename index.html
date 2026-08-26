@@ -1575,6 +1575,10 @@
   .ca-trash{background:rgba(0,0,0,.28);border-color:rgba(233,206,150,.28);color:#c3b7a2}
   .ca-trash:hover{border-color:var(--rouge);color:#fff;background:rgba(168,38,29,.22)}
   .cart-note{color:#9a8e79}
+  /* Signature chaleureuse « Pino » en bas de commande */
+  .cart-sign{margin-top:15px;padding-top:14px;border-top:1px solid rgba(233,206,150,.12);
+    text-align:center;font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:.9rem;color:#b7aa94;line-height:1.65}
+  .cart-sign .cs-name{display:block;margin-top:3px;font-size:1.6rem;color:#E9CE96;line-height:1.2}
 
   /* Ligne « à retirer sur place » + horaires du jour, dans le pied de commande */
   .cart-pickup{display:none}
@@ -2764,6 +2768,7 @@
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
     <p class="cart-note">Pas de paiement en ligne&nbsp;: outil d'aide à la commande.<br>Total estimé, à confirmer sur place.</p>
+    <p class="cart-sign">Au plaisir de vous accueillir<br>ou de vous revoir.<br><span class="cs-name">Pino</span></p>
   </div>
 </div>
 
