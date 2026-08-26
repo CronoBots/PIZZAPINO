@@ -1,8 +1,8 @@
 /* Service worker Pizzeria Pino — réseau d'abord, cache en secours (hors-ligne). */
-var CACHE = 'pino-v137';
+var CACHE = 'pino-v138';
 var CORE = [
   './', './index.html', './legal.html', './manifest.webmanifest',
-  './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png',
+  './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/pino-logo.png',
   './fonts/fraunces-normal-400_700.woff2', './fonts/inter-normal-400.woff2', './fonts/oswald-normal-400.woff2',
   './images/hero-feast.webp',
   './images/bg-pates.webp', './images/bg-pizzas.webp', './images/bg-viandes.webp', './images/bg-desserts.webp'

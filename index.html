@@ -1297,7 +1297,7 @@
   html.standalone #splash{display:flex;position:fixed;inset:0;z-index:2000;background:#0a0908;
     align-items:center;justify-content:center;pointer-events:none;
     animation:splashOut .8s ease 1s forwards;will-change:opacity}
-  html.standalone #splash img{position:relative;width:42vw;max-width:300px;height:auto;display:block;
+  html.standalone #splash img{position:relative;width:60vw;max-width:400px;height:auto;display:block;
     animation:splashLogo 1.5s ease forwards;will-change:transform,opacity}
   @keyframes splashOut{to{opacity:0;visibility:hidden}}
   @keyframes splashLogo{0%{transform:scale(.93);opacity:0}35%{opacity:1}100%{transform:scale(1);opacity:1}}
@@ -1652,7 +1652,7 @@
 </head>
 <body>
 <!-- ÉCRAN DE LANCEMENT (PWA) : logo en fondu -->
-<div id="splash" aria-hidden="true" style="position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;background:#0a0908"><img src="icons/icon-512.png" alt="Pizzeria Pino" width="300" height="300" style="width:42vw;max-width:300px;height:auto"></div>
+<div id="splash" aria-hidden="true" style="position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;background:#0a0908"><img src="icons/pino-logo.png" alt="Pizzeria Pino" width="400" height="400" style="width:60vw;max-width:400px;height:auto"></div>
 <script>(function(){var s=document.getElementById('splash');if(!s)return;/* écran de lancement uniquement en PWA installée (pas sur le site mobile) */if(!document.documentElement.classList.contains('standalone')){if(s.parentNode)s.parentNode.removeChild(s);return;}var done=function(){if(s&&s.parentNode)s.parentNode.removeChild(s);s=null;};s.addEventListener('animationend',function(e){if(e.target===s)done();});setTimeout(done,2500);})();</script>
 <a class="skip" href="#carte">Aller à la carte</a>
 
