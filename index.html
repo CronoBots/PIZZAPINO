@@ -666,6 +666,7 @@
   .reviews .btn-ghost:hover{border-color:var(--rouge);color:var(--rouge)}
   .ti-embed{margin-top:46px;min-height:140px;text-align:left}
   /* Cartes d'avis intégrées */
+  .ti-reviews{margin-top:clamp(32px,5vw,48px);min-height:120px}
   .rev-marquee{margin-top:48px;position:relative;overflow:hidden;
     -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);
     mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)}
@@ -1979,92 +1980,10 @@
   <div class="wrap">
     <p class="eyebrow reveal"><span class="num">04</span> Ils en parlent</p>
     <h2 class="reveal" style="--i:1">Ce que disent <em>nos clients</em></h2>
-    <p class="lead reveal" style="--i:2"><strong style="color:var(--or)">4,2/5</strong> sur Google · 1 087 avis<br>Merci à celles et ceux qui nous font confiance.</p>
-    <!-- Avis Google (intégrés — issus de la fiche Google Pizzeria Pino) -->
-    <div class="rev-marquee reveal">
-     <div class="rev-track" id="revTrack">
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#A8261D">C</span>
-          <div class="rev-id"><span class="rev-name">Christine S.</span><span class="rev-when">il y a 3 semaines</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Pizza excellente, le service rapide.</p>
-      </article>
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#6E8B6E">S</span>
-          <div class="rev-id"><span class="rev-name">Sylvie G.</span><span class="rev-when">il y a 2 mois</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Que ce soit sur place ou à emporter, en salle ou en terrasse quand le temps le permet, c'est toujours délicieux et bien accueilli ! Je recommande +++</p>
-      </article>
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#C0532F">K</span>
-          <div class="rev-id"><span class="rev-name">Kevin</span><span class="rev-when">il y a 4 mois</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Nous adorons la Pizzeria Pino ! Un restaurant italien convivial, parfait pour manger sur place ou à emporter. La qualité des pizzas est excellente, et c'est toujours rapide et efficace.</p>
-      </article>
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#8C6A4A">S</span>
-          <div class="rev-id"><span class="rev-name">Sylvain P.</span><span class="rev-when">il y a 7 mois</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Très beau cadre. Cuisine de très bonne qualité à un prix très bas. Personnel souriant, réactif et proactif. Nous y retournerons avec un grand plaisir.</p>
-      </article>
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#B04A9A">A</span>
-          <div class="rev-id"><span class="rev-name">Anne B.</span><span class="rev-when">il y a 8 mois</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Envie de partager une délicieuse pizza ou de déguster un bon plat de pâtes ? Alors vous êtes au bon endroit. Cadre très accueillant et personnel agréable.</p>
-      </article>
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#4E6E8C">C</span>
-          <div class="rev-id"><span class="rev-name">Collette J.</span><span class="rev-when">il y a 8 mois</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Le lieu est vraiment superbe, on y mange vraiment très bien et le service est au top. Une expérience que je répéterai régulièrement !</p>
-      </article>
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#3E7D6E">C</span>
-          <div class="rev-id"><span class="rev-name">Christian G.</span><span class="rev-when">il y a 8 mois</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Très belle découverte, personnel aimable. Cuisine de belle qualité, plats copieux et prix raisonnable.</p>
-      </article>
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#B58A2E">L</span>
-          <div class="rev-id"><span class="rev-name">Lucien M.</span><span class="rev-when">il y a 6 mois</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Pizza super délicieuse, service impeccable.</p>
-      </article>
-      <article class="rev-card">
-        <div class="rev-head">
-          <span class="rev-av" style="background:#9A3B4E">C</span>
-          <div class="rev-id"><span class="rev-name">Christine F.</span><span class="rev-when">il y a 7 mois</span></div>
-          <svg class="rev-g" viewBox="0 0 24 24" aria-label="Avis Google"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.3 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.7 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>
-        </div>
-        <div class="rev-stars" aria-label="5 étoiles sur 5">★★★★★</div>
-        <p class="rev-text">Très bons moments, même en grand groupe nous avons pu manger tous ensemble et c'était très bon. Je reviendrai très certainement !</p>
-      </article>
-     </div>
+    <p class="lead reveal" style="--i:2">Merci à celles et ceux qui nous font confiance.</p>
+    <!-- Avis Google en direct — widget Trustindex -->
+    <div class="ti-reviews reveal">
+      <script defer async src='https://cdn.trustindex.io/loader.js?2e90fc0805f5031a4c763bbd147'></script>
     </div>
     <div class="social-row reveal" style="margin-top:44px">
       <a class="social-btn google" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener" aria-label="Voir les avis Google">
