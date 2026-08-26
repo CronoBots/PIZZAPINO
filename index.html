@@ -741,9 +741,11 @@
   .hours li.today .day{color:var(--or)}
   .hours .day{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.1rem;color:var(--rouge-l);
     display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .hours .hrs{color:var(--gris);font-size:1rem;text-align:right;white-space:nowrap}
-  .hours .badge-today{font-size:.56rem;background:var(--or);color:#1a1510;padding:3px 9px;letter-spacing:.1em;
-    font-family:"Oswald",sans-serif;font-style:normal;text-transform:uppercase;border-radius:2px}
+  .hours .hrs{display:flex;align-items:baseline;color:var(--gris);font-size:1rem}
+  .hours .svc{display:inline-flex;align-items:baseline;gap:8px;white-space:nowrap}
+  .hours .svc + .svc{margin-left:18px;padding-left:18px;border-left:1px solid var(--hair)}
+  .hours .sl{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.6rem;
+    font-weight:600;color:var(--or)}
   .hours .nb{white-space:nowrap}
   /* Badges d'infos répartis en dessous */
   .feat{margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
@@ -798,10 +800,11 @@
     .stat:nth-child(2)::after{display:none}
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
-    /* Horaires : jour + heures sur une ligne, resserré sur mobile */
-    .hours li{padding:12px 15px;gap:10px}
+    /* Horaires : jour à gauche, midi/soir empilés à droite sur mobile */
+    .hours li{padding:12px 15px;gap:12px}
     .hours .day{font-size:1.02rem}
-    .hours .hrs{color:var(--gris);font-size:.92rem}
+    .hours .hrs{flex-direction:column;align-items:flex-end;gap:3px;font-size:.92rem}
+    .hours .svc + .svc{margin-left:0;padding-left:0;border-left:0}
     /* Réseaux : on empile (libellé puis identifiant) pour éviter les coupures */
     .ig-line a{display:flex;margin-top:5px;width:max-content;max-width:100%}
     /* iOS plein écran SANS zoom : le hero remplit l'écran (svh), mais l'image de fond a une
@@ -1586,7 +1589,8 @@
   html.app-mode #infos .ic-head{text-align:center;border:0;padding:0;margin:0 0 13px;font-size:.82rem;color:var(--or);font-style:normal;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em}
   html.app-mode #infos .hours{border-color:rgba(198,154,77,.16)}
   html.app-mode #infos .hours li{padding:13px 16px;border-bottom-color:rgba(198,154,77,.12)}
-  html.app-mode #infos .contact-frame{border:0;padding:0;margin-top:0;display:block}
+  html.app-mode #infos .contact-frame{border:0;padding:0;margin-top:14px;display:block}
+  html.app-mode #infos .cb-info .ic-head{margin-top:6px}
   html.app-mode #infos .app-infos-actions{display:grid;grid-template-columns:1fr 1fr;gap:11px}
   html.app-mode #infos .aia{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:16px 12px;border-radius:11px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.07em;font-size:.82rem;text-decoration:none;
@@ -2021,13 +2025,13 @@
       <div class="hours-block reveal" style="--i:1">
         <h3 class="ic-head">Horaires</h3>
         <ul class="hours" id="hoursList">
-          <li data-days="1"><span class="day">Lundi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
-          <li data-days="2"><span class="day">Mardi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
-          <li data-days="3"><span class="day">Mercredi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
-          <li data-days="4"><span class="day">Jeudi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
-          <li data-days="5"><span class="day">Vendredi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
-          <li data-days="6"><span class="day">Samedi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
-          <li data-days="0"><span class="day">Dimanche</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
+          <li data-days="1"><span class="day">Lundi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–21h30</span></span></span></li>
+          <li data-days="2"><span class="day">Mardi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–21h30</span></span></span></li>
+          <li data-days="3"><span class="day">Mercredi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–21h30</span></span></span></li>
+          <li data-days="4"><span class="day">Jeudi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–21h30</span></span></span></li>
+          <li data-days="5"><span class="day">Vendredi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–22h</span></span></span></li>
+          <li data-days="6"><span class="day">Samedi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–22h</span></span></span></li>
+          <li data-days="0"><span class="day">Dimanche</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–22h</span></span></span></li>
         </ul>
         <div class="feat">
           <span>Terrasse</span><span>À emporter</span><span>Repas sur place</span><span>Traiteur</span>
@@ -2502,16 +2506,11 @@
       if(open){ cmStatus.className = "cm-status open"; cmStatus.innerHTML = '<span class="dot-live open"></span>Ouvert maintenant'; }
       else { cmStatus.className = "cm-status closed"; cmStatus.innerHTML = '<span class="dot-live closed"></span>' + (nextOpen!==null ? "Fermé · ouvre à "+hhmm(nextOpen) : "Actuellement fermé"); }
     }
-    // surligner la ligne d'horaire du jour
+    // surligner la ligne d'horaire du jour (accent doré, sans badge)
     document.querySelectorAll("#hoursList li").forEach(function(li){
       var days = (li.getAttribute("data-days")||"").split(",");
       if(days.indexOf(String(day))>-1){
         li.classList.add("today");
-        var d = li.querySelector(".day");
-        if(d && !d.querySelector(".badge-today")){
-          var b = document.createElement("span"); b.className="badge-today"; b.textContent="Aujourd'hui";
-          d.appendChild(b);
-        }
       }
     });
   })();
