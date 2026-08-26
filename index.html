@@ -746,7 +746,7 @@
   .hours .svc + .svc{margin-left:18px;padding-left:18px;border-left:1px solid var(--hair)}
   .hours .sl{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.6rem;
     font-weight:600;color:var(--or)}
-  .hours .nb{white-space:nowrap}
+  .hours .nb{white-space:nowrap;display:inline-block;min-width:5.4em}
   /* Badges d'infos répartis en dessous */
   .feat{margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
   .feat span{font-size:.72rem;background:none;color:var(--gris);padding:9px 16px;border-radius:0;
@@ -800,10 +800,13 @@
     .stat:nth-child(2)::after{display:none}
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
-    /* Horaires : jour à gauche, midi/soir empilés à droite sur mobile */
-    .hours li{padding:12px 15px;gap:12px}
-    .hours .day{font-size:1.02rem}
-    .hours .hrs{flex-direction:column;align-items:flex-end;gap:3px;font-size:.92rem}
+    /* Horaires : jour à gauche, midi/soir en colonnes alignées à droite (mobile) */
+    .hours li{padding:13px 16px;gap:14px}
+    .hours .day{font-size:1.04rem}
+    .hours .hrs{display:grid;grid-template-columns:max-content max-content;column-gap:11px;row-gap:5px;
+      justify-content:end;align-items:baseline;font-size:.95rem}
+    .hours .svc{display:contents}
+    .hours .svc .sl{justify-self:start;align-self:center}
     .hours .svc + .svc{margin-left:0;padding-left:0;border-left:0}
     /* Réseaux : on empile (libellé puis identifiant) pour éviter les coupures */
     .ig-line a{display:flex;margin-top:5px;width:max-content;max-width:100%}
