@@ -1595,6 +1595,8 @@
     color:#EBD9B4;background:rgba(233,206,150,.05);border:1px solid rgba(233,206,150,.24);border-radius:999px;
     padding:9px 16px;transition:background .2s,border-color .2s,color .2s;-webkit-tap-highlight-color:transparent}
   .cart-suggest .cs-chips button:hover{background:rgba(233,206,150,.12);border-color:#E9CE96;color:#F7EFDD}
+  /* État vide : pastilles groupées juste sous le message (pas repoussées en bas) */
+  .cart-suggest-empty{margin-top:20px;padding-top:0}
 
   /* Vue plus compacte : on retire le paragraphe d'intro */
   html.app-mode #carte .lead{display:none}
@@ -2935,7 +2937,14 @@
     }
     list.innerHTML = '';
     if(t.n === 0){
-      list.innerHTML = '<div class="cart-empty"><span class="ce-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>Votre commande est vide.<br>Ajoutez des plats depuis la carte avec les boutons + et −.</div>';
+      list.innerHTML = '<div class="cart-empty"><span class="ce-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>Votre commande est vide.<br>Choisissez une catégorie pour commencer.</div>';
+      if(IS_APP){
+        var sug0 = document.createElement('div'); sug0.className = 'cart-suggest cart-suggest-empty';
+        sug0.innerHTML = '<div class="cs-chips">'
+          + CAT_ORDER.map(function(c){ return '<button type="button" data-goto="' + c + '">' + (CAT_SHORT[c] || CAT_LABEL[c]) + '</button>'; }).join('')
+          + '</div>';
+        list.appendChild(sug0);
+      }
     } else {
       var groups = {};
       for(var k in state){ var c = state[k].cat || (byId[k] && byId[k].cat) || '_autres'; (groups[c] = groups[c] || []).push(k); }
