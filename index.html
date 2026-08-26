@@ -1284,7 +1284,7 @@
   }
   html.app-mode #progress{display:none}
   html.app-mode .app-bar .ab-brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.36rem;color:var(--paper,#F1EADB);letter-spacing:.03em;line-height:1;white-space:nowrap;text-transform:uppercase}
-  html.app-mode .app-bar .ab-brand b{color:var(--rouge,#A8261D);font-weight:600}
+  html.app-mode .app-bar .ab-brand b{color:var(--rouge,#A8261D);font-weight:600;font-style:italic}
   html.app-mode .app-bar .ab-status{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.62rem;color:#cfc3ad;white-space:nowrap}
   html.app-mode .app-bar .ab-status .dot-live{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
   html.app-mode .app-bar .ab-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
@@ -1630,8 +1630,9 @@
     <a href="#top" class="brand"><span class="brand-pre">Restaurant</span>Pizzeria <b>Pino</b><small>Pâtes fraîches · Feu de bois · Nandrin</small></a>
     <nav class="main">
       <ul>
-        <li><a href="#carte">La carte</a></li>
+        <li><a href="#top">Accueil</a></li>
         <li><a href="#galerie">Le restaurant</a></li>
+        <li><a href="#carte">La carte</a></li>
         <li><a href="#avis">Avis</a></li>
         <li><a href="#infos">Contact</a></li>
       </ul>
@@ -1693,6 +1694,31 @@
 </div>
 
 <!-- MAISON -->
+<!-- GALERIE -->
+<section id="galerie" class="gallery center">
+  <div class="wrap">
+    <p class="eyebrow reveal">Le restaurant</p>
+    <h2 class="reveal" style="--i:1">Une pizzeria comme <em>en Italie</em></h2>
+    <p class="lead reveal" style="--i:2">Un restaurant familial qui régale Nandrin et le Condroz depuis plus de trente ans. Pizzas au feu de bois, pâtes fraîches et desserts maison, préparés chaque jour avec passion et générosité.</p>
+    <div class="gal-grid">
+      <div class="gal-item reveal" data-full="images/etab-facade.jpg"><picture><source type="image/webp" srcset="images/etab-facade.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-facade.jpg" alt="Façade du Restaurant Pizzeria Pino à Nandrin"></picture><span class="cap">La façade<small>Bienvenue chez Pino</small></span></div>
+      <div class="gal-item reveal" style="--i:1" data-full="images/etab-entree.jpg"><picture><source type="image/webp" srcset="images/etab-entree.webp"><img loading="lazy" decoding="async" width="851" height="638" src="images/etab-entree.jpg" alt="Entrée à emporter de la Pizzeria Pino"></picture><span class="cap">L'entrée<small>Terrasse à l'étage</small></span></div>
+      <div class="gal-item reveal" style="--i:2" data-full="images/etab-terrasse.jpg"><picture><source type="image/webp" srcset="images/etab-terrasse.webp"><img loading="lazy" decoding="async" width="960" height="1276" src="images/etab-terrasse.jpg" alt="Terrasse du restaurant Pizzeria Pino"></picture><span class="cap">La terrasse<small>À rue</small></span></div>
+      <div class="gal-item reveal" data-full="images/etab-bar.jpg"><picture><source type="image/webp" srcset="images/etab-bar.webp"><img loading="lazy" decoding="async" width="1200" height="895" src="images/etab-bar.jpg" alt="Bar à vins et salle de la Pizzeria Pino"></picture><span class="cap">Le bar à vins<small>Notre cave</small></span></div>
+      <div class="gal-item reveal" style="--i:1" data-full="images/etab-salle.jpg"><picture><source type="image/webp" srcset="images/etab-salle.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-salle.jpg" alt="Salle du restaurant Pizzeria Pino"></picture><span class="cap">La salle<small>Salle principale</small></span></div>
+      <div class="gal-item reveal" style="--i:2" data-full="images/etab-salle2.jpg"><picture><source type="image/webp" srcset="images/etab-salle2.webp"><img loading="lazy" decoding="async" width="960" height="1280" src="images/etab-salle2.jpg" alt="Intérieur de la Pizzeria Pino"></picture><span class="cap">L'intérieur<small>Seconde salle</small></span></div>
+    </div>
+    <p class="lead lead-sub reveal">Une cinquantaine de couverts en salle, une trentaine de places sur la terrasse à rue et une vingtaine sur la terrasse suspendue à l'étage. Sur place, à emporter ou en traiteur pour vos événements et réceptions.</p>
+    <!-- Vidéo officielle (regroupée avec la galerie) -->
+    <div class="gal-video reveal" id="video">
+      <div class="vid-frame">
+        <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
+      </div>
+      <span class="badge-off"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-right:7px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Vidéo officielle · @pino.nandrin</span>
+    </div>
+  </div>
+</section>
+
 <!-- CARTE -->
 <section id="carte" class="menu">
   <div class="menu-live-bg" aria-hidden="true"><span class="mlb-a"></span><span class="mlb-b"></span><span class="mlb-scrim"></span></div>
@@ -1899,30 +1925,6 @@
   </div>
 </section>
 
-<!-- GALERIE -->
-<section id="galerie" class="gallery center">
-  <div class="wrap">
-    <p class="eyebrow reveal">Le restaurant</p>
-    <h2 class="reveal" style="--i:1">Une pizzeria comme <em>en Italie</em></h2>
-    <p class="lead reveal" style="--i:2">Un restaurant familial qui régale Nandrin et le Condroz depuis plus de trente ans. Pizzas au feu de bois, pâtes fraîches et desserts maison, préparés chaque jour avec passion et générosité.</p>
-    <div class="gal-grid">
-      <div class="gal-item reveal" data-full="images/etab-facade.jpg"><picture><source type="image/webp" srcset="images/etab-facade.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-facade.jpg" alt="Façade du Restaurant Pizzeria Pino à Nandrin"></picture><span class="cap">La façade<small>Bienvenue chez Pino</small></span></div>
-      <div class="gal-item reveal" style="--i:1" data-full="images/etab-entree.jpg"><picture><source type="image/webp" srcset="images/etab-entree.webp"><img loading="lazy" decoding="async" width="851" height="638" src="images/etab-entree.jpg" alt="Entrée à emporter de la Pizzeria Pino"></picture><span class="cap">L'entrée<small>Terrasse à l'étage</small></span></div>
-      <div class="gal-item reveal" style="--i:2" data-full="images/etab-terrasse.jpg"><picture><source type="image/webp" srcset="images/etab-terrasse.webp"><img loading="lazy" decoding="async" width="960" height="1276" src="images/etab-terrasse.jpg" alt="Terrasse du restaurant Pizzeria Pino"></picture><span class="cap">La terrasse<small>À rue</small></span></div>
-      <div class="gal-item reveal" data-full="images/etab-bar.jpg"><picture><source type="image/webp" srcset="images/etab-bar.webp"><img loading="lazy" decoding="async" width="1200" height="895" src="images/etab-bar.jpg" alt="Bar à vins et salle de la Pizzeria Pino"></picture><span class="cap">Le bar à vins<small>Notre cave</small></span></div>
-      <div class="gal-item reveal" style="--i:1" data-full="images/etab-salle.jpg"><picture><source type="image/webp" srcset="images/etab-salle.webp"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-salle.jpg" alt="Salle du restaurant Pizzeria Pino"></picture><span class="cap">La salle<small>Salle principale</small></span></div>
-      <div class="gal-item reveal" style="--i:2" data-full="images/etab-salle2.jpg"><picture><source type="image/webp" srcset="images/etab-salle2.webp"><img loading="lazy" decoding="async" width="960" height="1280" src="images/etab-salle2.jpg" alt="Intérieur de la Pizzeria Pino"></picture><span class="cap">L'intérieur<small>Seconde salle</small></span></div>
-    </div>
-    <p class="lead lead-sub reveal">Une cinquantaine de couverts en salle, une trentaine de places sur la terrasse à rue et une vingtaine sur la terrasse suspendue à l'étage. Sur place, à emporter ou en traiteur pour vos événements et réceptions.</p>
-    <!-- Vidéo officielle (regroupée avec la galerie) -->
-    <div class="gal-video reveal" id="video">
-      <div class="vid-frame">
-        <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
-      </div>
-      <span class="badge-off"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-right:7px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Vidéo officielle · @pino.nandrin</span>
-    </div>
-  </div>
-</section>
 
 <!-- INSTAGRAM -->
 <section id="instagram" class="insta center">
