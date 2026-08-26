@@ -975,8 +975,11 @@
   .legal-links .sep{color:var(--gris-d);opacity:.6}
   .legal-links .linkbtn{background:none;border:0;cursor:pointer;font:inherit;text-transform:uppercase;letter-spacing:.08em;padding:0}
   .credit{margin-top:18px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.66rem;color:var(--gris-d)}
-  .credit a{color:var(--or);text-decoration:none;font-weight:500}
+  .credit a,.credit b{color:var(--or);text-decoration:none;font-weight:500}
   .credit a:hover{text-decoration:underline}
+  footer .foot-nap{margin-top:7px;font-size:.82rem;opacity:.8}
+  footer .foot-nap a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(233,206,150,.35)}
+  footer .foot-nap a:hover{color:var(--or)}
 
   /* ===== BANDEAU COOKIES ===== */
   .cookie-banner{position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(15,11,8,.97);
@@ -2127,6 +2130,7 @@
   <div class="wrap">
     <a href="#top" class="brand"><span class="brand-pre">Restaurant</span>Pizzeria <b>Pino</b></a>
     <p><span style="white-space:nowrap">Restaurant italien</span> · <span style="white-space:nowrap">Pâtes fraîches</span> · <span style="white-space:nowrap">Pizzas au feu de bois</span></p>
+    <p class="foot-nap"><span style="white-space:nowrap">Route du Condroz 131 · 4550 Nandrin</span> · <a href="tel:+3285513339">085 51 33 39</a></p>
     <div class="social">
       <a class="ig" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Instagram de la Pizzeria Pino">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
@@ -2147,7 +2151,7 @@
       <span class="sep">·</span>
       <button type="button" id="manageCookies" class="linkbtn">Gérer les cookies</button>
     </nav>
-    <p class="credit">Réalisation : <a href="https://digitalconcept.be" target="_blank" rel="noopener">Digital Concept</a></p>
+    <p class="credit">Réalisation : <b>Digital Concept</b></p>
   </div>
 </footer>
 
