@@ -121,7 +121,7 @@
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "4.2",
-    "reviewCount": "1087"
+    "reviewCount": "1212"
   },
   "openingHoursSpecification": [
     {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"], "opens": "12:00", "closes": "14:00"},
@@ -1347,6 +1347,8 @@
   html.app-mode .hi-cta,html.app-mode .hi-rating,html.app-mode .hero-frame,html.app-mode .hero .hero-bg{opacity:1!important;animation:none!important}
   html.app-mode .hi-line{width:min(300px,62vw)!important;animation:none!important}
   /* Stats & Avis : même fond clair (crème) qu'en version PC, aussi en mode app */
+  /* Mobile (app) : la carte étant masquée, galerie et réseaux sociaux se touchent → liseré rouge de séparation */
+  html.app-mode #instagram{border-top:6px solid var(--rouge,#A8261D)}
 
   /* ===== Site web : section « carte » immersive (photo fixe par catégorie) ===== */
   /* #carte transparent : la photo (calque fixe en z-index négatif) transparaît uniquement ici ;
@@ -1950,7 +1952,7 @@
     <div class="grid">
       <div class="stat reveal"><div class="n"><span class="cnt" data-to="30" data-dec="0">0</span><span class="suf">+</span></div><div class="l">Ans d'expérience</div></div>
       <div class="stat reveal" style="--i:1"><div class="n"><span class="cnt" data-to="4.2" data-dec="1">0</span><span class="suf">★</span></div><div class="l">Note Google</div></div>
-      <div class="stat reveal" style="--i:2"><div class="n"><span class="cnt" data-to="1087" data-dec="0" data-sep="1">0</span><span class="suf">+</span></div><div class="l">Avis Google</div></div>
+      <div class="stat reveal" style="--i:2"><div class="n"><span class="cnt" data-to="1212" data-dec="0" data-sep="1">0</span><span class="suf">+</span></div><div class="l">Avis Google</div></div>
       <div class="stat reveal" style="--i:3"><div class="n"><span class="cnt" data-to="100" data-dec="0">0</span><span class="suf">+</span></div><div class="l">Couverts &amp; terrasses</div></div>
     </div>
   </div>
