@@ -1518,7 +1518,10 @@
   html.app-mode #cartPanel{position:static;transform:none!important;visibility:visible;pointer-events:auto;
     max-width:none;margin:0;max-height:none;border-top:0;box-shadow:none;display:none}
   html.app-mode body.app-cart #cartPanel{display:flex;min-height:calc(100svh - 128px)}
-  html.app-mode body.app-cart #carte,html.app-mode body.app-cart .app-cat-head,html.app-mode body.app-cart .menu-live-bg{display:none!important}
+  /* Vue Commande : on masque toute la page d'accueil derrière — seul le panneau reste (plus de liseré de fond) */
+  html.app-mode body.app-cart > section,html.app-mode body.app-cart > header,html.app-mode body.app-cart > footer,
+  html.app-mode body.app-cart .app-cat-head,html.app-mode body.app-cart .menu-live-bg{display:none!important}
+  html.app-mode body.app-cart{background:#100b08}
   html.app-mode #cartPanel .cart-list{overflow:visible;max-height:none;-webkit-mask-image:none;mask-image:none}
   html.app-mode #cartPanel .cart-head{padding-top:18px}
 
@@ -2733,7 +2736,7 @@
     </div>
     <div id="cartStatus" class="cart-status" aria-live="polite"></div>
     <div class="cart-actions">
-      <button type="button" class="ca-send" id="cartSend" aria-label="Envoyer ma commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg><span class="cs-label">Envoyer</span></button>
+      <button type="button" class="ca-send" id="cartSend" aria-label="Partager ma commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5"/><path d="M15.4 6.5 8.6 10.5"/></svg><span class="cs-label">Partager</span></button>
       <a class="ca-call" id="caCall" href="tel:+3285513339" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Appeler</a>
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
@@ -3098,13 +3101,14 @@
     });
     if(remark && remark.value.trim()) lines.push('Note : ' + remark.value.trim(), '');
     lines.push('Total estimé : ' + money(totals().s) + ' (à confirmer sur place)');
+    lines.push('', '— Pizzeria Pino · 085 51 33 39', 'Route du Condroz 131, 4550 Nandrin');
     return lines.join('\n');
   }
   function flashSend(ok){
     if(!sendBtn) return;
     var lbl = sendBtn.querySelector('.cs-label'), old = lbl ? lbl.textContent : '';
     sendBtn.classList.add('copied'); if(lbl) lbl.textContent = ok ? 'Commande copiée !' : 'Copie impossible';
-    setTimeout(function(){ sendBtn.classList.remove('copied'); if(lbl) lbl.textContent = old || 'Envoyer ma commande'; }, 2200);
+    setTimeout(function(){ sendBtn.classList.remove('copied'); if(lbl) lbl.textContent = old || 'Partager'; }, 2200);
   }
   function copyOrder(text){
     if(navigator.clipboard && navigator.clipboard.writeText){
