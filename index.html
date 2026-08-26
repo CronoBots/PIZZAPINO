@@ -496,6 +496,8 @@
   @media(max-width:760px){.gal-video{display:none!important}}
   /* PC : la vidéo occupe la colonne centrale de la galerie, encadrée par les photos */
   @media(min-width:761px){
+    /* grille un peu plus étroite → vidéo et photos légèrement moins hautes (ratios conservés) */
+    .gal-grid{max-width:1040px;margin-left:auto;margin-right:auto}
     .gal-grid .gal-video{grid-column:2;grid-row:1 / span 3;margin:0;gap:0;display:block;position:relative;align-self:stretch}
     .gal-grid .gal-video .vid-frame{width:100%;height:100%;margin:0}
     .gal-grid .gal-video .vid-frame video{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;display:block}
