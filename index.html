@@ -732,17 +732,18 @@
   .infos-stack{margin-top:46px}
   .ic-head{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.35rem;color:var(--blanc);
     margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--hair)}
-  /* Les 2 horaires côte à côte */
-  .hours{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0}
-  .hours li{list-style:none;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:20px 22px;
-    border:1px solid var(--hair);font-size:1rem;transition:background .3s,border-color .3s}
-  .hours li.today{background:rgba(198,154,77,.07);border-color:rgba(198,154,77,.32)}
+  /* Horaires : une ligne par jour, très lisible */
+  .hours{display:flex;flex-direction:column;margin:0;border:1px solid var(--hair);border-radius:12px;overflow:hidden}
+  .hours li{list-style:none;display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:13px 20px;
+    border-bottom:1px solid var(--hair);font-size:1rem;transition:background .3s}
+  .hours li:last-child{border-bottom:0}
+  .hours li.today{background:rgba(198,154,77,.09);box-shadow:inset 3px 0 0 var(--or)}
   .hours li.today .day{color:var(--or)}
-  .hours .day{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.12rem;color:var(--rouge-l);
+  .hours .day{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.1rem;color:var(--rouge-l);
     display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .hours .hrs{color:var(--gris);font-size:1.02rem}
-  .hours .badge-today{font-size:.6rem;background:var(--or);color:#1a1510;padding:3px 9px;letter-spacing:.1em;
-    font-family:"Oswald",sans-serif;font-style:normal;text-transform:uppercase}
+  .hours .hrs{color:var(--gris);font-size:1rem;text-align:right;white-space:nowrap}
+  .hours .badge-today{font-size:.56rem;background:var(--or);color:#1a1510;padding:3px 9px;letter-spacing:.1em;
+    font-family:"Oswald",sans-serif;font-style:normal;text-transform:uppercase;border-radius:2px}
   .hours .nb{white-space:nowrap}
   /* Badges d'infos répartis en dessous */
   .feat{margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
@@ -797,10 +798,10 @@
     .stat:nth-child(2)::after{display:none}
     .dishes{grid-template-columns:1fr;gap:0}
     .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
-    /* Horaires empilés sur mobile (sinon trop étroits côte à côte) */
-    .hours{grid-template-columns:1fr;gap:12px}
-    .hours li{flex-direction:column;align-items:flex-start;gap:7px}
-    .hours .hrs{color:var(--gris)}
+    /* Horaires : jour + heures sur une ligne, resserré sur mobile */
+    .hours li{padding:12px 15px;gap:10px}
+    .hours .day{font-size:1.02rem}
+    .hours .hrs{color:var(--gris);font-size:.92rem}
     /* Réseaux : on empile (libellé puis identifiant) pour éviter les coupures */
     .ig-line a{display:flex;margin-top:5px;width:max-content;max-width:100%}
     /* iOS plein écran SANS zoom : le hero remplit l'écran (svh), mais l'image de fond a une
@@ -1583,8 +1584,8 @@
   html.app-mode #infos .infos-stack{margin-top:22px;display:flex;flex-direction:column;gap:14px}
   html.app-mode #infos .hours-block{background:rgba(255,255,255,.03);border:1px solid rgba(198,154,77,.16);border-radius:12px;padding:18px 15px}
   html.app-mode #infos .ic-head{text-align:center;border:0;padding:0;margin:0 0 13px;font-size:.82rem;color:var(--or);font-style:normal;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em}
-  html.app-mode #infos .hours{grid-template-columns:1fr;gap:9px}
-  html.app-mode #infos .hours li{border-radius:9px;padding:14px 16px}
+  html.app-mode #infos .hours{border-color:rgba(198,154,77,.16)}
+  html.app-mode #infos .hours li{padding:13px 16px;border-bottom-color:rgba(198,154,77,.12)}
   html.app-mode #infos .contact-frame{border:0;padding:0;margin-top:0;display:block}
   html.app-mode #infos .app-infos-actions{display:grid;grid-template-columns:1fr 1fr;gap:11px}
   html.app-mode #infos .aia{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:16px 12px;border-radius:11px;
@@ -2020,8 +2021,13 @@
       <div class="hours-block reveal" style="--i:1">
         <h3 class="ic-head">Horaires</h3>
         <ul class="hours" id="hoursList">
-          <li data-days="1,2,3,4"><span class="day">Lundi → Jeudi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
-          <li data-days="5,6,0"><span class="day">Vendredi → Dimanche</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
+          <li data-days="1"><span class="day">Lundi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
+          <li data-days="2"><span class="day">Mardi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
+          <li data-days="3"><span class="day">Mercredi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
+          <li data-days="4"><span class="day">Jeudi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–21h30</span></span></li>
+          <li data-days="5"><span class="day">Vendredi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
+          <li data-days="6"><span class="day">Samedi</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
+          <li data-days="0"><span class="day">Dimanche</span><span class="hrs"><span class="nb">12h–14h</span> · <span class="nb">17h–22h</span></span></li>
         </ul>
         <div class="feat">
           <span>Terrasse</span><span>À emporter</span><span>Repas sur place</span><span>Traiteur</span>
