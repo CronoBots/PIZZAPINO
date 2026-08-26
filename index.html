@@ -1297,19 +1297,13 @@
   html.standalone #splash{display:flex;position:fixed;inset:0;z-index:2000;background:#0a0908;
     align-items:center;justify-content:center;pointer-events:none;
     animation:splashOut .8s ease 1s forwards;will-change:opacity}
-  html.standalone #splash::before{content:"";position:absolute;width:82vw;max-width:560px;aspect-ratio:1;
-    border-radius:50%;background:radial-gradient(circle,rgba(201,154,77,.18),transparent 66%);
-    opacity:0;animation:splashGlow 1.8s ease forwards;will-change:opacity,transform}
   html.standalone #splash img{position:relative;width:42vw;max-width:300px;height:auto;display:block;
-    -webkit-mask-image:radial-gradient(circle at center,#000 52%,transparent 82%);
-    mask-image:radial-gradient(circle at center,#000 52%,transparent 82%);
-    animation:splashLogo 1.8s cubic-bezier(.45,0,.15,1) forwards;will-change:transform,opacity}
+    animation:splashLogo 1.5s ease forwards;will-change:transform,opacity}
   @keyframes splashOut{to{opacity:0;visibility:hidden}}
-  @keyframes splashGlow{0%{opacity:0;transform:scale(.82)}42%{opacity:1}100%{opacity:0;transform:scale(1.28)}}
-  @keyframes splashLogo{0%{transform:scale(1);opacity:1}30%{transform:scale(1.02);opacity:1}100%{transform:scale(1.16);opacity:0}}
+  @keyframes splashLogo{0%{transform:scale(.93);opacity:0}35%{opacity:1}100%{transform:scale(1);opacity:1}}
   @media(prefers-reduced-motion:reduce){
     html.standalone #splash{animation:splashOut .5s ease .6s forwards}
-    html.standalone #splash img,html.standalone #splash::before{animation:none}
+    html.standalone #splash img{animation:none;opacity:1;transform:none}
   }
 
   .app-bar{display:none}
