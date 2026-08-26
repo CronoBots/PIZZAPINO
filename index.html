@@ -724,8 +724,10 @@
   .quote .wrap{position:relative;z-index:1}
   .quote p{font-family:"Fraunces",serif;font-style:italic;font-size:clamp(1.7rem,4vw,2.7rem);max-width:26ch;
     margin:0 auto;line-height:1.25;font-weight:500}
-  .quote span{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.3em;
-    font-size:.7rem;margin-top:26px;color:#F3C9C2}
+  .quote .q-sign{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.26em;
+    font-size:.72rem;line-height:1.95;margin-top:26px;color:#F3C9C2}
+  .quote .q-sign .qs-name{display:block;font-family:"Fraunces",serif;font-style:italic;text-transform:none;
+    letter-spacing:normal;font-size:clamp(1.7rem,5vw,2.05rem);line-height:1.2;margin-top:6px;color:#fff}
 
   /* ===== INFOS ===== */
   .infos{background:var(--noir)}
@@ -1575,10 +1577,6 @@
   .ca-trash{background:rgba(0,0,0,.28);border-color:rgba(233,206,150,.28);color:#c3b7a2}
   .ca-trash:hover{border-color:var(--rouge);color:#fff;background:rgba(168,38,29,.22)}
   .cart-note{color:#9a8e79}
-  /* Signature chaleureuse « Pino » en bas de commande */
-  .cart-sign{margin-top:15px;padding-top:14px;border-top:1px solid rgba(233,206,150,.12);
-    text-align:center;font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:.9rem;color:#b7aa94;line-height:1.65}
-  .cart-sign .cs-name{display:block;margin-top:3px;font-size:1.6rem;color:#E9CE96;line-height:1.2}
 
   /* Ligne « à retirer sur place » + horaires du jour, dans le pied de commande */
   .cart-pickup{display:none}
@@ -2041,8 +2039,8 @@
 <!-- CITATION -->
 <section class="quote">
   <div class="wrap">
-    <p class="reveal">La Pizzeria Pino utilise des produits italiens de première qualité</p>
-    <span class="reveal" style="--i:1">— Au plaisir de vous accueillir ou de vous revoir · Pino</span>
+    <p class="reveal">Les pizzas au feu de bois, les pâtes fraîches maison et des produits italiens de première qualité.</p>
+    <div class="q-sign reveal" style="--i:1">Au plaisir de vous accueillir<br>ou de vous revoir.<br><span class="qs-name">Pino</span></div>
   </div>
 </section>
 
@@ -2768,7 +2766,6 @@
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
     <p class="cart-note">Pas de paiement en ligne&nbsp;: outil d'aide à la commande.<br>Total estimé, à confirmer sur place.</p>
-    <p class="cart-sign">Au plaisir de vous accueillir<br>ou de vous revoir.<br><span class="cs-name">Pino</span></p>
   </div>
 </div>
 
