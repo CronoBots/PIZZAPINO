@@ -498,9 +498,9 @@
   @media(min-width:761px){
     /* grille un peu plus étroite → vidéo et photos légèrement moins hautes (ratios conservés) */
     .gal-grid{max-width:980px;margin-left:auto;margin-right:auto}
-    .gal-grid .gal-video{grid-column:2;grid-row:1 / span 3;margin:0;gap:0;display:block;position:relative;align-self:stretch}
-    .gal-grid .gal-video .vid-frame{width:100%;height:100%;margin:0}
-    .gal-grid .gal-video .vid-frame video{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;display:block}
+    .gal-grid .gal-video{grid-column:2;grid-row:1 / span 3;margin:0;gap:0;display:flex;flex-direction:column;justify-content:center;position:relative;align-self:stretch}
+    .gal-grid .gal-video .vid-frame{width:100%;height:auto;margin:0;position:relative}
+    .gal-grid .gal-video .vid-frame video{width:100%;height:auto;aspect-ratio:9/16;object-fit:cover;display:block}
     .gal-grid .gal-video .badge-off{position:absolute;left:0;right:0;bottom:0;z-index:3;margin:0;border:0;border-radius:0;
       display:flex;align-items:center;justify-content:center;padding:26px 12px 12px;
       background:linear-gradient(transparent,rgba(10,8,6,.92))}
@@ -1721,8 +1721,8 @@
       <div class="gal-video reveal" id="video">
         <div class="vid-frame">
           <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
+          <span class="badge-off"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-right:7px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Vidéo officielle · @pino.nandrin</span>
         </div>
-        <span class="badge-off"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-right:7px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Vidéo officielle · @pino.nandrin</span>
       </div>
     </div>
     <p class="lead lead-sub reveal">Une cinquantaine de couverts en salle, une trentaine de places sur la terrasse à rue et une vingtaine sur la terrasse suspendue à l'étage. Sur place, à emporter ou en traiteur pour vos événements et réceptions.</p>
