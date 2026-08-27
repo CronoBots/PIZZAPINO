@@ -1499,6 +1499,12 @@
   /* Stats & Avis : même fond clair (crème) qu'en version PC, aussi en mode app */
   /* Mobile (app) : la carte étant masquée, galerie et réseaux sociaux se touchent → liseré rouge de séparation */
   html.app-mode #instagram{border-top:6px solid var(--rouge,#A8261D)}
+  /* La carte masquée fait se toucher avis + réseaux : le liseré d'#instagram suffit,
+     on retire celui du bas des avis pour éviter la double bordure rouge */
+  html.app-mode body.app-home .reviews{border-bottom:0}
+  /* Bouton « Laisser un avis » : même largeur que les cartes d'avis au-dessus */
+  html.app-mode .rev-cta a{width:100%}
+  html.app-mode .rev-cta .rc-stars{margin-left:auto}
 
   /* ===== Site web : section « carte » immersive (photo fixe par catégorie) ===== */
   /* #carte transparent : la photo (calque fixe en z-index négatif) transparaît uniquement ici ;
