@@ -479,8 +479,10 @@
   /* Bandeau « Pizza Junior » intégré au cadre des suppléments */
   /* Bandeau Junior : uniquement quand la catégorie Pizzas est active */
   .supp-junior{display:none}
-  body[data-menucat="pizzas"] .supp-junior,body.searching .supp-junior{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;padding:12px 18px;margin:0 0 20px;
-    border-radius:12px;background:rgba(168,38,29,.07);border:1px solid rgba(168,38,29,.28)}
+  /* Plus de cadre intérieur (évite le « cadre dans le cadre ») : bandeau ouvert,
+     séparé de la liste des suppléments par un simple trait. */
+  body[data-menucat="pizzas"] .supp-junior,body.searching .supp-junior{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;
+    padding:0 2px 16px;margin:0 0 18px;border-bottom:1px solid rgba(233,206,150,.16)}
   .supp-junior .sj-name{font-family:"Fraunces",serif;font-weight:600;font-size:1.1rem;color:#F5EEDF}
   .supp-junior .jn-age{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.58em;color:#c7b89e;margin-left:5px;vertical-align:middle}
   .supp-junior .sj-price{margin-left:auto;font-family:"Fraunces",serif;font-weight:600;font-size:1.5rem;color:var(--rouge-l,#e0574b);line-height:1}
