@@ -1,5 +1,5 @@
 /* Service worker Pizzeria Pino — réseau d'abord, cache en secours (hors-ligne). */
-var CACHE = 'pino-v180';
+var CACHE = 'pino-v181';
 var CORE = [
   './', './index.html', './legal.html', './manifest.webmanifest',
   './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/pino-logo.png',

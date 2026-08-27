@@ -348,7 +348,8 @@
   .mcta-order{background:linear-gradient(180deg,#C33A2E,#9E1E15);color:#fff;
     box-shadow:0 16px 34px -16px rgba(168,38,29,.75),inset 0 1px 0 rgba(255,255,255,.13)}
   .mcta-order:hover{transform:translateY(-2px);box-shadow:0 22px 46px -16px rgba(168,38,29,.85),inset 0 1px 0 rgba(255,255,255,.16)}
-  .mcta-pdf{background:rgba(233,206,150,.06);border-color:rgba(233,206,150,.55);color:#EFE3C8}
+  /* Bouton « Voir la carte (PDF) » masqué pour le moment (carte PDF pas encore prête) */
+  .mcta-pdf{display:none!important;background:rgba(233,206,150,.06);border-color:rgba(233,206,150,.55);color:#EFE3C8}
   .mcta-pdf:hover{border-color:var(--or,#C69A4D);color:#fff;background:rgba(233,206,150,.13);transform:translateY(-2px)}
   html.app-mode .mcta-pdf{border-color:rgba(233,206,150,.42);color:#EFE3C8}
   html.app-mode .mcta-pdf:hover{border-color:var(--or,#C69A4D);color:#F7EFDD;background:rgba(233,206,150,.08)}
@@ -1468,7 +1469,14 @@
   .cart-clear{display:block;margin:13px auto 0;background:none;border:0;color:var(--ink-mut);font-size:.78rem;text-decoration:underline;cursor:pointer;font-family:inherit}
   .cart-clear:hover{color:var(--rouge)}
   .cart-note{margin-top:10px;font-size:.66rem;color:var(--ink-mut);text-align:center;line-height:1.5}
-  .cart-note-phone{margin-top:9px;padding-top:9px;border-top:1px solid rgba(233,206,150,.12);font-style:italic;opacity:.9}
+  /* Bas de la commande : mentions légales épurées (paiement + téléphone) */
+  .cart-legal{margin-top:15px;padding-top:14px;border-top:1px solid rgba(233,206,150,.14)}
+  .cart-legal .cl-main{display:flex;align-items:flex-start;justify-content:center;gap:8px;max-width:340px;margin:0 auto;
+    font-family:"Inter",sans-serif;font-size:.72rem;line-height:1.5;color:#b3a693;text-align:left}
+  .cart-legal .cl-main b{color:#E9CE96;font-weight:600}
+  .cart-legal .cl-ico{width:15px;height:15px;flex:0 0 auto;color:#c69a4d;margin-top:1px}
+  .cart-legal .cl-sub{max-width:340px;margin:8px auto 0;font-family:"Inter",sans-serif;font-size:.66rem;line-height:1.5;
+    color:#8a7f6d;font-style:italic;text-align:center}
 
 
   /* ===== BANNIÈRE "INSTALLER L'APP" (mobile, bas d'écran, discrète) ===== */
@@ -1657,14 +1665,12 @@
   html.app-mode body.app-cart,html.app-mode.has-cart{background:#100b08}
   html.app-mode #carte{background:transparent;border-top:0;border-bottom:0}
   html.app-mode #carte .cta-row .btn-ghost{border-color:rgba(233,206,150,.42);color:#EFE7D6}
-  /* Calque photo en fond de catégorie — DÉFILE avec le contenu (aucun parallax, aucun zoom).
-     position:absolute (ancré en haut du document) et non fixed : le fond suit le scroll des plats.
-     Fondu vers le bas (mask) pour se fondre proprement dans le noir sans coupure nette. */
+  /* Calque photo en fond de catégorie : FIXE, visible en permanence pendant le scroll, sans bouger
+     ni zoomer. position:fixed = le fond reste immobile, les plats défilent par-dessus. */
   .app-bg-layer,#appScrim{display:none}
-  html.app-mode .app-bg-layer{display:block;position:absolute;top:0;left:0;right:0;height:110svh;z-index:-2;pointer-events:none;
-    background:#0d0b0a center center/cover no-repeat;opacity:0;transition:opacity .6s ease;will-change:opacity;
-    -webkit-mask-image:linear-gradient(180deg,#000 58%,transparent);mask-image:linear-gradient(180deg,#000 58%,transparent)}
-  html.app-mode #appScrim{display:block;position:absolute;top:0;left:0;right:0;height:110svh;z-index:-1;pointer-events:none;
+  html.app-mode .app-bg-layer{display:block;position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background:#0d0b0a center center/cover no-repeat;opacity:0;transition:opacity .6s ease;will-change:opacity}
+  html.app-mode #appScrim{display:block;position:fixed;inset:0;z-index:-1;pointer-events:none;
     background:linear-gradient(180deg,rgba(9,7,5,.34),rgba(9,7,5,.42) 45%,rgba(9,7,5,.6))}
   /* En-tête de catégorie : texte sur la photo */
   .app-cat-head{display:none}
@@ -3149,8 +3155,10 @@
       <a class="ca-call" id="caCall" href="tel:+3285513339" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Appeler</a>
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
-    <p class="cart-note">Pas de paiement en ligne&nbsp;: outil d'aide à la commande.<br>Total estimé, à confirmer sur place.</p>
-    <p class="cart-note cart-note-phone">Commander par téléphone ne supprime pas forcément le délai d'attente sur place&nbsp;: cela dépend de notre planning. Merci de votre compréhension.</p>
+    <div class="cart-legal">
+      <p class="cl-main"><svg class="cl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v4.5"/><path d="M12 8h.01"/></svg><span>Outil d'aide à la commande — <b>aucun paiement en ligne</b>. Total estimé, à confirmer sur place.</span></p>
+      <p class="cl-sub">Commander par téléphone n'évite pas toujours le délai d'attente sur place&nbsp;: cela dépend de notre planning.</p>
+    </div>
   </div>
 </div>
 
