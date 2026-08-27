@@ -424,6 +424,10 @@
   body.searching .menu-tabs{opacity:.4;pointer-events:none}
   body.searching .menu-panel{display:block;margin-top:30px}
   body.searching .menu-panel .cat-title,body.searching .menu-panel .menu-foot,body.searching .menu-panel .cat-note,body.searching .menu-panel .junior-note{display:none}
+  /* Recherche : fusionner les blocs .dishes d'une catégorie en UNE carte (les blocs vides sont masqués) */
+  body.searching #carte .menu-panel .dishes.dishes-empty{display:none}
+  body.searching #carte .menu-panel .dishes.dishes-first:not(.dishes-last){border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:0}
+  body.searching #carte .menu-panel .dishes:not(.dishes-first):not(.dishes-empty){border-top-left-radius:0;border-top-right-radius:0}
   .dish.hide{display:none}
   .menu-panel{display:none;margin-top:30px}
   .menu-panel.show{display:block}
@@ -469,8 +473,9 @@
   .supp-box li:last-child{border-bottom:0}
   .supp-box li:first-child{color:var(--rouge);font-weight:600}
   /* Suppléments (liste détaillée sous la carte) */
-  .supplements{max-width:660px;margin:0 auto;border:1px solid rgba(233,206,150,.32);border-radius:14px;
-    padding:22px 28px 18px;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  /* Section suppléments : plus de cadre extérieur (il faisait doublon avec le bloc Junior et
+     traçait une ligne inutile juste sous la dernière carte). Section ouverte et aérée. */
+  .supplements{max-width:660px;margin:0 auto;padding:4px 6px 0;border:0;background:none}
   /* Bandeau « Pizza Junior » intégré au cadre des suppléments */
   /* Bandeau Junior : uniquement quand la catégorie Pizzas est active */
   .supp-junior{display:none}
@@ -1464,6 +1469,7 @@
   .cart-clear{display:block;margin:13px auto 0;background:none;border:0;color:var(--ink-mut);font-size:.78rem;text-decoration:underline;cursor:pointer;font-family:inherit}
   .cart-clear:hover{color:var(--rouge)}
   .cart-note{margin-top:10px;font-size:.66rem;color:var(--ink-mut);text-align:center;line-height:1.5}
+  .cart-note-phone{margin-top:9px;padding-top:9px;border-top:1px solid rgba(233,206,150,.12);font-style:italic;opacity:.9}
 
 
   /* ===== BANNIÈRE "INSTALLER L'APP" (mobile, bas d'écran, discrète) ===== */
@@ -2179,7 +2185,6 @@
         </ul>
         <p class="supp-note">Tarifs à emporter · les suppléments s'ajoutent au prix du plat.</p>
       </div>
-      <p class="menu-foot">Commander par téléphone ne supprime pas forcément le délai d'attente sur place : cela dépend de notre planning. Merci de votre compréhension.</p>
       <div class="menu-cta">
         <button type="button" class="mcta mcta-order magnet" id="orderNowBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span>Commander à emporter</span></button>
         <a class="mcta mcta-pdf" href="carte-pizzeria-pino.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Voir la carte (PDF)</span></a>
@@ -2635,6 +2640,9 @@
         document.body.classList.remove("searching");
         dishes.forEach(function(d){ d.classList.remove("hide"); });
         document.querySelectorAll(".menu-panel").forEach(function(pnl){ pnl.classList.remove("no-results"); });
+        document.querySelectorAll(".menu-panel .dishes").forEach(function(dz){
+          dz.classList.remove("dishes-empty","dishes-first","dishes-last");
+        });
         count.textContent = "";
         return;
       }
@@ -2647,6 +2655,18 @@
       });
       document.querySelectorAll(".menu-panel").forEach(function(pnl){
         pnl.classList.toggle("no-results", pnl.querySelectorAll(".dish:not(.hide)").length === 0);
+        // Fusionner en une seule carte les blocs .dishes d'une même catégorie :
+        // on masque les blocs sans résultat et on repère le 1er / dernier bloc visible.
+        var shown = [];
+        pnl.querySelectorAll(".dishes").forEach(function(dz){
+          var empty = dz.querySelectorAll(".dish:not(.hide)").length === 0;
+          dz.classList.toggle("dishes-empty", empty);
+          if(!empty) shown.push(dz);
+        });
+        shown.forEach(function(dz, i){
+          dz.classList.toggle("dishes-first", i === 0);
+          dz.classList.toggle("dishes-last", i === shown.length - 1);
+        });
       });
       count.textContent = n===0 ? "Aucun plat trouvé" : (n + (n>1?" plats trouvés":" plat trouvé"));
     }
@@ -3128,6 +3148,7 @@
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la commande" title="Vider la commande"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
     <p class="cart-note">Pas de paiement en ligne&nbsp;: outil d'aide à la commande.<br>Total estimé, à confirmer sur place.</p>
+    <p class="cart-note cart-note-phone">Commander par téléphone ne supprime pas forcément le délai d'attente sur place&nbsp;: cela dépend de notre planning. Merci de votre compréhension.</p>
   </div>
 </div>
 
