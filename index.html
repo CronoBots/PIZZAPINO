@@ -1645,7 +1645,8 @@
   html:not(.app-mode) #carte .cta-row .btn-ghost:hover{border-color:var(--rouge);color:#fff}
 
   /* ===== Concept C : fond photo immersif (mode app) ===== */
-  html.app-mode body{background:#0d0b0a}
+  html.app-mode,html.app-mode body{background:#0d0b0a}
+  html.app-mode body.app-cart,html.app-mode.has-cart{background:#100b08}
   html.app-mode #carte{background:transparent;border-top:0;border-bottom:0}
   html.app-mode #carte .cta-row .btn-ghost{border-color:rgba(233,206,150,.42);color:#EFE7D6}
   /* calque photo fixe derrière tout le contenu */
@@ -1715,7 +1716,7 @@
   html.app-mode .cart-close{display:none}
   html.app-mode #cartPanel{position:static;transform:none!important;visibility:visible;pointer-events:auto;
     max-width:none;margin:0;max-height:none;border-top:0;box-shadow:none;display:none}
-  html.app-mode body.app-cart #cartPanel{display:flex;min-height:calc(100svh - 128px)}
+  html.app-mode body.app-cart #cartPanel{display:flex;min-height:calc(100svh - 128px);min-height:calc(100dvh - 128px)}
   /* Vue Commande : on masque toute la page d'accueil derrière — seul le panneau reste (plus de liseré de fond) */
   html.app-mode body.app-cart > section,html.app-mode body.app-cart > header,html.app-mode body.app-cart > footer,
   html.app-mode body.app-cart .app-cat-head,html.app-mode body.app-cart .menu-live-bg{display:none!important}
