@@ -720,11 +720,14 @@
   .igpf-btn-msg:hover{background:#454545}
   .igpf-tabs{display:flex;border-top:1px solid rgba(255,255,255,.12)}
   .igpf-tab{flex:1;display:flex;align-items:center;justify-content:center;padding:11px 0;color:#8e8e8e;
-    border-top:1px solid transparent;margin-top:-1px}
+    border-top:1px solid transparent;margin-top:-1px;
+    background:none;border-left:0;border-right:0;border-bottom:0;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .18s}
   .igpf-tab svg{width:23px;height:23px}
   .igpf-tab.on{color:#fff;border-top-color:#fff}
+  .igpf-tab:hover{color:#c9c9c9}
   .igpf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
   .igpf-cell{position:relative;aspect-ratio:3/4;overflow:hidden;display:block;background:#111}
+  .igpf-cell[hidden]{display:none}
   .igpf-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .2s}
   .igpf-cell:hover img{opacity:.82}
   .igpf-badge{position:absolute;top:8px;right:8px;width:22px;height:22px;pointer-events:none;
@@ -2183,10 +2186,9 @@
           <a class="igpf-btn igpf-btn-follow" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener">Suivre</a>
           <a class="igpf-btn igpf-btn-msg" href="https://ig.me/m/pino.nandrin" target="_blank" rel="noopener">Envoyer un message</a>
         </div>
-        <div class="igpf-tabs" aria-hidden="true">
-          <span class="igpf-tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1.5"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg></span>
-          <span class="igpf-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 8h18M8.5 3l2.5 5M14 3l2.5 5"/><path d="M10 11.5v5l4.2-2.5z" fill="currentColor" stroke="none"/></svg></span>
-          <span class="igpf-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <div class="igpf-tabs" role="tablist" aria-label="Filtrer les publications">
+          <button type="button" class="igpf-tab on" role="tab" aria-selected="true" data-filter="all" aria-label="Toutes les publications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1.5"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg></button>
+          <button type="button" class="igpf-tab" role="tab" aria-selected="false" data-filter="reel" aria-label="Reels uniquement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 8h18M8.5 3l2.5 5M14 3l2.5 5"/><path d="M10 11.5v5l4.2-2.5z" fill="currentColor" stroke="none"/></svg></button>
         </div>
         <div class="igpf-grid">
           <a class="igpf-cell" data-ig="reel" href="https://www.instagram.com/reel/DU5_qJLDO6m/" target="_blank" rel="noopener" aria-label="Reel Saint-Valentin sur Instagram"><picture><source type="image/webp" srcset="images/ig/pub-1.webp"><img loading="lazy" decoding="async" width="720" height="960" src="images/ig/pub-1.jpg" alt="Reel Saint-Valentin — Pizzeria Pino"></picture></a>
@@ -2904,6 +2906,32 @@
     window.addEventListener("pageshow", onResume);
     window.addEventListener("focus", onResume);
     document.addEventListener("visibilitychange", function(){ if(!document.hidden) onResume(); });
+  })();
+
+  /* ---- Onglets du profil Instagram : Grille (tout) / Reels (vidéos uniquement),
+          comme dans l'app Instagram. ---- */
+  (function(){
+    var tabs = document.querySelectorAll(".igpf-tab");
+    var grid = document.querySelector(".igpf-grid");
+    if(!tabs.length || !grid) return;
+    var cells = grid.querySelectorAll(".igpf-cell");
+    function apply(filter){
+      for(var i=0;i<cells.length;i++){
+        var isReel = cells[i].getAttribute("data-ig") === "reel";
+        cells[i].hidden = (filter === "reel") && !isReel;
+      }
+    }
+    for(var t=0;t<tabs.length;t++){
+      tabs[t].addEventListener("click", function(){
+        for(var j=0;j<tabs.length;j++){
+          tabs[j].classList.remove("on");
+          tabs[j].setAttribute("aria-selected", "false");
+        }
+        this.classList.add("on");
+        this.setAttribute("aria-selected", "true");
+        apply(this.getAttribute("data-filter"));
+      });
+    }
   })();
 
   /* ---- Braises du four à bois (hero) ---- */
