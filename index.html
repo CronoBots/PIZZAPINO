@@ -374,7 +374,7 @@
   h2 em{font-style:italic;color:var(--or)}
   .lead{font-size:1.1rem;max-width:60ch;color:var(--gris)}
   .lead-sub{font-size:1rem;opacity:.86}
-  .center .lead.lead-sub{margin-top:clamp(52px,8vw,84px)}
+  .center .lead.lead-sub{margin-top:56px}
   .center{text-align:center}.center .eyebrow{justify-content:center}.center .lead{margin:0 auto}
 
   /* ===== MAISON — intro centrée + 3 atouts ===== */
@@ -472,7 +472,9 @@
   .supplements{max-width:660px;margin:0 auto;border:1px solid rgba(233,206,150,.32);border-radius:14px;
     padding:22px 28px 18px;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
   /* Bandeau « Pizza Junior » intégré au cadre des suppléments */
-  .supp-junior{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;padding:12px 18px;margin:0 0 20px;
+  /* Bandeau Junior : uniquement quand la catégorie Pizzas est active */
+  .supp-junior{display:none}
+  body[data-menucat="pizzas"] .supp-junior,body.searching .supp-junior{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;padding:12px 18px;margin:0 0 20px;
     border-radius:12px;background:rgba(168,38,29,.07);border:1px solid rgba(168,38,29,.28)}
   .supp-junior .sj-name{font-family:"Fraunces",serif;font-weight:600;font-size:1.1rem;color:#F5EEDF}
   .supp-junior .jn-age{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.58em;color:#c7b89e;margin-left:5px;vertical-align:middle}
@@ -616,7 +618,39 @@
 
   /* ===== INSTAGRAM ===== */
   .insta{background:var(--noir-2)}
-  .insta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:52px auto 0;max-width:540px}
+  /* Carte profil Instagram (premium) */
+  .ig-profile{display:flex;align-items:center;gap:26px;max-width:760px;margin:44px auto 0;text-align:left;
+    padding:22px 26px;border:1px solid rgba(233,206,150,.2);border-radius:20px;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015))}
+  .ig-avatar{flex:0 0 auto;width:88px;height:88px;border-radius:50%;padding:3px;
+    background:conic-gradient(from 210deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5,#FEDA75);display:inline-flex}
+  .ig-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid var(--noir-2,#120d09)}
+  .ig-pmeta{flex:1 1 auto;min-width:0}
+  .ig-handle{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.5rem;color:#F4ECDB;line-height:1}
+  .ig-tag{display:block;font-size:.9rem;color:#b9ac96;margin-top:5px}
+  .ig-stats{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:14px}
+  .ig-stat{display:flex;flex-direction:column;line-height:1.15}
+  .ig-stat b{font-family:"Fraunces",serif;font-weight:600;font-size:1.12rem;color:#E9CE96}
+  .ig-stat small{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.58rem;color:#9a8e79;margin-top:2px}
+  .ig-actions{flex:0 0 auto;display:flex;flex-direction:column;gap:9px}
+  .ig-follow{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap;
+    padding:11px 20px;border-radius:11px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;font-weight:500;
+    color:#fff;transition:transform .25s,box-shadow .25s}
+  .ig-follow svg{width:17px;height:17px}
+  .ig-follow.ig{background:radial-gradient(120% 120% at 28% 108%,#FEDA75 0%,#FA7E1E 26%,#D62976 54%,#962FBF 78%,#4F5BD5 100%)}
+  .ig-follow.fb{background:#1877F2}
+  .ig-follow:hover{transform:translateY(-2px);box-shadow:0 12px 26px -14px rgba(0,0,0,.9)}
+  @media(max-width:620px){.ig-profile{flex-direction:column;text-align:center;gap:16px;padding:22px 18px}
+    .ig-stats{justify-content:center}.ig-actions{flex-direction:row;width:100%}.ig-follow{flex:1 1 0}}
+  .insta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px auto 0;max-width:760px}
+  /* Tuile « voir plus » (dégradé Instagram) */
+  .insta-more{display:flex;align-items:center;justify-content:center;text-decoration:none;
+    background:radial-gradient(130% 130% at 26% 110%,#FEDA75 0%,#FA7E1E 24%,#D62976 52%,#962FBF 76%,#4F5BD5 100%)}
+  .insta-more::after{display:none}
+  .im-in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;color:#fff;padding:12px}
+  .im-ico{opacity:.96}
+  .im-in b{font-family:"Fraunces",serif;font-weight:600;font-size:1.02rem;line-height:1.15}
+  .im-in small{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.62rem;opacity:.92}
   .insta-tile{position:relative;aspect-ratio:4/5;border-radius:0;overflow:hidden;display:block;
     border:1px solid var(--hair)}
   .insta-tile img{width:100%;height:100%;object-fit:cover}
@@ -630,7 +664,8 @@
     display:grid;place-items:center;color:#fff;font-size:1.1rem;border:1px solid rgba(255,255,255,.55);
     transition:transform .3s;padding-left:4px}
   .insta-tile:hover .insta-play span{transform:scale(1.12)}
-  @media(max-width:760px){.insta-grid{grid-template-columns:1fr 1fr;gap:10px}}
+  @media(max-width:760px){.insta-grid{grid-template-columns:1fr 1fr;gap:10px}
+    .insta-more{grid-column:1/-1;aspect-ratio:auto;min-height:104px}}
   /* Boutons réseaux sociaux premium */
   .social-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:44px}
   .social-btn{display:inline-flex;align-items:center;gap:14px;text-decoration:none;min-width:236px;
@@ -905,6 +940,7 @@
     .values{margin-top:36px}
     .value{padding:24px 0}
     .gal-grid{margin-top:34px}
+    .center .lead.lead-sub{margin-top:34px}
     .insta-grid{margin-top:34px}
     .menu-panel{margin-top:32px}
     .menu-search{margin-top:30px}
@@ -1765,7 +1801,7 @@
       <!-- Vidéo officielle — intégrée au centre de la galerie (sur PC) -->
       <div class="gal-video reveal" id="video">
         <div class="vid-frame">
-          <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" controls width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo officielle de la Pizzeria Pino"></video>
+          <video id="pinoVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" autoplay disablepictureinpicture width="330" height="586" data-src="media/pino-soiree.mp4" aria-label="Vidéo d'ambiance de la Pizzeria Pino"></video>
         </div>
       </div>
     </div>
@@ -1989,29 +2025,42 @@
   <div class="wrap">
     <p class="eyebrow reveal">Réseaux sociaux</p>
     <h2 class="reveal" style="--i:1">Suivez-nous <em>en ligne</em></h2>
-    <p class="lead reveal" style="--i:2">Nos reels, l'ambiance et les coulisses du restaurant, à suivre sur Instagram et Facebook.</p>
+    <p class="lead reveal" style="--i:2">Les reels, l'ambiance et les coulisses du restaurant — au quotidien sur Instagram et Facebook.</p>
+
+    <div class="ig-profile reveal" style="--i:2">
+      <span class="ig-avatar"><img loading="lazy" decoding="async" width="132" height="132" src="icons/icon-512.png" alt="Pizzeria Pino"></span>
+      <div class="ig-pmeta">
+        <span class="ig-handle">@pino.nandrin</span>
+        <span class="ig-tag">Pizzeria Pino · Restaurant italien à Nandrin</span>
+        <div class="ig-stats">
+          <span class="ig-stat"><b>Reels</b><small>&amp; stories</small></span>
+          <span class="ig-stat"><b>3 600+</b><small>abonnés Facebook</small></span>
+          <span class="ig-stat"><b>4,2/5</b><small>1 200+ avis Google</small></span>
+        </div>
+      </div>
+      <div class="ig-actions">
+        <a class="ig-follow ig" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Suivre sur Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>Suivre</a>
+        <a class="ig-follow fb" href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener" aria-label="Suivre sur Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg>Facebook</a>
+      </div>
+    </div>
+
     <div class="insta-grid">
       <a class="insta-tile reveal" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir le reel sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
         <span class="insta-play"><span>▶</span></span>
-        <picture><source type="image/webp" srcset="images/insta-1.webp"><img loading="lazy" decoding="async" width="800" height="1000" src="images/insta-1.jpg" alt="Reel — ambiance Saint-Valentin"></picture>
+        <picture><source type="image/webp" srcset="images/insta-1.webp"><img loading="lazy" decoding="async" width="800" height="1000" src="images/insta-1.jpg" alt="Reel — ambiance du restaurant"></picture>
       </a>
       <a class="insta-tile reveal" style="--i:1" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir le reel sur Instagram">
         <span class="insta-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
         <span class="insta-play"><span>▶</span></span>
-        <picture><source type="image/webp" srcset="images/insta-2.webp"><img loading="lazy" decoding="async" width="800" height="1000" src="images/insta-2.jpg" alt="Reel — Saint-Valentin chez Pino"></picture>
+        <picture><source type="image/webp" srcset="images/insta-2.webp"><img loading="lazy" decoding="async" width="800" height="1000" src="images/insta-2.jpg" alt="Reel — soirée chez Pino"></picture>
       </a>
-    </div>
-    <div class="social-row reveal">
-      <a class="social-btn ig" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Suivre la Pizzeria Pino sur Instagram">
-        <span class="sb-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
-        <span class="sb-txt"><span class="sb-name">Instagram</span><span class="sb-handle">@pino.nandrin</span></span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-      <a class="social-btn fb" href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener" aria-label="Suivre la Pizzeria Pino sur Facebook">
-        <span class="sb-ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg></span>
-        <span class="sb-txt"><span class="sb-name">Facebook</span><span class="sb-handle">Plus de 3 600 abonnés</span></span>
-        <span class="sb-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <a class="insta-tile insta-more reveal" style="--i:2" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Voir tous nos reels sur Instagram">
+        <span class="im-in">
+          <span class="im-ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+          <b>Voir tous nos reels</b>
+          <small>@pino.nandrin →</small>
+        </span>
       </a>
     </div>
   </div>
