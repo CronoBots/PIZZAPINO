@@ -2517,8 +2517,6 @@
     if(!layers[0] || !layers[1]) return;
     var active = 0;
     var IMG = {pates:'bg-pates',pizzas:'bg-pizzas',viandes:'bg-viandes',desserts:'bg-desserts'};
-    var warmBg = function(){ Object.keys(IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + IMG[k] + '.webp'; }); };
-    if('requestIdleCallback' in window){ requestIdleCallback(warmBg, {timeout:3000}); } else { setTimeout(warmBg, 1400); } // préchargement différé
     window.setWebBg = function(cat){
       var img = IMG[cat]; if(!img) return;
       var next = layers[1 - active];
@@ -2528,8 +2526,20 @@
       layers[active].style.opacity = '0';
       active = 1 - active;
     };
-    var act = document.querySelector('.menu-tabs .tab.active');
-    setWebBg(act ? act.dataset.tab : 'pizzas');
+    /* Les fonds du menu ne se chargent qu'à l'approche de la section (gain au 1er affichage) */
+    var started = false;
+    function startBg(){
+      if(started) return; started = true;
+      var act = document.querySelector('.menu-tabs .tab.active');
+      setWebBg(act ? act.dataset.tab : 'pizzas');
+      var warmBg = function(){ Object.keys(IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + IMG[k] + '.webp'; }); };
+      if('requestIdleCallback' in window){ requestIdleCallback(warmBg, {timeout:3000}); } else { setTimeout(warmBg, 1400); }
+    }
+    var sec = document.getElementById('carte');
+    if(sec && 'IntersectionObserver' in window){
+      var bgIO = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ startBg(); bgIO.disconnect(); } }); }, {rootMargin:'700px 0px'});
+      bgIO.observe(sec);
+    } else { startBg(); }
   })();
 
   /* ---- Recherche dans la carte (nom + ingrédients) ---- */
@@ -2829,10 +2839,17 @@
     if(!v) return;
     var mobile = window.matchMedia && window.matchMedia("(max-width:760px)").matches;
     if(!mobile || reduce) return; // desktop ou mouvement réduit : on garde la photo (aucun téléchargement)
-    v.src = "media/pino-soiree.mp4";
-    var play = function(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); };
-    v.addEventListener("loadeddata", play, {once:true});
-    v.load();
+    var c = navigator.connection || {};
+    if(c.saveData || (c.effectiveType && c.effectiveType !== "4g")) return; // économie de données / réseau lent (2g/3g) : on garde l'image
+    function loadVid(){
+      if(v.getAttribute("src")) return;
+      v.src = "media/pino-soiree.mp4";
+      v.addEventListener("loadeddata", function(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }, {once:true});
+      v.load();
+    }
+    /* On diffère le chargement de la vidéo (2 Mo) après l'affichage de la page pour ne pas ralentir le 1er rendu */
+    function kick(){ ('requestIdleCallback' in window) ? requestIdleCallback(loadVid, {timeout:2500}) : setTimeout(loadVid, 1200); }
+    if(document.readyState === "complete") kick(); else window.addEventListener("load", kick, {once:true});
   })();
 
   /* ---- Hauteur du hero en mode app : espace EXACT entre la barre d'app et la barre
@@ -3600,17 +3617,17 @@
   })();
   var CAT_IMG = { pates:'bg-pates', pizzas:'bg-pizzas', viandes:'bg-viandes', desserts:'bg-desserts' };
   var CAT_HD = { pates:true, pizzas:true, viandes:true, desserts:true }; // photos HD dédiées → flou léger
-  var warmCat = function(){ Object.keys(CAT_IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + CAT_IMG[k] + '.webp'; }); };
-  if('requestIdleCallback' in window){ requestIdleCallback(warmCat, {timeout:3000}); } else { setTimeout(warmCat, 1400); } // préchargement différé des fonds
-  function updateHead(id){
+  var catWarmed = false;
+  var warmCat = function(){ if(catWarmed) return; catWarmed = true; Object.keys(CAT_IMG).forEach(function(k){ var im = new Image(); im.src = 'images/' + CAT_IMG[k] + '.webp'; }); };
+  function updateHead(id, skipBg){
     if(!sharedHead) return;
     sharedHead.querySelector('.ach-txt').innerHTML = TITLES_HTML[id] || TITLES[id] || '';
     var n = COUNTS[id] || 0;
     sharedHead.querySelector('.ach-count').textContent = n + ' plat' + (n>1?'s':'');
     var img = CAT_IMG[id];
-    if(img) setBg(img, !!CAT_HD[id]);
+    if(img && !skipBg){ setBg(img, !!CAT_HD[id]); warmCat(); } // fonds chargés seulement à l'entrée dans la carte
   }
-  updateHead('pizzas');
+  updateHead('pizzas', true); // au lancement (vue Accueil) : titre seulement, aucun fond téléchargé
 
   function setActiveCat(btn){ catBtns.forEach(function(b){ b.classList.toggle('active', b===btn); }); }
 
