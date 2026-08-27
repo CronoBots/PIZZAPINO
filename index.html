@@ -739,6 +739,8 @@
   .igp-cap{padding:3px 12px 0;font-size:.78rem;line-height:1.42;color:#262626}
   .igp-cap b{font-weight:600}
   .igp-tag{color:#00376b}
+  .igp-comments{display:block;padding:5px 12px 0;font-size:.78rem;color:#8e8e8e;text-decoration:none}
+  .igp-comments:hover{color:#5a5a5a}
   .igp-time{display:block;padding:6px 12px 12px;font-size:.62rem;text-transform:uppercase;letter-spacing:.03em;color:#8e8e8e}
   .igf-note{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:22px;font-size:.82rem;color:#9a8e79;font-style:italic}
   .igf-note svg{flex:0 0 auto;color:#c69a4d}
@@ -746,13 +748,14 @@
   @media(min-width:761px){
     .ig-feed{max-width:720px}
     .igf-grid{grid-template-columns:1fr;gap:22px}
-    .igp{display:grid;grid-template-columns:224px 1fr;grid-template-rows:1fr auto auto auto auto auto 1fr;
-      grid-template-areas:"media ." "media header" "media bar" "media likes" "media cap" "media time" "media .";align-items:start}
+    .igp{display:grid;grid-template-columns:224px 1fr;grid-template-rows:1fr auto auto auto auto auto auto 1fr;
+      grid-template-areas:"media ." "media header" "media bar" "media likes" "media cap" "media comments" "media time" "media .";align-items:start}
     .igp-media{grid-area:media;aspect-ratio:9/16;border-right:1px solid #efefef}
     .igp-top{grid-area:header;border-bottom:1px solid #efefef;padding-bottom:12px;margin-bottom:2px}
     .igp-bar{grid-area:bar;padding-top:13px}
     .igp-likes{grid-area:likes}
     .igp-cap{grid-area:cap;padding-top:6px}
+    .igp-comments{grid-area:comments}
     .igp-time{grid-area:time;padding-top:8px}
   }
   @media(max-width:600px){.igf-grid{grid-template-columns:1fr;max-width:360px;margin:0 auto;gap:18px}.igf-head{flex-wrap:wrap;gap:10px}}
@@ -2174,6 +2177,7 @@
           <div class="igp-bar"><span class="igp-l"><svg class="ic-h" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 8.4 8.4 0 0 1-4-1L3 20l1.1-5.4A8.4 8.4 0 0 1 3 11.5 8.4 8.4 0 0 1 11.5 3h.5a8.4 8.4 0 0 1 9 8.5z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span><svg class="igp-bk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
           <div class="igp-likes">100 j'aime</div>
           <p class="igp-cap"><b>pino.nandrin</b> Découverte 🎥 🇮🇹🍕 <span class="igp-tag">#pizzaiolo #pino #italy #pizza #belgium</span></p>
+          <a class="igp-comments" href="https://www.instagram.com/reel/DUERqrZjXWr/" target="_blank" rel="noopener">Voir les 4 commentaires</a>
           <span class="igp-time">28 janvier</span>
         </article>
       </div>
