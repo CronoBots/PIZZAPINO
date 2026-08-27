@@ -766,8 +766,8 @@
   .igp-cta:hover{background:rgba(233,206,150,.12);border-color:#E9CE96;transform:translateY(-1px)}
   /* PC : deux reels côte à côte, format vertical façon Instagram (vidéo entière + infos dessous) */
   @media(min-width:761px){
-    .ig-feed{max-width:760px}
-    .igf-grid{grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
+    .ig-feed{max-width:540px}
+    .igf-grid{grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
     .igp{display:flex;flex-direction:column}
     .igp-cta{margin-top:auto}
   }
@@ -1818,7 +1818,7 @@
   .tabbar{display:none}
   html.app-mode .tabbar{
     display:flex;position:fixed;left:0;right:0;bottom:0;z-index:130;
-    background:rgba(13,11,10,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    background:#100c0a;
     border-top:2px solid rgba(198,154,77,.30);padding:6px 2px calc(6px + env(safe-area-inset-bottom));
   }
   html.app-mode .tabbar .tb{position:relative;flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:4px;
