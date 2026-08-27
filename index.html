@@ -1719,7 +1719,12 @@
   html.app-mode .cart-close{display:none}
   html.app-mode #cartPanel{position:static;transform:none!important;visibility:visible;pointer-events:auto;
     max-width:none;margin:0;max-height:none;border-top:0;box-shadow:none;display:none}
-  html.app-mode body.app-cart #cartPanel{display:flex;min-height:calc(100svh - 128px);min-height:calc(100dvh - 128px)}
+  /* La barre haute (.app-bar sticky) inclut safe-area-top et la barre d'onglets (padding-bottom du body)
+     inclut safe-area-bottom : on retranche donc AUSSI les deux safe-areas, sinon elles s'ajoutent en bas
+     comme espace scrollable vide sous le pied de commande (~90px sur iPhone à encoche). */
+  html.app-mode body.app-cart #cartPanel{display:flex;
+    min-height:calc(100svh - 128px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    min-height:calc(100dvh - 128px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
   /* Vue Commande : on masque toute la page d'accueil derrière — seul le panneau reste (plus de liseré de fond) */
   html.app-mode body.app-cart > section,html.app-mode body.app-cart > header,html.app-mode body.app-cart > footer,
   html.app-mode body.app-cart .app-cat-head,html.app-mode body.app-cart .menu-live-bg{display:none!important}
