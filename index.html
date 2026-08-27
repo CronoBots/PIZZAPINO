@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pizzeria Pino — Restaurant italien & pizzas au feu de bois à Nandrin</title>
-<meta name="description" content="Pizzeria Pino, route du Condroz à Nandrin. Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. Restaurant, à emporter et traiteur. 4,2/5 sur plus de 1000 avis. Tél. 085 51 33 39.">
+<meta name="description" content="Pizzeria Pino, route du Condroz à Nandrin. Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. Restaurant, à emporter et traiteur. 4,2/5 sur plus de 1 200 avis. Tél. 085 51 33 39.">
 <meta name="keywords" content="pizzeria Nandrin, restaurant italien Nandrin, pizza feu de bois, pâtes fraîches, Condroz, à emporter, traiteur, osso buco">
 <meta name="author" content="Pizzeria Pino">
 <meta name="robots" content="index, follow">
@@ -60,7 +60,7 @@
 <!-- Open Graph (aperçu lors du partage sur réseaux sociaux) -->
 <meta property="og:type" content="restaurant">
 <meta property="og:title" content="Pizzeria Pino — Restaurant italien & pizzas au feu de bois à Nandrin">
-<meta property="og:description" content="Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. 4,2/5 sur plus de 1000 avis.">
+<meta property="og:description" content="Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. 4,2/5 sur plus de 1 200 avis.">
 <meta property="og:image" content="https://cronobots.github.io/PIZZAPINO/images/hero-feast.jpg">
 <meta property="og:image:width" content="1672">
 <meta property="og:image:height" content="941">
@@ -70,7 +70,7 @@
 <meta property="og:locale" content="fr_BE">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pizzeria Pino — Restaurant italien à Nandrin">
-<meta name="twitter:description" content="Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. 4,2/5 sur plus de 1000 avis.">
+<meta name="twitter:description" content="Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. 4,2/5 sur plus de 1 200 avis.">
 <meta name="twitter:image" content="https://cronobots.github.io/PIZZAPINO/images/hero-feast.jpg">
 
 <!-- Favicon emoji pizza -->
@@ -678,6 +678,12 @@
   .ti-embed{margin-top:46px;min-height:140px;text-align:left}
   /* Cartes d'avis intégrées */
   .ti-reviews{margin-top:clamp(32px,5vw,48px);min-height:120px}
+  .ti-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;text-align:center;
+    padding:38px 18px;border:1px dashed var(--hair-ink);border-radius:16px;background:rgba(0,0,0,.02)}
+  .ti-ph svg{color:var(--or)}
+  .ti-ph p{font-size:.9rem;max-width:40ch;line-height:1.55;color:var(--ink-mut);margin:0}
+  .ti-ph .map-alt{color:var(--rouge)}
+  .ti-ph .map-alt:hover{color:var(--rouge-d)}
   /* Bouton « Laisser un avis » sous le widget (section claire) */
   .rev-cta{display:flex;justify-content:center;margin-top:clamp(26px,4vw,40px)}
   .rev-cta a{display:inline-flex;align-items:center;gap:14px;padding:14px 24px;border-radius:14px;text-decoration:none;
@@ -2019,9 +2025,14 @@
     <p class="eyebrow reveal">Ils en parlent</p>
     <h2 class="reveal" style="--i:1">Ce que disent <em>nos clients</em></h2>
     <p class="lead reveal" style="--i:2">Merci à celles et ceux qui nous font confiance.</p>
-    <!-- Avis Google en direct — widget Trustindex -->
-    <div class="ti-reviews reveal">
-      <script defer async src='https://cdn.trustindex.io/loader.js?2e90fc0805f5031a4c763bbd147'></script>
+    <!-- Avis Google en direct — widget Trustindex (chargé seulement après consentement, RGPD) -->
+    <div class="ti-reviews reveal" id="tiReviews" data-ti="https://cdn.trustindex.io/loader.js?2e90fc0805f5031a4c763bbd147">
+      <div class="ti-ph" id="tiPlaceholder">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <p>Les avis Google sont affichés via Trustindex, un service tiers. Ils se chargent avec votre accord.</p>
+        <button type="button" class="map-load" id="tiLoad">Afficher les avis</button>
+        <a class="map-alt" href="https://www.google.com/maps/place//data=!4m3!3m2!1s0x47c055bb01ab8f13%3A0x7a7073aea619564a!12i1" target="_blank" rel="noopener">Voir les avis sur Google ↗</a>
+      </div>
     </div>
     <div class="rev-cta reveal">
       <a href="https://www.google.com/maps/place//data=!4m3!3m2!1s0x47c055bb01ab8f13%3A0x7a7073aea619564a!12i1" target="_blank" rel="noopener" aria-label="Laisser un avis sur Google">
@@ -2713,11 +2724,25 @@
       mapWrap.appendChild(f);
       mapLoaded = true;
     }
+    // Avis Google via Trustindex : script tiers chargé seulement après consentement (RGPD)
+    var reviewsLoaded = false;
+    var tiWrap = document.getElementById("tiReviews");
+    var tiPh = document.getElementById("tiPlaceholder");
+    function loadReviews(){
+      if(reviewsLoaded || !tiWrap) return;
+      var src = tiWrap.getAttribute("data-ti");
+      if(!src) return;
+      var sc = document.createElement("script");
+      sc.defer = true; sc.async = true; sc.src = src;
+      if(tiPh) tiPh.remove();
+      tiWrap.appendChild(sc);
+      reviewsLoaded = true;
+    }
     function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
     function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
 
     var choice = get();
-    if(choice === "all"){ loadMap(); }
+    if(choice === "all"){ loadMap(); loadReviews(); }
     else if(!choice){ showBanner(); }
 
     if(banner){
@@ -2725,11 +2750,14 @@
         b.addEventListener("click", function(){
           var c = b.getAttribute("data-consent");
           set(c);
-          if(c === "all") loadMap();
+          if(c === "all"){ loadMap(); loadReviews(); }
           hideBanner();
         });
       });
     }
+    // Clic explicite sur "Afficher les avis" = consentement pour le service tiers
+    var tiLoad = document.getElementById("tiLoad");
+    if(tiLoad) tiLoad.addEventListener("click", function(){ set("all"); loadReviews(); loadMap(); });
     var manage = document.getElementById("manageCookies");
     if(manage) manage.addEventListener("click", function(e){ e.preventDefault(); showBanner(); });
 
