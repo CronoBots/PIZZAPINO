@@ -667,7 +667,7 @@
   .igp{background:#fff;border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,.05);
     box-shadow:0 36px 66px -34px rgba(0,0,0,.78),0 10px 24px -14px rgba(0,0,0,.5);
     text-align:left;color:#262626;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  .igp-top{display:flex;align-items:center;gap:9px;padding:10px 12px}
+  .igp-top{display:flex;align-items:center;gap:9px;padding:10px 12px;position:static;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0;box-shadow:none;z-index:auto}
   .igp-av{flex:0 0 auto;width:30px;height:30px;border-radius:50%;padding:1.5px;background:conic-gradient(from 210deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5,#FEDA75)}
   .igp-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:2px solid #fff}
   .igp-id{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;line-height:1.2}
@@ -689,6 +689,19 @@
   .igp-time{display:block;padding:6px 12px 12px;font-size:.62rem;text-transform:uppercase;letter-spacing:.03em;color:#8e8e8e}
   .igf-note{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:22px;font-size:.82rem;color:#9a8e79;font-style:italic}
   .igf-note svg{flex:0 0 auto;color:#c69a4d}
+  /* PC : publications en cartes horizontales (reel portrait à gauche, infos à droite) */
+  @media(min-width:761px){
+    .ig-feed{max-width:720px}
+    .igf-grid{grid-template-columns:1fr;gap:22px}
+    .igp{display:grid;grid-template-columns:224px 1fr;grid-template-rows:1fr auto auto auto auto auto 1fr;
+      grid-template-areas:"media ." "media header" "media bar" "media likes" "media cap" "media time" "media .";align-items:start}
+    .igp-media{grid-area:media;aspect-ratio:9/16;border-right:1px solid #efefef}
+    .igp-top{grid-area:header;border-bottom:1px solid #efefef;padding-bottom:12px;margin-bottom:2px}
+    .igp-bar{grid-area:bar;padding-top:13px}
+    .igp-likes{grid-area:likes}
+    .igp-cap{grid-area:cap;padding-top:6px}
+    .igp-time{grid-area:time;padding-top:8px}
+  }
   @media(max-width:600px){.igf-grid{grid-template-columns:1fr;max-width:360px;margin:0 auto;gap:18px}.igf-head{flex-wrap:wrap;gap:10px}}
   .insta-tile{position:relative;aspect-ratio:4/5;border-radius:0;overflow:hidden;display:block;
     border:1px solid var(--hair)}
