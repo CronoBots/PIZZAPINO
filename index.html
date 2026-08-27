@@ -608,27 +608,9 @@
     .win-grid{grid-auto-rows:calc((100vw - 88px)/4*0.652)}
   }
   @media(max-width:760px){
-    /* Carrousel « spotlight » : défilement horizontal, photo centrale agrandie,
-       voisines réduites et atténuées (échelle continue pilotée en JS). */
-    .win-grid{display:flex;grid-template-columns:none;gap:14px;margin-top:34px;
-      overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
-      padding:8px calc(50% - 39vw) 6px;scrollbar-width:none;overscroll-behavior-x:contain}
-    .win-grid::-webkit-scrollbar{display:none}
-    .win-item,.win-item.win-lg,.win-item.reveal{flex:0 0 78vw;grid-column:auto;grid-row:auto;
-      aspect-ratio:4/5;border-radius:16px;scroll-snap-align:center;
-      opacity:.5;transform:scale(.84);transition:none;box-shadow:0 24px 54px -26px #000}
-    .win-item img{transition:none}
-    .win-item::before{width:40px;height:40px}
-    /* Photo centrale : pastille « agrandir » + léger voile pour l'affordance tactile */
-    .win-item.is-center::before{opacity:1;transform:translate(-50%,-50%) scale(1)}
-    .win-item.is-center::after{opacity:.42}
-    .win-carousel-counter{display:block;margin:18px auto 0;font-family:"Oswald",sans-serif;
-      text-transform:uppercase;letter-spacing:.2em;font-size:.72rem;color:#c9b48a;text-align:center}
-    .win-carousel-counter b{color:#F4ECDB;font-weight:600}
-    .win-carousel-hint{display:block;margin:6px auto 0;font-family:"Inter",sans-serif;font-size:.66rem;
-      letter-spacing:.02em;color:#8a7f6d;text-align:center;font-style:italic}
+    .win-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-top:38px}
+    .win-item::before{width:38px;height:38px}
   }
-  @media(min-width:761px){ .win-carousel-counter,.win-carousel-hint{display:none} }
 
   /* ===== POP-UP APPEL / COMMANDE ===== */
   #callModal{position:fixed;inset:0;z-index:1600;display:flex;align-items:center;justify-content:center;padding:24px;
@@ -3397,53 +3379,6 @@
     var tb = document.querySelector('.tabbar .tb[data-cat="' + b.getAttribute('data-goto') + '"]');
     if(tb) tb.click();
   });
-  /* ===== Galerie Winter : carrousel « spotlight » sur mobile (échelle continue centrée) ===== */
-  (function(){
-    var grid = document.querySelector('#galerie-winter .win-grid');
-    if(!grid) return;
-    var items = Array.prototype.slice.call(grid.querySelectorAll('.win-item'));
-    if(!items.length) return;
-    var mq = window.matchMedia('(max-width:760px)');
-    var counter = document.createElement('div'); counter.className = 'win-carousel-counter';
-    counter.innerHTML = '<b>1</b> / ' + items.length;
-    var hint = document.createElement('div'); hint.className = 'win-carousel-hint';
-    hint.textContent = 'Glissez · appuyez pour agrandir';
-    grid.parentNode.insertBefore(counter, grid.nextSibling);
-    counter.parentNode.insertBefore(hint, counter.nextSibling);
-    var raf = null, curCenter = -1;
-    function clear(){ items.forEach(function(it){ it.style.transform = ''; it.style.opacity = ''; it.classList.remove('is-center'); }); curCenter = -1; }
-    function update(){
-      raf = null;
-      if(!mq.matches){ return; }
-      var gr = grid.getBoundingClientRect();
-      var cx = gr.left + gr.width / 2;
-      var best = 0, bestDist = Infinity;
-      for(var i = 0; i < items.length; i++){
-        var r = items[i].getBoundingClientRect();
-        var d = Math.abs((r.left + r.width / 2) - cx) / (r.width || 1);
-        var dd = d > 1 ? 1 : d;
-        items[i].style.transform = 'scale(' + (1 - 0.16 * dd).toFixed(3) + ')';
-        items[i].style.opacity = (1 - 0.5 * dd).toFixed(3);
-        if(d < bestDist){ bestDist = d; best = i; }
-      }
-      if(best !== curCenter){
-        if(curCenter > -1 && items[curCenter]) items[curCenter].classList.remove('is-center');
-        items[best].classList.add('is-center');
-        curCenter = best;
-        counter.innerHTML = '<b>' + (best + 1) + '</b> / ' + items.length;
-      }
-    }
-    function onScroll(){ if(raf == null) raf = requestAnimationFrame(update); }
-    grid.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', function(){ if(mq.matches) onScroll(); else clear(); });
-    function init(){ if(mq.matches){ curCenter = -1; update(); } else { clear(); } }
-    if(mq.addEventListener) mq.addEventListener('change', init);
-    requestAnimationFrame(init);
-    if('IntersectionObserver' in window){
-      var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) onScroll(); }); }, { threshold: 0.05 });
-      io.observe(grid);
-    }
-  })();
   /* Ligne « à retirer sur place » + horaires du jour */
   (function(){
     var pk = document.getElementById('cartPickup'); if(!pk) return;
