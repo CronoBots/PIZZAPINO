@@ -3392,6 +3392,25 @@
     var tb = document.querySelector('.tabbar .tb[data-cat="' + b.getAttribute('data-goto') + '"]');
     if(tb) tb.click();
   });
+  /* ===== Reprise auto des images qui échouent (chargement réseau intermittent) ===== */
+  (function(){
+    var MAX = 3;
+    function retry(img){
+      if(!img || img.tagName !== 'IMG') return;
+      var n = parseInt(img.getAttribute('data-retry') || '0', 10);
+      if(n >= MAX) return;
+      var src = img.getAttribute('src'); if(!src) return; // le src est le JPEG (fallback fiable)
+      img.setAttribute('data-retry', n + 1);
+      var clean = src.split('?')[0].split('#')[0];
+      setTimeout(function(){ img.src = clean + '?_r=' + (n + 1); }, 500 * (n + 1));
+    }
+    // erreurs de chargement (ne bulle pas → capture)
+    window.addEventListener('error', function(e){ var t = e.target; if(t && t.tagName === 'IMG') retry(t); }, true);
+    // balayage des images déjà en échec avant l'exécution du script
+    window.addEventListener('load', function(){
+      document.querySelectorAll('img').forEach(function(img){ if(img.complete && img.naturalWidth === 0) retry(img); });
+    });
+  })();
   /* ===== Fil Instagram : points de pagination du carrousel à swipe (mobile) ===== */
   (function(){
     var grid = document.querySelector('#instagram .igf-grid');
