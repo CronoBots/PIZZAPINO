@@ -798,9 +798,23 @@
     .igp-media{aspect-ratio:1/1}
     .igp-cta{margin-top:auto}
   }
+  /* Points de pagination du carrousel Instagram (mobile) */
+  .igf-dots{display:none;justify-content:center;gap:8px;margin:16px auto 0}
+  .igf-dot{width:7px;height:7px;border-radius:50%;border:0;padding:0;cursor:pointer;
+    background:rgba(233,206,150,.3);transition:background .25s,transform .25s;-webkit-tap-highlight-color:transparent}
+  .igf-dot.on{background:#E9CE96;transform:scale(1.3)}
   @media(max-width:760px){
-    .igf-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto;gap:18px}
+    /* Fil Instagram : carrousel à swipe gauche/droite entre les publications */
+    .ig-feed{max-width:none}
+    .igf-grid{display:flex;grid-template-columns:none;gap:14px;max-width:none;margin:0;align-items:stretch;
+      overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+      padding:4px 8%;scrollbar-width:none;overscroll-behavior-x:contain}
+    .igf-grid::-webkit-scrollbar{display:none}
+    .igf-grid > *{flex:0 0 84%;scroll-snap-align:center;max-width:none;margin:0}
+    .igp{display:flex;flex-direction:column}
+    .igp-cta{margin-top:auto}
     .igf-cta{max-width:none;margin:0}
+    .igf-dots{display:flex}
   }
   .insta-tile{position:relative;aspect-ratio:4/5;border-radius:0;overflow:hidden;display:block;
     border:1px solid var(--hair)}
@@ -3379,6 +3393,43 @@
     var tb = document.querySelector('.tabbar .tb[data-cat="' + b.getAttribute('data-goto') + '"]');
     if(tb) tb.click();
   });
+  /* ===== Fil Instagram : points de pagination du carrousel à swipe (mobile) ===== */
+  (function(){
+    var grid = document.querySelector('#instagram .igf-grid');
+    if(!grid) return;
+    var slides = Array.prototype.slice.call(grid.children);
+    if(slides.length < 2) return;
+    var dots = document.createElement('div'); dots.className = 'igf-dots';
+    dots.setAttribute('aria-hidden', 'true');
+    slides.forEach(function(_, i){
+      var d = document.createElement('button'); d.type = 'button'; d.className = 'igf-dot';
+      d.setAttribute('aria-label', 'Aller à la publication ' + (i + 1));
+      d.addEventListener('click', function(){ slides[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); });
+      dots.appendChild(d);
+    });
+    grid.parentNode.insertBefore(dots, grid.nextSibling);
+    var dotEls = Array.prototype.slice.call(dots.children);
+    var raf = null, cur = -1;
+    function update(){
+      raf = null;
+      var gr = grid.getBoundingClientRect();
+      var cx = gr.left + gr.width / 2, best = 0, bd = Infinity;
+      for(var i = 0; i < slides.length; i++){
+        var r = slides[i].getBoundingClientRect();
+        var d = Math.abs((r.left + r.width / 2) - cx);
+        if(d < bd){ bd = d; best = i; }
+      }
+      if(best !== cur){
+        if(dotEls[cur]) dotEls[cur].classList.remove('on');
+        dotEls[best].classList.add('on');
+        cur = best;
+      }
+    }
+    function onScroll(){ if(raf == null) raf = requestAnimationFrame(update); }
+    grid.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    requestAnimationFrame(update);
+  })();
   /* Ligne « à retirer sur place » + horaires du jour */
   (function(){
     var pk = document.getElementById('cartPickup'); if(!pk) return;
