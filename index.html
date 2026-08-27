@@ -698,6 +698,39 @@
   .im-in small{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.62rem;opacity:.92}
   /* ===== Simulation fil Instagram (aperçu module Trustindex) ===== */
   .ig-feed{max-width:680px;margin:42px auto 0}
+  /* --- Aperçu du profil Instagram (en-tête + grille, style Instagram sombre) --- */
+  .ig-pf{display:block;max-width:468px;margin:38px auto 0;background:#000;border:1px solid rgba(255,255,255,.13);
+    border-radius:16px;overflow:hidden;text-align:left;color:#f5f5f5;font-family:"Inter",system-ui,sans-serif}
+  .igpf-head{display:flex;align-items:center;gap:20px;padding:20px 18px 10px}
+  .igpf-av{flex:0 0 auto;width:74px;height:74px;border-radius:50%;overflow:hidden;display:block;
+    border:2px solid rgba(255,255,255,.16);background:#161210}
+  .igpf-av img{width:100%;height:100%;object-fit:cover;display:block}
+  .igpf-side{flex:1;min-width:0}
+  .igpf-namerow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .igpf-name{font-size:1.05rem;font-weight:600;color:#fff}
+  .igpf-follow{font-size:.82rem;font-weight:600;color:#fff;background:#0095f6;border-radius:9px;
+    padding:6px 18px;text-decoration:none;white-space:nowrap;transition:background .2s}
+  .igpf-follow:hover{background:#1aa1f7}
+  .igpf-stats{list-style:none;display:flex;gap:20px;margin:13px 0 0;padding:0;font-size:.82rem;color:#c9c9c9}
+  .igpf-stats b{color:#fff;font-weight:700}
+  .igpf-bio{padding:2px 18px 15px;font-size:.86rem;line-height:1.55;color:#e8e8e8}
+  .igpf-bio b{font-weight:600;color:#fff}
+  .igpf-clock{margin-right:1px}
+  .igpf-link{display:block;margin-top:3px;color:#5bb4f0;text-decoration:none;font-weight:500}
+  .igpf-link:hover{text-decoration:underline}
+  .igpf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-top:1px solid rgba(255,255,255,.1)}
+  .igpf-cell{position:relative;aspect-ratio:1/1;overflow:hidden;display:block;background:#111}
+  .igpf-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .2s}
+  .igpf-cell:hover img{opacity:.82}
+  .igpf-badge{position:absolute;top:7px;right:7px;width:19px;height:19px;pointer-events:none;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
+  .igpf-badge svg{width:100%;height:100%}
+  .igpf-cta{display:flex;align-items:center;justify-content:center;gap:9px;padding:14px;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.78rem;font-weight:600;
+    color:#fff;text-decoration:none;border-top:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(90deg,#833ab4,#c13584,#e1306c,#fd1d1d,#f77737);transition:filter .2s}
+  .igpf-cta svg{width:17px;height:17px}
+  .igpf-cta:hover{filter:brightness(1.08)}
   .igf-head{display:flex;align-items:center;gap:14px;padding:0 4px 20px;text-align:left}
   .igf-av{flex:0 0 auto;width:58px;height:58px;border-radius:50%;padding:2.5px;background:conic-gradient(from 210deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5,#FEDA75);display:inline-flex}
   .igf-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:2.5px solid var(--noir-2,#120d09)}
@@ -2228,38 +2261,42 @@
     <h2 class="reveal" style="--i:1">Suivez-nous <em>en ligne</em></h2>
     <p class="lead reveal" style="--i:2">Les reels, l'ambiance et les coulisses du restaurant — au quotidien sur Instagram et Facebook.</p>
 
-    <!-- Simulation du fil Instagram / Facebook (aperçu du module Trustindex, une fois le compte connecté) -->
-    <div class="ig-feed reveal" style="--i:2" aria-label="Aperçu du fil Instagram">
-      <div class="igf-grid">
-        <article class="igp">
-          <header class="igp-top"><span class="igp-av"><img loading="lazy" width="64" height="64" src="icons/icon-512.png" alt=""></span><span class="igp-id"><b>pino.nandrin</b><span>Nandrin, Belgique</span></span><span class="igp-more">•••</span></header>
-          <div class="igp-media"><a class="igp-open" href="https://www.instagram.com/reel/DU5_qJLDO6m/" target="_blank" rel="noopener" aria-label="Voir la publication Saint-Valentin sur Instagram"><span class="igp-reel"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9l4.5-5M9 9l4.5-5M15 9l4.5-5"/><path d="M10.5 12.5v3l2.6-1.5z" fill="#fff"/></svg></span><video class="igp-vid" poster="images/insta-2.jpg" muted loop playsinline preload="none" disablepictureinpicture data-src="media/reel-valentin.mp4" aria-label="Reel — Saint-Valentin au restaurant"></video></a><button type="button" class="igp-play" aria-label="Lire la vidéo"><svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button><button type="button" class="igp-sound" aria-label="Activer le son" aria-pressed="false"><svg class="snd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg><svg class="snd-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></button></div>
-          <div class="igp-bar"><span class="igp-l"><svg class="ic-h" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 8.4 8.4 0 0 1-4-1L3 20l1.1-5.4A8.4 8.4 0 0 1 3 11.5 8.4 8.4 0 0 1 11.5 3h.5a8.4 8.4 0 0 1 9 8.5z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span><svg class="igp-bk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
-          <div class="igp-likes">62 j'aime</div>
-          <p class="igp-cap"><b>pino.nandrin</b> Happy Valentine's day in a restaurant 🎥❤️ <span class="igp-tag">#nandrin #pino #belgium #valentinesday</span></p>
-          <span class="igp-time">18 février</span>
-          <a class="igp-cta" href="https://www.instagram.com/reel/DU5_qJLDO6m/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>Voir sur Instagram</a>
-        </article>
-        <article class="igp">
-          <header class="igp-top"><span class="igp-av"><img loading="lazy" width="64" height="64" src="icons/icon-512.png" alt=""></span><span class="igp-id"><b>pino.nandrin</b><span>Nandrin, Belgique</span></span><span class="igp-more">•••</span></header>
-          <div class="igp-media"><a class="igp-open" href="https://www.instagram.com/reel/DUERqrZjXWr/" target="_blank" rel="noopener" aria-label="Voir la publication du pizzaiolo sur Instagram"><span class="igp-reel"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9l4.5-5M9 9l4.5-5M15 9l4.5-5"/><path d="M10.5 12.5v3l2.6-1.5z" fill="#fff"/></svg></span><video class="igp-vid" poster="images/insta-pizzaiolo.jpg" muted loop playsinline preload="none" disablepictureinpicture data-src="media/reel-pizzaiolo.mp4" aria-label="Reel — le pizzaiolo au travail"></video></a><button type="button" class="igp-play" aria-label="Lire la vidéo"><svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button><button type="button" class="igp-sound" aria-label="Activer le son" aria-pressed="false"><svg class="snd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg><svg class="snd-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></button></div>
-          <div class="igp-bar"><span class="igp-l"><svg class="ic-h" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 8.4 8.4 0 0 1-4-1L3 20l1.1-5.4A8.4 8.4 0 0 1 3 11.5 8.4 8.4 0 0 1 11.5 3h.5a8.4 8.4 0 0 1 9 8.5z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span><svg class="igp-bk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
-          <div class="igp-likes">100 j'aime</div>
-          <p class="igp-cap"><b>pino.nandrin</b> Découverte 🎥 🇮🇹🍕 <span class="igp-tag">#pizzaiolo #pino #italy #pizza #belgium</span></p>
-          <a class="igp-comments" href="https://www.instagram.com/reel/DUERqrZjXWr/" target="_blank" rel="noopener">Voir les 4 commentaires</a>
-          <span class="igp-time">28 janvier</span>
-          <a class="igp-cta" href="https://www.instagram.com/reel/DUERqrZjXWr/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>Voir sur Instagram</a>
-        </article>
-        <div class="igf-cta">
-          <span class="igfc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>
-          <span class="igfc-live"><i></i>Fil en direct</span>
-          <b class="igfc-h">Suivez le quotidien de Pino</b>
-          <p class="igfc-p">Reels, ambiance et coulisses — et chaque nouvelle publication apparaît ici <b>automatiquement</b>, sans rien à faire.</p>
-          <div class="igfc-btns">
-            <a class="igfc-b ig" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>Instagram</a>
-            <a class="igfc-b fb" href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg>Facebook</a>
+    <!-- Aperçu du profil Instagram (statique ; remplacé par le module Trustindex une fois le compte connecté) -->
+    <div class="ig-feed reveal" style="--i:2" aria-label="Profil Instagram de Pizzeria Pino">
+      <div class="ig-pf">
+        <div class="igpf-head">
+          <a class="igpf-av" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Ouvrir le profil Instagram">
+            <img loading="lazy" width="140" height="140" src="icons/icon-512.png" alt="Logo Pizzeria Pino">
+          </a>
+          <div class="igpf-side">
+            <div class="igpf-namerow">
+              <span class="igpf-name">pino.nandrin</span>
+              <a class="igpf-follow" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener">Suivre</a>
+            </div>
+            <ul class="igpf-stats">
+              <li><b>8</b> publications</li>
+              <li><b>103</b> abonnés</li>
+              <li><b>11</b> suivis</li>
+            </ul>
           </div>
         </div>
+        <div class="igpf-bio">
+          <b>Pizzeria Pino</b> · Restaurant italien<br>
+          Nandrin — sur place ou à emporter<br>
+          <span class="igpf-clock" aria-hidden="true">🕒</span> Ouvert 7j/7
+          <a class="igpf-link" href="https://www.pizzeriapino.be" target="_blank" rel="noopener">www.pizzeriapino.be</a>
+        </div>
+        <div class="igpf-grid">
+          <a class="igpf-cell" href="https://www.instagram.com/reel/DU5_qJLDO6m/" target="_blank" rel="noopener" aria-label="Reel Saint-Valentin"><picture><source type="image/webp" srcset="images/insta-2.webp"><img loading="lazy" decoding="async" width="600" height="600" src="images/insta-2.jpg" alt="Reel Saint-Valentin — Pizzeria Pino"></picture><span class="igpf-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9l4.5-5M9 9l4.5-5M15 9l4.5-5"/><path d="M10.5 12.5v3l2.6-1.5z" fill="#fff"/></svg></span></a>
+          <a class="igpf-cell" href="https://www.instagram.com/reel/DUERqrZjXWr/" target="_blank" rel="noopener" aria-label="Reel du pizzaiolo"><picture><source type="image/webp" srcset="images/insta-pizzaiolo.webp"><img loading="lazy" decoding="async" width="600" height="600" src="images/insta-pizzaiolo.jpg" alt="Reel du pizzaiolo — Pizzeria Pino"></picture><span class="igpf-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9l4.5-5M9 9l4.5-5M15 9l4.5-5"/><path d="M10.5 12.5v3l2.6-1.5z" fill="#fff"/></svg></span></a>
+          <a class="igpf-cell" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Soirée Pino Winter"><picture><source type="image/webp" srcset="images/winter/w-01.webp"><img loading="lazy" decoding="async" width="600" height="600" src="images/winter/w-01.jpg" alt="Soirée Pino Winter"></picture><span class="igpf-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M8 3h9a4 4 0 0 1 4 4v9h-2V7a2 2 0 0 0-2-2H8zM3 8h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z"/></svg></span></a>
+          <a class="igpf-cell" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Ambiance Pino Winter"><picture><source type="image/webp" srcset="images/winter/w-05.webp"><img loading="lazy" decoding="async" width="600" height="600" src="images/winter/w-05.jpg" alt="Ambiance Pino Winter"></picture></a>
+          <a class="igpf-cell" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Terrasse d'hiver"><picture><source type="image/webp" srcset="images/winter/w-08.webp"><img loading="lazy" decoding="async" width="600" height="600" src="images/winter/w-08.jpg" alt="Terrasse d'hiver — Pino Winter"></picture></a>
+          <a class="igpf-cell" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Soirée entre convives"><picture><source type="image/webp" srcset="images/winter/w-11.webp"><img loading="lazy" decoding="async" width="600" height="600" src="images/winter/w-11.jpg" alt="Soirée entre convives — Pino Winter"></picture><span class="igpf-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M8 3h9a4 4 0 0 1 4 4v9h-2V7a2 2 0 0 0-2-2H8zM3 8h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z"/></svg></span></a>
+          <a class="igpf-cell" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Détails de table"><picture><source type="image/webp" srcset="images/winter/w-15.webp"><img loading="lazy" decoding="async" width="600" height="600" src="images/winter/w-15.jpg" alt="Détails de table — Pino Winter"></picture></a>
+          <a class="igpf-cell" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Moment festif"><picture><source type="image/webp" srcset="images/winter/w-19.webp"><img loading="lazy" decoding="async" width="600" height="600" src="images/winter/w-19.jpg" alt="Moment festif — Pino Winter"></picture></a>
+        </div>
+        <a class="igpf-cta" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>Voir le profil sur Instagram</a>
       </div>
     </div>
   </div>
