@@ -1645,7 +1645,10 @@
   html:not(.app-mode) #carte .cta-row .btn-ghost:hover{border-color:var(--rouge);color:#fff}
 
   /* ===== Concept C : fond photo immersif (mode app) ===== */
-  html.app-mode,html.app-mode body{background:#0d0b0a}
+  /* Fond sombre sur <html> uniquement : il se peint DERRIÈRE le calque photo (z-index:-2).
+     Le <body> reste transparent, sinon (flux normal) il recouvrirait la photo de catégorie. */
+  html.app-mode{background:#0d0b0a}
+  html.app-mode body{background:transparent}
   html.app-mode body.app-cart,html.app-mode.has-cart{background:#100b08}
   html.app-mode #carte{background:transparent;border-top:0;border-bottom:0}
   html.app-mode #carte .cta-row .btn-ghost{border-color:rgba(233,206,150,.42);color:#EFE7D6}
