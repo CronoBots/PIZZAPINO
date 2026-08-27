@@ -1760,11 +1760,11 @@
   /* Vue plus compacte : on retire le paragraphe d'intro */
   html.app-mode #carte .lead{display:none}
 
-  /* Section Infos allégée : horaires + adresse + itinéraire, sans carte ni superflu */
-  /* Infos & contact en mode app : écran épuré, façon application */
-  html.app-mode #infos .feat,html.app-mode #infos .ig-line{display:none!important}
-  /* Carte Google visible en PWA, sous l'adresse */
-  html.app-mode #infos .cb-map{margin-top:16px}
+  /* Infos & contact en mode app : deux cartes complètes (horaires+équipements | contact+carte) */
+  html.app-mode #infos .feat{grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;padding-top:16px;border-top-color:rgba(198,154,77,.16)}
+  html.app-mode #infos .feat li{font-size:.64rem;padding:9px 11px;letter-spacing:.05em;border-color:rgba(198,154,77,.18)}
+  /* Carte Google visible en PWA, sous les coordonnées */
+  html.app-mode #infos .cb-map{margin-top:0}
   html.app-mode #infos .map{min-height:220px;border-radius:12px}
   html.app-mode #infos .map iframe{min-height:220px}
   html.app-mode #infos .center .eyebrow{display:none}
@@ -1776,8 +1776,18 @@
   html.app-mode #infos .ic-head{text-align:center;border:0;padding:0;margin:0 0 13px;font-size:.82rem;color:var(--or);font-style:normal;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em}
   html.app-mode #infos .hours{border-color:rgba(198,154,77,.16)}
   html.app-mode #infos .hours li{padding:13px 16px;border-bottom-color:rgba(198,154,77,.12)}
-  html.app-mode #infos .contact-frame{border:0;padding:0;margin-top:14px;display:block}
-  html.app-mode #infos .cb-info .ic-head{margin-top:6px}
+  html.app-mode #infos .contact-frame{background:rgba(255,255,255,.03);border:1px solid rgba(198,154,77,.16);border-radius:12px;padding:18px 15px;margin-top:0;display:flex;flex-direction:column;gap:14px}
+  html.app-mode #infos .cb-info{gap:0}
+  html.app-mode #infos .cb-info .ic-head{margin-top:0}
+  html.app-mode #infos .app-addr{text-align:center;color:var(--gris);font-size:.98rem;line-height:1.5;margin:0}
+  html.app-mode #infos .app-tel{display:flex;align-items:center;justify-content:center;gap:9px;margin:15px auto 0;width:fit-content;
+    padding:11px 20px;border-radius:999px;border:1px solid rgba(198,154,77,.38);color:var(--or-l);font-weight:600;font-size:1rem;
+    font-family:"Oswald",sans-serif;letter-spacing:.04em;text-decoration:none;background:rgba(198,154,77,.07)}
+  html.app-mode #infos .app-tel svg{width:16px;height:16px;flex:0 0 auto}
+  html.app-mode #infos .app-social{display:flex;justify-content:center;gap:12px;margin-top:13px}
+  html.app-mode #infos .app-social a{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;
+    border-radius:50%;border:1px solid rgba(198,154,77,.24);color:var(--or-l);background:rgba(255,255,255,.02)}
+  html.app-mode #infos .app-social svg{width:19px;height:19px}
   html.app-mode #infos .app-infos-actions{display:grid;grid-template-columns:1fr 1fr;gap:11px}
   html.app-mode #infos .aia{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:16px 12px;border-radius:11px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.07em;font-size:.82rem;text-decoration:none;
@@ -3584,7 +3594,12 @@
     if(!info) return;
     info.innerHTML =
       '<h3 class="ic-head">Nous trouver</h3>'
-      + '<p class="app-addr">Route du Condroz 131<br>4550 Nandrin</p>';
+      + '<p class="app-addr">Route du Condroz 131 (Centre commercial)<br>4550 Nandrin</p>'
+      + '<a class="app-tel" href="tel:+3285513339"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.6 9.8a16 16 0 0 0 6 6l1.4-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>085 51 33 39</a>'
+      + '<div class="app-social">'
+      +   '<a href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Instagram Pizzeria Pino"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></a>'
+      +   '<a href="https://www.facebook.com/100064486855231/" target="_blank" rel="noopener" aria-label="Facebook Pizzeria Pino"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg></a>'
+      + '</div>';
   })();
 
   // Titre de catégorie (centré) + recherche juste en dessous, dans le contenu
