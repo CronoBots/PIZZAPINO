@@ -3354,7 +3354,9 @@
         });
       });
       if(IS_APP){
-        var miss = CAT_ORDER.filter(function(c){ return !groups[c]; });
+        // Les pizzas restent toujours proposées (on en commande souvent plusieurs) ;
+        // les autres catégories ne sont suggérées que si elles ne sont pas déjà au panier.
+        var miss = CAT_ORDER.filter(function(c){ return c === 'pizzas' || !groups[c]; });
         if(!miss.length) miss = CAT_ORDER.slice();
         var sug = document.createElement('div'); sug.className = 'cart-suggest';
         sug.innerHTML = '<p class="cs-hint">Envie de compléter votre commande&nbsp;?</p><div class="cs-chips">'
