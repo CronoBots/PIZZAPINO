@@ -905,14 +905,18 @@
   /* Créneau en cours (ouvert maintenant) : seule l'heure passe en vert */
   .hours .svc.now .nb{color:#4ad07d}
   /* Badges d'infos répartis en dessous */
-  .feat{margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
-  .feat span{font-size:.72rem;background:none;color:var(--gris);padding:9px 16px;border-radius:0;
-    border:1px solid var(--hair);transition:.25s;font-family:"Oswald",sans-serif;
-    text-transform:uppercase;letter-spacing:.12em}
-  .feat span:hover{color:var(--blanc);border-color:var(--or)}
+  .feat{margin:26px auto 0;padding:0;list-style:none;max-width:620px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .feat li{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:.7rem;
+    color:var(--gris);padding:10px 12px;border-radius:999px;border:1px solid var(--hair);
+    background:rgba(255,255,255,.02);transition:color .25s,border-color .25s,background .25s;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.09em;white-space:nowrap}
+  .feat li svg{width:15px;height:15px;flex:0 0 auto;color:var(--or)}
+  .feat li:hover{color:var(--blanc);border-color:var(--or);background:rgba(198,154,77,.08)}
+  @media(max-width:760px){.feat{grid-template-columns:repeat(2,1fr);max-width:420px}}
   /* Contact + carte côte à côte, dans un même cadre */
   .contact-frame{margin-top:clamp(30px,3.5vw,48px);display:grid;grid-template-columns:1fr 1.3fr;
-    gap:clamp(26px,3.2vw,48px);border:1px solid var(--hair);padding:clamp(24px,2.8vw,38px);align-items:stretch}
+    gap:clamp(26px,3.2vw,48px);border:1px solid var(--hair);border-radius:16px;padding:clamp(24px,2.8vw,38px);align-items:stretch}
   .cb-info{display:flex;flex-direction:column;justify-content:center}
   .cb-info p{margin-bottom:13px;font-size:1rem;color:var(--gris);line-height:1.6}
   .cb-info a{color:var(--or-l);font-weight:600;text-decoration:none}
@@ -1067,7 +1071,7 @@
     .dish:hover{padding-left:0}
     .btn:hover{transform:none}
     .gal-item:hover img,.insta-tile:hover img,.value:hover,.tab:hover{transform:none}
-    .feat span:hover{transform:none}
+    .feat li:hover{transform:none}
     #toTop:hover{transform:none}
     .nav-cta:hover{transform:none}
   }
@@ -2194,7 +2198,7 @@
     <p class="win-credit reveal">
       <span class="wc-cam"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
       Photographies <strong>Nicolas Darimont</strong> · <a href="https://www.instagram.com/nd_production_off/" target="_blank" rel="noopener">@nd_production_off</a>
-      <a class="wc-see" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener">Voir sur Instagram →</a>
+      <a class="wc-see" href="https://www.instagram.com/p/DSXzLj-DVBc/" target="_blank" rel="noopener">Voir la publication →</a>
     </p>
   </div>
 </section>
@@ -2263,10 +2267,16 @@
           <li data-days="6"><span class="day">Samedi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–22h</span></span></span></li>
           <li data-days="0"><span class="day">Dimanche</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–22h</span></span></span></li>
         </ul>
-        <div class="feat">
-          <span>Terrasse</span><span>À emporter</span><span>Repas sur place</span><span>Traiteur</span>
-          <span>Accessible PMR</span><span>Parking gratuit</span><span>Menu enfant</span><span>Groupes</span>
-        </div>
+        <ul class="feat">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12v9"/><path d="M3 11a9 6 0 0 1 18 0z"/><path d="M12 5V3"/></svg>Terrasse</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>À emporter</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3v6a2.5 2.5 0 0 0 5 0V3"/><path d="M6.5 3v18"/><path d="M18 3c-1.7 1.5-2.5 4-2.5 6.5S16 14 18 14.5V21"/></svg>Repas sur place</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17h16"/><path d="M4 17a8 8 0 0 1 16 0"/><path d="M12 9V6.5"/><circle cx="12" cy="5" r="1"/></svg>Traiteur</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="4.3" r="1.8"/><path d="M12 7.5v6h5l2.5 5.5"/><path d="M12.5 13.5a5.5 5.5 0 1 0 4.7 8.2"/></svg>Accessible PMR</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>Parking gratuit</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>Menu enfant</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.8"/><path d="M17 14.5a5.5 5.5 0 0 1 3.5 4.5"/></svg>Groupes</li>
+        </ul>
       </div>
       <div class="contact-frame reveal" style="--i:2">
         <div class="cb-info">
