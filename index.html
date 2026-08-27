@@ -473,9 +473,8 @@
   .supp-box li:last-child{border-bottom:0}
   .supp-box li:first-child{color:var(--rouge);font-weight:600}
   /* Suppléments (liste détaillée sous la carte) */
-  /* Section suppléments : plus de cadre extérieur (il faisait doublon avec le bloc Junior et
-     traçait une ligne inutile juste sous la dernière carte). Section ouverte et aérée. */
-  .supplements{max-width:660px;margin:0 auto;padding:4px 6px 0;border:0;background:none}
+  .supplements{max-width:660px;margin:0 auto;border:1px solid rgba(233,206,150,.32);border-radius:14px;
+    padding:22px 28px 18px;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
   /* Bandeau « Pizza Junior » intégré au cadre des suppléments */
   /* Bandeau Junior : uniquement quand la catégorie Pizzas est active */
   .supp-junior{display:none}
@@ -1658,11 +1657,14 @@
   html.app-mode body.app-cart,html.app-mode.has-cart{background:#100b08}
   html.app-mode #carte{background:transparent;border-top:0;border-bottom:0}
   html.app-mode #carte .cta-row .btn-ghost{border-color:rgba(233,206,150,.42);color:#EFE7D6}
-  /* calque photo fixe derrière tout le contenu */
+  /* Calque photo en fond de catégorie — DÉFILE avec le contenu (aucun parallax, aucun zoom).
+     position:absolute (ancré en haut du document) et non fixed : le fond suit le scroll des plats.
+     Fondu vers le bas (mask) pour se fondre proprement dans le noir sans coupure nette. */
   .app-bg-layer,#appScrim{display:none}
-  html.app-mode .app-bg-layer{display:block;position:fixed;inset:0;z-index:-2;pointer-events:none;
-    background:#0d0b0a center center/cover no-repeat;opacity:0;transition:opacity .6s ease;will-change:opacity}
-  html.app-mode #appScrim{display:block;position:fixed;inset:0;z-index:-1;pointer-events:none;
+  html.app-mode .app-bg-layer{display:block;position:absolute;top:0;left:0;right:0;height:110svh;z-index:-2;pointer-events:none;
+    background:#0d0b0a center center/cover no-repeat;opacity:0;transition:opacity .6s ease;will-change:opacity;
+    -webkit-mask-image:linear-gradient(180deg,#000 58%,transparent);mask-image:linear-gradient(180deg,#000 58%,transparent)}
+  html.app-mode #appScrim{display:block;position:absolute;top:0;left:0;right:0;height:110svh;z-index:-1;pointer-events:none;
     background:linear-gradient(180deg,rgba(9,7,5,.34),rgba(9,7,5,.42) 45%,rgba(9,7,5,.6))}
   /* En-tête de catégorie : texte sur la photo */
   .app-cat-head{display:none}
