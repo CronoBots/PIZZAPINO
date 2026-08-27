@@ -730,10 +730,11 @@
   .igpf-badge{position:absolute;top:8px;right:8px;width:22px;height:22px;pointer-events:none;
     filter:drop-shadow(0 1px 3px rgba(0,0,0,.9))}
   .igpf-badge svg{width:100%;height:100%}
-  /* Mobile : profil Instagram pleine largeur (bord à bord) comme dans l'app */
+  /* Mobile : profil Instagram pleine largeur (bord à bord) et fondu avec l'intro (un seul bloc) */
   @media(max-width:760px){
-    .ig-pf{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
-      border-left:0;border-right:0;border-radius:0}
+    #instagram .lead{margin-bottom:6px}
+    .ig-pf{width:100vw;max-width:100vw;margin:16px calc(50% - 50vw) 0;
+      border:0;border-radius:0}
     .igpf-grid{gap:2px}
     .igpf-badge{width:24px;height:24px}
   }
