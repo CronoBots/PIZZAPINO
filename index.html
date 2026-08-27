@@ -471,6 +471,13 @@
   /* Suppléments (liste détaillée sous la carte) */
   .supplements{max-width:660px;margin:0 auto;border:1px solid rgba(233,206,150,.32);border-radius:14px;
     padding:22px 28px 18px;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  /* Bandeau « Pizza Junior » intégré au cadre des suppléments */
+  .supp-junior{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;padding:12px 18px;margin:0 0 20px;
+    border-radius:12px;background:rgba(168,38,29,.07);border:1px solid rgba(168,38,29,.28)}
+  .supp-junior .sj-name{font-family:"Fraunces",serif;font-weight:600;font-size:1.1rem;color:#F5EEDF}
+  .supp-junior .jn-age{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.58em;color:#c7b89e;margin-left:5px;vertical-align:middle}
+  .supp-junior .sj-price{margin-left:auto;font-family:"Fraunces",serif;font-weight:600;font-size:1.5rem;color:var(--rouge-l,#e0574b);line-height:1}
+  .supp-junior .sj-sub{flex:1 1 100%;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.11em;font-size:.62rem;color:#c7b89e}
   .supp-h{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:1.35rem;color:#F7F1E5;margin:0 0 14px}
   .supp-grid{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 38px;text-align:left}
   @media(max-width:560px){.supp-grid{grid-template-columns:1fr}}
@@ -496,11 +503,11 @@
   @media(max-width:760px){.gal-video{display:none!important}}
   /* PC : la vidéo occupe la colonne centrale de la galerie, encadrée par les photos */
   @media(min-width:761px){
-    /* grille un peu plus étroite → vidéo et photos légèrement moins hautes (ratios conservés) */
-    .gal-grid{max-width:980px;margin-left:auto;margin-right:auto}
-    .gal-grid .gal-video{grid-column:2;grid-row:1 / span 3;margin:0;gap:0;display:flex;flex-direction:column;justify-content:center;position:relative;align-self:stretch}
-    .gal-grid .gal-video .vid-frame{width:100%;height:auto;margin:0;position:relative}
-    .gal-grid .gal-video .vid-frame video{width:100%;height:auto;aspect-ratio:9/16;object-fit:cover;display:block}
+    /* colonne centrale élargie (ratio 9:16 = hauteur des 3 photos) → la vidéo remplit toute la hauteur, sans vide, ratio conservé */
+    .gal-grid{grid-template-columns:1fr 1.32fr 1fr;max-width:1080px;margin-left:auto;margin-right:auto}
+    .gal-grid .gal-video{grid-column:2;grid-row:1 / span 3;margin:0;gap:0;display:block;position:relative;align-self:stretch}
+    .gal-grid .gal-video .vid-frame{width:100%;height:100%;margin:0;position:relative}
+    .gal-grid .gal-video .vid-frame video{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;display:block}
     .gal-grid .gal-video .badge-off{position:absolute;left:0;right:0;bottom:0;z-index:3;margin:0;border:0;border-radius:0;
       display:flex;align-items:center;justify-content:center;padding:26px 12px 12px;
       background:linear-gradient(transparent,rgba(10,8,6,.92))}
@@ -979,7 +986,7 @@
   @keyframes hiFade{to{opacity:1}}
   @keyframes hiLine{to{width:min(300px,62vw)}}
   @keyframes heroPhoto{to{opacity:1}}
-  header,.call-bar{animation:chromeIn .7s ease 1.1s both}
+  .call-bar{animation:chromeIn .7s ease 1.1s both}
   @keyframes chromeIn{from{opacity:0}to{opacity:1}}
   @keyframes fabIn{from{opacity:0}to{opacity:var(--fab-opacity)}}
   @media(prefers-reduced-motion:reduce){
@@ -1675,7 +1682,7 @@
 <!-- HEADER -->
 <header id="hdr">
   <div class="wrap nav">
-    <a href="#top" class="brand"><span class="brand-pre">Restaurant</span>Pizzeria <b>Pino</b><small>Pâtes fraîches · Feu de bois · Nandrin</small></a>
+    <a href="#top" class="brand"><span class="brand-pre">Restaurant italien</span>Pizzeria <b>Pino</b><small>Pizza au feu de bois · Pâtes fraîches · Nandrin</small></a>
     <nav class="main">
       <ul>
         <li><a href="#top">Accueil</a></li>
@@ -1920,7 +1927,6 @@
         <div class="dish"><span class="name">Bruschetta</span><span class="dot"></span><span class="price">9,50</span><small class="desc">Tomates fraîches, ail, basilic, origan</small></div>
         <div class="dish"><span class="name">Fraicheur</span><span class="dot"></span><span class="price">11,00</span><small class="desc">Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)</small></div>
       </div>
-      <p class="junior-note"><span class="jn-label">Pizza Junior <span class="jn-age">−14 ans</span></span><strong>−2,00 €</strong><span class="jn-sub">à déduire du prix de la pizza choisie</span></p>
     </div>
 
     <!-- VIANDES -->
@@ -1948,6 +1954,11 @@
 
     <div class="center" style="margin-top:42px">
       <div class="supplements">
+        <div class="supp-junior">
+          <span class="sj-name">Pizza Junior <span class="jn-age">−14 ans</span></span>
+          <span class="sj-price">−2,00 €</span>
+          <span class="sj-sub">à déduire du prix de la pizza choisie</span>
+        </div>
         <p class="supp-h">Suppléments</p>
         <ul class="supp-grid">
           <li><span>Bresaola</span><i></i><b>2,50</b></li>
