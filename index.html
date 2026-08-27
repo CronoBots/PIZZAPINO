@@ -708,16 +708,16 @@
   .igpf-side{flex:1;min-width:0}
   .igpf-namerow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .igpf-name{font-size:1.05rem;font-weight:600;color:#fff}
-  .igpf-follow{font-size:.82rem;font-weight:600;color:#fff;background:#0095f6;border-radius:9px;
-    padding:6px 18px;text-decoration:none;white-space:nowrap;transition:background .2s}
-  .igpf-follow:hover{background:#1aa1f7}
   .igpf-stats{list-style:none;display:flex;gap:20px;margin:13px 0 0;padding:0;font-size:.82rem;color:#c9c9c9}
   .igpf-stats b{color:#fff;font-weight:700}
-  .igpf-bio{padding:2px 18px 15px;font-size:.86rem;line-height:1.55;color:#e8e8e8}
-  .igpf-bio b{font-weight:600;color:#fff}
-  .igpf-clock{margin-right:1px}
-  .igpf-link{display:block;margin-top:3px;color:#5bb4f0;text-decoration:none;font-weight:500}
-  .igpf-link:hover{text-decoration:underline}
+  /* Boutons Suivre / Envoyer un message — présentés comme dans l'app Instagram */
+  .igpf-actions{display:flex;gap:8px;padding:2px 18px 16px}
+  .igpf-btn{flex:1;text-align:center;padding:8px 10px;border-radius:9px;font-size:.85rem;font-weight:600;
+    text-decoration:none;line-height:1.25;white-space:nowrap;transition:background .18s}
+  .igpf-btn-follow{background:#0095f6;color:#fff}
+  .igpf-btn-follow:hover{background:#1aa1f7}
+  .igpf-btn-msg{background:#363636;color:#fff}
+  .igpf-btn-msg:hover{background:#454545}
   .igpf-tabs{display:flex;border-top:1px solid rgba(255,255,255,.12)}
   .igpf-tab{flex:1;display:flex;align-items:center;justify-content:center;padding:11px 0;color:#8e8e8e;
     border-top:1px solid transparent;margin-top:-1px}
@@ -2157,9 +2157,9 @@
 <!-- INSTAGRAM -->
 <section id="instagram" class="insta center">
   <div class="wrap">
-    <p class="eyebrow reveal">Réseaux sociaux</p>
-    <h2 class="reveal" style="--i:1">Suivez-nous <em>en ligne</em></h2>
-    <p class="lead reveal" style="--i:2">Les reels, l'ambiance et les coulisses du restaurant — au quotidien sur Instagram et Facebook.</p>
+    <p class="eyebrow reveal">Instagram</p>
+    <h2 class="reveal" style="--i:1">Suivez-nous <em>@pino.nandrin</em></h2>
+    <p class="lead reveal" style="--i:2">Reels, coulisses et ambiance du restaurant — le meilleur de Pizzeria Pino, en images.</p>
 
     <!-- Aperçu du profil Instagram (statique ; remplacé par le module Trustindex une fois le compte connecté) -->
     <div class="ig-feed reveal" style="--i:2" aria-label="Profil Instagram de Pizzeria Pino">
@@ -2171,7 +2171,6 @@
           <div class="igpf-side">
             <div class="igpf-namerow">
               <span class="igpf-name">pino.nandrin</span>
-              <a class="igpf-follow" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener">Suivre</a>
             </div>
             <ul class="igpf-stats">
               <li><b>8</b> publications</li>
@@ -2180,11 +2179,9 @@
             </ul>
           </div>
         </div>
-        <div class="igpf-bio">
-          <b>Pizzeria Pino</b> · Restaurant italien<br>
-          Nandrin — sur place ou à emporter<br>
-          <span class="igpf-clock" aria-hidden="true">🕒</span> Ouvert 7j/7
-          <a class="igpf-link" href="https://www.pizzeriapino.be" target="_blank" rel="noopener">www.pizzeriapino.be</a>
+        <div class="igpf-actions">
+          <a class="igpf-btn igpf-btn-follow" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener">Suivre</a>
+          <a class="igpf-btn igpf-btn-msg" href="https://ig.me/m/pino.nandrin" target="_blank" rel="noopener">Envoyer un message</a>
         </div>
         <div class="igpf-tabs" aria-hidden="true">
           <span class="igpf-tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1.5"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg></span>
@@ -2886,6 +2883,27 @@
     fit();
     window.addEventListener("load", fit);
     window.addEventListener("orientationchange", function(){ setTimeout(fit, 300); });
+  })();
+
+  /* ---- Barres fixes (app-bar + tabbar) : iOS/WebKit peut laisser une barre
+          « collée » à une position d'ancien viewport quand on quitte puis revient
+          sur la PWA. On force un recalcul de mise en page au réveil. ---- */
+  (function(){
+    var root = document.documentElement;
+    if(!root.classList.contains("app-mode")) return;
+    function reflowBars(){
+      var els = [document.querySelector(".tabbar"), document.querySelector(".app-bar")];
+      for(var i=0;i<els.length;i++){
+        var el = els[i]; if(!el) continue;
+        el.style.transform = "translateZ(0)";
+        void el.offsetHeight;      /* force un reflow synchrone */
+        el.style.transform = "";
+      }
+    }
+    function onResume(){ reflowBars(); requestAnimationFrame(reflowBars); setTimeout(reflowBars, 300); }
+    window.addEventListener("pageshow", onResume);
+    window.addEventListener("focus", onResume);
+    document.addEventListener("visibilitychange", function(){ if(!document.hidden) onResume(); });
   })();
 
   /* ---- Braises du four à bois (hero) ---- */
