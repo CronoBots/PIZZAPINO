@@ -246,8 +246,8 @@
     text-transform:uppercase;color:var(--or);margin-bottom:6px}
   .brand small{display:block;font-family:"Oswald",sans-serif;font-weight:500;font-size:.55rem;letter-spacing:.34em;
     text-transform:uppercase;color:var(--gris-d);margin-top:7px}
-  nav.main ul{list-style:none;display:flex;gap:36px;align-items:center;font-family:"Oswald",sans-serif;
-    font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
+  nav.main ul{list-style:none;display:flex;gap:26px;align-items:center;font-family:"Oswald",sans-serif;
+    font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500;white-space:nowrap}
   nav.main a{text-decoration:none;color:var(--blanc);opacity:.72;position:relative;padding:8px 0;transition:opacity .3s,color .3s}
   nav.main a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;
     background:linear-gradient(90deg,var(--rouge-l),var(--or));transition:width .35s var(--rapide)}
@@ -914,9 +914,11 @@
   .call-bar{display:none}
 
   /* ===== RESPONSIVE ===== */
-  @media(max-width:920px){
+  @media(max-width:1080px){
     nav.main,.nav-cta{display:none}
     .burger{display:flex}
+  }
+  @media(max-width:920px){
     .values{grid-template-columns:1fr;gap:0}
     .infos-stack{grid-template-columns:1fr}
   }
@@ -1828,8 +1830,10 @@
       <ul>
         <li><a href="#top">Accueil</a></li>
         <li><a href="#galerie">Le restaurant</a></li>
-        <li><a href="#carte">La carte</a></li>
         <li><a href="#avis">Avis</a></li>
+        <li><a href="#carte">La carte</a></li>
+        <li><a href="#galerie-winter">Événement</a></li>
+        <li><a href="#instagram">Instagram</a></li>
         <li><a href="#infos">Contact</a></li>
       </ul>
     </nav>
@@ -1840,9 +1844,11 @@
 
 <!-- MENU MOBILE -->
 <div id="mobnav">
-  <a href="#carte">La carte</a>
   <a href="#galerie">Le restaurant</a>
   <a href="#avis">Avis</a>
+  <a href="#carte">La carte</a>
+  <a href="#galerie-winter">Événement</a>
+  <a href="#instagram">Instagram</a>
   <a href="#infos">Contact</a>
   <span class="m-tel">085 51 33 39</span>
 </div>
