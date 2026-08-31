@@ -285,12 +285,16 @@
   .hero-bg{position:absolute;inset:-8% 0;background-image:url('images/hero-feast.jpg');
     background-image:image-set(url('images/hero-feast.webp') type('image/webp'),url('images/hero-feast.jpg') type('image/jpeg'));
     background-size:cover;background-position:center;z-index:0}
-  /* Vidéo en fond du hero : mobile uniquement (remplace la photo) */
+  /* Vidéo en fond du hero : mobile uniquement. La photo reste le fond par défaut ;
+     la vidéo ne se révèle qu'une fois la lecture réellement lancée (évite un cadre
+     noir quand l'autoplay est refusé : mode économie d'énergie iOS, réseau, réglage navigateur). */
   .hero-video{display:none}
   @media(max-width:760px){
-    .hero-video{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#0c0a08}
-    .hero .hero-bg{display:none}
+    .hero-video{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+      opacity:0;transition:opacity .6s ease}
+    .hero-video.is-playing{opacity:1}
   }
+  @media(prefers-reduced-motion:reduce){.hero-video{transition:none}}
   .hero::before{content:"";position:absolute;inset:0;z-index:1;
     background:linear-gradient(110deg,rgba(17,13,10,.93) 10%,rgba(17,13,10,.55) 52%,rgba(17,13,10,.8) 100%)}
   /* cadre éditorial */
@@ -1856,7 +1860,7 @@
 <!-- HERO -->
 <section class="hero" id="top">
   <div class="hero-bg" id="heroBg"></div>
-  <video class="hero-video" id="heroVideo" poster="images/video-poster.jpg" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+  <video class="hero-video" id="heroVideo" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
   <div class="hero-glow" aria-hidden="true"></div>
   <canvas class="embers" id="embers" aria-hidden="true"></canvas>
   <div class="spotlight" id="spot"></div>
@@ -2867,12 +2871,33 @@
     var mobile = window.matchMedia && window.matchMedia("(max-width:760px)").matches;
     if(!mobile || reduce) return; // desktop ou mouvement réduit : on garde la photo (aucun téléchargement)
     var c = navigator.connection || {};
-    if(c.saveData || (c.effectiveType && c.effectiveType !== "4g")) return; // économie de données / réseau lent (2g/3g) : on garde l'image
+    /* On n'exclut que l'économie de données et les réseaux vraiment lents : Chrome Android
+       annonce souvent "3g" sur une connexion correcte, ce qui privait la plupart des mobiles de la vidéo. */
+    var lent = c.effectiveType === "2g" || c.effectiveType === "slow-2g";
+    if(c.saveData || lent) return; // économie de données / réseau très lent : on garde la photo
+    v.addEventListener("playing", function(){ v.classList.add("is-playing"); });
+    v.addEventListener("pause",   function(){ v.classList.remove("is-playing"); });
+    function jouer(){ var p = v.play(); return (p && p.catch) ? p : null; }
+    function surGeste(){
+      document.removeEventListener("touchstart", surGeste);
+      document.removeEventListener("click", surGeste);
+      jouer();
+    }
     function loadVid(){
       if(v.getAttribute("src")) return;
       v.src = "media/pino-soiree.mp4";
-      v.addEventListener("loadeddata", function(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }, {once:true});
+      /* On n'attend plus 'loadeddata' pour appeler play() : Safari iOS respecte strictement
+         preload="none" et ne télécharge rien tant que play() n'est pas appelé, donc l'événement
+         n'arrivait jamais et la lecture ne démarrait pas. C'est play() qui lance la récupération. */
+      v.preload = "auto";
       v.load();
+      var p = jouer();
+      if(p) p.catch(function(){
+        /* Autoplay refusé (mode économie d'énergie iOS, réglage navigateur…) : la photo du hero
+           reste affichée et on retente au premier geste, qui lève la restriction. */
+        document.addEventListener("touchstart", surGeste, {passive:true});
+        document.addEventListener("click", surGeste, {passive:true});
+      });
     }
     /* On diffère le chargement de la vidéo (2 Mo) après l'affichage de la page pour ne pas ralentir le 1er rendu */
     function kick(){ ('requestIdleCallback' in window) ? requestIdleCallback(loadVid, {timeout:2500}) : setTimeout(loadVid, 1200); }

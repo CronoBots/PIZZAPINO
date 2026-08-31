@@ -1,5 +1,5 @@
 /* Service worker Pizzeria Pino — réseau d'abord, cache en secours (hors-ligne). */
-var CACHE = 'pino-v211';
+var CACHE = 'pino-v212';
 var CORE = [
   './', './index.html', './legal.html', './manifest.webmanifest',
   './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/pino-logo.png',
@@ -39,7 +39,15 @@ self.addEventListener('fetch', function(e){
       }
       return res;
     }).catch(function(){
-      return caches.match(req).then(function(m){ return m || caches.match('./index.html'); });
+      return caches.match(req).then(function(m){
+        if(m) return m;
+        /* Ne jamais renvoyer la page HTML à la place d'un média : l'élément <video>/<img>
+           recevrait un document et échouerait en silence. Mieux vaut une vraie erreur réseau,
+           le poster / la photo de repli prend alors le relais. */
+        var media = req.destination === 'video' || req.destination === 'audio' || req.destination === 'image' ||
+                    /\.(mp4|webm|ogg|mp3|jpe?g|png|webp|avif|svg|woff2?)$/i.test(url.pathname);
+        return media ? Response.error() : caches.match('./index.html');
+      });
     })
   );
 });
