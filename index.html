@@ -1670,6 +1670,45 @@
   html.app-mode #cartPanel .cart-list{overflow:visible;max-height:none;-webkit-mask-image:none;mask-image:none}
   html.app-mode #cartPanel .cart-head{padding-top:18px}
 
+  /* ===== Commande sur grand écran : boîte de dialogue à deux colonnes =====
+     Sur mobile le panneau reste une feuille qui monte du bas. À partir de
+     900 px il devient un vrai dialogue centré : la liste à gauche, le
+     récapitulatif à droite. Plus de colonne étroite au milieu du vide, et
+     plus de pied de page qui déborde sous la ligne de flottaison. */
+  @media (min-width:900px){
+    .cart-panel{
+      left:50%;right:auto;top:50%;bottom:0;
+      width:min(1040px,calc(100vw - 72px));max-width:none;margin:0;
+      max-height:min(76vh,720px);
+      border-radius:16px;overflow:hidden;
+      box-shadow:0 40px 90px -26px rgba(0,0,0,.72);
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 348px;
+      grid-template-rows:auto minmax(0,1fr);
+      grid-template-areas:"head head" "list foot";
+      transform:translate(-50%,-46%) scale(.985);
+    }
+    .cart-panel.show{transform:translate(-50%,-50%) scale(1)}
+    .cart-head{grid-area:head;padding:18px 26px 14px}
+    .cart-head h3{font-size:1.5rem}
+    .cart-list{grid-area:list;min-height:0;padding:8px 26px 22px}
+    .cart-foot{grid-area:foot;min-height:0;overflow-y:auto;
+      border-top:0;border-left:1px solid var(--hair-ink);
+      padding:22px 24px calc(22px + env(safe-area-inset-bottom))}
+    .cart-item{padding:13px 0;gap:8px}
+    .cart-item .ci-name{font-size:1.05rem}
+    .cart-total{margin-bottom:12px}
+    /* Trois boutons côte à côte seraient à l'étroit dans 348 px :
+       « Appeler » prend toute la largeur, les deux autres se partagent la suite. */
+    .cart-actions{flex-wrap:wrap}
+    .cart-actions .ca-call{flex:1 1 100%;order:1}
+    .cart-actions .ca-send{order:2;flex:1 1 0}
+    .cart-actions .ca-trash{order:3}
+  }
+  @media (min-width:900px) and (prefers-reduced-motion:reduce){
+    .cart-panel{transform:translate(-50%,-50%)}
+  }
+
   /* ===== Panier « Ma commande » en thème sombre (site + app) ===== */
   .cart-ov{background:rgba(6,4,3,.66)}
   .cart-panel{background:#17110d;border-top-color:var(--rouge,#A8261D)}
