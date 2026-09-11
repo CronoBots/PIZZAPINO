@@ -3074,19 +3074,21 @@
     // On ne laisse jamais un bloc vide sous le titre : on renvoie vers Google.
     function tiFallback(){
       if(!tiWrap || tiWrap.querySelector(".ti-fallback")) return;
+      // Le service peut injecter son propre message d'erreur, en anglais :
+      // on le retire avant d'afficher le repli.
+      Array.prototype.slice.call(tiWrap.children).forEach(function(n){
+        if(n.tagName !== "SCRIPT") n.parentNode.removeChild(n);
+      });
       var d = document.createElement("div");
       d.className = "ti-ph ti-fallback";
       d.innerHTML = '<p>Les avis ne s\'affichent pas pour le moment.</p>'
         + '<a class="map-alt" href="' + TI_GOOGLE + '" target="_blank" rel="noopener">Voir nos avis sur Google \u2197</a>';
       tiWrap.appendChild(d);
     }
+    // Le widget reel porte la classe .ti-widget. Tout le reste — message
+    // d'erreur du service, conteneur vide — compte comme un echec.
     function tiRendu(){
-      if(!tiWrap) return false;
-      var n = tiWrap.children;
-      for(var i = 0; i < n.length; i++){
-        if(n[i].tagName !== "SCRIPT" && !n[i].classList.contains("ti-fallback")) return true;
-      }
-      return false;
+      return !!(tiWrap && tiWrap.querySelector(".ti-widget"));
     }
     function loadReviews(){
       if(reviewsLoaded || !tiWrap) return;
@@ -3098,7 +3100,8 @@
       if(tiPh) tiPh.remove();
       tiWrap.appendChild(sc);
       reviewsLoaded = true;
-      setTimeout(function(){ if(!tiRendu()) tiFallback(); }, 8000);
+      setTimeout(function(){ if(!tiRendu()) tiFallback(); }, 4000);
+      setTimeout(function(){ if(!tiRendu()) tiFallback(); }, 10000);
     }
     function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
     function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
