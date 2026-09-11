@@ -860,8 +860,9 @@
   /* Le filet du jour se place dans la marge de la carte : le nom du jour
      garde exactement l'alignement des autres lignes, sans coller au trait. */
   .hours li.today{background:rgba(198,154,77,.09);position:relative}
-  .hours li.today::before{content:"";position:absolute;top:0;bottom:0;left:-14px;width:3px;
-    background:var(--or);border-radius:2px}
+  .hours li.today::before{content:"";position:absolute;top:0;bottom:0;left:-14px;width:14px;
+    background:linear-gradient(90deg,var(--or) 0 3px,rgba(198,154,77,.09) 3px 100%);
+    border-radius:2px 0 0 2px}
   .hours li.today .day{color:var(--or)}
   .hours .day{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:1.1rem;color:var(--rouge-l);
     display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -942,7 +943,7 @@
     /* Horaires : jour à gauche, midi/soir en colonnes alignées à droite (mobile) */
     .hours li{padding:13px 16px;gap:14px}
     /* Sur mobile la ligne est déjà retraite de 16px : le filet reste au bord. */
-    .hours li.today::before{left:0}
+    .hours li.today::before{left:0;width:3px;background:var(--or)}
     .hours .day{font-size:1.04rem}
     .hours .hrs{display:grid;grid-template-columns:max-content max-content;column-gap:11px;row-gap:5px;
       justify-content:end;align-items:baseline;font-size:.95rem}
