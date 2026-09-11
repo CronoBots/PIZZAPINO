@@ -3069,15 +3069,36 @@
     var reviewsLoaded = false;
     var tiWrap = document.getElementById("tiReviews");
     var tiPh = document.getElementById("tiPlaceholder");
+    var TI_GOOGLE = "https://www.google.com/maps/place//data=!4m3!3m2!1s0x47c055bb01ab8f13%3A0x7a7073aea619564a!12i1";
+    // Le widget n'a pas rendu : compte expire, service injoignable ou bloqueur.
+    // On ne laisse jamais un bloc vide sous le titre : on renvoie vers Google.
+    function tiFallback(){
+      if(!tiWrap || tiWrap.querySelector(".ti-fallback")) return;
+      var d = document.createElement("div");
+      d.className = "ti-ph ti-fallback";
+      d.innerHTML = '<p>Les avis ne s\'affichent pas pour le moment.</p>'
+        + '<a class="map-alt" href="' + TI_GOOGLE + '" target="_blank" rel="noopener">Voir nos avis sur Google \u2197</a>';
+      tiWrap.appendChild(d);
+    }
+    function tiRendu(){
+      if(!tiWrap) return false;
+      var n = tiWrap.children;
+      for(var i = 0; i < n.length; i++){
+        if(n[i].tagName !== "SCRIPT" && !n[i].classList.contains("ti-fallback")) return true;
+      }
+      return false;
+    }
     function loadReviews(){
       if(reviewsLoaded || !tiWrap) return;
       var src = tiWrap.getAttribute("data-ti");
       if(!src) return;
       var sc = document.createElement("script");
       sc.defer = true; sc.async = true; sc.src = src;
+      sc.onerror = tiFallback;
       if(tiPh) tiPh.remove();
       tiWrap.appendChild(sc);
       reviewsLoaded = true;
+      setTimeout(function(){ if(!tiRendu()) tiFallback(); }, 8000);
     }
     function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
     function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
