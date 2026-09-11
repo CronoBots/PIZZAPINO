@@ -31,7 +31,8 @@
   window.addEventListener('orientationchange', function(){ lastW=0; setTimeout(set,250); });
   window.addEventListener('resize', set); /* ne met à jour que si la LARGEUR change (rotation), pas la barre d'URL */
 }catch(e){}})();</script>
-<link rel="icon" type="image/png" href="icons/icon-512.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+<link rel="shortcut icon" type="image/png" href="icons/icon-512.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -72,9 +73,6 @@
 <meta name="twitter:title" content="Pizzeria Pino — Restaurant italien à Nandrin">
 <meta name="twitter:description" content="Pâtes fraîches, pizzas au feu de bois, produits italiens de première qualité. 4,2/5 sur plus de 1 200 avis.">
 <meta name="twitter:image" content="https://cronobots.github.io/PIZZAPINO/images/hero-feast.jpg">
-
-<!-- Favicon emoji pizza -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
 
 <!-- Données structurées Google (fiche restaurant enrichie) -->
 <script type="application/ld+json">
