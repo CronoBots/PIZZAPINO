@@ -1486,11 +1486,12 @@
   html.app-mode body.app-home .marquee{display:block!important}
   html.app-mode body.app-home .reveal{opacity:1!important;transform:none!important}
   /* hero dans l'app : plein écran entre la barre d'app et la barre d'onglets, sans indicateur de scroll */
-  /* Entre la barre d'app et la barre d'onglets. On part de 100svh : la hauteur
-     du viewport quand les barres du navigateur sont déployées. innerHeight, lui,
-     compte la bande qu'elles recouvrent — d'où un cadre coupé par le bas dans
-     Safari ou Edge, alors qu'il tombait juste dans l'application installée. */
-  html.app-mode .hero{min-height:calc(100svh - var(--ab-h,56px) - var(--tb-h,72px));padding:0!important}
+  /* Entre la barre d'app et la barre d'onglets. La valeur est figée en pixels
+     au chargement (voir plus bas) : les deux barres se dimensionnent avec
+     env(safe-area-inset-*), qui change quand le navigateur escamote ses barres
+     au défilement. Une hauteur calculée en direct suivrait ces variations et
+     le hero se remettrait à respirer sous les doigts. */
+  html.app-mode .hero{min-height:var(--hero-app-h, calc(100svh - 60px - 60px));padding:0!important}
   html.app-mode .hero .hi-scroll{display:none}
   html.app-mode .hero-frame{inset:12px}
   /* Répartition verticale : identité en haut, description au centre, actions en bas.
@@ -2925,18 +2926,28 @@
   (function(){
     var root = document.documentElement;
     if(!root.classList.contains("app-mode")) return;
-    /* On ne mesure que les deux barres — elles, sont stables et intègrent les
-       safe-areas de l'iPhone. La hauteur du viewport, c'est svh qui la donne,
-       en CSS : lui seul sait ce que les barres du navigateur recouvrent. */
-    function fit(){
+    /* visualViewport.height donne ce que l'on voit vraiment ; innerHeight, lui,
+       compte la bande que les barres du navigateur recouvrent. On retient la
+       plus petite mesure des premiers instants : si l'une tombe pendant que le
+       navigateur a déjà escamoté ses barres, elle serait trop généreuse et le
+       cadre repasserait sous les onglets. */
+    var retenu = 0;
+    function fit(neuf){
       var ab = document.querySelector(".app-bar");
       var tb = document.querySelector(".tabbar");
-      if(ab && ab.offsetHeight) root.style.setProperty("--ab-h", ab.offsetHeight + "px");
-      if(tb && tb.offsetHeight) root.style.setProperty("--tb-h", tb.offsetHeight + "px");
+      var vv = window.visualViewport;
+      var vue = vv && vv.height ? vv.height : window.innerHeight;
+      var h = Math.round(vue - (ab ? ab.offsetHeight : 0) - (tb ? tb.offsetHeight : 0));
+      if(h <= 240) return;
+      if(neuf || !retenu || h < retenu){
+        retenu = h;
+        root.style.setProperty("--hero-app-h", h + "px");
+      }
     }
     fit();
-    window.addEventListener("load", fit);
-    window.addEventListener("orientationchange", function(){ setTimeout(fit, 300); });
+    window.addEventListener("load", function(){ fit(); setTimeout(fit, 700); });
+    /* Rotation : tout change, on repart d'une mesure neuve. */
+    window.addEventListener("orientationchange", function(){ setTimeout(function(){ fit(true); }, 300); });
   })();
 
   /* ---- Barres fixes (app-bar + tabbar) : iOS/WebKit peut laisser une barre
