@@ -1498,17 +1498,13 @@
      La barre d'app gère déjà l'encoche : pas de safe-area ici (sinon vide en haut). */
   html.app-mode body.app-home .hero{display:flex!important;flex-direction:column}
   html.app-mode .hero .wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;width:100%}
+  /* Ces marges aèrent le hero sur un grand écran ; sur un petit elles
+     pousseraient le contenu sous la barre d'onglets. Elles sont donc choisies
+     selon la hauteur — mais en JavaScript, figées en même temps que celle du
+     hero. Une media query serait réévaluée dès que le navigateur rétracte ses
+     barres, et tout le contenu se redistribuerait sous les doigts. */
   html.app-mode .hi-center{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;
-    padding-top:94px;padding-bottom:78px}
-  /* Ces marges aèrent le hero sur un grand écran. Sur un petit — un iPhone SE,
-     ou n'importe quel téléphone dont le navigateur déploie ses barres — elles
-     poussent le contenu sous la barre d'onglets et coupent le cadre. */
-  @media (max-height:700px){
-    html.app-mode .hi-center{padding-top:52px;padding-bottom:44px}
-  }
-  @media (max-height:600px){
-    html.app-mode .hi-center{padding-top:24px;padding-bottom:20px}
-  }
+    padding-top:var(--hi-pt,94px);padding-bottom:var(--hi-pb,78px)}
   html.app-mode .hi-desc{margin-top:0}
   html.app-mode .hi-cta{margin-top:0}
   /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
@@ -2942,6 +2938,11 @@
       if(neuf || !retenu || h < retenu){
         retenu = h;
         root.style.setProperty("--hero-app-h", h + "px");
+        /* Les marges intérieures suivent la même mesure, et se figent avec elle. */
+        var pt = h < 500 ? 24 : (h < 600 ? 52 : 94);
+        var pb = h < 500 ? 20 : (h < 600 ? 44 : 78);
+        root.style.setProperty("--hi-pt", pt + "px");
+        root.style.setProperty("--hi-pb", pb + "px");
       }
     }
     fit();
