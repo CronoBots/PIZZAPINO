@@ -1,2 +1,4 @@
 # Pages du menu rendues par le chien de garde : reconstruites à la demande.
 menu/apercu/
+__pycache__/
+*.pyc
