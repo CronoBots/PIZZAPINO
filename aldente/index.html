@@ -147,7 +147,8 @@ footer a{color:var(--texte-2)}
 <div class="enveloppe porte" id="porte">
   <p class="marque">Pizzeria Pino</p>
   <h1>Al <em>dente</em></h1>
-  <p>Vos chiffres, réservés à la maison.</p>
+  <p>Vos chiffres, réservés à la maison.<br>
+     Utilisez le lien qui vous a été remis&nbsp;; la clé ci-dessous n'est qu'un secours.</p>
   <form id="formCle" autocomplete="off">
     <input type="password" id="champCle" placeholder="Votre clé" aria-label="Clé d'accès"
            autocomplete="current-password" enterkeyhint="go">
@@ -232,10 +233,30 @@ footer a{color:var(--texte-2)}
   /* ═══════════════════════════════════════════════════════════════════ */
 
   var STOCK = 'pino.aldente.cle';
+
+  /* Un en-tête HTTP ne transporte pas les accents : une clé qui en contient
+     arriverait mutilée au serveur, et l'accès échouerait sans explication. */
+  var ASCII = /^[\x20-\x7E]+$/;
+  var PLAINTE = 'La clé ne peut contenir ni accent ni caractère spécial : '
+              + 'lettres non accentuées, chiffres, tirets et points seulement.';
   var porte  = document.getElementById('porte');
   var bord   = document.getElementById('bord');
   var jours  = 30;
   var demo   = /[?&]demo=1/.test(location.search);
+
+  /* Le lien remis aux gérants porte la clé : .../aldente/?k=…
+     On la range en mémoire de session puis on l'efface de la barre d'adresse,
+     pour qu'elle ne traîne ni à l'écran ni dans une capture. La page est en
+     « no-referrer » : elle ne la transmet à aucun site tiers. */
+  (function(){
+    var m = /[?&]k=([^&]+)/.exec(location.search);
+    if(!m) return;
+    try{ sessionStorage.setItem(STOCK, decodeURIComponent(m[1])); }catch(e){}
+    if(history.replaceState){
+      var propre = location.search.replace(/([?&])k=[^&]*&?/, '$1').replace(/[?&]$/, '');
+      history.replaceState(null, '', location.pathname + propre + location.hash);
+    }
+  })();
 
   var fr  = new Intl.NumberFormat('fr-BE');
   var frD = new Intl.NumberFormat('fr-BE', { maximumFractionDigits: 1 });
@@ -384,6 +405,7 @@ footer a{color:var(--texte-2)}
       return;
     }
     var cle = sessionStorage.getItem(STOCK) || '';
+    if(!ASCII.test(cle)){ deconnecte(PLAINTE); return; }
     fetch(API + '/stats?j=' + jours, { headers: { 'X-Pino-Cle': cle } })
       .then(function(r){
         if(r.status === 401){ deconnecte('Clé refusée.'); throw new Error('cle'); }
@@ -413,6 +435,7 @@ footer a{color:var(--texte-2)}
     e.preventDefault();
     var v = document.getElementById('champCle').value.trim();
     if(!v){ document.getElementById('erreurCle').textContent = 'Saisissez votre clé.'; return; }
+    if(!ASCII.test(v)){ document.getElementById('erreurCle').textContent = PLAINTE; return; }
     sessionStorage.setItem(STOCK, v);
     document.getElementById('erreurCle').textContent = '';
     ouvre();

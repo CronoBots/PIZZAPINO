@@ -134,6 +134,15 @@ la ville où se trouve le relais de son opérateur, pas là où il se tient. Le
 libellé « Non localisé » apparaît quand le service ne sait pas trancher.
 À présenter aux gérants comme une tendance, jamais comme une adresse.
 
+**La clé doit être en ASCII simple** — lettres non accentuées, chiffres, tirets, points.
+Un en-tête HTTP ne transporte pas les accents : une clé qui en contient arriverait
+mutilée au serveur. La page refuse désormais ces clés avec un message clair plutôt
+que de laisser l'accès échouer sans raison.
+
+**La clé est remise sous forme de lien** : `https://pizzeriapino.be/aldente/?k=VOTRE-CLE`.
+La page la range en mémoire de session puis l'efface de la barre d'adresse. Les gérants
+ajoutent ce lien à leur écran d'accueil et n'ont jamais rien à saisir.
+
 **Le mot de passe passe en clair dans l'en-tête `X-Pino-Cle`.** C'est sans danger
 sur HTTPS, mais il protège des chiffres de fréquentation, pas un compte en
 banque : ne le réutilisez nulle part ailleurs.

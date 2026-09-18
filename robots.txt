@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /aldente/
 
 Sitemap: https://pizzeriapino.be/sitemap.xml
