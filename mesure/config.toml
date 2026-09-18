@@ -1,0 +1,9 @@
+# À reporter dans supabase/config.toml, ou à régler depuis le tableau de bord
+# Supabase (Edge Functions → mesure → Details → « Verify JWT with legacy secret »).
+#
+# Le site appelle la fonction sans jeton : c'est une balise publique posée par
+# le navigateur d'un visiteur anonyme. La protection ne vient donc pas d'un JWT
+# mais de deux verrous propres à la fonction — la liste des origines autorisées,
+# et le mot de passe exigé pour lire les chiffres.
+[functions.mesure]
+verify_jwt = false
