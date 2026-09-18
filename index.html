@@ -3097,7 +3097,7 @@
     // Le widget n'a pas rendu : compte expire, service injoignable ou bloqueur.
     // On ne laisse jamais un bloc vide sous le titre : on renvoie vers Google.
     function tiFallback(){
-      if(!tiWrap || tiWrap.querySelector(".ti-fallback")) return;
+      if(!tiWrap || tiRendu() || tiWrap.querySelector(".ti-fallback")) return;
       // Le service peut injecter son propre message d'erreur, en anglais :
       // on le retire avant d'afficher le repli.
       Array.prototype.slice.call(tiWrap.children).forEach(function(n){
@@ -3109,10 +3109,33 @@
         + '<a class="map-alt" href="' + TI_GOOGLE + '" target="_blank" rel="noopener">Voir nos avis sur Google \u2197</a>';
       tiWrap.appendChild(d);
     }
-    // Le widget reel porte la classe .ti-widget. Tout le reste — message
-    // d'erreur du service, conteneur vide — compte comme un echec.
+    // Le widget porte normalement la classe .ti-widget, mais on ne se lie pas
+    // a une classe que le service peut renommer : tout bloc etranger assez
+    // haut pour etre une liste d'avis compte comme un rendu. Un message
+    // d'erreur du service, lui, reste court et ne passe pas la barre.
     function tiRendu(){
-      return !!(tiWrap && tiWrap.querySelector(".ti-widget"));
+      if(!tiWrap) return false;
+      if(tiWrap.querySelector(".ti-widget")) return true;
+      var n = tiWrap.children;
+      for(var i = 0; i < n.length; i++){
+        var e = n[i];
+        if(e.tagName === "SCRIPT" || e.classList.contains("ti-ph")) continue;
+        if(e.offsetHeight > 120) return true;
+      }
+      return false;
+    }
+    // Les avis arrivent parfois apres le delai : le repli doit s'effacer
+    // tout seul quand le widget finit par s'afficher.
+    function tiSurveille(){
+      if(!window.MutationObserver || !tiWrap) return;
+      var obs = new MutationObserver(function(){
+        if(!tiRendu()) return;
+        var f = tiWrap.querySelector(".ti-fallback"); if(f) f.remove();
+        var a = tiWrap.querySelector(".ti-attente"); if(a) a.remove();
+        obs.disconnect();
+      });
+      obs.observe(tiWrap, { childList: true, subtree: true });
+      setTimeout(function(){ obs.disconnect(); }, 30000);
     }
     function loadReviews(){
       if(reviewsLoaded || !tiWrap) return;
@@ -3121,11 +3144,19 @@
       var sc = document.createElement("script");
       sc.defer = true; sc.async = true; sc.src = src;
       sc.onerror = tiFallback;
-      if(tiPh) tiPh.remove();
+      // On garde le cadre occupe pendant le telechargement plutot que de
+      // laisser un vide sous le titre.
+      if(tiPh){
+        tiPh.className = "ti-ph ti-attente";
+        tiPh.innerHTML = "<p>Chargement des avis\u2026</p>";
+      }
       tiWrap.appendChild(sc);
       reviewsLoaded = true;
-      setTimeout(function(){ if(!tiRendu()) tiFallback(); }, 4000);
-      setTimeout(function(){ if(!tiRendu()) tiFallback(); }, 10000);
+      tiSurveille();
+      setTimeout(function(){
+        if(tiRendu()){ var a = tiWrap.querySelector(".ti-attente"); if(a) a.remove(); return; }
+        tiFallback();
+      }, 12000);
     }
     function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
     function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
