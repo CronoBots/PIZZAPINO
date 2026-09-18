@@ -3686,8 +3686,16 @@
       ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); flashSend(ok);
     }catch(e){ flashSend(false); }
   }
+  /* Ce que le client a composé, sans quantité ni prix : juste les intitulés. */
+  function mesurePanier(){
+    if(!window.pinoMesure) return;
+    var noms = [];
+    for(var k in state){ if(state[k] && state[k].name) noms.push(state[k].name); }
+    if(noms.length) window.pinoMesure('commande', noms);
+  }
   function shareOrder(){
     if(!Object.keys(state).length) return;
+    mesurePanier();
     var text = buildOrderText();
     if(navigator.share){
       navigator.share({ title: 'Ma commande — Pizzeria Pino', text: text }).catch(function(err){
@@ -3697,6 +3705,8 @@
     } else { copyOrder(text); }
   }
   if(sendBtn) sendBtn.addEventListener('click', shareOrder);
+  var btnAppel = document.getElementById('caCall');
+  if(btnAppel) btnAppel.addEventListener('click', mesurePanier);
   fab.addEventListener('click', openPanel);
   var orderNowBtn = document.getElementById('orderNowBtn');
   if(orderNowBtn) orderNowBtn.addEventListener('click', openPanel);
@@ -3974,6 +3984,53 @@
     if(deferred || isIOS) setTimeout(show, 400);
   }
   setTimeout(maybeShow, 3200);
+})();
+</script>
+
+<!-- ══════════ Mesure de fréquentation ══════════
+     Aucun cookie, aucun identifiant, aucune adresse IP conservée : le collecteur
+     n'incrémente que des totaux (« Liège : 34 »). Rien ici ne permet de suivre
+     un visiteur, ni sur ce site ni d'un site à l'autre. Voir mesure/worker.js. -->
+<script>
+(function(){
+  /* Adresse du collecteur, sans barre oblique finale. Vide = mesure inactive. */
+  var API = '';
+
+  var dernierPanier = '';
+
+  function envoie(type, plats){
+    if(!API) return;
+    try{
+      var charge = JSON.stringify(plats && plats.length ? { t:type, p:plats } : { t:type });
+      var corps = new Blob([charge], { type:'text/plain;charset=UTF-8' });
+      if(navigator.sendBeacon && navigator.sendBeacon(API + '/e', corps)) return;
+      fetch(API + '/e', { method:'POST', body:charge, keepalive:true, mode:'cors',
+                          headers:{ 'Content-Type':'text/plain;charset=UTF-8' } }).catch(function(){});
+    }catch(e){}
+  }
+
+  /* Le panier n'est compté qu'une fois par composition, pas à chaque clic. */
+  window.pinoMesure = function(type, plats){
+    if(type === 'commande'){
+      var sig = (plats || []).slice().sort().join('|');
+      if(!sig || sig === dernierPanier) return;
+      dernierPanier = sig;
+    }
+    envoie(type, plats);
+  };
+
+  /* La visite : une fois, à l'ouverture de la page. */
+  if(document.visibilityState !== 'prerender') envoie('vue');
+
+  /* Appels et itinéraires : une seule écoute pour tous les liens, même ceux
+     ajoutés plus tard par le script. */
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest && e.target.closest('a[href]');
+    if(!a) return;
+    var h = a.getAttribute('href') || '';
+    if(h.indexOf('tel:') === 0) envoie('appel');
+    else if(/(google\.[a-z.]+\/maps|maps\.google\.)/.test(h)) envoie('itineraire');
+  }, true);
 })();
 </script>
 

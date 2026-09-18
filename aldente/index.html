@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Al dente — Pizzeria Pino</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#14100D">
+<link rel="icon" type="image/png" sizes="512x512" href="../icons/icon-512.png">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Al dente">
+
+<style>
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;src:url('../fonts/fraunces-normal-400_700.woff2') format('woff2')}
+@font-face{font-family:'Fraunces';font-style:italic;font-weight:400 600;font-display:swap;src:url('../fonts/fraunces-italic-400_600.woff2') format('woff2')}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:400;font-display:swap;src:url('../fonts/oswald-normal-400.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('../fonts/inter-normal-400.woff2') format('woff2')}
+
+:root{
+  --fond:#14100D;          /* charbon chaud, comme le site */
+  --surface:#191411;       /* surface des blocs — référence des contrastes */
+  --surface-2:#221C17;
+  --texte:#F5EFE4;         /* crème */
+  --texte-2:#B5AB99;
+  --texte-3:#84796A;
+  --or:#C69A4D;            /* la donnée : une seule teinte, l'intensité vient de la longueur */
+  --or-l:#E9CE96;
+  --rouge:#A8261D;
+  --trait:rgba(245,239,228,.1);
+  --piste:rgba(198,154,77,.13);   /* fond de barre */
+  --rayon:14px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--fond);color:var(--texte);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:16px;line-height:1.55;
+  padding:clamp(16px,4vw,40px) clamp(16px,4vw,40px) 64px;
+  -webkit-font-smoothing:antialiased;text-wrap:pretty;
+}
+.enveloppe{max-width:920px;margin:0 auto}
+
+/* ── en-tête ─────────────────────────────────────────────────────── */
+header{border-bottom:1px solid var(--trait);padding-bottom:18px;margin-bottom:26px}
+.marque{font-family:'Oswald',sans-serif;font-size:.68rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--or);margin-bottom:6px}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(1.9rem,6vw,2.6rem);
+  line-height:1.05;letter-spacing:-.01em}
+h1 em{font-style:italic;color:var(--or)}
+.periode-info{color:var(--texte-3);font-size:.86rem;margin-top:8px}
+
+/* ── sélecteur de période ────────────────────────────────────────── */
+.filtres{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 30px}
+.filtres button{
+  font-family:'Oswald',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--texte-2);background:var(--surface);border:1px solid var(--trait);
+  border-radius:999px;padding:9px 16px;cursor:pointer;transition:.2s;min-height:40px}
+.filtres button:hover{color:var(--texte);border-color:var(--or)}
+.filtres button[aria-pressed="true"]{background:var(--or);border-color:var(--or);color:#14100D}
+
+/* ── rangée de chiffres clés ─────────────────────────────────────── */
+.cles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:34px}
+@media(min-width:680px){.cles{grid-template-columns:repeat(4,1fr)}}
+.cle{background:var(--surface);border:1px solid var(--trait);border-radius:var(--rayon);
+  padding:16px 16px 14px}
+.cle .n{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(1.9rem,7vw,2.5rem);
+  line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.cle .l{font-family:'Oswald',sans-serif;font-size:.63rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--texte-3);margin-top:8px;line-height:1.35}
+
+/* ── sections ────────────────────────────────────────────────────── */
+section{background:var(--surface);border:1px solid var(--trait);border-radius:var(--rayon);
+  padding:clamp(18px,3.4vw,26px);margin-bottom:16px}
+.titre{display:flex;align-items:baseline;justify-content:space-between;gap:6px 12px;
+  flex-wrap:wrap;margin-bottom:4px}
+.titre .bascule{margin-left:auto}
+h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter-spacing:-.01em}
+.chapo{color:var(--texte-3);font-size:.85rem;margin-bottom:20px}
+
+/* ── barres : une seule teinte, la longueur porte la grandeur ────── */
+.barres{display:flex;flex-direction:column;gap:14px}
+.barre .haut{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+.barre .nom{font-size:.94rem;color:var(--texte);min-width:0;overflow-wrap:anywhere}
+.barre .val{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1rem;
+  font-variant-numeric:tabular-nums;color:var(--texte);white-space:nowrap}
+.barre .val span{font-family:'Inter',sans-serif;font-weight:400;font-size:.78rem;color:var(--texte-3)}
+.piste{height:10px;background:var(--piste);border-radius:0 5px 5px 0;overflow:hidden}
+.remplissage{height:100%;background:var(--or);border-radius:0 5px 5px 0;
+  width:0;transition:width .6s cubic-bezier(.22,1,.36,1)}
+
+/* ── courbe des visites ──────────────────────────────────────────── */
+.courbe{margin-top:6px}
+.courbe svg{display:block;width:100%;height:76px;overflow:visible}
+.courbe .ligne{fill:none;stroke:var(--or);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.courbe .aire{fill:var(--or);opacity:.1}
+.courbe .pointe{fill:var(--or);stroke:var(--surface);stroke-width:2}
+.bornes{display:flex;justify-content:space-between;color:var(--texte-3);
+  font-size:.72rem;margin-top:8px}
+
+/* ── tableau (identité jamais portée par la seule couleur) ───────── */
+.bascule{font-family:'Oswald',sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--texte-3);background:none;border:0;border-bottom:1px solid var(--trait);
+  padding:4px 0;cursor:pointer;transition:.2s}
+.bascule:hover{color:var(--or);border-color:var(--or)}
+table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.88rem}
+th,td{text-align:left;padding:8px 10px 8px 0;border-bottom:1px solid var(--trait)}
+th{font-family:'Oswald',sans-serif;font-size:.62rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--texte-3);font-weight:400}
+td:last-child,th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+[hidden]{display:none!important}
+
+/* ── états ───────────────────────────────────────────────────────── */
+.vide{color:var(--texte-3);font-size:.9rem;padding:18px 0;text-align:center}
+.alerte{background:var(--surface-2);border:1px solid var(--trait);border-left:3px solid var(--or);
+  border-radius:8px;padding:14px 16px;margin-bottom:20px;font-size:.88rem;color:var(--texte-2)}
+.alerte b{color:var(--texte)}
+.alerte.demo{border-left-color:var(--rouge)}
+
+/* ── porte d'entrée ──────────────────────────────────────────────── */
+.porte{max-width:380px;margin:14vh auto 0;text-align:center}
+.porte h1{margin-bottom:10px}
+.porte p{color:var(--texte-3);font-size:.9rem;margin-bottom:24px}
+.porte form{display:flex;gap:8px}
+.porte input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--trait);
+  color:var(--texte);border-radius:10px;padding:13px 15px;font-size:1rem;font-family:inherit}
+.porte input:focus{outline:2px solid var(--or);outline-offset:1px;border-color:var(--or)}
+.porte button{background:var(--or);color:#14100D;border:0;border-radius:10px;padding:13px 20px;
+  font-family:'Oswald',sans-serif;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;min-height:48px}
+.porte .erreur{color:#E8836F;font-size:.85rem;margin-top:14px;min-height:1.2em}
+
+footer{color:var(--texte-3);font-size:.78rem;margin-top:34px;padding-top:18px;
+  border-top:1px solid var(--trait);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+footer a{color:var(--texte-2)}
+.quitter{background:none;border:0;color:var(--texte-3);font:inherit;cursor:pointer;
+  text-decoration:underline;padding:0}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ══════════ Porte : la page ne montre rien sans la clé ══════════ -->
+<div class="enveloppe porte" id="porte">
+  <p class="marque">Pizzeria Pino</p>
+  <h1>Al <em>dente</em></h1>
+  <p>Vos chiffres, réservés à la maison.</p>
+  <form id="formCle" autocomplete="off">
+    <input type="password" id="champCle" placeholder="Votre clé" aria-label="Clé d'accès"
+           autocomplete="current-password" enterkeyhint="go">
+    <button type="submit">Entrer</button>
+  </form>
+  <p class="erreur" id="erreurCle" role="alert"></p>
+</div>
+
+<!-- ══════════ Tableau de bord ══════════ -->
+<div class="enveloppe" id="bord" hidden>
+
+  <header>
+    <p class="marque">Pizzeria Pino · Tableau de bord</p>
+    <h1>Al <em>dente</em></h1>
+    <p class="periode-info" id="periodeInfo">Chargement…</p>
+  </header>
+
+  <div id="banniere"></div>
+
+  <div class="filtres" role="group" aria-label="Période observée">
+    <button type="button" data-j="7">7 jours</button>
+    <button type="button" data-j="30" aria-pressed="true">30 jours</button>
+    <button type="button" data-j="90">90 jours</button>
+    <button type="button" data-j="365">1 an</button>
+  </div>
+
+  <div class="cles">
+    <div class="cle"><div class="n" id="kVues">—</div><div class="l">Visites</div></div>
+    <div class="cle"><div class="n" id="kAppels">—</div><div class="l">Appels lancés</div></div>
+    <div class="cle"><div class="n" id="kItin">—</div><div class="l">Itinéraires demandés</div></div>
+    <div class="cle"><div class="n" id="kCmd">—</div><div class="l">Commandes composées</div></div>
+  </div>
+
+  <section id="secCourbe">
+    <div class="titre"><h2>Les visites, jour par jour</h2></div>
+    <p class="chapo">Une visite = une personne qui ouvre le site.</p>
+    <div class="courbe" id="courbe"></div>
+  </section>
+
+  <section id="secVilles">
+    <div class="titre">
+      <h2>D’où viennent vos visiteurs</h2>
+      <button class="bascule" type="button" data-cible="tblVilles">Voir en tableau</button>
+    </div>
+    <p class="chapo">Ville approximative, déduite du réseau. Aucun visiteur n’est identifié.</p>
+    <div class="barres" id="barVilles"></div>
+    <div id="tblVilles" hidden></div>
+  </section>
+
+  <section id="secSupports">
+    <div class="titre">
+      <h2>Sur quel appareil</h2>
+      <button class="bascule" type="button" data-cible="tblSupports">Voir en tableau</button>
+    </div>
+    <p class="chapo">Ce que vos clients ont en main au moment de vous chercher.</p>
+    <div class="barres" id="barSupports"></div>
+    <div id="tblSupports" hidden></div>
+  </section>
+
+  <section id="secPlats">
+    <div class="titre">
+      <h2>Les plats les plus mis au panier</h2>
+      <button class="bascule" type="button" data-cible="tblPlats">Voir en tableau</button>
+    </div>
+    <p class="chapo">Ce que les clients composent sur le site — pas ce qui est encaissé.</p>
+    <div class="barres" id="barPlats"></div>
+    <div id="tblPlats" hidden></div>
+  </section>
+
+  <footer>
+    <span>Sans cookie, sans profil, sans donnée personnelle. <a href="../legal.html#confidentialite">En savoir plus</a></span>
+    <button class="quitter" type="button" id="quitter">Fermer la session</button>
+  </footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ══ À RENSEIGNER une fois le service en ligne ══════════════════════════
+     L'adresse du Worker Cloudflare, sans barre oblique finale.
+     Exemple : 'https://pino-mesure.vincent-buron.workers.dev'            */
+  var API = '';
+  /* ═══════════════════════════════════════════════════════════════════ */
+
+  var STOCK = 'pino.aldente.cle';
+  var porte  = document.getElementById('porte');
+  var bord   = document.getElementById('bord');
+  var jours  = 30;
+  var demo   = /[?&]demo=1/.test(location.search);
+
+  var fr  = new Intl.NumberFormat('fr-BE');
+  var frD = new Intl.NumberFormat('fr-BE', { maximumFractionDigits: 1 });
+  function nb(n){ return fr.format(n || 0); }
+  function pourcent(n, total){ return frD.format(total ? Math.round(n * 1000 / total) / 10 : 0); }
+  function echappe(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  }
+
+  /* ── barres : teinte unique, la longueur seule porte la grandeur ── */
+  function dessineBarres(cible, liste, unite){
+    var hote = document.getElementById(cible);
+    if(!liste || !liste.length){
+      hote.innerHTML = '<p class="vide">Aucune donnée sur cette période.</p>';
+      return;
+    }
+    var total = liste.reduce(function(s, d){ return s + d.n; }, 0);
+    var max = liste[0].n || 1;
+    hote.innerHTML = liste.map(function(d){
+      return '<div class="barre">'
+        + '<div class="haut"><span class="nom">' + echappe(d.nom) + '</span>'
+        + '<span class="val">' + nb(d.n)
+        + ' <span>' + (unite ? unite + ' · ' : '') + pourcent(d.n, total) + ' %</span></span></div>'
+        + '<div class="piste"><div class="remplissage" data-l="' + (d.n * 100 / max) + '"></div></div>'
+        + '</div>';
+    }).join('');
+    requestAnimationFrame(function(){
+      hote.querySelectorAll('.remplissage').forEach(function(el){
+        el.style.width = el.dataset.l + '%';
+      });
+    });
+  }
+
+  function dessineTable(cible, liste, entete){
+    var hote = document.getElementById(cible);
+    if(!liste || !liste.length){ hote.innerHTML = ''; return; }
+    var total = liste.reduce(function(s, d){ return s + d.n; }, 0);
+    hote.innerHTML = '<table><thead><tr><th>' + entete + '</th><th>Nombre</th><th>Part</th></tr></thead><tbody>'
+      + liste.map(function(d){
+          return '<tr><td>' + echappe(d.nom) + '</td><td>' + nb(d.n) + '</td><td>'
+               + pourcent(d.n, total) + ' %</td></tr>';
+        }).join('')
+      + '</tbody></table>';
+  }
+
+  /* ── courbe : une série, 2 px, aire à 10 %, pointe cerclée ── */
+  function dessineCourbe(points){
+    var hote = document.getElementById('courbe');
+    if(!points || points.length < 2){
+      hote.innerHTML = '<p class="vide">Pas encore assez de jours pour tracer une courbe.</p>';
+      return;
+    }
+    var L = 600, H = 70, m = 6;
+    var max = Math.max.apply(null, points.map(function(p){ return p.n; })) || 1;
+    var x = function(i){ return m + i * (L - 2 * m) / (points.length - 1); };
+    var y = function(v){ return H - m - v * (H - 2 * m) / max; };
+
+    var d = points.map(function(p, i){ return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p.n).toFixed(1); }).join(' ');
+    var aire = d + ' L' + x(points.length - 1).toFixed(1) + ' ' + (H - m) + ' L' + x(0).toFixed(1) + ' ' + (H - m) + ' Z';
+    var dernier = points[points.length - 1];
+
+    hote.innerHTML =
+      '<svg viewBox="0 0 ' + L + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="'
+        + 'Visites quotidiennes, maximum ' + nb(max) + '">'
+      + '<path class="aire" d="' + aire + '"/>'
+      + '<path class="ligne" d="' + d + '" vector-effect="non-scaling-stroke"/>'
+      + '<circle class="pointe" cx="' + x(points.length - 1).toFixed(1) + '" cy="' + y(dernier.n).toFixed(1) + '" r="4"/>'
+      + '</svg>'
+      + '<div class="bornes"><span>' + dateCourte(points[0].j) + '</span>'
+      + '<span>' + nb(max) + ' visites au plus haut</span>'
+      + '<span>' + dateCourte(dernier.j) + '</span></div>';
+  }
+
+  function dateCourte(iso){
+    var p = String(iso).split('-');
+    if(p.length !== 3) return iso;
+    return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]))
+      .toLocaleDateString('fr-BE', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  }
+
+  /* ── rendu complet ── */
+  function affiche(d){
+    document.getElementById('kVues').textContent   = nb(d.totaux.vue);
+    document.getElementById('kAppels').textContent = nb(d.totaux.appel);
+    document.getElementById('kItin').textContent   = nb(d.totaux.itineraire);
+    document.getElementById('kCmd').textContent    = nb(d.totaux.commande);
+
+    document.getElementById('periodeInfo').textContent =
+      'Du ' + dateCourte(d.depuis) + ' au ' + dateCourte(d.jusqua) + ' · ' + d.jours + ' jours';
+
+    dessineCourbe(d.courbe);
+    dessineBarres('barVilles',   d.villes,   'visites');
+    dessineBarres('barSupports', d.supports, 'visites');
+    dessineBarres('barPlats',    d.plats,    'fois');
+    dessineTable('tblVilles',   d.villes,   'Ville');
+    dessineTable('tblSupports', d.supports, 'Appareil');
+    dessineTable('tblPlats',    d.plats,    'Plat');
+  }
+
+  function banniere(html, classe){
+    document.getElementById('banniere').innerHTML =
+      html ? '<div class="alerte ' + (classe || '') + '">' + html + '</div>' : '';
+  }
+
+  /* ── chiffres de démonstration, pour montrer la page avant la mise en service ── */
+  function jeuDemo(n){
+    var courbe = [], j = new Date();
+    for(var i = n - 1; i >= 0; i--){
+      var d = new Date(j.getTime() - i * 86400000);
+      var we = d.getDay() === 5 || d.getDay() === 6 || d.getDay() === 0;
+      courbe.push({ j: d.toISOString().slice(0, 10),
+                    n: Math.round((we ? 46 : 27) + Math.sin(i / 2.4) * 7 + (i % 5)) });
+    }
+    var vues = courbe.reduce(function(s, p){ return s + p.n; }, 0);
+    return {
+      depuis: courbe[0].j, jusqua: courbe[courbe.length - 1].j, jours: n,
+      totaux: { vue: vues, appel: Math.round(vues * .14), itineraire: Math.round(vues * .09),
+                commande: Math.round(vues * .06) },
+      villes: [{nom:'Nandrin',n:Math.round(vues*.28)},{nom:'Liège',n:Math.round(vues*.19)},
+               {nom:'Neupré',n:Math.round(vues*.12)},{nom:'Huy',n:Math.round(vues*.09)},
+               {nom:'Esneux',n:Math.round(vues*.07)},{nom:'Seraing',n:Math.round(vues*.05)},
+               {nom:'Non localisé',n:Math.round(vues*.2)}],
+      supports: [{nom:'Téléphone',n:Math.round(vues*.79)},{nom:'Ordinateur',n:Math.round(vues*.16)},
+                 {nom:'Tablette',n:Math.round(vues*.05)}],
+      plats: [{nom:'Margherita',n:64},{nom:'Quattro formaggi',n:51},{nom:'Calzone',n:44},
+              {nom:'Diavola',n:38},{nom:'Tagliatelle bolognaise',n:31},{nom:'Prosciutto',n:27},
+              {nom:'Lasagne maison',n:22},{nom:'Tiramisù',n:18}],
+      courbe: courbe
+    };
+  }
+
+  /* ── appel au service ── */
+  function charge(){
+    if(demo){
+      banniere('<b>Démonstration.</b> Ces chiffres sont fictifs, ils servent à montrer la page. '
+             + 'Retirez « ?demo=1 » de l’adresse pour voir les vrais.', 'demo');
+      affiche(jeuDemo(jours));
+      return;
+    }
+    if(!API){
+      banniere('<b>Service de mesure pas encore branché.</b> La page est prête&nbsp;; '
+             + 'il reste à mettre le collecteur en ligne et à renseigner son adresse. '
+             + 'En attendant, <a href="?demo=1">voir la page avec des chiffres d’exemple</a>.');
+      return;
+    }
+    var cle = sessionStorage.getItem(STOCK) || '';
+    fetch(API + '/stats?j=' + jours, { headers: { 'X-Pino-Cle': cle } })
+      .then(function(r){
+        if(r.status === 401){ deconnecte('Clé refusée.'); throw new Error('cle'); }
+        if(!r.ok) throw new Error('http ' + r.status);
+        return r.json();
+      })
+      .then(function(d){ banniere(''); affiche(d); })
+      .catch(function(e){
+        if(e.message === 'cle') return;
+        banniere('<b>Chiffres indisponibles pour le moment.</b> Le service de mesure ne répond pas. '
+               + 'Réessayez dans quelques minutes.');
+      });
+  }
+
+  /* ── porte ── */
+  function ouvre(){
+    porte.hidden = true; bord.hidden = false; charge();
+  }
+  function deconnecte(msg){
+    sessionStorage.removeItem(STOCK);
+    bord.hidden = true; porte.hidden = false;
+    document.getElementById('erreurCle').textContent = msg || '';
+    document.getElementById('champCle').value = '';
+  }
+
+  document.getElementById('formCle').addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = document.getElementById('champCle').value.trim();
+    if(!v){ document.getElementById('erreurCle').textContent = 'Saisissez votre clé.'; return; }
+    sessionStorage.setItem(STOCK, v);
+    document.getElementById('erreurCle').textContent = '';
+    ouvre();
+  });
+
+  document.getElementById('quitter').addEventListener('click', function(){ deconnecte(''); });
+
+  document.querySelectorAll('.filtres button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.filtres button').forEach(function(o){ o.removeAttribute('aria-pressed'); });
+      b.setAttribute('aria-pressed', 'true');
+      jours = parseInt(b.dataset.j, 10);
+      charge();
+    });
+  });
+
+  document.querySelectorAll('.bascule').forEach(function(b){
+    b.addEventListener('click', function(){
+      var t = document.getElementById(b.dataset.cible);
+      var g = t.previousElementSibling;
+      var ouvert = t.hidden;
+      t.hidden = !ouvert; g.hidden = ouvert;
+      b.textContent = ouvert ? 'Voir en barres' : 'Voir en tableau';
+    });
+  });
+
+  /* En démonstration la clé n'a pas de sens : on entre directement. */
+  if(demo || sessionStorage.getItem(STOCK)) ouvre();
+})();
+</script>
+</body>
+</html>

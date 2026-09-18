@@ -1,0 +1,16 @@
+name = "pino-mesure"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+# Seules ces origines peuvent écrire ou lire. Ajoutez le domaine définitif
+# le jour où le site quitte github.io, sinon la mesure s'arrête en silence.
+[vars]
+ORIGINES = "https://cronobots.github.io"
+
+# Remplacez database_id par celui que renvoie « wrangler d1 create pino-mesure ».
+[[d1_databases]]
+binding = "DB"
+database_name = "pino-mesure"
+database_id = "à-remplacer-après-la-création"
+
+# La clé du tableau de bord n'est pas ici : « wrangler secret put CLE ».
