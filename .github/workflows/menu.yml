@@ -1,0 +1,66 @@
+# Chien de garde du menu officiel.
+#
+# À chaque fois que menu.pdf est poussé, on vérifie qu'il correspond bien à
+# la version avec laquelle le site a été synchronisé. Si ce n'est plus le
+# cas, une issue est ouverte avec les pages rendues en image et une lecture
+# optique indicative. Le site n'est jamais modifié automatiquement : sur un
+# menu scanné, une lecture optique se trompe, et un prix faux sur le site
+# d'un restaurant coûte plus cher que dix minutes de relecture.
+
+name: Menu officiel
+
+on:
+  push:
+    branches: [main]
+    paths: ['menu.pdf', 'index.html', 'menu/verifie.py']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Outils de rendu et de lecture optique
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-fra
+          pip install --quiet pymupdf
+
+      - name: Comparer le menu au site
+        id: verif
+        run: python3 menu/verifie.py | tee menu/apercu-rapport.md
+
+      - name: Conserver les pages rendues
+        if: steps.verif.outputs.desynchronise == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: menu-rendu
+          path: menu/apercu/
+          retention-days: 30
+
+      - name: Signaler l'écart
+        if: steps.verif.outputs.desynchronise == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEPOT: ${{ github.repository }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITRE="Le menu officiel a changé — le site est à reprendre"
+          {
+            cat menu/apercu/rapport.md
+            echo
+            echo "Les pages du menu rendues en image sont dans les fichiers de [cette exécution]($RUN)."
+          } > corps.md
+
+          EXISTANTE=$(gh issue list --repo "$DEPOT" --state open \
+                        --search "in:title $TITRE" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTANTE" ]; then
+            gh issue comment "$EXISTANTE" --repo "$DEPOT" --body-file corps.md
+          else
+            gh issue create --repo "$DEPOT" --title "$TITRE" --body-file corps.md
+          fi
