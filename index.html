@@ -892,9 +892,6 @@
   .cb-info{display:flex;flex-direction:column;flex:0 0 auto}
   .cb-info p{margin-bottom:12px;font-size:1rem;color:var(--gris);line-height:1.6}
   .cb-info p:last-child{margin-bottom:0}
-  /* Message des gérants : il informe celui qui s'apprête à appeler,
-     au lieu de le freiner depuis le panneau de liste. */
-  .cb-info .cb-note{display:block;margin-top:7px;font-size:.8rem;font-style:italic;line-height:1.5;color:var(--gris-d)}
   .cb-info a{color:var(--or-l);font-weight:600;text-decoration:none}
   .cb-info a:hover{text-decoration:underline}
   .cb-map{display:flex;flex:1 1 auto}
@@ -1811,10 +1808,6 @@
   html.app-mode #infos .aia svg{width:19px;height:19px}
   html.app-mode #infos .aia.aia-primary{background:var(--rouge);border-color:var(--rouge);color:#fff}
   html.app-mode #infos .app-addr{text-align:center;margin:15px 0 0;color:var(--gris);font-size:.94rem;line-height:1.5;font-family:"Inter",system-ui,sans-serif}
-  /* Le mot des gérants sur l'attente : sous le numéro, là où il informe
-     celui qui s'apprête à appeler. */
-  html.app-mode #infos .app-note{max-width:320px;margin:14px auto 0;text-align:center;font-size:.78rem;
-    font-style:italic;line-height:1.55;color:#8D8272;text-wrap:pretty}
 
   /* Bouton « remonter » au-dessus de la barre d'onglets */
   html.app-mode #toTop{display:inline-flex!important;align-items:center!important;justify-content:center!important;line-height:1;bottom:calc(84px + env(safe-area-inset-bottom))!important;right:16px!important;left:auto!important;z-index:125}
@@ -2328,7 +2321,7 @@
         <div class="cb-info">
           <h3 class="ic-head">Nous contacter</h3>
           <p>Route du Condroz 131<br>4550 Nandrin · <a href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener">Itinéraire ↗</a></p>
-          <p>Tél.&nbsp;: <a href="tel:+3285513339">085 51 33 39</a><br><small class="cb-note">Commander par téléphone n'évite pas toujours le délai d'attente sur place&nbsp;: cela dépend de notre planning. Merci de votre compréhension.</small></p>
+          <p>Tél.&nbsp;: <a href="tel:+3285513339">085 51 33 39</a></p>
           <p class="ig-line">Instagram : <a href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg> @pino.nandrin</a></p>
           <p class="ig-line">Facebook : <a href="https://www.facebook.com/share/1F96kxvUGi/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg> Pizzeria Pino</a></p>
         </div>
@@ -3806,8 +3799,6 @@
       '<h3 class="ic-head">Nous trouver</h3>'
       + '<p class="app-addr">Route du Condroz 131<br>4550 Nandrin</p>'
       + '<a class="app-tel" href="tel:+3285513339"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.6 9.8a16 16 0 0 0 6 6l1.4-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>085 51 33 39</a>'
-      + '<p class="app-note">Commander par téléphone n\'évite pas toujours le délai d\'attente sur place\u00a0: '
-      +   'cela dépend de notre planning. Merci de votre compréhension.</p>'
       + '<div class="app-social">'
       +   '<a href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" aria-label="Instagram Pizzeria Pino"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></a>'
       +   '<a href="https://www.facebook.com/share/1F96kxvUGi/" target="_blank" rel="noopener" aria-label="Facebook Pizzeria Pino"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h2.5V6H14c-2 0-3.5 1.5-3.5 3.5V11H8.5v3h2v7h3v-7H16l.5-3h-3V9.5c0-.3.2-.5.5-.5z"/></svg></a>'
