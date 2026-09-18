@@ -1,18 +1,39 @@
 {
   "name": "PIZZERIA PINO",
   "short_name": "PIZZERIA PINO",
-  "description": "Restaurant italien & pizzas au feu de bois à Nandrin. Carte, avis et commande à composer.",
+  "description": "Restaurant italien & pizzas au feu de bois à Nandrin. Carte, avis et liste à composer.",
   "lang": "fr",
-  "id": "/PIZZAPINO/",
+  "dir": "ltr",
+  "id": "/",
   "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
   "background_color": "#14100D",
   "theme_color": "#14100D",
-  "categories": ["food", "restaurant"],
+  "categories": ["food", "restaurant", "lifestyle"],
   "icons": [
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "screenshots/mobile-accueil.webp", "sizes": "780x1688", "type": "image/webp",
+      "form_factor": "narrow", "label": "L'accueil du restaurant" },
+    { "src": "screenshots/mobile-carte.webp", "sizes": "780x1688", "type": "image/webp",
+      "form_factor": "narrow", "label": "La carte des pizzas au feu de bois" },
+    { "src": "screenshots/bureau-accueil.webp", "sizes": "1280x800", "type": "image/webp",
+      "form_factor": "wide", "label": "Le site sur ordinateur" }
+  ],
+  "shortcuts": [
+    { "name": "La carte", "short_name": "Carte", "description": "Pizzas, pâtes, viandes et desserts",
+      "url": "./?source=raccourci#carte",
+      "icons": [{ "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }] },
+    { "name": "Ma liste", "short_name": "Ma liste", "description": "Reprendre la liste en cours",
+      "url": "./?source=raccourci#liste",
+      "icons": [{ "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }] },
+    { "name": "Nous trouver", "short_name": "Accès", "description": "Adresse, horaires et téléphone",
+      "url": "./?source=raccourci#infos",
+      "icons": [{ "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }] }
   ]
 }

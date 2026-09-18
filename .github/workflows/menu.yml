@@ -12,7 +12,7 @@ name: Menu officiel
 on:
   push:
     branches: [main]
-    paths: ['menu.pdf', 'index.html', 'menu/verifie.py']
+    paths: ['menu.pdf', 'index.html', 'menu/verifie.py', 'menu/balisage.py']
   workflow_dispatch:
 
 permissions:
@@ -30,6 +30,12 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-fra
           pip install --quiet pymupdf
+
+      - name: Les données structurées suivent-elles la carte ?
+        run: |
+          # Google lit la carte dans le balisage, pas dans la page. Si les deux
+          # divergent, il affiche des prix périmés dans ses résultats.
+          python3 menu/balisage.py --verifie
 
       - name: Comparer le menu au site
         id: verif
