@@ -1486,7 +1486,11 @@
   html.app-mode body.app-home .marquee{display:block!important}
   html.app-mode body.app-home .reveal{opacity:1!important;transform:none!important}
   /* hero dans l'app : plein écran entre la barre d'app et la barre d'onglets, sans indicateur de scroll */
-  html.app-mode .hero{min-height:var(--hero-app-h, calc(var(--hvh,100svh) - 128px));padding:0!important}
+  /* Entre la barre d'app et la barre d'onglets. On part de 100svh : la hauteur
+     du viewport quand les barres du navigateur sont déployées. innerHeight, lui,
+     compte la bande qu'elles recouvrent — d'où un cadre coupé par le bas dans
+     Safari ou Edge, alors qu'il tombait juste dans l'application installée. */
+  html.app-mode .hero{min-height:calc(100svh - var(--ab-h,56px) - var(--tb-h,72px));padding:0!important}
   html.app-mode .hero .hi-scroll{display:none}
   html.app-mode .hero-frame{inset:12px}
   /* Répartition verticale : identité en haut, description au centre, actions en bas.
@@ -1495,6 +1499,15 @@
   html.app-mode .hero .wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;width:100%}
   html.app-mode .hi-center{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;
     padding-top:94px;padding-bottom:78px}
+  /* Ces marges aèrent le hero sur un grand écran. Sur un petit — un iPhone SE,
+     ou n'importe quel téléphone dont le navigateur déploie ses barres — elles
+     poussent le contenu sous la barre d'onglets et coupent le cadre. */
+  @media (max-height:700px){
+    html.app-mode .hi-center{padding-top:52px;padding-bottom:44px}
+  }
+  @media (max-height:600px){
+    html.app-mode .hi-center{padding-top:24px;padding-bottom:20px}
+  }
   html.app-mode .hi-desc{margin-top:0}
   html.app-mode .hi-cta{margin-top:0}
   /* dans l'app, le hero s'affiche instantanément (pas d'animation qui rejoue à chaque retour Accueil) */
@@ -2912,13 +2925,14 @@
   (function(){
     var root = document.documentElement;
     if(!root.classList.contains("app-mode")) return;
+    /* On ne mesure que les deux barres — elles, sont stables et intègrent les
+       safe-areas de l'iPhone. La hauteur du viewport, c'est svh qui la donne,
+       en CSS : lui seul sait ce que les barres du navigateur recouvrent. */
     function fit(){
       var ab = document.querySelector(".app-bar");
       var tb = document.querySelector(".tabbar");
-      var abH = ab ? ab.offsetHeight : 0;
-      var tbH = tb ? tb.offsetHeight : 0;
-      var h = window.innerHeight - abH - tbH;
-      if(h > 260) root.style.setProperty("--hero-app-h", h + "px");
+      if(ab && ab.offsetHeight) root.style.setProperty("--ab-h", ab.offsetHeight + "px");
+      if(tb && tb.offsetHeight) root.style.setProperty("--tb-h", tb.offsetHeight + "px");
     }
     fit();
     window.addEventListener("load", fit);
