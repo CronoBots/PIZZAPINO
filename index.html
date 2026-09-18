@@ -1321,16 +1321,10 @@
   .cart-total-sub{margin:-4px 0 12px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.62rem;color:var(--ink-mut)}
   .cart-total-sub:empty{display:none}
   .cart-total-sub .cts-junior{color:#1f9d57}
-  .cart-status{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:11px;
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;font-weight:500}
-  .cart-status:empty{display:none}
-  .cart-status.open{color:#1f9d57}
-  .cart-status.closed{color:var(--rouge)}
   .cart-cat{display:flex;align-items:center;gap:10px;margin:13px 0 0;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.66rem;color:var(--rouge)}
   .cart-cat::after{content:"";flex:1;height:1px;background:var(--hair-ink)}
   .cart-cat:first-child{margin-top:2px}
   .cart-actions{display:flex;gap:10px;align-items:stretch}
-  .cart-actions .ca-call{flex:1 1 auto}
   /* Confirmation maison « vider la commande » (thème sombre) */
   .confirm-ov{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:26px;
     background:rgba(6,4,3,.74);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:cfIn .2s ease}
@@ -1358,14 +1352,12 @@
   .cart-actions a{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;text-decoration:none;transition:.2s;cursor:pointer}
   .cart-actions a svg{width:18px;height:18px}
-  .cart-actions .ca-call{background:var(--rouge);color:#fff}
-  .cart-actions .ca-call:hover{background:var(--rouge-d)}
-  /* Bouton « Envoyer ma commande » : action premium (liseré doré), à gauche de « Appeler » */
+  /* « Partager » est désormais la seule action de la liste : elle occupe
+     toute la place laissée par la poubelle, qui reste à sa droite. */
   .ca-send{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:9px;padding:14px 10px;cursor:pointer;
     background:linear-gradient(180deg,rgba(233,206,150,.2),rgba(233,206,150,.08));border:1px solid rgba(233,206,150,.55);
     color:#EEDBAC;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;font-weight:600;
     transition:background .2s,border-color .2s,color .2s}
-  .cart-actions .ca-call{flex:1 1 0}
   .ca-send svg{width:18px;height:18px}
   .ca-send:hover{background:rgba(233,206,150,.28);border-color:#E9CE96;color:#fff}
   .ca-send.copied{background:#1f9d57;border-color:#1f9d57;color:#fff}
@@ -1690,12 +1682,8 @@
     .cart-item{padding:13px 0;gap:8px}
     .cart-item .ci-name{font-size:1.05rem}
     .cart-total{margin-bottom:12px}
-    /* Trois boutons côte à côte seraient à l'étroit dans 348 px :
-       « Appeler » prend toute la largeur, les deux autres se partagent la suite. */
-    .cart-actions{flex-wrap:wrap}
-    .cart-actions .ca-call{flex:1 1 100%;order:1}
-    .cart-actions .ca-send{order:2;flex:1 1 0}
-    .cart-actions .ca-trash{order:3}
+    /* Deux éléments seulement : « Partager » s'étire, la poubelle garde sa largeur. */
+    .cart-actions .ca-send{flex:1 1 0}
   }
   @media (min-width:900px) and (prefers-reduced-motion:reduce){
     .cart-panel{transform:translate(-50%,-50%)}
@@ -3200,11 +3188,9 @@
   <div class="cart-foot">
     <div class="cart-total"><span>Total estimé</span><b id="cartTotal">0,00 €</b></div>
     <p class="cart-total-sub" id="cartTotalSub"></p>
-    <div id="cartStatus" class="cart-status" aria-live="polite"></div>
     <div id="cartPickup" class="cart-pickup"></div>
     <div class="cart-actions">
       <button type="button" class="ca-send" id="cartSend" aria-label="Partager ma liste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5"/><path d="M15.4 6.5 8.6 10.5"/></svg><span class="cs-label">Partager</span></button>
-      <a class="ca-call" id="caCall" href="tel:+3285513339" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Appeler</a>
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la liste" title="Vider la liste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
     <div class="cart-legal">
@@ -3597,17 +3583,6 @@
   try{ localStorage.removeItem('pino_order_note'); }catch(e){}
 
   var ov = document.getElementById('cartOv'), panel = document.getElementById('cartPanel');
-  function syncCartStatus(){
-    var hs = document.getElementById('heroStatus'), cs = document.getElementById('cartStatus');
-    if(!cs) return;
-    var open = hs && hs.classList.contains('open');
-    if(open){ cs.className = 'cart-status open'; cs.innerHTML = '<span class="dot-live open"></span>Ouvert maintenant'; }
-    else {
-      cs.className = 'cart-status closed';
-      var m = ((hs && hs.textContent) || '').match(/ouvre à\s*([0-9hHmM:]+)/);
-      cs.innerHTML = '<span class="dot-live closed"></span>' + (m ? 'Fermé · ouvre à ' + m[1] : 'Actuellement fermé');
-    }
-  }
   var IS_APP = document.documentElement.classList.contains('app-mode');
   function setOrderTabActive(on){
     var bar = document.getElementById('tabbar'); if(!bar) return;
@@ -3615,7 +3590,6 @@
     var o = document.getElementById('tbOrder'); if(o) o.classList.toggle('active', on);
   }
   function openPanel(){
-    syncCartStatus();
     if(IS_APP){
       document.body.classList.remove('app-home');
       document.body.classList.add('app-cart');
@@ -3684,6 +3658,17 @@
     for(var k in state){ if(state[k] && state[k].name) noms.push(state[k].name); }
     if(noms.length) window.pinoMesure('commande', noms);
   }
+  /* Le bouton d'appel portait la mesure du panier ; il a quitté ce panneau.
+     On relève la liste quand le visiteur s'en va — un seul relevé par visite,
+     avec la composition finale, et jamais les états intermédiaires. La
+     signature interne écarte de toute façon les doublons. */
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden' && Object.keys(state).length) mesurePanier();
+  });
+  window.addEventListener('pagehide', function(){
+    if(Object.keys(state).length) mesurePanier();
+  });
+
   function shareOrder(){
     if(!Object.keys(state).length) return;
     mesurePanier();
@@ -3696,8 +3681,6 @@
     } else { copyOrder(text); }
   }
   if(sendBtn) sendBtn.addEventListener('click', shareOrder);
-  var btnAppel = document.getElementById('caCall');
-  if(btnAppel) btnAppel.addEventListener('click', mesurePanier);
   fab.addEventListener('click', openPanel);
   var orderNowBtn = document.getElementById('orderNowBtn');
   if(orderNowBtn) orderNowBtn.addEventListener('click', openPanel);
