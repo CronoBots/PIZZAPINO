@@ -2,3 +2,7 @@
 menu/apercu/
 __pycache__/
 *.pyc
+
+# Le dépliant est un produit dérivé : on le régénère quand on en a besoin.
+menu/depliant-*.html
+menu/depliant-*.pdf
