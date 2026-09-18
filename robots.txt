@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /aldente/
 
-Sitemap: https://cronobots.github.io/PIZZAPINO/sitemap.xml
+Sitemap: https://pizzeriapino.be/sitemap.xml
