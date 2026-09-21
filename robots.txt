@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# Scan du menu officiel : sert de référence au contrôle de synchronisation,
+# n'a pas de couche texte et n'a rien à faire dans l'index.
+Disallow: /menu.pdf
+
 Sitemap: https://pizzeriapino.be/sitemap.xml
