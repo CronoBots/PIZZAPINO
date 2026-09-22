@@ -76,11 +76,11 @@ lisent dans la fiche Google, jamais ici.
 
 **Le bouton d'avis Google.** Son adresse est écrite en toutes lettres dans
 `index.html`, deux fois — dans le bloc contact et dans sa version « application ».
-Elle pointe pour l'instant sur la fiche (`maps?cid=…`), d'où « Rédiger un avis »
-est à un doigt. Le lien qui ouvre **directement** le formulaire s'obtient dans
-la fiche d'établissement Google : *Accueil → Demander des avis → copier le lien*.
-Il a la forme `https://g.page/r/<code>/review`. Le remplacer aux deux endroits
-suffit ; rien d'autre ne bouge.
+C'est le lien court officiel de la fiche, `https://g.page/r/CUpWGaauc3B6EBM/review`,
+qui ouvre le formulaire d'avis directement. Il se reprend dans la fiche
+d'établissement Google : *Accueil → Demander des avis → copier le lien*. Si la
+fiche change un jour de propriétaire ou d'identifiant, c'est là qu'on va
+chercher le nouveau, et il suffit de le remplacer aux deux endroits.
 
 **L'heure est déduite à l'arrivée, jamais transmise.** Le visiteur n'envoie ni
 son horloge ni son fuseau : la fonction Edge lit l'heure de Bruxelles au moment
