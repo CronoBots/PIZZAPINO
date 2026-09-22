@@ -226,17 +226,29 @@ body.verrouille #bord{filter:blur(3px);pointer-events:none;user-select:none}
 .porte{width:100%;max-width:380px;text-align:center;background:var(--surface);
   border:1px solid var(--trait);border-radius:16px;padding:30px 26px 24px;
   box-shadow:0 30px 70px -20px #000}
-.porte h1{margin-bottom:10px}
-.porte p{color:var(--texte-3);font-size:.9rem;margin-bottom:24px}
-.porte form{display:flex;gap:8px}
-.porte input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--trait);
-  color:var(--texte);border-radius:10px;padding:13px 15px;font-size:1rem;font-family:inherit}
-.porte input:focus{outline:2px solid var(--or);outline-offset:1px;border-color:var(--or)}
-.porte input:focus::placeholder{color:transparent}
-.porte button{background:var(--or);color:#14100D;border:0;border-radius:10px;padding:13px 20px;
-  font-family:'Oswald',sans-serif;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
-  cursor:pointer;min-height:48px}
-.porte .erreur{color:#E8836F;font-size:.85rem;margin-top:14px;min-height:1.2em}
+.porte h1{margin-bottom:20px}
+/* Le champ porte son libelle au-dessus, pas dedans : un repere qui s'efface
+   des qu'on clique laisse un rectangle vide et muet. */
+.porte-lab{display:block;text-align:left;font-family:'Oswald',sans-serif;
+  text-transform:uppercase;letter-spacing:.13em;font-size:.6rem;color:var(--texte-3);
+  margin-bottom:8px}
+.porte-champ{position:relative}
+.porte input{width:100%;box-sizing:border-box;background:var(--fond);
+  border:1px solid var(--trait);color:var(--texte);border-radius:10px;
+  padding:12px 46px 12px 14px;font-size:.98rem;font-family:inherit;letter-spacing:.05em}
+.porte input:focus{outline:none;border-color:var(--or);
+  box-shadow:0 0 0 3px rgba(198,154,77,.16)}
+.porte-oeil{position:absolute;right:5px;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;display:grid;place-items:center;background:none;border:0;
+  color:var(--texte-3);cursor:pointer;border-radius:9px;transition:color .2s}
+.porte-oeil:hover,.porte-oeil[aria-pressed="true"]{color:var(--or-l)}
+.porte-oeil svg{width:17px;height:17px}
+.porte-ok{width:100%;margin-top:15px;background:var(--or);color:#14100D;border:0;
+  border-radius:10px;padding:13px 20px;font-family:'Oswald',sans-serif;font-size:.74rem;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;min-height:48px}
+.porte .erreur{color:#E8836F;font-size:.85rem;margin:10px 0 0;min-height:1.2em;
+  text-align:left}
+.porte .erreur:empty{min-height:0}
 
 footer{color:var(--texte-3);font-size:.78rem;margin-top:34px;padding-top:18px;
   border-top:1px solid var(--trait);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
@@ -255,11 +267,20 @@ footer a{color:var(--texte-2)}
   <p class="marque">Pizzeria Pino</p>
   <h1 id="porteTitre">Statistiques</h1>
   <form id="formCle" autocomplete="off">
-    <input type="password" id="champCle" placeholder="Mot de passe" aria-label="Mot de passe"
-           autocomplete="current-password" enterkeyhint="go">
-    <button type="submit">Entrer</button>
+    <label class="porte-lab" for="champCle">Mot de passe</label>
+    <div class="porte-champ">
+      <input type="password" id="champCle" autocomplete="current-password"
+             enterkeyhint="go" spellcheck="false">
+      <button type="button" class="porte-oeil" id="porteVoir" aria-pressed="false"
+              aria-label="Afficher le mot de passe" title="Afficher le mot de passe"><svg
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+        d="M1.8 12S5.5 5.5 12 5.5 22.2 12 22.2 12 18.5 18.5 12 18.5 1.8 12 1.8 12Z"/><circle
+        cx="12" cy="12" r="3.1"/></svg></button>
+    </div>
+    <p class="erreur" id="erreurCle" role="alert"></p>
+    <button type="submit" class="porte-ok">Entrer</button>
   </form>
-  <p class="erreur" id="erreurCle" role="alert"></p>
  </div>
 </div>
 
@@ -1671,6 +1692,21 @@ footer a{color:var(--texte-2)}
     document.getElementById('champCle').value = '';
     document.getElementById('champCle').focus();
   }
+
+  /* Voir ce qu'on tape : sur un telephone, un mot de passe saisi a l'aveugle
+     se trompe une fois sur deux. */
+  (function(){
+    var champ = document.getElementById('champCle');
+    var oeil = document.getElementById('porteVoir');
+    oeil.addEventListener('click', function(){
+      var visible = champ.type === 'text';
+      champ.type = visible ? 'password' : 'text';
+      oeil.setAttribute('aria-pressed', visible ? 'false' : 'true');
+      var t = visible ? 'Afficher le mot de passe' : 'Masquer le mot de passe';
+      oeil.setAttribute('aria-label', t); oeil.title = t;
+      champ.focus();
+    });
+  })();
 
   document.getElementById('formCle').addEventListener('submit', function(e){
     e.preventDefault();

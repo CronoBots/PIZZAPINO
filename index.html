@@ -1363,15 +1363,28 @@
   .cf-cancel:hover{border-color:#E9CE96;color:#fff}
   .cf-ok{background:var(--rouge);border-color:var(--rouge);color:#fff}
   .cf-ok:hover{background:var(--rouge-d)}
-  .gerant-ico{background:rgba(198,154,77,.14);border-color:rgba(198,154,77,.42);color:#E9CE96}
-  .gerant-box input{width:100%;box-sizing:border-box;font:inherit;font-size:1rem;text-align:center;
-    padding:13px 15px;border-radius:11px;border:1px solid rgba(233,206,150,.24);
-    background:#100b08;color:#F5EEDF}
-  .gerant-box input:focus{outline:2px solid #c69a4d;outline-offset:1px;border-color:#c69a4d}
-  /* Le curseur clignote deja la : « Mot de passe » ne sert plus a rien et
-     genait la lecture de ce qu'on tape. */
-  .gerant-box input:focus::placeholder{color:transparent}
-  .gerant-box .gerant-err{min-height:1.15em;margin:9px 0 14px;font-size:.82rem;color:#e0574b}
+  .gerant-ico{background:rgba(198,154,77,.14);border-color:rgba(198,154,77,.42);color:#E9CE96;
+    width:44px;height:44px;margin-bottom:13px}
+  .gerant-ico svg{width:19px;height:19px}
+  .gerant-box h3{margin-bottom:19px}
+  /* Le champ porte son libelle au-dessus, pas dedans : un repere qui s'efface
+     des qu'on clique laisse un rectangle vide et muet. */
+  .gerant-lab{display:block;text-align:left;font-family:"Oswald",sans-serif;
+    text-transform:uppercase;letter-spacing:.13em;font-size:.6rem;color:#a99c86;
+    margin-bottom:8px}
+  .gerant-champ{position:relative}
+  .gerant-box input{width:100%;box-sizing:border-box;font:inherit;font-size:.98rem;
+    padding:12px 46px 12px 14px;border-radius:10px;border:1px solid rgba(233,206,150,.22);
+    background:#100b08;color:#F5EEDF;letter-spacing:.05em}
+  .gerant-box input:focus{outline:none;border-color:#c69a4d;
+    box-shadow:0 0 0 3px rgba(198,154,77,.16)}
+  .gerant-oeil{position:absolute;right:5px;top:50%;transform:translateY(-50%);
+    width:36px;height:36px;display:grid;place-items:center;background:none;border:0;
+    color:#8b8071;cursor:pointer;border-radius:9px;transition:color .2s}
+  .gerant-oeil:hover,.gerant-oeil[aria-pressed="true"]{color:#E9CE96}
+  .gerant-oeil svg{width:17px;height:17px}
+  .gerant-box .gerant-err{min-height:1.15em;margin:9px 0 15px;font-size:.82rem;
+    color:#e0574b;text-align:left}
   .gerant-ok{background:#c69a4d;border-color:#c69a4d;color:#14100D}
   .gerant-ok:hover{background:#d9ae62}
   @keyframes cfIn{from{opacity:0}to{opacity:1}}
@@ -3289,8 +3302,17 @@
       x="4" y="10.5" width="16" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></span>
     <h3 id="gerantTitre">Espace gérant</h3>
     <form id="gerantForm" autocomplete="off">
-      <input type="password" id="gerantCle" placeholder="Mot de passe" aria-label="Mot de passe"
-             autocomplete="current-password" enterkeyhint="go" spellcheck="false">
+      <label class="gerant-lab" for="gerantCle">Mot de passe</label>
+      <div class="gerant-champ">
+        <input type="password" id="gerantCle" autocomplete="current-password"
+               enterkeyhint="go" spellcheck="false">
+        <button type="button" class="gerant-oeil" id="gerantVoir" aria-pressed="false"
+                aria-label="Afficher le mot de passe" title="Afficher le mot de passe"><svg
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+          d="M1.8 12S5.5 5.5 12 5.5 22.2 12 22.2 12 18.5 18.5 12 18.5 1.8 12 1.8 12Z"/><circle
+          cx="12" cy="12" r="3.1"/></svg></button>
+      </div>
       <p class="gerant-err" id="gerantErr" role="alert"></p>
       <div class="confirm-actions">
         <button type="button" class="cf-cancel" id="gerantAnnuler">Annuler</button>
@@ -4111,8 +4133,22 @@
   function ferme(){
     ov.hidden = true;
     champ.value = '';
+    champ.type = 'password';
+    oeil.setAttribute('aria-pressed', 'false');
     if(rendre && rendre.focus) rendre.focus();
   }
+
+  /* Voir ce qu'on tape : sur un telephone, un mot de passe saisi a l'aveugle
+     se trompe une fois sur deux. */
+  var oeil = document.getElementById('gerantVoir');
+  oeil.addEventListener('click', function(){
+    var visible = champ.type === 'text';
+    champ.type = visible ? 'password' : 'text';
+    oeil.setAttribute('aria-pressed', visible ? 'false' : 'true');
+    var t = visible ? 'Afficher le mot de passe' : 'Masquer le mot de passe';
+    oeil.setAttribute('aria-label', t); oeil.title = t;
+    champ.focus();
+  });
 
   bouton.addEventListener('click', ouvre);
   document.getElementById('gerantAnnuler').addEventListener('click', ferme);
