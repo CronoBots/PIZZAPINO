@@ -135,7 +135,6 @@ def rendu(sections, supps):
     out.append('          <span class="sj-price">−2,00 €</span>')
     out.append('          <span class="sj-sub">à déduire du prix de la pizza choisie</span>')
     out.append('        </div>')
-    out.append('        <p class="supp-h">Suppléments</p>')
     out.append('        <ul class="supp-grid">')
     for nom, prix, offert in supps:
         out.append('          <li%s><span>%s</span><i></i><b>%s</b></li>'
