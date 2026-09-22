@@ -112,6 +112,14 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
   font-size:.72rem;margin-top:8px}
 /* Samedi et dimanche, en retrait : le rythme de la semaine se voit d'un coup. */
 .courbe .weekend{fill:var(--texte);opacity:.05}
+/* Le SVG est etire en largeur (preserveAspectRatio="none") : un <circle> y
+   serait aplati en ovale. La pointe est donc un element HTML, place en
+   pourcentage sur un cadre aux dimensions du trace. */
+.cadre{position:relative}
+.pointe{position:absolute;width:9px;height:9px;border-radius:50%;
+  background:var(--or);box-shadow:0 0 0 2px var(--surface);
+  transform:translate(-50%,-50%);pointer-events:none;
+  transition:left .15s ease-out,top .15s ease-out}
 .courbe .guide{stroke:var(--or);stroke-width:1;opacity:.5;stroke-dasharray:2 3}
 .survol{position:absolute;top:-4px;transform:translateX(-50%);pointer-events:none;
   background:var(--surface-2);border:1px solid var(--trait);border-radius:9px;
@@ -122,6 +130,20 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 .survol span{display:block;color:var(--texte-3);font-size:.72rem;margin-top:2px}
 .survol.adroite{transform:translateX(-100%)}
 .survol.agauche{transform:translateX(0)}
+
+/* Pendant une mise a jour, les chiffres affiches sont peut-etre perimes :
+   on le montre plutot que de les laisser passer pour frais. */
+#bord.occupe .cles,#bord.occupe section{opacity:.5}
+#bord .cles,#bord section{transition:opacity .2s}
+
+.actions{display:flex;gap:8px;align-items:center;margin-left:auto}
+.filtres{align-items:center}
+.filtres .action{font-family:'Oswald',sans-serif;font-size:.66rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--texte-2);background:none;
+  border:1px solid var(--trait);border-radius:999px;padding:9px 14px;
+  cursor:pointer;transition:.2s;min-height:40px}
+.filtres .action:hover{color:var(--or);border-color:var(--or)}
+.filtres .action[disabled]{opacity:.45;cursor:default;color:var(--texte-3)}
 
 /* ── tableau (identité jamais portée par la seule couleur) ───────── */
 .bascule{font-family:'Oswald',sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
@@ -196,6 +218,9 @@ footer a{color:var(--texte-2)}
     <button type="button" data-j="30" aria-pressed="true">30 jours</button>
     <button type="button" data-j="90">90 jours</button>
     <button type="button" data-j="365">1 an</button>
+    <span class="actions">
+      <button class="action" type="button" id="rafraichir">Actualiser</button>
+    </span>
   </div>
 
   <div class="cles">
@@ -216,7 +241,8 @@ footer a{color:var(--texte-2)}
   <section id="secVilles">
     <div class="titre">
       <h2>D’où viennent vos visiteurs</h2>
-      <button class="bascule" type="button" data-cible="tblVilles">Voir en tableau</button>
+      <button class="bascule" type="button" data-cible="tblVilles"
+              aria-expanded="false" aria-controls="tblVilles">Voir en tableau</button>
     </div>
     <p class="chapo">Ville approximative, déduite du réseau. Aucun visiteur n’est identifié.
        Les douze premières sont détaillées&nbsp;; le reste est regroupé, mais compte dans les parts.</p>
@@ -227,7 +253,8 @@ footer a{color:var(--texte-2)}
   <section id="secSupports">
     <div class="titre">
       <h2>Sur quel appareil</h2>
-      <button class="bascule" type="button" data-cible="tblSupports">Voir en tableau</button>
+      <button class="bascule" type="button" data-cible="tblSupports"
+              aria-expanded="false" aria-controls="tblSupports">Voir en tableau</button>
     </div>
     <p class="chapo">Ce que vos clients ont en main au moment de vous chercher.</p>
     <div class="barres" id="barSupports"></div>
@@ -237,7 +264,8 @@ footer a{color:var(--texte-2)}
   <section id="secPlats">
     <div class="titre">
       <h2>Les plats les plus mis au panier</h2>
-      <button class="bascule" type="button" data-cible="tblPlats">Voir en tableau</button>
+      <button class="bascule" type="button" data-cible="tblPlats"
+              aria-expanded="false" aria-controls="tblPlats">Voir en tableau</button>
     </div>
     <p class="chapo">Ce que les clients composent sur le site — pas ce qui est encaissé.</p>
     <div class="barres" id="barPlats"></div>
@@ -246,7 +274,9 @@ footer a{color:var(--texte-2)}
 
   <footer>
     <span>Sans cookie, sans profil, sans donnée personnelle. <a href="../legal.html#confidentialite">En savoir plus</a></span>
-    <button class="quitter" type="button" id="quitter">Fermer la session</button>
+    <span><button class="quitter" type="button" id="exporter">Exporter en CSV</button>
+      &nbsp;·&nbsp;
+      <button class="quitter" type="button" id="quitter">Fermer la session</button></span>
   </footer>
 </div>
 
@@ -268,6 +298,7 @@ footer a{color:var(--texte-2)}
   var porte  = document.getElementById('porte');
   var bord   = document.getElementById('bord');
   var jours  = 30;
+  var enCours = null;                 // requête en vol, annulable
   var demo   = /[?&]demo=1/.test(location.search);
 
   /* Le lien remis aux gérants porte la clé : .../aldente/?k=…
@@ -380,32 +411,43 @@ footer a{color:var(--texte-2)}
     var aire = d + ' L' + x(points.length - 1).toFixed(1) + ' ' + (H - m) + ' L' + x(0).toFixed(1) + ' ' + (H - m) + ' Z';
     var dernier = points[points.length - 1];
 
+    /* La pointe est posee en pourcentage sur le cadre, hors du SVG : etiree
+       en largeur, elle s'y afficherait en ovale. */
+    var pcX = function(i){ return (x(i) / L * 100).toFixed(2); };
+    var pcY = function(v){ return (y(v) / H * 100).toFixed(2); };
+
     hote.innerHTML =
-      '<svg viewBox="0 0 ' + L + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="'
+      '<div class="cadre">'
+      + '<svg viewBox="0 0 ' + L + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="'
         + 'Ouvertures quotidiennes, maximum ' + nb(max) + '">'
       + bandes
       + '<line class="guide" x1="0" y1="0" x2="0" y2="' + H + '" hidden/>'
       + '<path class="aire" d="' + aire + '"/>'
       + '<path class="ligne" d="' + d + '" vector-effect="non-scaling-stroke"/>'
-      + '<circle class="pointe" cx="' + x(points.length - 1).toFixed(1) + '" cy="' + y(dernier.n).toFixed(1) + '" r="4"/>'
       + '</svg>'
+      + '<span class="pointe" style="left:' + pcX(points.length - 1) + '%;top:'
+        + pcY(dernier.n) + '%"></span>'
+      + '</div>'
       + '<div class="bornes"><span>' + dateCourte(points[0].j) + '</span>'
       + '<span>' + nb(max) + ' ouvertures au plus haut</span>'
       + '<span>' + dateCourte(dernier.j) + '</span></div>';
 
-    installeSurvol(hote, points, x);
+    installeSurvol(hote, points, pcX, pcY);
   }
 
   /* Lire un jour précis, au doigt comme à la souris. La courbe est étirée en
      largeur (preserveAspectRatio="none") : on repère le point par la fraction
      de largeur parcourue, jamais par les coordonnées internes du SVG. */
-  function installeSurvol(hote, points, x){
-    var svg   = hote.querySelector('svg');
-    var guide = hote.querySelector('.guide');
-    var bulle = document.createElement('div');
+  function installeSurvol(hote, points, pcX, pcY){
+    var cadre  = hote.querySelector('.cadre');
+    var svg    = hote.querySelector('svg');
+    var guide  = hote.querySelector('.guide');
+    var pointe = hote.querySelector('.pointe');
+    var repos  = { gauche: pointe.style.left, haut: pointe.style.top };
+    var bulle  = document.createElement('div');
     bulle.className = 'survol';
     bulle.hidden = true;
-    hote.appendChild(bulle);
+    cadre.appendChild(bulle);
 
     function montre(clientX){
       var r = svg.getBoundingClientRect();
@@ -422,11 +464,19 @@ footer a{color:var(--texte-2)}
       bulle.classList.toggle('agauche', gauche < r.width * 0.12);
       bulle.classList.toggle('adroite', gauche > r.width * 0.88);
 
-      guide.setAttribute('x1', x(i).toFixed(1));
-      guide.setAttribute('x2', x(i).toFixed(1));
+      var vx = pcX(i);
+      guide.setAttribute('x1', vx * 6);      // pourcentage vers le repere 0-600
+      guide.setAttribute('x2', vx * 6);
       guide.removeAttribute('hidden');
+      pointe.style.left = vx + '%';
+      pointe.style.top  = pcY(pt.n) + '%';
     }
-    function cache(){ bulle.hidden = true; guide.setAttribute('hidden', ''); }
+    function cache(){
+      bulle.hidden = true;
+      guide.setAttribute('hidden', '');
+      pointe.style.left = repos.gauche;
+      pointe.style.top  = repos.haut;
+    }
 
     svg.addEventListener('pointermove', function(e){ montre(e.clientX); });
     svg.addEventListener('pointerdown', function(e){ montre(e.clientX); });
@@ -472,14 +522,15 @@ footer a{color:var(--texte-2)}
   }
 
   /* ── rendu complet ── */
+  var dernier = null;
   function affiche(d){
+    dernier = d;
     document.getElementById('kVues').textContent   = nb(d.totaux.vue);
     document.getElementById('kAppels').textContent = nb(d.totaux.appel);
     document.getElementById('kItin').textContent   = nb(d.totaux.itineraire);
     document.getElementById('kCmd').textContent    = nb(d.totaux.commande);
 
-    document.getElementById('periodeInfo').textContent =
-      'Du ' + dateCourte(d.depuis) + ' au ' + dateCourte(d.jusqua) + ' · ' + d.jours + ' jours';
+    document.getElementById('periodeInfo').textContent = periodeTexte(d);
 
     var avant = d.precedent || {};
     [['dVues', 'vue'], ['dAppels', 'appel'], ['dItin', 'itineraire'], ['dCmd', 'commande']]
@@ -519,6 +570,8 @@ footer a{color:var(--texte-2)}
 
   /* ── chiffres de démonstration, pour montrer la page avant la mise en service ── */
   function jeuDemo(n){
+    n = parseInt(n, 10);
+    if(!isFinite(n) || n < 1) n = 30;
     var courbe = [], j = new Date();
     for(var i = n - 1; i >= 0; i--){
       var d = new Date(j.getTime() - i * 86400000);
@@ -573,7 +626,15 @@ footer a{color:var(--texte-2)}
     }
     var cle = sessionStorage.getItem(STOCK) || '';
     if(!ASCII.test(cle)){ deconnecte(PLAINTE); return; }
-    fetch(API + '/stats?j=' + jours, { headers: { 'X-Pino-Cle': cle } })
+
+    /* Deux clics rapides sur les périodes lançaient deux requêtes, et c'est la
+       plus lente qui gagnait : on pouvait lire « 90 jours » au-dessus des
+       chiffres de 7 jours. La précédente est donc abandonnée. */
+    if(enCours) enCours.abort();
+    var appel = enCours = new AbortController();
+    occupe(true);
+
+    fetch(API + '/stats?j=' + jours, { headers: { 'X-Pino-Cle': cle }, signal: appel.signal })
       .then(function(r){
         if(r.status === 401){ deconnecte('Clé refusée.'); throw new Error('cle'); }
         if(!r.ok) throw new Error('http ' + r.status);
@@ -581,10 +642,64 @@ footer a{color:var(--texte-2)}
       })
       .then(function(d){ banniere(''); affiche(d); })
       .catch(function(e){
-        if(e.message === 'cle') return;
+        if(e.name === 'AbortError' || e.message === 'cle') return;
         banniere('<b>Chiffres indisponibles pour le moment.</b> Le service de mesure ne répond pas. '
                + 'Réessayez dans quelques minutes.');
+      })
+      .then(function(){ if(enCours === appel){ enCours = null; occupe(false); } });
+  }
+
+  /* Pendant une mise à jour, les chiffres à l'écran sont peut-être périmés :
+     on l'annonce plutôt que de les laisser passer pour frais. */
+  function occupe(oui){
+    bord.classList.toggle('occupe', !!oui);
+    bord.setAttribute('aria-busy', oui ? 'true' : 'false');
+    document.getElementById('rafraichir').disabled = !!oui;
+    var ligne = document.getElementById('periodeInfo');
+    if(oui) ligne.textContent = 'Mise à jour…';
+    else if(dernier) ligne.textContent = periodeTexte(dernier);
+  }
+
+  function periodeTexte(d){
+    return 'Du ' + dateCourte(d.depuis) + ' au ' + dateCourte(d.jusqua) + ' · ' + d.jours + ' jours';
+  }
+
+  /* ── export ──
+     Point-virgule et BOM : c'est ce qu'attend un tableur en configuration
+     francophone, sinon les accents et les colonnes partent en morceaux. */
+  function enCSV(){
+    if(!dernier) return '';
+    var lignes = [['Section', 'Libellé', 'Nombre', 'Part (%)']];
+    var t = dernier.totaux, v = t.vue || 0;
+    var part = function(n){ return v ? String(Math.round(n * 1000 / v) / 10).replace('.', ',') : ''; };
+
+    lignes.push(['Total', 'Ouvertures du site', t.vue, '']);
+    lignes.push(['Total', 'Appels lancés', t.appel, part(t.appel)]);
+    lignes.push(['Total', 'Itinéraires demandés', t.itineraire, part(t.itineraire)]);
+    lignes.push(['Total', 'Commandes composées', t.commande, part(t.commande)]);
+
+    (dernier.courbe || []).forEach(function(p){
+      lignes.push(['Ouvertures par jour', p.j, p.n, '']);
+    });
+    var bloc = function(nom, liste, queue){
+      var rangs = avecQueue(liste, queue);
+      var total = rangs.reduce(function(a, d){ return a + d.n; }, 0);
+      rangs.forEach(function(d){
+        lignes.push([nom, d.nom, d.n, String(Math.round(d.n * 1000 / total) / 10).replace('.', ',')]);
       });
+    };
+    bloc('Villes', dernier.villes,
+         queueDe(dernier.villes_autres, dernier.villes_autres_n, 'autre ville', 'autres villes'));
+    bloc('Appareils', dernier.supports);
+    bloc('Plats', dernier.plats,
+         queueDe(dernier.plats_autres, dernier.plats_autres_n, 'autre plat', 'autres plats'));
+
+    return '\uFEFF' + lignes.map(function(l){
+      return l.map(function(c){
+        var v = String(c == null ? '' : c);
+        return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+      }).join(';');
+    }).join('\r\n');
   }
 
   /* ── porte ── */
@@ -610,9 +725,9 @@ footer a{color:var(--texte-2)}
 
   document.getElementById('quitter').addEventListener('click', function(){ deconnecte(''); });
 
-  document.querySelectorAll('.filtres button').forEach(function(b){
+  document.querySelectorAll('.filtres button[data-j]').forEach(function(b){
     b.addEventListener('click', function(){
-      document.querySelectorAll('.filtres button').forEach(function(o){ o.removeAttribute('aria-pressed'); });
+      document.querySelectorAll('.filtres button[data-j]').forEach(function(o){ o.removeAttribute('aria-pressed'); });
       b.setAttribute('aria-pressed', 'true');
       jours = parseInt(b.dataset.j, 10);
       charge();
@@ -626,7 +741,25 @@ footer a{color:var(--texte-2)}
       var ouvert = t.hidden;
       t.hidden = !ouvert; g.hidden = ouvert;
       b.textContent = ouvert ? 'Voir en barres' : 'Voir en tableau';
+      /* Le libellé change à l'écran ; sans cet attribut, rien ne le dit à
+         qui navigue au lecteur d'écran. */
+      b.setAttribute('aria-expanded', ouvert ? 'true' : 'false');
     });
+  });
+
+  document.getElementById('rafraichir').addEventListener('click', function(){ charge(); });
+
+  document.getElementById('exporter').addEventListener('click', function(){
+    var texte = enCSV();
+    if(!texte) return;
+    var lien = document.createElement('a');
+    var url = URL.createObjectURL(new Blob([texte], { type: 'text/csv;charset=utf-8' }));
+    lien.href = url;
+    lien.download = 'al-dente-' + (dernier.depuis || '') + '-au-' + (dernier.jusqua || '') + '.csv';
+    document.body.appendChild(lien);
+    lien.click();
+    lien.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 0);
   });
 
   /* En démonstration la clé n'a pas de sens : on entre directement. */
