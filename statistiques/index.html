@@ -348,12 +348,14 @@ footer a{color:var(--texte-2)}
 
   <section id="secJours">
     <div class="titre">
-      <h2>Le poids de chaque jour</h2>
+      <h2>Votre semaine type</h2>
       <button class="bascule" type="button" data-cible="tblJours"
               aria-expanded="false" aria-controls="tblJours">Voir en tableau</button>
     </div>
-    <p class="chapo">Moyenne par jour de semaine, pour la mesure choisie ci-dessus, sur la période choisie.
-       Le jour en cours n’est pas compté&nbsp;: il n’est pas fini.</p>
+    <p class="chapo">Tous les lundis de la période réunis en un seul, tous les mardis en un
+       seul, et ainsi de suite — de quoi voir si le vendredi pèse vraiment plus que le
+       mardi. C’est la mesure choisie ci-dessus qui est moyennée. Le jour en cours n’est
+       pas compté&nbsp;: il n’est pas fini.</p>
     <div class="barres" id="barJours"></div>
     <div id="tblJours" hidden></div>
   </section>
@@ -1789,9 +1791,10 @@ footer a{color:var(--texte-2)}
       + '</tbody></table>';
   }
 
-  /* ── le poids de chaque jour de semaine ──
-     Rien de nouveau n'est collecte : la courbe porte deja une date et un
-     nombre par jour. On range simplement ces jours par leur nom. */
+  /* ── la semaine type ──
+     Rien de nouveau n'est collecte : la serie porte deja une date et un nombre
+     par jour. On empile simplement tous les lundis ensemble, tous les mardis
+     ensemble, et on en fait la moyenne. */
   var JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 
   function moyennesParJour(courbe, jusqua){
