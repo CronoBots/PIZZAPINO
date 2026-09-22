@@ -68,6 +68,18 @@ as $$
     from public.compteur
     where jour >= depuis
     group by type, cle
+  ),
+  -- Villes et plats sont classés ICI, avec leur rang : la page n'affiche que
+  -- les premiers, mais on renvoie aussi ce que pèse la queue. Sans cela, elle
+  -- calculerait ses pourcentages sur le seul haut du classement et annoncerait
+  -- des parts trop grandes.
+  v as (
+    select cle as nom, n, row_number() over (order by n desc, cle) as rang
+    from fenetre where type = 'ville'
+  ),
+  p as (
+    select cle as nom, n, row_number() over (order by n desc, cle) as rang
+    from fenetre where type = 'plat'
   )
   select json_build_object(
     'totaux', (
@@ -77,21 +89,23 @@ as $$
             group by type) t
     ),
     'villes', (
-      select coalesce(json_agg(v order by v.n desc, v.nom), '[]'::json)
-      from (select cle as nom, n from fenetre where type = 'ville'
-            order by n desc limit 12) v
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by rang), '[]'::json)
+      from v where rang <= 12
     ),
+    'villes_autres',   (select coalesce(sum(n), 0)::int from v where rang > 12),
+    'villes_autres_n', (select count(*)::int          from v where rang > 12),
     'supports', (
-      select coalesce(json_agg(s order by s.n desc, s.nom), '[]'::json)
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
       from (select cle as nom, n from fenetre where type = 'support') s
     ),
     'plats', (
-      select coalesce(json_agg(p order by p.n desc, p.nom), '[]'::json)
-      from (select cle as nom, n from fenetre where type = 'plat'
-            order by n desc limit 15) p
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by rang), '[]'::json)
+      from p where rang <= 15
     ),
+    'plats_autres',   (select coalesce(sum(n), 0)::int from p where rang > 15),
+    'plats_autres_n', (select count(*)::int          from p where rang > 15),
     'courbe', (
-      select coalesce(json_agg(c order by c.j), '[]'::json)
+      select coalesce(json_agg(json_build_object('j', j, 'n', n) order by j), '[]'::json)
       from (select jour as j, sum(n)::int as n from public.compteur
             where type = 'vue' and jour >= depuis group by jour) c
     )

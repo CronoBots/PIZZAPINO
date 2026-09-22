@@ -17,6 +17,45 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 const TYPES = new Set(['vue', 'appel', 'itineraire', 'commande']);
+
+/* Les robots chargent la page comme un client, mais ne poussent jamais la porte
+   du restaurant. Les compter gonfle les totaux et noie les vraies villes : sur
+   les premiers jours de mesure, Bruxelles et Zaventem — deux places fortes des
+   centres de données — pesaient à elles seules un cinquième des ouvertures. */
+const ROBOT = new RegExp([
+  'bot', 'crawl', 'spider', 'slurp', 'scrapy', 'curl/', 'wget', 'python-requests',
+  'go-http-client', 'okhttp', 'libwww', 'java/', 'axios', 'headlesschrome',
+  'phantomjs', 'puppeteer', 'playwright', 'lighthouse', 'pagespeed', 'gtmetrix',
+  'pingdom', 'uptime', 'monitoring', 'preview', 'facebookexternalhit', 'embedly',
+  'whatsapp', 'telegram', 'discord', 'semrush', 'ahrefs', 'dataforseo',
+].join('|'), 'i');
+
+/* Les noms de villes arrivent du service de géolocalisation. On les demande en
+   français ; restent quelques exonymes flamands et la périphrase bruxelloise,
+   que l'on ramène au nom que le gérant emploierait. */
+const EXONYMES: Record<string, string> = {
+  'brussels': 'Bruxelles',
+  'région de bruxelles-capitale': 'Bruxelles',
+  'bruxelles-capitale, région de': 'Bruxelles',
+  'brussel': 'Bruxelles',
+  'liege': 'Liège',
+  'luik': 'Liège',
+  'antwerpen': 'Anvers',
+  'antwerp': 'Anvers',
+  'gent': 'Gand',
+  'ghent': 'Gand',
+  'brugge': 'Bruges',
+  'leuven': 'Louvain',
+  'mechelen': 'Malines',
+  'kortrijk': 'Courtrai',
+  'oostende': 'Ostende',
+  'sint-niklaas': 'Saint-Nicolas',
+  'doornik': 'Tournai',
+  'namen': 'Namur',
+  'aarlen': 'Arlon',
+  'hoei': 'Huy',
+  'bergen': 'Mons',
+};
 const MAX_PLATS = 40;
 const MAX_JOURS = 365;
 
@@ -51,6 +90,13 @@ function support(req: Request): string {
   return 'Ordinateur';
 }
 
+/** Un robot, une sonde, un aperçu de lien : tout sauf un client. */
+function estRobot(req: Request): boolean {
+  const ua = req.headers.get('user-agent') ?? '';
+  if (!ua) return true;                    // un vrai navigateur en envoie toujours un
+  return ROBOT.test(ua);
+}
+
 /** Comparaison à durée constante : ne fuit pas la clé caractère par caractère. */
 function memeCle(a: string, b: string): boolean {
   if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
@@ -72,13 +118,16 @@ async function ville(req: Request): Promise<string> {
     const ctrl = new AbortController();
     const minuteur = setTimeout(() => ctrl.abort(), 1500);
     const r = await fetch(
-      `https://ipwho.is/${encodeURIComponent(brut)}?fields=success,city,region,country_code`,
+      `https://ipwho.is/${encodeURIComponent(brut)}?fields=success,city,region,country_code&lang=fr`,
       { signal: ctrl.signal });
     clearTimeout(minuteur);
     const g = await r.json();
     if (!g || g.success === false) return 'Non localisé';
     const nom = g.city || g.region;
-    if (nom) return nettoie(nom, 48);
+    if (nom) {
+      const propre = nettoie(nom, 48);
+      return EXONYMES[propre.toLowerCase()] ?? propre;
+    }
     return g.country_code && g.country_code !== 'BE' ? 'Hors Belgique' : 'Non localisé';
   } catch {
     return 'Non localisé';                       // jamais d'erreur visible côté visiteur
@@ -117,6 +166,9 @@ async function rpc(nom: string, corps: unknown): Promise<Response> {
 
 async function evenement(req: Request, origine: string): Promise<Response> {
   const vide = new Response(null, { status: 204, headers: cors(origine) });
+
+  // Écarté avant toute écriture : un robot ne laisse aucune trace en base.
+  if (estRobot(req)) return vide;
 
   let corps: { t?: string; p?: unknown[] };
   try { corps = await req.json(); } catch { return vide; }
@@ -179,6 +231,12 @@ async function stats(req: Request, origine: string): Promise<Response> {
     supports: agrege?.supports ?? [],
     plats:    agrege?.plats    ?? [],
     courbe:   agrege?.courbe   ?? [],
+    // Ce que pèse la queue du classement, que la page n'affiche pas en détail
+    // mais doit compter dans ses pourcentages.
+    villes_autres:   agrege?.villes_autres   ?? 0,
+    villes_autres_n: agrege?.villes_autres_n ?? 0,
+    plats_autres:    agrege?.plats_autres    ?? 0,
+    plats_autres_n:  agrege?.plats_autres_n  ?? 0,
   }), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',

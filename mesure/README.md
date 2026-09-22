@@ -14,11 +14,20 @@ clairement signalés. Utile pour la présentation aux gérants.
 
 | Enregistré | Jamais enregistré |
 |---|---|
-| Nombre de visites par jour | Qui a visité |
+| Nombre d'ouvertures du site par jour | Qui a visité |
 | Ville approximative, en total (« Liège : 34 ») | Adresse IP |
 | Type d'appareil, en total | Navigateur, système, empreinte |
 | Appels et itinéraires lancés, en nombre | Numéro appelé, identité |
 | Intitulés des plats mis au panier, en nombre | Panier d'une personne donnée |
+
+**Une ouverture n'est pas une personne.** Sans cookie ni identifiant — c'est le
+choix de conception — un même client qui revient le lendemain est recompté. Le
+tableau de bord dit donc « ouvertures du site », jamais « visiteurs uniques ».
+
+**Les robots sont écartés avant toute écriture.** Un `user-agent` de robot, de
+sonde de surveillance ou d'aperçu de lien ne laisse aucune trace en base : sans
+ce filtre, les totaux gonflent et les villes des centres de données (Bruxelles,
+Zaventem) éclipsent les vraies communes.
 
 Une seule ligne en base par `(jour, type, clé)`, incrémentée. Aucun parcours
 individuel ne peut en être reconstitué — ce qui est exactement ce que promet la

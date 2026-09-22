@@ -90,6 +90,12 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 .piste{height:10px;background:var(--piste);border-radius:0 5px 5px 0;overflow:hidden}
 .remplissage{height:100%;background:var(--or);border-radius:0 5px 5px 0;
   width:0;transition:width .6s cubic-bezier(.22,1,.36,1)}
+/* La ligne de regroupement n'est pas un lieu ni un plat : elle se distingue
+   par un remplissage hachuré et un nom en italique — jamais par la seule
+   couleur, que tout le monde ne perçoit pas de la même façon. */
+.barre.queue .nom{color:var(--texte-3);font-style:italic}
+.barre.queue .remplissage{opacity:.5;
+  background:repeating-linear-gradient(135deg,var(--or) 0 2px,transparent 2px 6px)}
 
 /* ── courbe des visites ──────────────────────────────────────────── */
 .courbe{margin-top:6px}
@@ -176,15 +182,16 @@ footer a{color:var(--texte-2)}
   </div>
 
   <div class="cles">
-    <div class="cle"><div class="n" id="kVues">—</div><div class="l">Visites</div></div>
+    <div class="cle"><div class="n" id="kVues">—</div><div class="l">Ouvertures du site</div></div>
     <div class="cle"><div class="n" id="kAppels">—</div><div class="l">Appels lancés</div></div>
     <div class="cle"><div class="n" id="kItin">—</div><div class="l">Itinéraires demandés</div></div>
     <div class="cle"><div class="n" id="kCmd">—</div><div class="l">Commandes composées</div></div>
   </div>
 
   <section id="secCourbe">
-    <div class="titre"><h2>Les visites, jour par jour</h2></div>
-    <p class="chapo">Une visite = une personne qui ouvre le site.</p>
+    <div class="titre"><h2>Les ouvertures, jour par jour</h2></div>
+    <p class="chapo">Une ouverture = un chargement du site. Faute de cookie — c’est voulu —
+       un même client qui revient le lendemain est recompté.</p>
     <div class="courbe" id="courbe"></div>
   </section>
 
@@ -193,7 +200,8 @@ footer a{color:var(--texte-2)}
       <h2>D’où viennent vos visiteurs</h2>
       <button class="bascule" type="button" data-cible="tblVilles">Voir en tableau</button>
     </div>
-    <p class="chapo">Ville approximative, déduite du réseau. Aucun visiteur n’est identifié.</p>
+    <p class="chapo">Ville approximative, déduite du réseau. Aucun visiteur n’est identifié.
+       Les douze premières sont détaillées&nbsp;; le reste est regroupé, mais compte dans les parts.</p>
     <div class="barres" id="barVilles"></div>
     <div id="tblVilles" hidden></div>
   </section>
@@ -269,16 +277,34 @@ footer a{color:var(--texte-2)}
   }
 
   /* ── barres : teinte unique, la longueur seule porte la grandeur ── */
-  function dessineBarres(cible, liste, unite){
+  /* Le service ne détaille que le haut du classement, mais il dit aussi ce que
+     pèse la queue. On en fait une ligne « Autres ». Sans elle, les parts
+     seraient calculées sur le seul haut du tableau : Liège s'afficherait à
+     41 % là où sa part réelle est de 34 %. */
+  function queueDe(n, combien, singulier, pluriel){
+    if(!n || n <= 0) return null;
+    return { n: n, queue: true,
+             nom: combien > 1 ? combien + ' ' + pluriel : 'Une ' + singulier };
+  }
+
+  /** Les rangs à afficher, ligne de regroupement comprise. */
+  function avecQueue(liste, queue){
+    var rangs = (liste || []).slice();
+    if(queue) rangs.push(queue);
+    return rangs;
+  }
+
+  function dessineBarres(cible, liste, unite, queue){
     var hote = document.getElementById(cible);
     if(!liste || !liste.length){
       hote.innerHTML = '<p class="vide">Aucune donnée sur cette période.</p>';
       return;
     }
-    var total = liste.reduce(function(s, d){ return s + d.n; }, 0);
-    var max = liste[0].n || 1;
-    hote.innerHTML = liste.map(function(d){
-      return '<div class="barre">'
+    var rangs = avecQueue(liste, queue);
+    var total = rangs.reduce(function(s, d){ return s + d.n; }, 0);
+    var max = rangs.reduce(function(m, d){ return d.n > m ? d.n : m; }, 0) || 1;
+    hote.innerHTML = rangs.map(function(d){
+      return '<div class="barre' + (d.queue ? ' queue' : '') + '">'
         + '<div class="haut"><span class="nom">' + echappe(d.nom) + '</span>'
         + '<span class="val">' + nb(d.n)
         + ' <span>' + (unite ? unite + ' · ' : '') + pourcent(d.n, total) + ' %</span></span></div>'
@@ -292,13 +318,15 @@ footer a{color:var(--texte-2)}
     });
   }
 
-  function dessineTable(cible, liste, entete){
+  function dessineTable(cible, liste, entete, queue){
     var hote = document.getElementById(cible);
     if(!liste || !liste.length){ hote.innerHTML = ''; return; }
-    var total = liste.reduce(function(s, d){ return s + d.n; }, 0);
+    var rangs = avecQueue(liste, queue);
+    var total = rangs.reduce(function(s, d){ return s + d.n; }, 0);
     hote.innerHTML = '<table><thead><tr><th>' + entete + '</th><th>Nombre</th><th>Part</th></tr></thead><tbody>'
-      + liste.map(function(d){
-          return '<tr><td>' + echappe(d.nom) + '</td><td>' + nb(d.n) + '</td><td>'
+      + rangs.map(function(d){
+          return '<tr' + (d.queue ? ' class="queue"' : '') + '><td>'
+               + echappe(d.nom) + '</td><td>' + nb(d.n) + '</td><td>'
                + pourcent(d.n, total) + ' %</td></tr>';
         }).join('')
       + '</tbody></table>';
@@ -322,13 +350,13 @@ footer a{color:var(--texte-2)}
 
     hote.innerHTML =
       '<svg viewBox="0 0 ' + L + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="'
-        + 'Visites quotidiennes, maximum ' + nb(max) + '">'
+        + 'Ouvertures quotidiennes, maximum ' + nb(max) + '">'
       + '<path class="aire" d="' + aire + '"/>'
       + '<path class="ligne" d="' + d + '" vector-effect="non-scaling-stroke"/>'
       + '<circle class="pointe" cx="' + x(points.length - 1).toFixed(1) + '" cy="' + y(dernier.n).toFixed(1) + '" r="4"/>'
       + '</svg>'
       + '<div class="bornes"><span>' + dateCourte(points[0].j) + '</span>'
-      + '<span>' + nb(max) + ' visites au plus haut</span>'
+      + '<span>' + nb(max) + ' ouvertures au plus haut</span>'
       + '<span>' + dateCourte(dernier.j) + '</span></div>';
   }
 
@@ -350,12 +378,15 @@ footer a{color:var(--texte-2)}
       'Du ' + dateCourte(d.depuis) + ' au ' + dateCourte(d.jusqua) + ' · ' + d.jours + ' jours';
 
     dessineCourbe(d.courbe);
-    dessineBarres('barVilles',   d.villes,   'visites');
-    dessineBarres('barSupports', d.supports, 'visites');
-    dessineBarres('barPlats',    d.plats,    'fois');
-    dessineTable('tblVilles',   d.villes,   'Ville');
+    var qVilles = queueDe(d.villes_autres, d.villes_autres_n, 'autre ville', 'autres villes');
+    var qPlats  = queueDe(d.plats_autres,  d.plats_autres_n,  'autre plat',  'autres plats');
+
+    dessineBarres('barVilles',   d.villes,   'ouvertures', qVilles);
+    dessineBarres('barSupports', d.supports, 'ouvertures');
+    dessineBarres('barPlats',    d.plats,    'fois',       qPlats);
+    dessineTable('tblVilles',   d.villes,   'Ville',    qVilles);
     dessineTable('tblSupports', d.supports, 'Appareil');
-    dessineTable('tblPlats',    d.plats,    'Plat');
+    dessineTable('tblPlats',    d.plats,    'Plat',     qPlats);
   }
 
   function banniere(html, classe){
@@ -377,6 +408,8 @@ footer a{color:var(--texte-2)}
       depuis: courbe[0].j, jusqua: courbe[courbe.length - 1].j, jours: n,
       totaux: { vue: vues, appel: Math.round(vues * .14), itineraire: Math.round(vues * .09),
                 commande: Math.round(vues * .06) },
+      villes_autres: Math.round(vues * .06), villes_autres_n: 14,
+      plats_autres: 19, plats_autres_n: 11,
       villes: [{nom:'Nandrin',n:Math.round(vues*.28)},{nom:'Liège',n:Math.round(vues*.19)},
                {nom:'Neupré',n:Math.round(vues*.12)},{nom:'Huy',n:Math.round(vues*.09)},
                {nom:'Esneux',n:Math.round(vues*.07)},{nom:'Seraing',n:Math.round(vues*.05)},
@@ -390,12 +423,21 @@ footer a{color:var(--texte-2)}
     };
   }
 
+  /* Le service renvoie ses classements déjà triés ; le jeu fictif doit l'imiter,
+     sans quoi la démonstration montre des barres dans le désordre. */
+  function trieDemo(d){
+    ['villes', 'supports', 'plats'].forEach(function(k){
+      d[k].sort(function(a, b){ return b.n - a.n; });
+    });
+    return d;
+  }
+
   /* ── appel au service ── */
   function charge(){
     if(demo){
       banniere('<b>Démonstration.</b> Ces chiffres sont fictifs, ils servent à montrer la page. '
              + 'Retirez « ?demo=1 » de l’adresse pour voir les vrais.', 'demo');
-      affiche(jeuDemo(jours));
+      affiche(trieDemo(jeuDemo(jours)));
       return;
     }
     if(!API){
