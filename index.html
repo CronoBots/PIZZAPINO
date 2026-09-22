@@ -1382,15 +1382,6 @@
   .cart-clear:hover{color:var(--rouge)}
   .cart-note{margin-top:10px;font-size:.66rem;color:var(--ink-mut);text-align:center;line-height:1.5}
   /* Bas de la commande : mentions légales épurées (paiement + téléphone) */
-  .cart-commune{margin-top:15px;padding-top:14px;border-top:1px solid rgba(233,206,150,.14)}
-  .cart-commune label{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;
-    letter-spacing:.12em;font-size:.62rem;color:var(--ink-mut);margin-bottom:7px}
-  .cart-commune label span{letter-spacing:.06em;opacity:.7}
-  .cart-commune input{width:100%;box-sizing:border-box;font:inherit;font-size:.95rem;
-    padding:11px 13px;border-radius:10px;border:1px solid var(--hair-ink);
-    background:var(--paper);color:var(--ink)}
-  .cart-commune input:focus{outline:2px solid #c69a4d;outline-offset:1px;border-color:#c69a4d}
-  .cart-commune .cc-note{margin:7px 0 0;font-size:.72rem;line-height:1.45;color:var(--ink-mut)}
   .cart-legal{margin-top:15px;padding-top:14px;border-top:1px solid rgba(233,206,150,.14);text-align:center}
   .cart-legal .cl-main{display:block;max-width:340px;margin:0 auto;
     font-family:"Inter",sans-serif;font-size:.72rem;line-height:1.55;color:#b3a693}
@@ -1754,11 +1745,6 @@
   .ci-junior.on{background:#1f9d57;border-color:#1f9d57;color:#fff}
   .ci-junior.on::before{background:#fff;border-color:#fff}
   .cart-foot{background:#100b08;border-top-color:rgba(233,206,150,.16)}
-  .cart-commune{border-top-color:rgba(233,206,150,.16)}
-  .cart-commune label{color:#a99c86}
-  .cart-commune input{background:#1b1310;border-color:rgba(233,206,150,.2);color:#F5EEDF}
-  .cart-commune input::placeholder{color:#7d7263}
-  .cart-commune .cc-note{color:#a99c86}
   .cart-total{color:#EFE7D6}
   .cart-total b{color:#E9CE96}
   .cart-total-sub{color:#a99c86}
@@ -3264,228 +3250,11 @@
       <button type="button" class="ca-send" id="cartSend" aria-label="Partager ma liste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5"/><path d="M15.4 6.5 8.6 10.5"/></svg><span class="cs-label">Partager</span></button>
       <button type="button" class="ca-trash" id="cartClear" aria-label="Vider la liste" title="Vider la liste"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
     </div>
-    <div class="cart-commune">
-      <label for="cartCommune">Votre commune <span>— facultatif</span></label>
-      <input type="text" id="cartCommune" list="communesPino" autocomplete="off"
-             spellcheck="false" maxlength="40" enterkeyhint="done"
-             placeholder="Nandrin, Neupré, Modave…">
-      <p class="cc-note">Cela nous dit d’où viennent nos clients. Seul un compteur
-         par commune est conservé&nbsp;— jamais votre liste, jamais votre nom.</p>
-    </div>
     <div class="cart-legal">
       <p class="cl-main"><svg class="cl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v4.5"/><path d="M12 8h.01"/></svg><span class="cl-l">Préparez votre choix ici, puis <b>appelez-nous</b>.</span><span class="cl-l">La liste reste sur votre téléphone&nbsp;: elle n'est pas transmise au restaurant.</span></p>
     </div>
   </div>
 </div>
-
-<datalist id="communesPino">
-<!-- communes:début — engendré par mesure/lieux.py, ne pas modifier à la main -->
-  <option value="Fraineux">
-  <option value="Yernée">
-  <option value="Saint-Séverin">
-  <option value="Nandrin">
-  <option value="Villers-le-Temple">
-  <option value="Scry">
-  <option value="Aux Houx">
-  <option value="Soheit-Tinlot">
-  <option value="Fraiture">
-  <option value="Tinlot">
-  <option value="Ehein">
-  <option value="Outrelouxhe">
-  <option value="Hermalle-sous-Huy">
-  <option value="Ombret-Rawsa">
-  <option value="Neuville-en-Condroz">
-  <option value="Tavier">
-  <option value="Abée">
-  <option value="Strée-lez-Huy">
-  <option value="Berleur">
-  <option value="Les Gottes">
-  <option value="Rotheux-Rimière">
-  <option value="Seny">
-  <option value="Ellemelle">
-  <option value="Amay">
-  <option value="Limont">
-  <option value="Neupré">
-  <option value="Engis">
-  <option value="Ramelot">
-  <option value="Béemont">
-  <option value="Warzée">
-  <option value="Hody">
-  <option value="Stockay">
-  <option value="Ivoz-Ramet">
-  <option value="Pair">
-  <option value="Villers-aux-Tours">
-  <option value="Vierset-Barse">
-  <option value="Ampsin">
-  <option value="Terwagne">
-  <option value="Vien">
-  <option value="Jehay">
-  <option value="Awirs">
-  <option value="Plainevaux">
-  <option value="Houte-Si-Plou">
-  <option value="Anthisnes">
-  <option value="Saint-Georges-sur-Meuse">
-  <option value="Ouffet">
-  <option value="Ochain">
-  <option value="Strivay">
-  <option value="Tihange">
-  <option value="Flémalle-Haute">
-  <option value="Bodegnée">
-  <option value="Amostrennes">
-  <option value="Flémalle">
-  <option value="Modave">
-  <option value="Clavier-Station">
-  <option value="Bende">
-  <option value="Huy">
-  <option value="Fize-Fontaine">
-  <option value="Les Cahottes">
-  <option value="Atrin">
-  <option value="Boncelles">
-  <option value="Verlaine">
-  <option value="Dommartin">
-  <option value="Villers-le-Bouillet">
-  <option value="Clavier">
-  <option value="Jenneret">
-  <option value="Mont">
-  <option value="Vyle-et-Tharoul">
-  <option value="Hozémont">
-  <option value="Esneux">
-  <option value="Flémalle-Grande">
-  <option value="Antheit">
-  <option value="Mons-lez-Liège">
-  <option value="Fairon">
-  <option value="Marchin">
-  <option value="Horion">
-  <option value="Poulseur">
-  <option value="Hony">
-  <option value="Comblain-au-Pont">
-  <option value="Ougrée">
-  <option value="Wanze">
-  <option value="Ocquier">
-  <option value="Les Avins">
-  <option value="Vinalmont">
-  <option value="Jemeppe-sur-Meuse">
-  <option value="Seraing">
-  <option value="Fontin">
-  <option value="Seraing-le-Château">
-  <option value="Chapon-Seraing">
-  <option value="Hamoir">
-  <option value="Comblain-la-Tour">
-  <option value="Molu">
-  <option value="Bois">
-  <option value="Rivage">
-  <option value="Chanxhe">
-  <option value="Grâce-Hollogne">
-  <option value="Méry">
-  <option value="Liotte">
-  <option value="Wanzoul">
-  <option value="Velroux">
-  <option value="Pailhe">
-  <option value="Tilff">
-  <option value="Bois-et-Borsu">
-  <option value="Haneffe">
-  <option value="Hollogne-aux-Pierres">
-  <option value="Roloux">
-  <option value="Betgné">
-  <option value="Bas-Oha">
-  <option value="Tilleur">
-  <option value="Oneux">
-  <option value="Hautgné">
-  <option value="Warnant">
-  <option value="Goesnes">
-  <option value="Verlaine-sur-Ourthe">
-  <option value="Borsu">
-  <option value="Moha">
-  <option value="Borlon">
-  <option value="Sy">
-  <option value="Warnant-Dreye">
-  <option value="Jeneffe">
-  <option value="Filot">
-  <option value="Voroux-Goreux">
-  <option value="Hayen">
-  <option value="Ben">
-  <option value="Donceel">
-  <option value="Bierset">
-  <option value="Ben-Ahin">
-  <option value="Solières">
-  <option value="Noville">
-  <option value="Bonsin">
-  <option value="Vaux-et-Borset">
-  <option value="Tohogne">
-  <option value="Saint-Nicolas">
-  <option value="Grâce-Berleur">
-  <option value="Presseux">
-  <option value="Dolembreux">
-  <option value="Lincé">
-  <option value="Xhoris">
-  <option value="Montegnée">
-  <option value="Fexhe-le-Haut-Clocher">
-  <option value="Borlez">
-  <option value="Embourg">
-  <option value="Fumal">
-  <option value="Vieuxville">
-  <option value="Palenge">
-  <option value="Awans">
-  <option value="Gives">
-  <option value="Ville">
-  <option value="My">
-  <option value="Jallet">
-  <option value="Viemme">
-  <option value="Lillé">
-  <option value="Huccorgne">
-  <option value="Perwez">
-  <option value="Warre">
-  <option value="Beaufays">
-  <option value="Vieux-Waleffe">
-  <option value="Méan">
-  <option value="Septon">
-  <option value="Bomal">
-  <option value="Rouvreux">
-  <option value="Fooz">
-  <option value="Ogné">
-  <option value="Loncin">
-  <option value="Ans">
-  <option value="Havelange">
-  <option value="Bohon">
-  <option value="Petite-Somme">
-  <option value="Sprimont">
-  <option value="Verlée">
-  <option value="Septroux">
-  <option value="Hognoul">
-  <option value="Durbuy">
-  <option value="Bovenistier">
-  <option value="Les Waleffes">
-  <option value="Celles">
-  <option value="Awan">
-  <option value="Momalle">
-  <option value="Remicourt">
-  <option value="Liège">
-  <option value="Fallais">
-  <option value="Couthuin">
-  <option value="Noidré">
-  <option value="Florzé">
-  <option value="Vaux-sous-Chèvremont">
-  <option value="Chaudfontaine">
-  <option value="Maffe">
-  <option value="Faimes">
-  <option value="Marneffe">
-  <option value="Alleur">
-  <option value="Ozo">
-  <option value="Izier">
-  <option value="Ferrières">
-  <option value="Barvaux">
-  <option value="Haillot">
-  <option value="Gomzé">
-  <option value="Lavoir">
-  <option value="Évelette">
-  <option value="Damré">
-  <option value="Miécret">
-  <option value="Lamine">
-  <option value="Sendrogne">
-  <option value="Surlemez">
-  <option value="Kemexhe">
-<!-- communes:fin -->
-</datalist>
 
 <!-- Confirmation « vider la commande » (maison, remplace la fenêtre native) -->
 <div class="confirm-ov" id="confirmOv" hidden>
@@ -3937,53 +3706,12 @@
       ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta); flashSend(ok);
     }catch(e){ flashSend(false); }
   }
-  /* La commune est facultative et déclarée par le client. Elle se garde là où
-     se garde déjà la liste — sur son appareil — pour ne pas la lui redemander
-     à chaque fois. Rien d'autre n'en est fait ici : c'est le collecteur qui
-     n'en retient qu'un compteur par commune. */
-  var CKEY = 'pino_commune';
-  var champCommune = document.getElementById('cartCommune');
-
-  /* Les localités que le champ propose vraiment. On ne relève que celles-là :
-     sans ce garde-fou, « liege », « Liège » et « LIEGE » deviendraient trois
-     communes distinctes sur le tableau de bord. */
-  /* Sur un clavier de téléphone, « neupre » est au moins aussi probable que
-     « Neupré » : on compare sans accents, et on range la graphie officielle. */
-  function pliage(v){
-    v = String(v || '').trim().toLowerCase();
-    try{ v = v.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }catch(e){}
-    return v.replace(/[^a-z]+/g, '');
-  }
-  var COMMUNES = (function(){
-    var m = {};
-    var opts = document.querySelectorAll('#communesPino option');
-    for(var i = 0; i < opts.length; i++){
-      var c = pliage(opts[i].value);
-      if(c && !m[c]) m[c] = opts[i].value;
-    }
-    return m;
-  })();
-  function communeConnue(v){
-    return COMMUNES[pliage(v)] || '';
-  }
-
-  if(champCommune){
-    try{ champCommune.value = localStorage.getItem(CKEY) || ''; }catch(e){}
-    champCommune.addEventListener('change', function(){
-      /* On range la graphie officielle, pas ce qui a été tapé. */
-      var propre = communeConnue(champCommune.value);
-      if(propre) champCommune.value = propre;
-      try{ localStorage.setItem(CKEY, champCommune.value.trim()); }catch(e){}
-    });
-  }
-
   /* Ce que le client a composé, sans quantité ni prix : juste les intitulés. */
   function mesurePanier(){
     if(!window.pinoMesure) return;
     var noms = [];
     for(var k in state){ if(state[k] && state[k].name) noms.push(state[k].name); }
-    var commune = champCommune ? communeConnue(champCommune.value) : '';
-    if(noms.length) window.pinoMesure('commande', noms, commune);
+    if(noms.length) window.pinoMesure('commande', noms);
   }
   /* Le bouton d'appel portait la mesure du panier ; il a quitté ce panneau.
      On relève la liste quand le visiteur s'en va — un seul relevé par visite,
@@ -4320,13 +4048,10 @@
 
   var dernierPanier = '';
 
-  function envoie(type, plats, commune){
+  function envoie(type, plats){
     if(!API) return;
     try{
-      var corps2 = { t:type };
-      if(plats && plats.length) corps2.p = plats;
-      if(commune) corps2.c = commune;
-      var charge = JSON.stringify(corps2);
+      var charge = JSON.stringify(plats && plats.length ? { t:type, p:plats } : { t:type });
       var corps = new Blob([charge], { type:'text/plain;charset=UTF-8' });
       if(navigator.sendBeacon && navigator.sendBeacon(API + '/e', corps)) return;
       fetch(API + '/e', { method:'POST', body:charge, keepalive:true, mode:'cors',
@@ -4335,15 +4060,13 @@
   }
 
   /* Le panier n'est compté qu'une fois par composition, pas à chaque clic. */
-  window.pinoMesure = function(type, plats, commune){
+  window.pinoMesure = function(type, plats){
     if(type === 'commande'){
-      /* La commune entre dans la signature : si le client la renseigne après
-         coup sans toucher à sa liste, le relevé doit repartir. */
-      var sig = (plats || []).slice().sort().join('|') + '#' + (commune || '');
-      if(!plats || !plats.length || sig === dernierPanier) return;
+      var sig = (plats || []).slice().sort().join('|');
+      if(!sig || sig === dernierPanier) return;
       dernierPanier = sig;
     }
-    envoie(type, plats, commune);
+    envoie(type, plats);
   };
 
   /* La visite : une fois, à l'ouverture de la page. */
