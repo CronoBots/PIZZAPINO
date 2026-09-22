@@ -56,13 +56,6 @@ const EXONYMES: Record<string, string> = {
   'hoei': 'Huy',
   'bergen': 'Mons',
 };
-/* La commune est declaree par le client. La page ne l'envoie que si elle
-   figure dans la liste qu'elle propose ; ici on se borne a verifier la forme,
-   comme on le fait deja pour les intitules de plats : un nom de localite, pas
-   une phrase ni du balisage. Ce qui passerait quand meme n'irait jamais plus
-   loin qu'un compteur de plus sur un tableau de bord prive. */
-const COMMUNE_OK = /^[A-Za-z\u00C0-\u024F][A-Za-z\u00C0-\u024F' \-]{1,39}$/;
-
 const MAX_PLATS = 40;
 const MAX_JOURS = 365;
 
@@ -177,7 +170,7 @@ async function evenement(req: Request, origine: string): Promise<Response> {
   // Écarté avant toute écriture : un robot ne laisse aucune trace en base.
   if (estRobot(req)) return vide;
 
-  let corps: { t?: string; p?: unknown[]; c?: unknown };
+  let corps: { t?: string; p?: unknown[] };
   try { corps = await req.json(); } catch { return vide; }
   if (!corps || !TYPES.has(String(corps.t))) return vide;
 
@@ -187,12 +180,6 @@ async function evenement(req: Request, origine: string): Promise<Response> {
   // Le profil n'est relevé qu'à l'arrivée : une seule fois par visite.
   if (type === 'vue') {
     paires.push(['ville', await ville(req)], ['support', support(req)]);
-  }
-
-  // La commune, si le client a bien voulu la donner.
-  if (type === 'commande' && typeof corps.c === 'string') {
-    const commune = nettoie(corps.c, 40);
-    if (COMMUNE_OK.test(commune)) paires.push(['commune', commune]);
   }
 
   // Les plats déposés au panier, dédoublonnés et bornés.
@@ -248,7 +235,6 @@ async function stats(req: Request, origine: string): Promise<Response> {
     supports: agrege?.supports ?? [],
     plats:    agrege?.plats    ?? [],
     courbe:   agrege?.courbe   ?? [],
-    communes: agrege?.communes ?? [],
     // Ce que pèse la queue du classement, que la page n'affiche pas en détail
     // mais doit compter dans ses pourcentages.
     villes_autres:   agrege?.villes_autres   ?? 0,

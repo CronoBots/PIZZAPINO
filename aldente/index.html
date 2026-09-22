@@ -268,16 +268,12 @@ footer a{color:var(--texte-2)}
   </section>
 
   <section id="secCarte">
-    <div class="titre">
-      <h2>Sur la carte</h2>
-      <button class="bascule" type="button" data-cible="tblCommunes"
-              aria-expanded="false" aria-controls="tblCommunes">Voir en tableau</button>
-    </div>
-    <p class="chapo">Les communes que les clients indiquent eux-mêmes en composant leur
-       liste. Celle-ci est exacte&nbsp;— contrairement à la section précédente, déduite
-       du réseau, qui situe l’opérateur plutôt que le client.</p>
+    <div class="titre"><h2>Les mêmes, sur la carte</h2></div>
+    <p class="chapo">Le classement ci-dessus, posé sur le territoire. Même réserve&nbsp;:
+       ces villes viennent du réseau, qui situe l’opérateur plutôt que le client — un
+       habitant du Condroz sur son téléphone ressort le plus souvent « Liège ». À lire
+       comme un bassin, pas comme des adresses.</p>
     <div class="carteLieux" id="carteLieux"></div>
-    <div id="tblCommunes" hidden></div>
   </section>
 
   <section id="secSupports">
@@ -345,82 +341,462 @@ footer a{color:var(--texte-2)}
     }
   })();
 
-  /* communes:début — engendré par mesure/lieux.py, ne pas modifier à la main */
-  /* Coordonnées des localités, relevées sur OpenStreetMap (ODbL). */
+  /* lieux:début — engendré par mesure/lieux.py, ne pas modifier à la main */
+  /* Lieux et coordonnées, relevés sur OpenStreetMap (ODbL). */
   var CENTRE = [50.51623, 5.39926];
-  var LIEUX = {
-    "Fraineux":[50.5139,5.40063],"Yernée":[50.52824,5.38295],"Saint-Séverin":[50.52991,5.41183],
-    "Nandrin":[50.50634,5.41934],"Villers-le-Temple":[50.50811,5.37084],"Scry":[50.49942,5.37663],
-    "Aux Houx":[50.54877,5.39935],"Soheit-Tinlot":[50.47899,5.38335],"Fraiture":[50.47883,5.41858],
-    "Tinlot":[50.47774,5.3787],"Ehein":[50.54451,5.44443],"Outrelouxhe":[50.50423,5.33529],
-    "Hermalle-sous-Huy":[50.55699,5.36225],"Ombret-Rawsa":[50.54428,5.33717],
-    "Neuville-en-Condroz":[50.55203,5.45143],"Tavier":[50.496,5.47066],"Abée":[50.47353,5.35646],
-    "Strée-lez-Huy":[50.49256,5.32605],"Berleur":[50.51877,5.48512],"Les Gottes":[50.50403,5.31574],
-    "Rotheux-Rimière":[50.53534,5.48118],"Seny":[50.45955,5.40294],"Ellemelle":[50.46651,5.44333],
-    "Amay":[50.54978,5.3241],"Limont":[50.50774,5.4923],"Neupré":[50.54318,5.49011],
-    "Engis":[50.5825,5.40402],"Ramelot":[50.46445,5.32863],"Béemont":[50.4468,5.40371],
-    "Warzée":[50.44879,5.4271],"Hody":[50.48691,5.501],"Stockay":[50.58438,5.36024],
-    "Ivoz-Ramet":[50.58228,5.45235],"Pair":[50.44213,5.40223],"Villers-aux-Tours":[50.49694,5.5123],
-    "Vierset-Barse":[50.48112,5.29489],"Ampsin":[50.54024,5.28674],"Terwagne":[50.44458,5.34849],
-    "Vien":[50.47385,5.50536],"Jehay":[50.5749,5.31405],"Awirs":[50.59852,5.4093],
-    "Plainevaux":[50.54481,5.52153],"Houte-Si-Plou":[50.52794,5.52929],"Anthisnes":[50.48166,5.52253],
-    "Saint-Georges-sur-Meuse":[50.60007,5.35843],"Ouffet":[50.43773,5.46533],"Ochain":[50.43011,5.36185],
-    "Strivay":[50.53708,5.53543],"Tihange":[50.52759,5.25937],"Flémalle-Haute":[50.60184,5.44747],
-    "Bodegnée":[50.58579,5.30413],"Amostrennes":[50.52788,5.54196],"Flémalle":[50.59945,5.46996],
-    "Modave":[50.44161,5.30179],"Clavier-Station":[50.42885,5.32557],"Bende":[50.41763,5.41424],
-    "Huy":[50.51809,5.24081],"Fize-Fontaine":[50.58498,5.28351],"Les Cahottes":[50.61571,5.42355],
-    "Atrin":[50.41569,5.37044],"Boncelles":[50.57028,5.53785],"Verlaine":[50.60751,5.31844],
-    "Dommartin":[50.61765,5.36299],"Villers-le-Bouillet":[50.57537,5.26071],"Clavier":[50.41189,5.35774],
-    "Jenneret":[50.41285,5.44558],"Mont":[50.4851,5.56191],"Vyle-et-Tharoul":[50.44627,5.26827],
-    "Hozémont":[50.62487,5.39654],"Esneux":[50.53359,5.56862],"Flémalle-Grande":[50.61539,5.47309],
-    "Antheit":[50.5512,5.23585],"Mons-lez-Liège":[50.62245,5.46006],"Fairon":[50.44545,5.54287],
-    "Marchin":[50.48021,5.22634],"Horion":[50.63118,5.37817],"Poulseur":[50.5098,5.58232],
-    "Hony":[50.54007,5.57912],"Comblain-au-Pont":[50.4757,5.57485],"Ougrée":[50.59115,5.54396],
-    "Wanze":[50.53686,5.21439],"Ocquier":[50.39664,5.39614],"Les Avins":[50.41542,5.29936],
-    "Vinalmont":[50.56275,5.22614],"Jemeppe-sur-Meuse":[50.61809,5.49972],"Seraing":[50.61524,5.50894],
-    "Fontin":[50.52796,5.58877],"Seraing-le-Château":[50.62154,5.29967],
-    "Chapon-Seraing":[50.60967,5.27345],"Hamoir":[50.42541,5.53261],
-    "Comblain-la-Tour":[50.45531,5.56995],"Molu":[50.44624,5.23855],"Bois":[50.39753,5.3371],
-    "Rivage":[50.48331,5.58865],"Chanxhe":[50.49935,5.59556],"Grâce-Hollogne":[50.6323,5.47684],
-    "Méry":[50.54776,5.59185],"Liotte":[50.48218,5.59146],"Wanzoul":[50.56599,5.21389],
-    "Velroux":[50.64374,5.42527],"Pailhe":[50.4225,5.25862],"Tilff":[50.56957,5.5844],
-    "Bois-et-Borsu":[50.39463,5.33027],"Haneffe":[50.63869,5.31912],
-    "Hollogne-aux-Pierres":[50.63875,5.47587],"Roloux":[50.64949,5.39601],"Betgné":[50.52666,5.60817],
-    "Bas-Oha":[50.5224,5.18806],"Tilleur":[50.62066,5.53067],"Oneux":[50.47295,5.5987],
-    "Hautgné":[50.5379,5.60824],"Warnant":[50.59484,5.22734],"Goesnes":[50.4401,5.22178],
-    "Verlaine-sur-Ourthe":[50.40037,5.51043],"Borsu":[50.38876,5.32314],"Moha":[50.54716,5.18789],
-    "Borlon":[50.37851,5.40489],"Sy":[50.40472,5.5249],"Warnant-Dreye":[50.5957,5.22154],
-    "Jeneffe":[50.65323,5.35595],"Filot":[50.42675,5.56805],"Voroux-Goreux":[50.6547,5.42715],
-    "Hayen":[50.54582,5.6151],"Ben":[50.51259,5.17896],"Donceel":[50.6479,5.31994],
-    "Bierset":[50.65471,5.45126],"Ben-Ahin":[50.50332,5.17735],"Solières":[50.48522,5.18122],
-    "Noville":[50.65993,5.38341],"Bonsin":[50.37276,5.37888],"Vaux-et-Borset":[50.61318,5.23176],
-    "Tohogne":[50.38104,5.4814],"Saint-Nicolas":[50.63167,5.53763],"Grâce-Berleur":[50.64395,5.50611],
-    "Presseux":[50.49598,5.62485],"Dolembreux":[50.53685,5.62515],"Lincé":[50.51369,5.62831],
-    "Xhoris":[50.44398,5.60207],"Montegnée":[50.64234,5.51861],
-    "Fexhe-le-Haut-Clocher":[50.66431,5.39938],"Borlez":[50.63302,5.24511],"Embourg":[50.59164,5.61057],
-    "Fumal":[50.58679,5.1843],"Vieuxville":[50.39551,5.55124],"Palenge":[50.3632,5.43727],
-    "Awans":[50.66703,5.46222],"Gives":[50.50768,5.15467],"Ville":[50.41661,5.58782],
-    "My":[50.40579,5.57364],"Jallet":[50.44326,5.18216],"Viemme":[50.64829,5.26831],
-    "Lillé":[50.50089,5.64475],"Huccorgne":[50.56759,5.16476],"Perwez":[50.45328,5.17211],
-    "Warre":[50.36489,5.46525],"Beaufays":[50.55905,5.63857],"Vieux-Waleffe":[50.61653,5.20431],
-    "Méan":[50.36192,5.33386],"Septon":[50.35716,5.42281],"Bomal":[50.3762,5.52296],
-    "Rouvreux":[50.49024,5.65006],"Fooz":[50.67625,5.43762],"Ogné":[50.5164,5.65343],
-    "Loncin":[50.66515,5.50273],"Ans":[50.65287,5.54061],"Havelange":[50.38709,5.23958],
-    "Bohon":[50.35702,5.4753],"Petite-Somme":[50.34972,5.40175],"Sprimont":[50.50553,5.66172],
-    "Verlée":[50.36754,5.27956],"Septroux":[50.47206,5.65242],"Hognoul":[50.68081,5.45564],
-    "Durbuy":[50.35241,5.45625],"Bovenistier":[50.66761,5.28443],"Les Waleffes":[50.64024,5.21804],
-    "Celles":[50.65388,5.24556],"Awan":[50.46002,5.65122],"Momalle":[50.68523,5.37301],
-    "Remicourt":[50.67848,5.31999],"Liège":[50.64509,5.57361],"Fallais":[50.60928,5.17352],
-    "Couthuin":[50.53309,5.13229],"Noidré":[50.51727,5.6685],"Florzé":[50.48959,5.66585],
-    "Vaux-sous-Chèvremont":[50.6018,5.63393],"Chaudfontaine":[50.58479,5.64697],
-    "Maffe":[50.35379,5.31155],"Faimes":[50.66522,5.26274],"Marneffe":[50.5791,5.14489],
-    "Alleur":[50.67425,5.51299],"Ozo":[50.37333,5.55578],"Izier":[50.38489,5.57933],
-    "Ferrières":[50.4002,5.60639],"Barvaux":[50.35061,5.49328],"Haillot":[50.4406,5.14919],
-    "Gomzé":[50.54053,5.67378],"Lavoir":[50.54864,5.12558],"Évelette":[50.41358,5.17144],
-    "Damré":[50.5057,5.67842],"Miécret":[50.36579,5.24954],"Lamine":[50.68908,5.33467],
-    "Sendrogne":[50.52408,5.68036],"Surlemez":[50.51911,5.11748],"Kemexhe":[50.69618,5.40604]
+  var LIEUX = [
+    [50.5139,5.40063,"Fraineux"],[50.52824,5.38295,"Yernée"],[50.52991,5.41183,"Saint-Séverin"],
+    [50.50634,5.41934,"Nandrin"],[50.50811,5.37084,"Villers-le-Temple"],[50.49942,5.37663,"Scry"],
+    [50.54877,5.39935,"Aux Houx"],[50.47899,5.38335,"Soheit-Tinlot"],[50.47883,5.41858,"Fraiture"],
+    [50.47774,5.3787,"Tinlot"],[50.54451,5.44443,"Ehein"],[50.50423,5.33529,"Outrelouxhe"],
+    [50.55699,5.36225,"Hermalle-sous-Huy"],[50.54428,5.33717,"Ombret-Rawsa"],
+    [50.55203,5.45143,"Neuville-en-Condroz"],[50.496,5.47066,"Tavier"],[50.47353,5.35646,"Abée"],
+    [50.49256,5.32605,"Strée-lez-Huy"],[50.51877,5.48512,"Berleur"],
+    [50.50403,5.31574,"Les Gottes"],[50.53534,5.48118,"Rotheux-Rimière"],[50.45955,5.40294,"Seny"],
+    [50.46651,5.44333,"Ellemelle"],[50.54978,5.3241,"Amay"],[50.50774,5.4923,"Limont"],
+    [50.54318,5.49011,"Neupré"],[50.5825,5.40402,"Engis"],[50.46445,5.32863,"Ramelot"],
+    [50.4468,5.40371,"Béemont"],[50.44879,5.4271,"Warzée"],[50.48691,5.501,"Hody"],
+    [50.58438,5.36024,"Stockay"],[50.58228,5.45235,"Ivoz-Ramet"],[50.44213,5.40223,"Pair"],
+    [50.49694,5.5123,"Villers-aux-Tours"],[50.48112,5.29489,"Vierset-Barse"],
+    [50.54024,5.28674,"Ampsin"],[50.44458,5.34849,"Terwagne"],[50.47385,5.50536,"Vien"],
+    [50.5749,5.31405,"Jehay"],[50.59852,5.4093,"Awirs"],[50.54481,5.52153,"Plainevaux"],
+    [50.52794,5.52929,"Houte-Si-Plou"],[50.48166,5.52253,"Anthisnes"],
+    [50.60007,5.35843,"Saint-Georges-sur-Meuse"],[50.43773,5.46533,"Ouffet"],
+    [50.43011,5.36185,"Ochain"],[50.53708,5.53543,"Strivay"],[50.52759,5.25937,"Tihange"],
+    [50.60184,5.44747,"Flémalle-Haute"],[50.58579,5.30413,"Bodegnée"],
+    [50.52788,5.54196,"Amostrennes"],[50.59945,5.46996,"Flémalle"],[50.44161,5.30179,"Modave"],
+    [50.42885,5.32557,"Clavier-Station"],[50.41763,5.41424,"Bende"],[50.51809,5.24081,"Huy"],
+    [50.58498,5.28351,"Fize-Fontaine"],[50.61571,5.42355,"Les Cahottes"],
+    [50.41569,5.37044,"Atrin"],[50.57028,5.53785,"Boncelles"],[50.60751,5.31844,"Verlaine"],
+    [50.61765,5.36299,"Dommartin"],[50.57537,5.26071,"Villers-le-Bouillet"],
+    [50.41189,5.35774,"Clavier"],[50.41285,5.44558,"Jenneret"],[50.4851,5.56191,"Mont"],
+    [50.44627,5.26827,"Vyle-et-Tharoul"],[50.62487,5.39654,"Hozémont"],[50.53359,5.56862,"Esneux"],
+    [50.61539,5.47309,"Flémalle-Grande"],[50.5512,5.23585,"Antheit"],
+    [50.62245,5.46006,"Mons-lez-Liège"],[50.44545,5.54287,"Fairon"],[50.48021,5.22634,"Marchin"],
+    [50.63118,5.37817,"Horion"],[50.5098,5.58232,"Poulseur"],[50.54007,5.57912,"Hony"],
+    [50.4757,5.57485,"Comblain-au-Pont"],[50.59115,5.54396,"Ougrée"],[50.53686,5.21439,"Wanze"],
+    [50.39664,5.39614,"Ocquier"],[50.41542,5.29936,"Les Avins"],[50.56275,5.22614,"Vinalmont"],
+    [50.61809,5.49972,"Jemeppe-sur-Meuse"],[50.61524,5.50894,"Seraing"],
+    [50.52796,5.58877,"Fontin"],[50.62154,5.29967,"Seraing-le-Château"],
+    [50.60967,5.27345,"Chapon-Seraing"],[50.42541,5.53261,"Hamoir"],
+    [50.45531,5.56995,"Comblain-la-Tour"],[50.44624,5.23855,"Molu"],[50.39753,5.3371,"Bois"],
+    [50.48331,5.58865,"Rivage"],[50.49935,5.59556,"Chanxhe"],[50.6323,5.47684,"Grâce-Hollogne"],
+    [50.54776,5.59185,"Méry"],[50.48218,5.59146,"Liotte"],[50.56599,5.21389,"Wanzoul"],
+    [50.64374,5.42527,"Velroux"],[50.4225,5.25862,"Pailhe"],[50.56957,5.5844,"Tilff"],
+    [50.39463,5.33027,"Bois-et-Borsu"],[50.63869,5.31912,"Haneffe"],
+    [50.63875,5.47587,"Hollogne-aux-Pierres"],[50.64949,5.39601,"Roloux"],
+    [50.52666,5.60817,"Betgné"],[50.5224,5.18806,"Bas-Oha"],[50.62066,5.53067,"Tilleur"],
+    [50.47295,5.5987,"Oneux"],[50.5379,5.60824,"Hautgné"],[50.59484,5.22734,"Warnant"],
+    [50.4401,5.22178,"Goesnes"],[50.40037,5.51043,"Verlaine-sur-Ourthe"],
+    [50.38876,5.32314,"Borsu"],[50.54716,5.18789,"Moha"],[50.37851,5.40489,"Borlon"],
+    [50.40472,5.5249,"Sy"],[50.5957,5.22154,"Warnant-Dreye"],[50.65323,5.35595,"Jeneffe"],
+    [50.42675,5.56805,"Filot"],[50.6547,5.42715,"Voroux-Goreux"],[50.54582,5.6151,"Hayen"],
+    [50.51259,5.17896,"Ben"],[50.6479,5.31994,"Donceel"],[50.65471,5.45126,"Bierset"],
+    [50.50332,5.17735,"Ben-Ahin"],[50.48522,5.18122,"Solières"],[50.65993,5.38341,"Noville"],
+    [50.37276,5.37888,"Bonsin"],[50.61318,5.23176,"Vaux-et-Borset"],[50.38104,5.4814,"Tohogne"],
+    [50.63167,5.53763,"Saint-Nicolas"],[50.64395,5.50611,"Grâce-Berleur"],
+    [50.49598,5.62485,"Presseux"],[50.53685,5.62515,"Dolembreux"],[50.51369,5.62831,"Lincé"],
+    [50.44398,5.60207,"Xhoris"],[50.64234,5.51861,"Montegnée"],
+    [50.66431,5.39938,"Fexhe-le-Haut-Clocher"],[50.63302,5.24511,"Borlez"],
+    [50.59164,5.61057,"Embourg"],[50.58679,5.1843,"Fumal"],[50.39551,5.55124,"Vieuxville"],
+    [50.3632,5.43727,"Palenge"],[50.66703,5.46222,"Awans"],[50.50768,5.15467,"Gives"],
+    [50.41661,5.58782,"Ville"],[50.40579,5.57364,"My"],[50.44326,5.18216,"Jallet"],
+    [50.64829,5.26831,"Viemme"],[50.50089,5.64475,"Lillé"],[50.56759,5.16476,"Huccorgne"],
+    [50.45328,5.17211,"Perwez"],[50.36489,5.46525,"Warre"],[50.55905,5.63857,"Beaufays"],
+    [50.61653,5.20431,"Vieux-Waleffe"],[50.36192,5.33386,"Méan"],[50.35716,5.42281,"Septon"],
+    [50.3762,5.52296,"Bomal"],[50.49024,5.65006,"Rouvreux"],[50.67625,5.43762,"Fooz"],
+    [50.5164,5.65343,"Ogné"],[50.66515,5.50273,"Loncin"],[50.65287,5.54061,"Ans"],
+    [50.38709,5.23958,"Havelange"],[50.35702,5.4753,"Bohon"],[50.34972,5.40175,"Petite-Somme"],
+    [50.50553,5.66172,"Sprimont"],[50.36754,5.27956,"Verlée"],[50.47206,5.65242,"Septroux"],
+    [50.68081,5.45564,"Hognoul"],[50.35241,5.45625,"Durbuy"],[50.66761,5.28443,"Bovenistier"],
+    [50.64024,5.21804,"Les Waleffes"],[50.65388,5.24556,"Celles"],[50.46002,5.65122,"Awan"],
+    [50.68523,5.37301,"Momalle"],[50.67848,5.31999,"Remicourt"],[50.64509,5.57361,"Liège"],
+    [50.60928,5.17352,"Fallais"],[50.53309,5.13229,"Couthuin"],[50.51727,5.6685,"Noidré"],
+    [50.48959,5.66585,"Florzé"],[50.6018,5.63393,"Vaux-sous-Chèvremont"],
+    [50.58479,5.64697,"Chaudfontaine"],[50.35379,5.31155,"Maffe"],[50.66522,5.26274,"Faimes"],
+    [50.5791,5.14489,"Marneffe"],[50.67425,5.51299,"Alleur"],[50.37333,5.55578,"Ozo"],
+    [50.38489,5.57933,"Izier"],[50.4002,5.60639,"Ferrières"],[50.35061,5.49328,"Barvaux"],
+    [50.4406,5.14919,"Haillot"],[50.54053,5.67378,"Gomzé"],[50.54864,5.12558,"Lavoir"],
+    [50.41358,5.17144,"Évelette"],[50.5057,5.67842,"Damré"],[50.36579,5.24954,"Miécret"],
+    [50.68908,5.33467,"Lamine"],[50.52408,5.68036,"Sendrogne"],[50.51911,5.11748,"Surlemez"],
+    [50.4759,5.67632,"Aywaille"],[50.57281,5.68837,"Trooz"],[50.62206,5.65341,"Beyne-Heusay"],
+    [50.4894,5.09655,"Andenne"],[50.69769,5.25462,"Waremme"],[50.61684,5.68322,"Fléron"],
+    [50.66504,5.62998,"Herstal"],[50.63306,5.73179,"Soumagne"],[50.70919,5.64507,"Oupeye"],
+    [50.2688,5.44633,"Hotton"],[50.67246,5.07799,"Hannut"],[50.67272,5.72524,"Blegny"],
+    [50.56752,5.80371,"Pepinster"],[50.53492,5.81329,"Theux"],[50.78063,5.46392,"Tongres"],
+    [50.63916,5.7931,"Herve"],[50.73478,5.69364,"Visé"],[50.80245,5.34357,"Looz"],
+    [50.29649,5.10087,"Ciney"],[50.22709,5.34196,"Marche-en-Famenne"],[50.49207,5.86276,"Spa"],
+    [50.61137,5.85473,"Dison"],[50.59324,5.86783,"Verviers"],[50.75301,5.08132,"Landen"],
+    [50.70007,4.98922,"Orp-Jauche"],[50.81158,5.59787,"Riemst"],[50.59168,4.9066,"Eghezée"],
+    [50.77827,5.70753,"Eijsden"],[50.81528,5.18589,"Saint-Trond"],[50.45896,4.87233,"Jambes"],
+    [50.28581,5.79216,"Lierneux"],[50.46653,4.86619,"Namur"],
+    [50.18156,5.57595,"La Roche-en-Ardenne"],[50.39424,5.93103,"Stavelot"],
+    [50.87078,5.51811,"Bilzen"],[50.87547,5.30799,"Alken"],[50.3762,4.8675,"Profondeville"],
+    [50.8332,5.1031,"Léau"],[50.15885,5.22334,"Rochefort"],[50.85124,5.69098,"Maastricht"],
+    [50.90785,5.42003,"Diepenbeek"],[50.72418,4.868,"Jodoigne"],[50.25918,4.91306,"Dinant"],
+    [50.88928,5.65132,"Lanaken"],[50.42653,6.02761,"Malmedy"],[50.80748,4.93718,"Tirlemont"],
+    [50.93037,5.3378,"Hasselt"],[50.63057,6.03127,"Eupen"],[50.7155,6.01334,"La Calamine"],
+    [50.86475,5.83125,"Fauquemont"],[50.9407,5.16597,"Herck-la-Ville"],
+    [50.55973,4.69431,"Gembloux"],[50.96549,5.50015,"Genk"],[50.13238,5.78869,"Houffalize"],
+    [50.39595,4.69789,"Fosses-la-Ville"],[50.94794,5.11425,"Halen"],
+    [50.46564,4.66868,"Jemeppe-sur-Sambre"],[50.77102,6.01905,"Vaals"],
+    [50.99098,5.36777,"Zonhoven"],[50.68398,4.69742,"Chaumont-Gistoux"],
+    [50.7809,4.77173,"Beauvechain"],[50.67613,6.11084,"Raeren"],[50.83999,4.83213,"Boutersem"],
+    [50.96342,5.69602,"Maasmechelen"],[50.98622,5.19186,"Lummen"],
+    [50.02514,5.37386,"Saint-Hubert"],[50.11027,4.95493,"Beauraing"],
+    [50.73862,4.69623,"Grez-Doiceau"],[50.77635,6.08386,"Aix-la-Chapelle"],
+    [50.44906,4.61082,"Sambreville"],[50.88157,4.8416,"Lubbeek"],[50.96944,5.76697,"Stein"],
+    [50.32121,4.65849,"Mettet"],[50.98443,5.05043,"Diest"],[50.28039,6.1259,"Saint-Vith"],
+    [50.6682,4.61288,"Louvain-la-Neuve"],[50.88767,5.97733,"Heerlen"],[50.97,5.8267,"Geleen"],
+    [50.55447,6.2408,"Montjoie"],[50.41636,4.5712,"Aiseau-Presles"],[50.71697,4.61042,"Wavre"],
+    [50.48294,4.5497,"Fleurus"],[50.64432,4.56858,"Court-Saint-Etienne"],
+    [51.04896,5.22669,"Béringue"],[50.86549,6.0632,"Kerkrade"],
+    [50.66542,4.56741,"Ottignies-Louvain-la-Neuve"],[50.43184,4.54652,"Farciennes"],
+    [50.12127,6.00207,"Troisvierges"],[50.57273,4.53427,"Villers-la-Ville"],
+    [50.00231,5.71734,"Bastogne"],[50.81787,6.13411,"Würselen"],[50.90808,6.02646,"Landgraaf"],
+    [50.94311,5.97057,"Brunssum"],[50.86845,6.09505,"Rode-le-Duc"],[50.99742,5.86666,"Sittard"],
+    [50.86459,4.69377,"Héverlé"],[50.83763,4.66293,"Vieux-Héverlé"],[50.40461,4.52435,"Châtelet"],
+    [50.8792,4.70117,"Louvain"],[50.25142,4.60302,"Florennes"],[50.92159,4.75706,"Holsbeek"],
+    [50.60725,6.30053,"Simmerath"],[50.33782,4.52768,"Gerpinnes"],[50.77029,6.22955,"Stolberg"],
+    [50.78927,4.5834,"Huldenberg"],[51.06762,5.08786,"Tessenderlo"],
+    [50.52264,4.47635,"Les Bons Villers"],[50.98427,4.83643,"Aerschot"],[50.424,4.48598,"Gilly"],
+    [50.71226,4.52162,"Rixensart"],[50.86598,4.63063,"Bertem"],
+    [49.91563,5.3762,"Libramont-Chevigny"],[50.90698,4.67381,"Herent"],
+    [50.87715,6.16208,"Alsdorf"],[50.77016,4.53518,"Overijse"],[50.686,4.48442,"Lasne"],
+    [50.39122,4.46863,"Couillet"],[50.92138,6.11287,"Übach-Palenberg"],
+    [51.1193,5.2627,"Bourg-Léopold"],[50.61087,4.45107,"Genappe"],[50.05479,6.02755,"Clervaux"],
+    [50.73137,4.4894,"La Hulpe"],[50.41162,4.44453,"Charleroi"],[51.13191,5.45463,"Peer"],
+    [50.95147,4.70941,"Rotselaer"],[50.46538,4.43018,"Gosselies"],[50.39772,4.44425,"Marcinelle"],
+    [50.8175,6.26309,"Eschweiler"],[51.0535,4.88326,"Herselt"],[51.09472,5.79173,"Maaseik"],
+    [50.90746,6.18263,"Baesweiler"],[50.19627,4.54361,"Philippeville"],
+    [51.01941,4.78214,"Begijnendijk"],[51.14161,5.59746,"Brée"],[50.76748,4.47441,"Hoeilaert"],
+    [50.96361,6.11998,"Geilenkirchen"],[50.82419,4.51388,"Tervuren"],[49.96669,5.9321,"Wiltz"],
+    [51.08669,4.91687,"Westerlo"],[50.38791,4.40407,"Mont-sur-Marchienne"],
+    [50.9919,4.70406,"Tremelo"],[51.13174,5.07724,"Meerhout"],[50.45747,4.37601,"Courcelles"],
+    [50.88587,4.53907,"Cortenbergh"],[50.51226,4.36174,"Pont-à-Celles"],
+    [50.3789,4.37934,"Montigny-le-Tilleul"],[51.14497,5.7414,"Kinrooi"],
+    [50.71754,4.39776,"Waterloo"],[50.97695,4.63831,"Haecht"],[51.17298,5.57758,"Bocholt"],
+    [51.17076,5.16969,"Balen"],[50.2514,4.43141,"Walcourt"],[50.68287,4.36927,"Braine-l'Alleud"],
+    [49.84047,5.43553,"Neufchâteau"],[50.31716,4.38032,"Ham-sur-Heure-Nalinnes"],
+    [51.07539,4.78855,"Hulshout"],[50.79811,4.41764,"Watermael-Boitsfort"],
+    [50.86096,4.46626,"Kraainem"],[50.94133,4.54957,"Campenhout"],[50.81717,4.42709,"Auderghem"],
+    [50.90935,4.51105,"Steenokkerzeel"],[50.59769,4.32359,"Nivelles"],
+    [51.00375,4.62907,"Keerbergen"],[50.88062,4.473,"Zaventem"],[51.18404,5.11553,"Mol"],
+    [50.4107,4.32476,"Fontaine-l'Évêque"],[50.83703,4.42746,"Woluwe-Saint-Pierre"],
+    [51.16108,4.99032,"Geel"],[50.84304,4.42567,"Woluwe-Saint-Lambert"],
+    [50.98159,4.57293,"Boortmeerbeek"],[51.07599,4.72868,"Heist-sur-la-Montagne"],
+    [51.06543,6.09845,"Heinsberg"],[50.74503,4.34637,"Rhode-Saint-Genèse"],
+    [50.47131,4.2805,"Chapelle-lez-Herlaimont"],[51.14386,4.85973,"Olen"],
+    [51.23057,5.30769,"Lommel"],[50.83614,4.38617,"Etterbeek"],[50.98063,6.26762,"Linnich"],
+    [50.20695,6.4249,"Prüm"],[50.87201,4.40342,"Evere"],[50.83311,4.36683,"Ixelles"],
+    [51.05708,4.63105,"Putte"],[50.52926,4.2567,"Seneffe"],[50.40782,4.27009,"Anderlues"],
+    [50.91267,4.4329,"Machelen"],[50.84984,4.37459,"Saint-Josse-ten-Noode"],
+    [50.33974,4.28705,"Thuin"],[50.92209,6.3611,"Juliers"],[50.80354,4.33384,"Uccle"],
+    [50.825,4.34548,"Saint-Gilles"],[50.76608,4.30795,"Beersel"],[50.8676,4.37371,"Schaerbeek"],
+    [50.45507,4.24254,"Morlanwelz"],[50.45596,4.24209,"Morlanwelz-Mariemont"],
+    [50.05243,4.49687,"Couvin"],[50.50402,4.23556,"Manage"],[51.02532,4.54839,"Bonheiden"],
+    [50.84674,4.35249,"Bruxelles"],[50.34602,4.26549,"Lobbes"],[50.92871,4.42313,"Vilvorde"],
+    [51.13924,4.7544,"Herenthout"],[51.23908,5.11282,"Dessel"],[50.81179,4.31812,"Forest"],
+    [51.05524,6.22473,"Hückelhoven"],[51.17654,4.83626,"Herentals"],[50.8391,4.32965,"Anderlecht"],
+    [49.79498,5.06725,"Bouillon"],[50.8546,4.33864,"Molenbeek-Saint-Jean"],
+    [50.98422,4.46508,"Zemst"],[51.10074,6.15609,"Wassenberg"],[50.8606,4.33155,"Koekelberg"],
+    [51.1179,4.65751,"Berlaar"],[51.25384,5.70657,"Weert"],[50.01085,6.2948,"Neuerburg"],
+    [50.73605,4.23743,"Hal"],[50.87596,4.32457,"Jette"],[50.47936,4.18563,"La Louvière"],
+    [50.93246,4.37179,"Grimbergen"],[51.19339,5.98826,"Ruremonde"],[51.24079,4.96781,"Kasterlee"],
+    [51.02814,4.48035,"Malines"],[50.87033,4.3078,"Ganshoren"],[51.26759,5.08439,"Réthy"],
+    [50.78003,4.24436,"Leeuw-Saint-Pierre"],[51.06995,4.53224,"Wavre-Sainte-Catherine"],
+    [50.69302,4.2047,"Tubize"],[49.9337,6.20667,"Vianden"],[50.56968,4.17529,"Écaussinnes"],
+    [50.86492,4.29467,"Berchem-Sainte-Agathe"],[50.84807,4.26626,"Dilbeek"],
+    [50.23553,4.23831,"Beaumont"],[51.161,4.67029,"Nijlen"],[50.4103,4.16516,"Binche"],
+    [51.19199,4.7385,"Grobbendonk"],[50.93416,4.32873,"Meise"],[50.90877,4.30346,"Wemmel"],
+    [49.847,6.09847,"Ettelbruck"],[51.13107,4.56965,"Lierre"],[50.61071,4.13607,"Braine-le-Comte"],
+    [51.09572,4.5062,"Duffel"],[51.08099,6.31607,"Erkelenz"],[49.86909,6.16005,"Diekirch"],
+    [49.69932,5.31005,"Florenville"],[50.50168,4.10886,"Le Rœulx"],[51.32023,5.08646,"Arendonk"],
+    [50.04793,4.31733,"Chimay"],[51.07929,4.42405,"Rumst"],[51.35069,5.45945,"Valkenswaard"],
+    [51.14236,6.27769,"Wegberg"],[51.21479,4.65951,"Zandhoven"],
+    [51.31783,4.98171,"Vieux-Turnhout"],[51.00212,4.3028,"Londerzeel"],
+    [50.5792,4.06856,"Soignies"],[50.87134,4.1757,"Ternat"],[51.06068,4.35889,"Willebroeck"],
+    [50.90943,4.20156,"Asse"],[51.1897,4.5633,"Ranst"],[51.32338,4.94846,"Turnhout"],
+    [50.2971,4.09966,"Jeumont"],[51.20004,6.21966,"Niederkrüchten"],[51.36678,5.21543,"Bladel"],
+    [51.36144,5.16153,"Reusel"],[51.31292,4.8878,"Vosselaar"],[50.95936,4.23357,"Merchtem"],
+    [49.77357,4.72069,"Charleville-Mézières"],[51.16356,4.49639,"Boechout"],
+    [49.70338,4.94334,"Sedan"],[51.13533,4.44548,"Kontich"],[51.08738,4.36672,"Boom"],
+    [51.27167,4.71326,"Zoersel"],[51.31914,4.85645,"Beerse"],[49.68346,5.81677,"Arlon"],
+    [51.15481,4.44583,"Edegem"],[51.24308,6.18123,"Brüggen"],[50.69571,4.04119,"Enghien"],
+    [51.2031,4.5238,"Wommelghem"],[51.17041,4.4567,"Mortsel"],[51.19289,4.48895,"Borsbeek"],
+    [51.23887,4.58149,"Schilde"],[51.21304,6.27297,"Waldniel"],[51.1333,4.38702,"Aertselaer"],
+    [50.96905,4.18967,"Opwijk"],[51.38589,5.71337,"Someren"],[51.3717,4.99556,"Ravels"],
+    [51.41907,5.40456,"Veldhoven"],[50.87113,4.08608,"Liedekerke"],[51.20849,4.47193,"Deurne"],
+    [51.01523,4.20227,"Buggenhout"],[51.17009,4.39426,"Wilrijk"],[51.19435,4.433,"Berchem"],
+    [51.42267,5.56075,"Geldrop"],[50.88345,4.08164,"Denderleeuw"],[51.40409,5.74587,"Asten"],
+    [51.14302,4.34098,"Hemiksem"],[51.21285,4.44624,"Borgerhout"],[50.45496,3.95196,"Mons"],
+    [51.43926,5.47863,"Eindhoven"],[51.35037,4.75851,"Rijkevorsel"],[50.83536,4.02424,"Ninove"],
+    [51.25163,4.49804,"Schoten"],[51.17949,4.36178,"Hoboken"],[51.0004,4.13077,"Lebbeke"],
+    [51.0953,4.23413,"Bornem"],[51.44376,5.61875,"Mierlo"],[50.27857,3.97431,"Maubeuge"],
+    [51.19471,6.43538,"Mönchengladbach"],[51.25156,6.33484,"Dülken"],[50.53251,3.91132,"Jurbise"],
+    [51.22111,4.39971,"Anvers"],[51.24389,4.43972,"Merksem"],[51.32073,6.19792,"Kaldenkirchen"],
+    [51.17123,4.30911,"Kruibeke"],[49.56773,5.53296,"Virton"],[50.93832,4.03921,"Alost"],
+    [51.34848,4.63987,"Brecht"],[49.8121,6.42149,"Echternach"],[51.4743,5.54904,"Nuenen"],
+    [51.29007,4.49173,"Brasschaat"],[50.90225,4.00577,"Haaltert"],[51.30619,6.27632,"Lobberich"],
+    [50.40965,3.8933,"Frameries"],[51.12536,4.21333,"Tamise"],[51.25621,6.39055,"Viersen"],
+    [51.03123,4.09811,"Termonde"],[51.40129,4.76169,"Hoogstraten"],[51.44262,4.93089,"Baerle"],
+    [51.21854,4.33029,"Zwijndrecht"],[51.4791,5.65577,"Helmond"],[50.25137,3.92006,"Hautmont"],
+    [51.2782,4.42099,"Ekeren"],[50.44216,3.86373,"Quaregnon"],[51.37021,6.1689,"Venlo"],
+    [51.48516,5.13568,"Hilvarenbeek"],[51.28599,6.37048,"Süchteln"],[49.5672,5.8045,"Aubange"],
+    [51.09776,4.13772,"Hamme"],[51.50337,5.39387,"Best"],[51.50356,5.31024,"Oirschot"],
+    [50.40566,3.8514,"Colfontaine"],[50.77158,3.88273,"Grammont"],[50.01717,4.04585,"Fourmies"],
+    [51.21261,4.25778,"Beveren"],[51.51731,5.50084,"Son en Breugel"],[50.96615,3.97798,"Lede"],
+    [51.31495,4.42954,"Kapellen"],[50.44775,3.81952,"Saint-Ghislain"],[49.55669,5.87761,"Pétange"],
+    [51.39202,4.59909,"Wuustwezel"],[51.33608,6.34374,"Grefrath"],[50.7123,3.83011,"Lessines"],
+    [50.12188,3.93211,"Avesnes-sur-Helpe"],[49.61128,6.1298,"Luxembourg"],
+    [51.02516,4.00347,"Berlare"],[51.10971,4.08422,"Waesmunster"],[51.06836,4.03859,"Selles"],
+    [51.4525,6.05392,"Horst"],[50.43313,3.79609,"Boussu"],[51.00608,3.97425,"Wichelen"],
+    [51.16467,4.13951,"Saint-Nicolas-Waes"],[51.52318,5.06603,"Goirle"],
+    [49.51456,5.76791,"Longwy"],[49.92034,4.08372,"Hirson"],[50.63113,3.77695,"Ath"],
+    [50.39638,3.77868,"Dour"],[51.38284,4.4765,"Calmpthout"],[51.33265,4.36807,"Stabroek"],
+    [49.52085,5.88924,"Differdange"],[50.29789,3.79493,"Bavay"],
+    [50.20025,3.83364,"Aulnoye-Aymeries"],[51.56464,5.461,"Sint-Oedenrode"],
+    [50.92049,3.85892,"Hautem-Saint-Liévin"],[51.55624,5.0886,"Tilbourg"],
+    [51.55898,5.68646,"Gemert"],[51.47039,4.66099,"Zundert"],[51.36421,6.4195,"Kempen"],
+    [51.21799,4.12861,"Saint-Gilles-Waes"],[51.10445,3.98987,"Locres"],
+    [50.86946,3.80925,"Zottegem"],[51.57787,5.19381,"Oisterwijk"],[49.67931,6.4431,"Grevenmacher"],
+    [51.58831,5.32478,"Boxtel"],[51.52703,5.97536,"Venray"],[51.00688,3.88555,"Wetteren"],
+    [51.44393,6.26944,"Straelen"],[49.44611,5.60073,"Longuyon"],[49.50627,6.01182,"Schifflange"],
+    [49.49596,5.98503,"Esch-sur-Alzette"],[49.5169,6.10546,"Bettembourg"],
+    [50.94564,3.80327,"Oosterzele"],[51.20623,4.03969,"Stekene"],[49.46847,5.93268,"Villerupt"],
+    [51.02966,3.85047,"Laerne"],[51.58799,4.9194,"Rijen"],[51.46792,4.46983,"Essen"],
+    [51.00303,3.79888,"Melle"],[49.47865,6.08478,"Dudelange"],
+    [50.60053,3.62145,"Leuze-en-Hainaut"],[51.58878,4.77602,"Bréda"],[51.28229,4.0532,"Hulst"],
+    [51.09689,3.8356,"Lochristi"],[51.05562,3.79789,"Destelbergen"],[50.50799,3.59088,"Péruwelz"],
+    [50.99429,3.74591,"Merelbeke"],[50.44834,3.59289,"Condé-sur-l'Escaut"],
+    [50.38708,3.60112,"Onnaing"],[49.54423,6.36761,"Remich"],[50.24734,3.63645,"Le Quesnoy"],
+    [51.51697,6.32282,"Gueldre"],[51.56959,4.63571,"Etten-Leur"],[50.74755,3.60209,"Renaix"],
+    [51.04472,3.75888,"Gentbrugge"],[50.47242,3.56758,"Vieux-Condé"],[49.83423,3.90691,"Vervins"],
+    [50.92923,3.66142,"Gavere"],[51.53315,4.45613,"Rosendael"],[50.37102,3.55473,"Saint-Saulve"],
+    [50.84337,3.60414,"Audenarde"],[51.05383,3.72501,"Gand"],[51.5803,6.24563,"Kevelaer"],
+    [50.39728,3.53791,"Bruay-sur-l'Escaut"],[50.35007,3.54359,"Marly"],
+    [51.49448,4.28715,"Berg-op-Zoom"],[51.58894,4.52789,"Oudenbosch"],
+    [50.35793,3.52348,"Valenciennes"],[50.99242,3.6496,"La Pinte"],[49.50914,4.36665,"Rethel"],
+    [51.2,3.8105,"Zelzate"],[50.3704,3.50207,"Anzin"],[51.02097,3.63975,"Laethem-Saint-Martin"],
+    [51.10879,3.70786,"Everghem"],[50.9598,3.59632,"Nazareth"],[50.39163,3.48239,"Raismes"],
+    [50.10584,3.54175,"Le Cateau-Cambrésis"],[50.44915,3.42811,"Saint-Amand-les-Eaux"],
+    [50.83254,3.4784,"Anseghem"],[50.18516,3.49738,"Solesmes"],[51.22759,3.75329,"Assenede"],
+    [51.53545,4.22328,"Tholen"],[51.58598,4.3151,"Steenbergen"],[50.98419,3.52704,"Deynze"],
+    [51.32547,3.84031,"Terneuse"],[50.60565,3.38782,"Tournai"],[50.32709,3.39437,"Denain"],
+    [51.49358,4.04525,"Yerseke"],[50.29889,3.39092,"Douchy-les-Mines"],
+    [50.88682,3.43236,"Waregem"],[50.92066,3.44856,"Zulte"],[50.12439,3.41036,"Caudry"],
+    [51.18448,3.5666,"Eeklo"],[51.08389,3.44852,"Aeltre"],[50.35892,3.2811,"Somain"],
+    [50.85751,3.31137,"Harelbeke"],[50.70598,3.26402,"Estaimpuis"],[51.5031,3.88976,"Goes"],
+    [50.85229,3.28647,"Cuerne"],[50.82764,3.26599,"Courtrai"],[50.6713,3.21621,"Lys-lez-Lannoy"],
+    [51.00029,3.32734,"Tielt"],[50.7016,3.21539,"Wattrelos"],[50.74367,3.21427,"Mouscron"],
+    [50.65409,3.18394,"Hem"],[51.20889,3.44522,"Maldegem"],[50.92028,3.255,"Ingelmunster"],
+    [50.69159,3.17417,"Roubaix"],[50.17575,3.23461,"Cambrai"],[50.68021,3.15644,"Croix"],
+    [50.7235,3.16057,"Tourcoing"],[50.91983,3.21543,"Iseghem"],
+    [50.61932,3.1314,"Villeneuve-d'Ascq"],[50.75026,3.15258,"Neuville-en-Ferrain"],
+    [51.14057,3.33473,"Beernem"],[50.66916,3.13124,"Wasquehal"],[50.7029,3.13689,"Mouvaux"],
+    [51.32719,3.48955,"Oostburg"],[50.62745,3.10922,"Hellemmes"],
+    [50.64285,3.10935,"Mons-en-Barœul"],[50.75312,3.1209,"Roncq"],
+    [50.36443,3.11173,"Sin-le-Noble"],[50.6767,3.1043,"Marcq-en-Barœul"],
+    [50.78267,3.12492,"Halluin"],[50.796,3.12089,"Menin"],[50.70346,3.09216,"Bondues"],
+    [50.60567,3.07788,"Ronchin"],[51.44809,3.5698,"Flessingue"],
+    [50.6026,3.06979,"Faches-Thumesnil"],[50.6544,3.07333,"La Madeleine"],
+    [50.36757,3.08046,"Douai"],[49.56466,3.62069,"Laon"],[50.6761,3.06472,"Marquette-lez-Lille"],
+    [51.49968,3.61374,"Middelbourg"],[50.58788,3.05117,"Wattignies"],
+    [50.6608,3.04468,"Saint-André-lez-Lille"],[50.94495,3.12439,"Roulers"],
+    [51.1532,3.23445,"Oostkamp"],[49.84653,3.28768,"Saint-Quentin"],[50.54521,3.02528,"Seclin"],
+    [50.64779,3.02236,"Lambersart"],[50.60921,3.01625,"Loos"],[50.77822,3.04397,"Wervicq"],
+    [50.8914,3.06303,"Moorslede"],[50.4643,2.99387,"Oignies"],
+    [50.41977,2.99646,"Noyelles-Godault"],[50.60936,2.98644,"Haubourdin"],
+    [51.20855,3.22677,"Bruges"],[50.6457,2.98709,"Lomme"],[50.76533,3.00663,"Comines"],
+    [50.76874,2.99976,"Comines-Warneton"],[51.06478,3.10164,"Thourout"],
+    [50.49341,2.95775,"Carvin"],[50.45584,2.94476,"Courrières"],
+    [50.41917,2.94693,"Hénin-Beaumont"],[51.34339,3.28847,"Knocke-Heist"],
+    [50.87319,2.98747,"Zonnebeke"],[50.4269,2.92988,"Montigny-en-Gohelle"],
+    [50.97471,3.01457,"Staden"],[50.44741,2.90682,"Harnes"],[49.65585,3.29185,"Tergnier"],
+    [50.76542,2.89845,"Messines"],[50.68673,2.88217,"Armentières"],
+    [50.47565,2.86716,"Vendin-le-Vieil"],[50.97742,2.95244,"Houthulst"],
+    [50.40158,2.86642,"Méricourt"],[50.42054,2.85912,"Sallaumines"],[50.85219,2.8846,"Ypres"],
+    [51.31126,3.13234,"Blankenberghe"],[50.42917,2.83198,"Lens"],[50.41261,2.83439,"Avion"],
+    [51.18419,3.00494,"Audembourg"],[49.61489,3.21895,"Chauny"],[51.15428,2.96154,"Gistel"],
+    [50.4245,2.7738,"Liévin"],[51.27508,3.03169,"Le Coq"],[50.1036,2.84937,"Bapaume"],
+    [49.92908,2.93235,"Péronne"],[51.03334,2.86472,"Dixmude"],[50.29105,2.77722,"Arras"],
+    [51.24085,2.96479,"Bredene"],[50.73967,2.73493,"Bailleul"],[50.4464,2.71989,"Bully-les-Mines"],
+    [51.22586,2.9195,"Ostende"],[50.85566,2.7265,"Poperinge"],[50.48089,2.66209,"Nœux-les-Mines"],
+    [50.53094,2.63891,"Béthune"],[51.18648,2.82297,"Middelkerke"],[51.12943,2.75167,"Nieuport"],
+    [49.58056,3.00003,"Noyon"],[50.4822,2.54619,"Bruay-la-Buissière"],[51.07243,2.66213,"Furnes"],
+    [50.72261,2.53603,"Hazebrouck"],[50.0018,2.65092,"Albert"],[51.11877,2.63493,"Coxyde"],
+    [51.09883,2.59241,"La Panne"],[49.41795,2.82632,"Compiègne"]
+  ];
+  var INDEX = {
+    "aachen":271,"aalst":516,"aalter":652,"aarlen":474,"aarschot":310,"aartselaar":483,"aat":565,
+    "abee":16,"aeltre":652,"aerschot":310,"aertselaer":483,"aiseaupresles":282,"aixlachapelle":271,
+    "aken":271,"albert":752,"alken":238,"alleur":189,"alost":516,"alsdorf":316,"amay":23,
+    "amostrennes":51,"ampsin":36,"andenne":206,"anderlecht":408,"anderlues":386,"ans":164,
+    "anseghem":637,"antheit":71,"anthisnes":43,"antwerpen":511,"anvers":511,"anzegem":637,
+    "anzin":630,"arendonk":447,"arlon":474,"armentieres":721,"armentiers":721,"arras":738,
+    "asse":458,"assenede":639,"asten":495,"ath":565,"atrecht":738,"atrin":59,"aubange":537,
+    "audembourg":730,"audenarde":619,"auderghem":362,"auderghemoudergem":362,"aulnoyeaymeries":571,
+    "auxhoux":6,"avesnessurhelpe":553,"avion":729,"awan":176,"awans":145,"awirs":40,"aywaille":203,
+    "baarle":528,"baerle":528,"baesweiler":333,"bailleul":740,"balen":353,"bapaume":735,
+    "barvaux":193,"basoha":107,"bastenaken":292,"bastogne":292,"bavay":570,"beaufays":155,
+    "beaumont":433,"beauraing":269,"beauvechain":263,"beemont":28,"beernem":673,"beerse":473,
+    "beersel":393,"begijnendijk":335,"belle":740,"ben":123,"benahin":126,"bende":55,"berchem":492,
+    "berchemsainteagathe":431,"berchemsainteagathesintagathaberchem":431,"bergen":498,
+    "bergenopzoom":624,"bergopzoom":624,"beringen":286,"beringue":286,"berlaar":414,"berlare":555,
+    "berleur":18,"bertem":313,"best":539,"betgne":106,"bethune":745,"bettembourg":590,"betun":745,
+    "bevekom":263,"beveren":544,"beyneheusay":205,"bierset":125,"bilzen":237,"binche":435,
+    "bing":435,"bladel":463,"blankenberge":727,"blankenberghe":727,"blegny":214,"bocholt":352,
+    "bodegnee":50,"boechout":468,"bohon":166,"bois":92,"boisetborsu":102,"bomal":159,
+    "boncelles":60,"bondues":684,"bonheiden":399,"bonsin":129,"boom":471,"boortmeerbeek":372,
+    "borgerhout":497,"borgloon":220,"borgworm":207,"borlez":140,"borlon":116,"bornem":505,
+    "borsbeek":480,"borsu":114,"bouillon":409,"bourgleopold":321,"boussu":559,"boutersem":265,
+    "bovenistier":173,"boxtel":583,"brainelalleud":355,"brainelecomte":441,"brasschaat":520,
+    "brecht":517,"breda":600,"bredene":739,"bree":336,"bruaylabuissiere":749,"bruaysurlescaut":622,
+    "bruges":706,"brugge":706,"bruggen":476,"brunssum":295,"brussel":400,"bruxelles":400,
+    "bruxellesbrussel":400,"buggenhout":490,"bullylesmines":741,"calmpthout":567,"cambrai":667,
+    "campenhout":361,"carvin":711,"caudry":650,"celles":175,"chanxhe":94,
+    "chapellelezherlaimont":376,"chaponseraing":88,"charleroi":325,"charlevillemezieres":467,
+    "chatelet":300,"chaudfontaine":185,"chaumontgistoux":262,"chauny":731,"chimay":448,"ciney":221,
+    "clavier":64,"clavierstation":54,"clervaux":323,"colfontaine":541,"comblainaupont":78,
+    "comblainlatour":90,"comines":708,"comineswarneton":709,"comineswarnetonkomenwaasten":709,
+    "compiegne":755,"condesurlescaut":606,"cortenbergh":346,"couillet":319,"courcelles":345,
+    "courrieres":712,"courtrai":658,"courtsaintetienne":285,"couthuin":181,"couvin":397,
+    "coxyde":753,"croix":668,"cuerne":657,"damre":198,"dehaan":734,"deinze":642,"denain":645,
+    "denderleeuw":494,"dendermonde":526,"depanne":754,"depinte":627,"dessel":404,
+    "destelbergen":603,"deurne":489,"deynze":642,"diekirch":444,"diepenbeek":243,"diest":276,
+    "differdange":569,"diksmuide":737,"dilbeek":432,"dinant":245,"dison":224,"dixmude":737,
+    "dolembreux":135,"dommartin":62,"donceel":124,"doornik":644,"douai":689,"douchylesmines":647,
+    "dour":566,"dowaai":689,"dudelange":598,"duffel":442,"dulken":509,"durbuy":172,
+    "ecaussinnes":430,"echternach":518,"edegem":475,"edingen":477,"eeklo":651,"eghezee":229,
+    "ehein":10,"eigenbrakel":355,"eijsden":230,"eindhoven":499,"ekeren":532,"ellemelle":22,
+    "elsene":383,"embourg":141,"enghien":477,"enghienedingen":477,"engis":26,"erkelens":443,
+    "erkelenz":443,"eschsuralzette":589,"eschweiler":330,"esneux":69,"essen":596,"estaimpuis":655,
+    "ettelbruck":439,"ettenleur":611,"etterbeek":379,"eupen":250,"evelette":197,"evere":382,
+    "evergem":632,"everghem":632,"fachesthumesnil":687,"faimes":187,"fairon":73,"fallais":180,
+    "farciennes":289,"fauquemont":252,"ferrieres":192,"fexhelehautclocher":139,"filot":120,
+    "fizefontaine":57,"flemalle":52,"flemallegrande":70,"flemallehaute":49,"fleron":208,
+    "flessingue":686,"fleurus":284,"florennes":302,"florenville":445,"florze":183,
+    "fontaineleveque":368,"fontin":86,"fooz":161,"forest":405,"forestvorst":405,
+    "fosseslaville":257,"fourmies":543,"fraineux":0,"fraiture":8,"frameries":523,"fumal":142,
+    "furnes":750,"gand":620,"ganshoren":424,"gavere":616,"geel":370,"geilenkirchen":338,
+    "geldenaken":244,"gelderen":610,"geldern":610,"geldrop":493,"geleen":280,"gembloers":254,
+    "gembloux":254,"gemert":575,"genappe":322,"genepien":322,"genk":255,"gent":620,
+    "gentbrugge":613,"geraardsbergen":542,"gerpinnes":305,"gilly":311,"gistel":732,"gives":146,
+    "goes":656,"goesnes":112,"goirle":562,"gomze":195,"gosselies":328,"graceberleur":133,
+    "gracehollogne":95,"grammont":542,"graven":270,"grefrath":551,"grevenmacher":582,
+    "greverade":551,"grezdoiceau":270,"grimbergen":420,"grobbendonk":436,"gueldre":610,
+    "haacht":351,"haaltert":521,"haecht":351,"haillot":194,"hal":417,"halen":258,"halewijn":682,
+    "halle":417,"halluin":682,"hamme":538,"hamoir":89,"hamsurheurenalinnes":357,"haneffe":103,
+    "hannuit":213,"hannut":213,"harelbeke":654,"harnes":718,"hasselt":249,"haubourdin":705,
+    "hautemsaintlievin":573,"hautgne":110,"hautmont":531,"havelange":165,"hayen":122,
+    "hazebroek":751,"hazebrouck":751,"heerlen":279,"heinsberg":374,"heistopdenberg":373,
+    "heistsurlamontagne":373,"hellemmes":677,"helmond":530,"hem":663,"hemiksem":496,
+    "heninbeaumont":713,"hercklaville":253,"herent":315,"herentals":407,"herenthout":403,
+    "herkdestad":253,"hermallesoushuy":12,"herselt":331,"herstal":209,"herve":218,
+    "herzogenrath":296,"heverle":298,"heverlee":298,"hilvarenbeek":535,"hirson":564,"hoboken":503,
+    "hody":30,"hoei":56,"hoeilaart":337,"hoeilaert":337,"hognoul":171,"hollogneauxpierres":104,
+    "holsbeek":303,"hony":77,"hoogstraten":527,"horion":75,"horst":558,"hotton":212,
+    "houffalize":256,"houtesiplou":42,"houthulst":723,"hozemont":68,"huccorgne":152,
+    "huckelhoven":406,"huldenberg":307,"hulshout":358,"hulst":601,"huy":56,"ieper":726,
+    "ingelmunster":665,"iseghem":670,"ivozramet":32,"ixelles":383,"ixelleselsene":383,"izegem":670,
+    "izier":191,"jallet":149,"jambes":232,"jehay":39,"jemeppesurmeuse":84,"jemeppesursambre":259,
+    "jeneffe":119,"jenneret":65,"jette":418,"jeumont":461,"jodoigne":244,"julich":390,
+    "juliers":390,"jurbeke":510,"jurbise":510,"kaldenkerken":513,"kaldenkirchen":513,
+    "kalmthout":567,"kamerijk":667,"kampenhout":361,"kapellen":547,"kasterlee":422,
+    "keerbergen":365,"kelmis":251,"kelmislacalamine":251,"kempen":577,"kerkrade":287,
+    "kevelaar":621,"kevelaer":621,"kinrooi":349,"knockeheist":714,"knokkeheist":714,
+    "koekelberg":413,"koksijde":753,"komen":708,"komenwaasten":709,"kontich":470,"kortenberg":346,
+    "kortrijk":658,"kraainem":360,"kruibeke":514,"kuurne":657,"laarne":594,"lacalamine":251,
+    "laerne":594,"laethemsaintmartin":631,"lahulpe":324,"lalouviere":419,"lamadeleine":688,
+    "lambersart":699,"lamine":200,"lanaken":246,"landen":226,"landgraaf":294,"laon":690,
+    "lapanne":754,"lapinte":627,"larocheenardenne":235,"lasne":318,"lavoir":196,"leau":240,
+    "lebbeke":504,"lecateaucambresis":635,"lecoq":734,"lede":546,"leeuwsaintpierre":426,"lens":728,
+    "leopoldsburg":321,"lequesnoy":609,"lerulx":446,"lesavins":82,"lesbonsvillers":309,
+    "lescahottes":58,"lesgottes":19,"lessen":552,"lessines":552,"leswaleffes":174,"leuven":301,
+    "leuzeenhainaut":599,"libramontchevigny":314,"liedekerke":488,"liege":179,"lier":440,
+    "lierneux":233,"lierre":440,"lievin":733,"lille":151,"limont":24,"lince":136,"linnich":380,
+    "liotte":97,"lobberich":522,"lobberik":522,"lobbes":401,"lochristi":602,"locres":579,
+    "lokeren":579,"lomme":707,"lommel":378,"loncin":163,"londerzeel":454,"longuyon":587,
+    "longwy":563,"loos":700,"looz":220,"louvain":301,"louvainlaneuve":278,"lubbeek":273,"luik":179,
+    "lummen":267,"luxembourg":554,"luxemburg":554,"lyslezlannoy":659,"maaseik":332,
+    "maasmechelen":266,"maastricht":242,"mabuse":507,"machelen":387,"maffe":186,"maldegem":664,
+    "malines":423,"malmedy":247,"manage":398,"marcheenfamenne":222,"marchin":74,"marcinelle":329,
+    "marcqenbarul":681,"marly":623,"marneffe":188,"marquettelezlille":691,"maubeuge":507,
+    "mean":157,"mechelen":423,"meerhout":344,"meise":437,"melle":597,"menen":683,"menin":683,
+    "merchtem":466,"merelbeke":605,"mericourt":724,"merksem":512,"mery":96,"mesen":720,
+    "mesenmessines":720,"messines":720,"mettet":275,"middelbourg":692,"middelburg":692,
+    "middelkerke":746,"miecret":199,"mierlo":506,"modave":53,"moeskroen":662,"moha":115,"mol":367,
+    "molenbeeksaintjean":410,"molenbeeksaintjeansintjansmolenbeek":410,"molu":91,"momalle":177,
+    "monchengladbach":508,"mons":498,"monschau":281,"monsenbarul":678,"monslezliege":72,"mont":66,
+    "montegnee":138,"montignyengohelle":716,"montignyletilleul":348,"montjoie":281,
+    "montsurmarchienne":342,"moorslede":702,"morlanwelz":395,"morlanwelzmariemont":396,
+    "mortsel":479,"mouscron":662,"mouscronmoeskroen":662,"mouvaux":675,"my":148,"namen":234,
+    "namur":234,"nandrin":3,"nazareth":633,"nederkruchten":462,"neuerburg":416,"neufchateau":356,
+    "neupre":25,"neuvilleencondroz":14,"neuvilleenferrain":672,"niederkruchten":462,"nieuport":747,
+    "nieuwpoort":747,"nijlen":434,"nijvel":364,"ninove":501,"nivelles":364,"noidre":182,
+    "noville":128,"noyellesgodault":704,"noyon":748,"nuenen":519,"nuxlesmines":744,"ochain":46,
+    "ocquier":81,"ogne":162,"oignies":703,"oirschot":540,"oisterwijk":581,"olen":377,
+    "ombretrawsa":13,"oneux":109,"onnaing":607,"oostburg":676,"oostende":742,"oosterzele":591,
+    "oostkamp":696,"opwijk":484,"orpjauche":227,"ostende":742,"ottignieslouvainlaneuve":288,
+    "oudenaarde":619,"oudenbosch":625,"oudenburg":730,"oudergem":362,"oudheverlee":299,
+    "oudturnhout":453,"ouffet":45,"ougree":79,"oupeye":211,"outrelouxhe":11,"overijse":317,
+    "ozo":190,"pailhe":100,"pair":33,"palenge":144,"peer":326,"pepinster":215,"peronne":736,
+    "peruwelz":604,"perwez":153,"petange":549,"petitesomme":167,"philippeville":334,
+    "plainevaux":41,"pontacelles":347,"poperinge":743,"poulseur":76,"presseux":134,
+    "profondeville":239,"prum":381,"putte":384,"quaregnon":533,"raeren":264,"raismes":634,
+    "ramelot":27,"ranst":459,"ravels":486,"remich":608,"remicourt":178,"renaix":612,"rethel":628,
+    "rethy":425,"retie":425,"reusel":464,"rhodesaintgenese":375,"riemst":228,"rijen":595,
+    "rijkevorsel":500,"rivage":93,"rixensart":312,"rochefort":241,"rodeleduc":296,"roermond":421,
+    "roeselare":695,"roloux":105,"ronchin":685,"roncq":679,"ronse":612,"ronserenaix":612,
+    "roosendaal":617,"rosendael":617,"rotheuxrimiere":20,"rotselaar":327,"rotselaer":327,
+    "roubaix":666,"roulers":695,"rouvreux":160,"rumst":449,"ruremonde":421,"saintamandleseaux":636,
+    "saintandrelezlille":694,"saintgeorgessurmeuse":44,"saintghislain":548,"saintgilles":392,
+    "saintgillessintgillis":392,"saintgilleswaes":578,"sainthubert":268,"saintjossetennoode":388,
+    "saintjossetennoodesintjoosttennode":388,"saintnicolas":132,"saintnicolaswaes":561,
+    "saintquentin":697,"saintsaulve":618,"saintseverin":2,"sainttrond":231,"saintvith":277,
+    "sallaumines":725,"sambreville":272,"sanktvith":277,"schaarbeek":394,"schaerbeek":394,
+    "schaerbeekschaarbeek":394,"schifflange":588,"schilde":481,"schoten":502,"scry":5,"seclin":698,
+    "sedan":469,"selles":557,"sendrogne":201,"seneffe":385,"seny":21,"septon":158,"septroux":170,
+    "seraing":85,"serainglechateau":87,"sgravenbrakel":441,"shertogenrade":296,"sikelijn":698,
+    "simmerath":304,"sinlenoble":680,"sintagathaberchem":431,"sintgenesiusrode":375,
+    "sintgenesiusroderhodesaintgenese":375,"sintgillis":392,"sintgilliswaas":578,
+    "sintjansmolenbeek":410,"sintjoosttennode":388,"sintkatelijnewaver":427,"sintkwintens":697,
+    "sintlambrechtswoluwe":371,"sintlievenshoutem":573,"sintmartenslatem":631,"sintniklaas":561,
+    "sintoedenrode":572,"sintpietersleeuw":426,"sintpieterswoluwe":369,"sinttruiden":231,
+    "sittard":297,"soheittinlot":7,"soignies":455,"solesmes":638,"solieres":127,"somain":653,
+    "someren":485,"sonenbreugel":545,"soumagne":210,"spa":223,"sprimont":168,"stabroek":568,
+    "staden":717,"stavelot":236,"steenbergen":641,"steenokkerzeel":363,"steenput":655,"stein":274,
+    "stekene":592,"stockay":31,"stolberg":306,"straelen":586,"streelezhuy":17,"strivay":47,
+    "suchteln":536,"surlemez":202,"sy":117,"tamise":524,"tavier":15,"temse":524,"tergnier":719,
+    "terhulpen":324,"termonde":526,"ternat":456,"terneuse":643,"terneuzen":643,"tervuren":339,
+    "terwagne":37,"tessenderlo":308,"theux":216,"tholen":640,"thourout":710,"thuin":389,
+    "tielt":660,"tienen":248,"tihange":48,"tilbourg":574,"tilburg":574,"tilff":101,"tilleur":108,
+    "tinlot":9,"tirlemont":248,"toerkonje":669,"tohogne":131,"tongeren":217,"tongres":217,
+    "torhout":710,"tourcoing":669,"tournai":644,"tremelo":343,"troisvierges":290,"trooz":204,
+    "tubeke":428,"tubize":428,"turnhout":460,"ubachpalenberg":320,"uccle":391,"uccleukkel":391,
+    "ukkel":391,"vaals":260,"valenciennes":626,"valencijn":626,"valkenburg":252,"valkenswaard":450,
+    "vauxetborset":130,"vauxsouschevremont":184,"veldhoven":487,"velroux":99,"vendinlevieil":722,
+    "venlo":534,"venray":584,"verlaine":61,"verlainesurourthe":113,"verlee":169,"verviers":225,
+    "vervins":615,"veurne":750,"vianden":429,"viemme":150,"vien":38,"viersen":525,
+    "viersetbarse":35,"vieuxconde":614,"vieuxheverle":299,"vieuxturnhout":453,"vieuxville":143,
+    "vieuxwaleffe":156,"ville":147,"villeneuvedascq":671,"villersauxtours":34,"villerslaville":291,
+    "villerslebouillet":63,"villersletemple":4,"villerupt":593,"vilvoorde":402,"vilvorde":402,
+    "vinalmont":83,"virton":515,"vise":219,"vlissingen":686,"vorouxgoreux":121,"vorst":405,
+    "vosselaar":465,"vyleettharoul":67,"waasmunster":556,"waesmunster":556,"walcourt":354,
+    "waldniel":482,"wanze":80,"wanzoul":98,"waregem":648,"waremme":207,"warnant":111,
+    "warnantdreye":118,"warre":154,"warzee":29,"wasquehal":674,"wassenberg":412,"waterloo":350,
+    "watermaalbosvoorde":359,"watermaelboitsfort":359,"watermaelboitsfortwatermaalbosvoorde":359,
+    "wattignies":693,"wattrelos":661,"waver":283,"wavre":283,"wavresaintecatherine":427,
+    "weert":415,"wegberg":451,"wemmel":438,"wervicq":701,"wervik":701,"westerlo":341,
+    "wetteren":585,"wezet":219,"wichelen":560,"willebroeck":457,"willebroek":457,"wilrijk":491,
+    "wiltz":340,"woluwesaintlambert":371,"woluwesaintlambertsintlambrechtswoluwe":371,
+    "woluwesaintpierre":369,"woluwesaintpierresintpieterswoluwe":369,"wommelgem":478,
+    "wommelghem":478,"wurselen":293,"wuustwezel":550,"xhoris":137,"yernee":1,"yerseke":646,
+    "ypres":726,"zandhoven":452,"zaventem":366,"zele":557,"zelzate":629,"zemst":411,"zinnik":455,
+    "zoersel":472,"zonhoven":261,"zonnebeke":715,"zottegem":580,"zoutleeuw":240,"zulte":649,
+    "zundert":576,"zwijndrecht":529
   };
-  /* communes:fin */
+  /* lieux:fin */
 
   var fr  = new Intl.NumberFormat('fr-BE');
   var frD = new Intl.NumberFormat('fr-BE', { maximumFractionDigits: 1 });
@@ -628,32 +1004,34 @@ footer a{color:var(--texte-2)}
              classe: v > 0 ? 'd hausse' : 'd' };
   }
 
-  /* ── carte des communes déclarées ──
+  /* ── carte ──
      Projection équirectangulaire centrée sur le restaurant, la longitude
      resserrée par le cosinus de la latitude : sans cela, à 50° de latitude,
      un degré de longitude paraîtrait aussi large qu'un degré de latitude et
      la région serait étirée d'est en ouest. Le SVG garde ses proportions,
      donc une bulle reste ronde et deux distances égales le restent. */
-  function dessineCarte(liste){
+  function pliage(v){
+    v = String(v || '').trim().toLowerCase();
+    try{ v = v.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }catch(e){}
+    return v.replace(/[^a-z]+/g, '');
+  }
+
+  function dessineCarte(liste, reste){
     var hote = document.getElementById('carteLieux');
-    var connus = [], inconnus = [];
+    var parLieu = {}, situees = 0, perdues = reste || 0;
+
     (liste || []).forEach(function(d){
-      var c = LIEUX[d.nom];
-      if(c) connus.push({ nom: d.nom, n: d.n, lat: c[0], lon: c[1] });
-      else inconnus.push(d);
+      var i = INDEX[pliage(d.nom)];
+      if(i === undefined){ perdues += d.n; return; }
+      /* « Liege » et « Liège » désignent le même endroit : on additionne. */
+      if(parLieu[i]) parLieu[i].n += d.n;
+      else parLieu[i] = { nom: LIEUX[i][2], lat: LIEUX[i][0], lon: LIEUX[i][1], n: d.n };
+      situees += d.n;
     });
 
+    var connus = Object.keys(parLieu).map(function(k){ return parLieu[k]; });
     if(!connus.length){
-      /* Rien à placer : soit personne n'a répondu, soit les réponses tombent
-         hors de la zone cartographiée. Ce n'est pas la même chose. */
-      var horsZone = inconnus.reduce(function(a, d){ return a + d.n; }, 0);
-      hote.innerHTML = horsZone
-        ? '<p class="vide">' + nb(horsZone)
-          + (horsZone > 1 ? ' listes déclarées' : ' liste déclarée')
-          + ', mais aucune commune de la zone cartographiée.</p>'
-        : '<p class="vide">Aucune commune déclarée sur cette période.<br>'
-          + 'Le champ est facultatif&nbsp;: la carte se remplit à mesure que les clients '
-          + 'le renseignent en composant leur liste.</p>';
+      hote.innerHTML = '<p class="vide">Aucune ville situable sur cette période.</p>';
       return;
     }
 
@@ -667,8 +1045,8 @@ footer a{color:var(--texte-2)}
     var ys = tous.map(function(p){ return py(p.lat); });
     var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs);
     var y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
-    /* Une seule commune ne définit aucune étendue : on impose une fenêtre
-       d'environ dix kilomètres pour que la bulle ne remplisse pas l'écran. */
+    /* Une seule ville ne définit aucune étendue : on impose une fenêtre
+       d'une dizaine de kilomètres pour que la bulle ne remplisse pas l'écran. */
     var etX = Math.max(x1 - x0, 0.09), etY = Math.max(y1 - y0, 0.09);
     var mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
     var ech = Math.min((W - 2 * marge) / etX, (H - 2 * marge) / etY);
@@ -678,7 +1056,6 @@ footer a{color:var(--texte-2)}
     var maxi = connus.reduce(function(m, d){ return d.n > m ? d.n : m; }, 0) || 1;
     var rayon = function(n){ return 4 + 17 * Math.sqrt(n / maxi); };
 
-    /* Les plus grosses bulles d'abord : les petites restent cliquables. */
     var ordre = connus.slice().sort(function(a, b){ return b.n - a.n; });
     var bulles = ordre.map(function(d, i){
       return '<circle class="bulle" data-i="' + i + '" cx="' + X(d).toFixed(1)
@@ -692,10 +1069,9 @@ footer a{color:var(--texte-2)}
       + (cym - 8).toFixed(1) + 'v4M' + cxm.toFixed(1) + ' ' + (cym + 4).toFixed(1) + 'v4"/></g>';
 
     /* Placement des étiquettes. Posées bêtement au-dessus de chaque bulle,
-       elles se chevauchent et mordent sur les voisines — « Villers-le-Temple »
-       finissait à cheval sur Nandrin. On essaie donc quatre positions, et l'on
-       renonce à nommer plutôt que d'écrire par-dessus. */
-    var cases = [];                       // rectangles déjà occupés
+       elles se chevauchent et mordent sur les voisines. On essaie quatre
+       positions, et l'on renonce à nommer plutôt que d'écrire par-dessus. */
+    var cases = [];
     function libre(b){
       for(var i = 0; i < cases.length; i++){
         var c = cases[i];
@@ -703,19 +1079,19 @@ footer a{color:var(--texte-2)}
       }
       for(var j = 0; j < ordre.length; j++){
         var d = ordre[j], r = rayon(d.n), cx = X(d), cy = Y(d);
-        var px2 = Math.max(b.x, Math.min(cx, b.x + b.l));
-        var py2 = Math.max(b.y, Math.min(cy, b.y + b.h));
-        if((px2 - cx) * (px2 - cx) + (py2 - cy) * (py2 - cy) < r * r) return false;
+        var qx = Math.max(b.x, Math.min(cx, b.x + b.l));
+        var qy = Math.max(b.y, Math.min(cy, b.y + b.h));
+        if((qx - cx) * (qx - cx) + (qy - cy) * (qy - cy) < r * r) return false;
       }
       return true;
     }
     function pose(texte, cx, cy, r, classe){
       var l = texte.length * 4.35, h = 9;
       var essais = [
-        { x: cx - l / 2,  y: cy - r - 4 - h, a: 'middle', tx: cx, ty: cy - r - 5 },
-        { x: cx - l / 2,  y: cy + r + 3,     a: 'middle', tx: cx, ty: cy + r + 11 },
-        { x: cx + r + 4,  y: cy - h / 2,     a: 'start',  tx: cx + r + 5, ty: cy + 3 },
-        { x: cx - r - 4 - l, y: cy - h / 2,  a: 'end',    tx: cx - r - 5, ty: cy + 3 }
+        { x: cx - l / 2,     y: cy - r - 4 - h, a: 'middle', tx: cx,         ty: cy - r - 5 },
+        { x: cx - l / 2,     y: cy + r + 3,     a: 'middle', tx: cx,         ty: cy + r + 11 },
+        { x: cx + r + 4,     y: cy - h / 2,     a: 'start',  tx: cx + r + 5, ty: cy + 3 },
+        { x: cx - r - 4 - l, y: cy - h / 2,     a: 'end',    tx: cx - r - 5, ty: cy + 3 }
       ];
       for(var i = 0; i < essais.length; i++){
         var e = essais[i], b = { x: e.x, y: e.y, l: l, h: h };
@@ -728,31 +1104,27 @@ footer a{color:var(--texte-2)}
       }
       return '';
     }
-
-    /* Le restaurant se nomme en premier : c'est le repère de la carte. */
     var etiquettes = pose('Pizzeria Pino', cxm, cym, 9, 'chez');
     ordre.slice(0, Math.min(ordre.length, 10)).forEach(function(d){
       etiquettes += pose(d.nom, X(d), Y(d), rayon(d.n));
     });
 
     /* Une règle : sans échelle, une carte ne dit pas les distances. */
-    var kmRegle = 5, lg = (kmRegle / 111.32) * ech;
+    var kmRegle = 10, lg = (kmRegle / 111.32) * ech;
     var rx = 12, ry = H - 12;
     var regle = '<g><path class="regle" d="M' + rx + ' ' + ry + 'h' + lg.toFixed(1)
       + 'M' + rx + ' ' + (ry - 3) + 'v6M' + (rx + lg).toFixed(1) + ' ' + (ry - 3) + 'v6"/>'
       + '<text class="regle-txt" x="' + (rx + lg / 2).toFixed(1) + '" y="' + (ry - 6)
       + '" text-anchor="middle">' + kmRegle + ' km</text></g>';
 
-    var total = connus.reduce(function(a, d){ return a + d.n; }, 0);
-    var reste = inconnus.reduce(function(a, d){ return a + d.n; }, 0);
-    var pied = nb(total) + (total > 1 ? ' listes situées' : ' liste située')
-             + ' sur ' + connus.length + (connus.length > 1 ? ' communes' : ' commune')
-             + (reste ? ' · ' + nb(reste) + ' hors de la zone cartographiée' : '');
+    var pied = nb(situees) + (situees > 1 ? ' ouvertures situées' : ' ouverture située')
+             + ' sur ' + connus.length + (connus.length > 1 ? ' villes' : ' ville')
+             + (perdues ? ' · ' + nb(perdues) + ' non situées' : '');
 
     hote.innerHTML =
       '<div class="cadre">'
       + '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" '
-      + 'role="img" aria-label="Carte des communes déclarées, ' + echappe(pied) + '">'
+      + 'role="img" aria-label="Carte des villes, ' + echappe(pied) + '">'
       + regle + maison + bulles + etiquettes
       + '</svg></div>'
       + '<div class="bornes"><span>' + echappe(pied) + '</span></div>';
@@ -772,7 +1144,8 @@ footer a{color:var(--texte-2)}
         var d = ordre[+el.dataset.i];
         var r = cadre.getBoundingClientRect();
         var c = el.getBoundingClientRect();
-        bulle.innerHTML = '<b>' + nb(d.n) + '</b> ' + (d.n === 1 ? 'liste' : 'listes')
+        bulle.innerHTML = '<b>' + nb(d.n) + '</b> '
+                        + (d.n === 1 ? 'ouverture' : 'ouvertures')
                         + '<span>' + echappe(d.nom) + '</span>';
         bulle.hidden = false;
         var gauche = c.left + c.width / 2 - r.left;
@@ -829,8 +1202,7 @@ footer a{color:var(--texte-2)}
     dessineTable('tblVilles',   d.villes,   'Ville',    qVilles);
     dessineTable('tblSupports', d.supports, 'Appareil');
     dessineTable('tblPlats',    d.plats,    'Plat',     qPlats);
-    dessineCarte(d.communes);
-    dessineTable('tblCommunes', d.communes, 'Commune déclarée');
+    dessineCarte(d.villes, d.villes_autres);
   }
 
   function banniere(html, classe){
@@ -856,10 +1228,6 @@ footer a{color:var(--texte-2)}
                 commande: Math.round(vues * .06) },
       precedent: { vue: Math.round(vues * .88), appel: Math.round(vues * .13),
                    itineraire: Math.round(vues * .10), commande: Math.round(vues * .05) },
-      communes: [{nom:'Nandrin',n:31},{nom:'Villers-le-Temple',n:22},{nom:'Neupré',n:18},
-                 {nom:'Tinlot',n:12},{nom:'Modave',n:11},{nom:'Anthisnes',n:9},
-                 {nom:'Ouffet',n:7},{nom:'Esneux',n:6},{nom:'Huy',n:6},
-                 {nom:'Clavier',n:5},{nom:'Marchin',n:4},{nom:'Amay',n:3}],
       villes_autres: Math.round(vues * .06), villes_autres_n: 14,
       plats_autres: 19, plats_autres_n: 11,
       villes: [{nom:'Nandrin',n:Math.round(vues*.28)},{nom:'Liège',n:Math.round(vues*.19)},
