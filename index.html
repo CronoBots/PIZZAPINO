@@ -1142,6 +1142,14 @@
   .legal-links a:hover,.legal-links .linkbtn:hover{color:var(--or)}
   .legal-links .sep{color:var(--gris-d);opacity:.6}
   .legal-links .linkbtn{background:none;border:0;cursor:pointer;font:inherit;text-transform:uppercase;letter-spacing:.08em;padding:0}
+  /* Acces au tableau de bord, reserve a la maison. Discret par choix : ce qui
+     protege la page est sa cle, pas le fait qu'on ignore son adresse. */
+  .gerant{margin-top:16px;font-size:.72rem}
+  .gerant a{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);
+    text-decoration:none;padding:7px 14px;border:1px solid rgba(233,206,150,.18);
+    border-radius:999px;transition:color .25s,border-color .25s}
+  .gerant a:hover{color:var(--or);border-color:rgba(233,206,150,.45)}
+  .gerant svg{width:13px;height:13px;flex:0 0 auto}
   .credit{margin-top:18px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.66rem;color:var(--gris-d)}
   .credit a,.credit b{color:var(--or);text-decoration:none;font-weight:500}
   .credit a:hover{text-decoration:underline}
@@ -2365,7 +2373,7 @@
 <footer>
   <div class="wrap">
     <a href="#top" class="brand"><span class="brand-pre">Restaurant</span>Pizzeria <b>Pino</b></a>
-    <p><span style="white-space:nowrap">Restaurant italien</span> · <span style="white-space:nowrap">Pâtes fraîches</span> · <span style="white-space:nowrap">Pizzas au feu de bois</span></p>
+    <p><span style="white-space:nowrap">Restaurant italien</span> · <span style="white-space:nowrap">Pizzas au feu de bois</span> · <span style="white-space:nowrap">Pâtes fraîches</span></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · <span style="white-space:nowrap">Route du Condroz 131, 4550 Nandrin</span></p>
     <nav class="legal-links" aria-label="Informations légales">
       <a href="legal.html#mentions">Mentions légales</a>
@@ -2378,7 +2386,11 @@
       <span class="sep">·</span>
       <button type="button" id="manageCookies" class="linkbtn">Gérer les cookies</button>
     </nav>
-    <p class="credit">Réalisation : <b>CLIC&amp;CONNECT</b></p>
+    <p class="gerant"><a href="aldente/" rel="nofollow"><svg viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true"><rect x="4" y="10.5" width="16" height="10" rx="2"/><path
+         d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>Espace gérant</a></p>
+    <p class="credit">Réalisation : <b>CLICK&amp;CONNECT</b></p>
   </div>
 </footer>
 
