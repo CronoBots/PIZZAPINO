@@ -110,6 +110,7 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
    par un remplissage hachuré et un nom en italique — jamais par la seule
    couleur, que tout le monde ne perçoit pas de la même façon. */
 .barre.queue .nom{color:var(--texte-3);font-style:italic}
+#barJours .remplissage.we{background:#C4483F}
 .barre.queue .remplissage{opacity:.5;
   background:repeating-linear-gradient(135deg,var(--or) 0 2px,transparent 2px 6px)}
 
@@ -118,7 +119,8 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 .courbe svg{display:block;width:100%;height:auto;overflow:visible}
 /* La barre porte la valeur du jour ; la ligne, la tendance. Deux formes, deux
    teintes : la distinction ne tient jamais à la seule couleur. */
-.courbe .jour{fill:var(--or);opacity:.78;transition:opacity .15s}
+.courbe .jour{fill:var(--or);opacity:.82;transition:opacity .15s}
+.courbe .jour.we{fill:#C4483F}
 .courbe .jour.vise{opacity:1}
 .courbe .tendance{fill:none;stroke:#149CAE;stroke-width:2;
   stroke-linejoin:round;stroke-linecap:round}
@@ -128,23 +130,15 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 .bornes{display:flex;justify-content:space-between;color:var(--texte-3);
   font-size:.72rem;margin-top:8px}
 /* Samedi et dimanche, en retrait : le rythme de la semaine se voit d'un coup. */
-.courbe .weekend{fill:var(--texte);opacity:.05}
 /* La bande grise ne se devine pas : on la nomme. */
 .cle-we{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-left:4px}
 .cle-we + .cle-we{margin-left:14px}
 .ech-jour{display:inline-block;width:7px;height:12px;border-radius:2px;
-  background:var(--or);opacity:.78}
+  background:var(--or);opacity:.82}
+.ech-we{display:inline-block;width:7px;height:12px;border-radius:2px;background:#C4483F}
 .ech-tend{display:inline-block;width:16px;height:2px;border-radius:2px;background:#149CAE}
-.ech-we{display:inline-block;width:15px;height:11px;border-radius:2px;
-  background:rgba(245,239,228,.09);border:1px solid var(--trait)}
-/* Le SVG est etire en largeur (preserveAspectRatio="none") : un <circle> y
-   serait aplati en ovale. La pointe est donc un element HTML, place en
-   pourcentage sur un cadre aux dimensions du trace. */
+/* Le cadre porte la bulle de survol en position absolue. */
 .cadre{position:relative}
-.pointe{position:absolute;width:9px;height:9px;border-radius:50%;
-  background:var(--or);box-shadow:0 0 0 2px var(--surface);
-  transform:translate(-50%,-50%);pointer-events:none;
-  transition:left .15s ease-out,top .15s ease-out}
 .survol{position:absolute;top:-4px;transform:translateX(-50%);pointer-events:none;
   background:var(--surface-2);border:1px solid var(--trait);border-radius:9px;
   padding:7px 11px;font-size:.78rem;white-space:nowrap;z-index:2;
@@ -285,9 +279,9 @@ footer a{color:var(--texte-2)}
   <section id="secCourbe">
     <div class="titre"><h2>Les ouvertures, jour par jour</h2></div>
     <p class="chapo">
-      <span class="cle-we"><span class="ech-jour" aria-hidden="true"></span>chaque jour</span>
-      <span class="cle-we" id="cleTendance" hidden><span class="ech-tend" aria-hidden="true"></span>tendance sur 7&nbsp;jours</span>
+      <span class="cle-we"><span class="ech-jour" aria-hidden="true"></span>en semaine</span>
       <span class="cle-we"><span class="ech-we" aria-hidden="true"></span>samedis et dimanches</span>
+      <span class="cle-we" id="cleTendance" hidden><span class="ech-tend" aria-hidden="true"></span>tendance sur <span id="cleTendanceN">7 jours</span></span>
     </p>
     <div class="courbe" id="courbe"></div>
   </section>
@@ -1069,11 +1063,21 @@ footer a{color:var(--texte-2)}
     minuteurCourbe = setTimeout(function(){ dessineCourbe(derniereCourbe); }, 180);
   });
 
-  /** Moyenne centrée sur sept jours. Aux deux bouts la fenêtre se réduit à ce
-      qui existe : mieux vaut une ligne qui va jusqu'au bord qu'un trou. */
-  function tendance(points){
+  /** Largeur de la fenêtre de lissage. Sept jours effacent l'effet du week-end,
+      mais sur une semaine ils rendraient une ligne plate : on lisse alors sur
+      trois. En deçà de cinq jours, il n'y a rien à lisser. */
+  function fenetreTendance(n){
+    if(n >= 14) return 7;
+    if(n >= 5)  return 3;
+    return 0;
+  }
+
+  /** Moyenne centrée. Aux deux bouts la fenêtre se réduit à ce qui existe :
+      mieux vaut une ligne qui va jusqu'au bord qu'un trou. */
+  function tendance(points, fenetre){
+    var demi = Math.floor(fenetre / 2);
     return points.map(function(_, i){
-      var a = Math.max(0, i - 3), b = Math.min(points.length - 1, i + 3), t = 0;
+      var a = Math.max(0, i - demi), b = Math.min(points.length - 1, i + demi), t = 0;
       for(var k = a; k <= b; k++) t += points[k].n;
       return t / (b - a + 1);
     });
@@ -1103,32 +1107,26 @@ footer a{color:var(--texte-2)}
     var etiquettes = pas >= 9;
     var HT = H + (etiquettes ? hEtiq : 0);
 
-    var bandes = '';
-    if(n <= 92){
-      points.forEach(function(p, i){
-        var js = jourSemaine(p.j);
-        if(js !== 0 && js !== 6) return;
-        bandes += '<rect class="weekend" x="' + (pas * i).toFixed(1) + '" y="0" width="'
-                + pas.toFixed(1) + '" height="' + H + '"/>';
-      });
-    }
-
     var barres = points.map(function(p, i){
       var y = haut(p.n), h = Math.max(p.n > 0 ? 1.5 : 0, H - m - y);
       if(!h) return '';
       var x = (centre(i) - large / 2);
       var r = Math.min(rayon, h);
-      /* Sommet arrondi, pied d'aplomb sur la ligne de base. */
-      return '<path class="jour" data-i="' + i + '" d="M' + x.toFixed(2) + ' ' + (H - m).toFixed(2)
+      /* Sommet arrondi, pied d'aplomb sur la ligne de base. Le samedi et le
+         dimanche portent leur propre teinte : un fond grisé derrière la barre
+         se confondait avec le cadre, et disparaissait tout à fait dès que les
+         jours devenaient serrés. */
+      var js = jourSemaine(p.j);
+      return '<path class="jour' + (js === 0 || js === 6 ? ' we' : '')
+           + '" data-i="' + i + '" d="M' + x.toFixed(2) + ' ' + (H - m).toFixed(2)
            + 'V' + (y + r).toFixed(2) + 'a' + r.toFixed(2) + ' ' + r.toFixed(2) + ' 0 0 1 '
            + r.toFixed(2) + ' -' + r.toFixed(2) + 'h' + (large - 2 * r).toFixed(2)
            + 'a' + r.toFixed(2) + ' ' + r.toFixed(2) + ' 0 0 1 ' + r.toFixed(2) + ' '
            + r.toFixed(2) + 'V' + (H - m).toFixed(2) + 'Z"/>';
     }).join('');
 
-    /* Sous quatorze jours, une moyenne sur sept ne lisse plus rien : elle
-       redit la même courbe avec un jour de retard. On s'en passe. */
-    var moyennes = n >= 14 ? tendance(points) : null;
+    var fenetre = fenetreTendance(n);
+    var moyennes = fenetre ? tendance(points, fenetre) : null;
     var ligne = '';
     if(moyennes){
       ligne = '<path class="tendance" d="' + moyennes.map(function(v, i){
@@ -1153,13 +1151,17 @@ footer a{color:var(--texte-2)}
       + '<svg viewBox="0 0 ' + L + ' ' + HT + '" width="' + L + '" height="' + HT + '" role="img" '
       + 'aria-label="Ouvertures jour par jour, du ' + dateLongue(points[0].j) + ' au '
       + dateLongue(der.j) + '. Maximum ' + nb(max) + ' en un jour.">'
-      + bandes + barres + ligne + lettres
+      + barres + ligne + lettres
       + '</svg></div>'
       + '<div class="bornes"><span>' + dateCourte(points[0].j) + '</span>'
       + '<span>' + nb(max) + ' ouvertures au plus haut</span>'
       + '<span>' + dateCourte(der.j) + '</span></div>';
 
-    document.getElementById('cleTendance').hidden = !moyennes;
+    /* La légende dit sur combien de jours on lisse : « tendance » tout court
+       laisserait croire que c'est toujours la même. */
+    var cle = document.getElementById('cleTendance');
+    cle.hidden = !moyennes;
+    if(moyennes) document.getElementById('cleTendanceN').textContent = fenetre + ' jours';
     installeSurvol(hote, points, moyennes);
   }
 
@@ -1183,7 +1185,8 @@ footer a{color:var(--texte-2)}
 
       bulle.innerHTML = '<b>' + nb(pt.n) + '</b> ' + (pt.n === 1 ? 'ouverture' : 'ouvertures')
                       + '<span>' + dateLongue(pt.j)
-                      + (moyennes ? ' · tendance ' + frD.format(Math.round(moyennes[i] * 10) / 10) : '')
+                      + (moyennes ? ' · tendance ' + frD.format(Math.round(moyennes[i] * 10) / 10)
+                                    + ' sur ' + fenetreTendance(points.length) + ' jours' : '')
                       + '</span>';
       bulle.hidden = false;
       var gauche = (i + 0.5) / points.length * r.width;
@@ -1585,17 +1588,20 @@ footer a{color:var(--texte-2)}
     var max = tenus.reduce(function(m, l){ return l.n > m ? l.n : m; }, 0) || 1;
     /* L'ordre est celui de la semaine, jamais celui du classement : un lundi
        reste avant un mardi, meme s'il pese moins. */
-    hote.innerHTML = lignes.map(function(l){
+    hote.innerHTML = lignes.map(function(l, i){
       if(l.n === null){
         return '<div class="barre"><div class="haut"><span class="nom">' + l.nom
              + '</span><span class="val"><span>aucune journée complète</span></span></div>'
              + '<div class="piste"></div></div>';
       }
+      /* Même teinte que dans le graphique du dessus : un samedi ne change pas
+         de couleur d'un graphique à l'autre. */
+      var we = i >= 5 ? ' we' : '';
       return '<div class="barre"><div class="haut"><span class="nom">' + l.nom + '</span>'
            + '<span class="val">' + frD.format(Math.round(l.n * 10) / 10)
            + ' <span>en moyenne · ' + l.jours + (l.jours > 1 ? ' jours' : ' jour') + '</span>'
            + '</span></div>'
-           + '<div class="piste"><div class="remplissage" data-l="' + (l.n * 100 / max)
+           + '<div class="piste"><div class="remplissage' + we + '" data-l="' + (l.n * 100 / max)
            + '"></div></div></div>';
     }).join('');
     requestAnimationFrame(function(){
