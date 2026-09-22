@@ -85,9 +85,6 @@ as $$
     select cle as nom, n, row_number() over (order by n desc, cle) as rang
     from fenetre where type = 'ville'
   ),
-  p as (
-    select cle as nom, n, row_number() over (order by n desc, cle) as rang
-    from fenetre where type = 'plat'
   )
   select json_build_object(
     'totaux', (
@@ -109,12 +106,12 @@ as $$
       select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
       from (select cle as nom, n from fenetre where type = 'support') s
     ),
+    -- Tous les plats : le tableau de bord les repartit par section de la carte,
+    -- et une proportion calculee sur les quinze premiers seulement serait fausse.
     'plats', (
-      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by rang), '[]'::json)
-      from p where rang <= 15
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
+      from (select cle as nom, n from fenetre where type = 'plat') p
     ),
-    'plats_autres',   (select coalesce(sum(n), 0)::int from p where rang > 15),
-    'plats_autres_n', (select count(*)::int          from p where rang > 15),
     'courbe', (
       select coalesce(json_agg(json_build_object('j', j, 'n', n) order by j), '[]'::json)
       from (select jour as j, sum(n)::int as n from public.compteur

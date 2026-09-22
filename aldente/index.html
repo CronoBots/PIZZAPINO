@@ -112,6 +112,10 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
   font-size:.72rem;margin-top:8px}
 /* Samedi et dimanche, en retrait : le rythme de la semaine se voit d'un coup. */
 .courbe .weekend{fill:var(--texte);opacity:.05}
+/* La bande grise ne se devine pas : on la nomme. */
+.cle-we{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-left:4px}
+.ech-we{display:inline-block;width:15px;height:11px;border-radius:2px;
+  background:rgba(245,239,228,.09);border:1px solid var(--trait)}
 /* Le SVG est etire en largeur (preserveAspectRatio="none") : un <circle> y
    serait aplati en ovale. La pointe est donc un element HTML, place en
    pourcentage sur un cadre aux dimensions du trace. */
@@ -130,6 +134,9 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 .survol span{display:block;color:var(--texte-3);font-size:.72rem;margin-top:2px}
 .survol.adroite{transform:translateX(-100%)}
 .survol.agauche{transform:translateX(0)}
+.parts .survol{transform:translate(-50%,-100%)}
+.parts .survol.adroite{transform:translate(-100%,-100%)}
+.parts .survol.agauche{transform:translate(0,-100%)}
 .carteLieux .survol{transform:translate(-50%,-100%)}
 .carteLieux .survol.adroite{transform:translate(-100%,-100%)}
 .carteLieux .survol.agauche{transform:translate(0,-100%)}
@@ -151,6 +158,29 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 .carteLieux .etiq.chez{fill:var(--texte);font-size:8.5px}
 .carteLieux .regle{stroke:var(--texte-3);stroke-width:1}
 .carteLieux .regle-txt{fill:var(--texte-3);font-family:'Inter',sans-serif}
+
+/* ── camembert : part d'un tout, quatre sections au plus ──
+   Les teintes sont passees au controle de separation daltonienne (protanopie
+   et deuteranopie) sur ce fond sombre. L'identite ne repose jamais sur la
+   seule couleur : chaque part porte son nom en clair a cote. */
+.parts{display:flex;flex-wrap:wrap;align-items:center;gap:22px 30px;margin-top:10px;
+  position:relative}
+.parts svg{display:block;flex:0 0 auto}
+.parts .arc{transition:opacity .15s}
+.parts .arc:hover,.parts .arc.vise{opacity:.78;cursor:pointer}
+.parts .coeur-n{fill:var(--texte);font-family:'Fraunces',Georgia,serif;font-weight:600;
+  font-variant-numeric:tabular-nums}
+.parts .coeur-l{fill:var(--texte-3);font-family:'Oswald',sans-serif;
+  letter-spacing:.12em;text-transform:uppercase}
+.legende{flex:1 1 210px;min-width:190px;display:flex;flex-direction:column;gap:11px}
+.legende .lg{display:flex;align-items:baseline;gap:10px;font-size:.9rem}
+.legende .pastille{width:11px;height:11px;border-radius:3px;flex:0 0 auto;
+  transform:translateY(1px)}
+.legende .lg-nom{color:var(--texte)}
+.legende .lg-val{margin-left:auto;font-family:'Fraunces',Georgia,serif;font-weight:600;
+  font-variant-numeric:tabular-nums;color:var(--texte);white-space:nowrap}
+.legende .lg-val span{font-family:'Inter',sans-serif;font-weight:400;font-size:.78rem;
+  color:var(--texte-3)}
 
 /* Pendant une mise a jour, les chiffres affiches sont peut-etre perimes :
    on le montre plutot que de les laisser passer pour frais. */
@@ -264,7 +294,8 @@ footer a{color:var(--texte-2)}
   <section id="secCourbe">
     <div class="titre"><h2>Les ouvertures, jour par jour</h2></div>
     <p class="chapo">Une ouverture = un chargement du site. Faute de cookie — c’est voulu —
-       un même client qui revient le lendemain est recompté.</p>
+       un même client qui revient le lendemain est recompté.
+       <span class="cle-we"><span class="ech-we" aria-hidden="true"></span>samedis et dimanches</span></p>
     <div class="courbe" id="courbe"></div>
   </section>
 
@@ -311,6 +342,18 @@ footer a{color:var(--texte-2)}
     <div id="tblPlats" hidden></div>
   </section>
 
+  <section id="secParts">
+    <div class="titre">
+      <h2>Ce que les clients composent</h2>
+      <button class="bascule" type="button" data-cible="tblParts"
+              aria-expanded="false" aria-controls="tblParts">Voir en tableau</button>
+    </div>
+    <p class="chapo">La répartition des plats mis au panier, par section de la carte.
+       Ce sont des ajouts à une liste, pas des ventes encaissées.</p>
+    <div class="parts" id="parts"></div>
+    <div id="tblParts" hidden></div>
+  </section>
+
   <footer>
     <span>Sans cookie, sans profil, sans donnée personnelle. <a href="../legal.html#confidentialite">En savoir plus</a></span>
     <span><button class="quitter" type="button" id="exporter">Exporter en CSV</button>
@@ -353,6 +396,56 @@ footer a{color:var(--texte-2)}
       history.replaceState(null, '', location.pathname + propre + location.hash);
     }
   })();
+
+  /* plats:début — engendré par mesure/plats.py, ne pas modifier à la main */
+  /* Plat → section de la carte, engendré depuis index.html.
+     Les noms sont ceux qui arrivent en base, préfixe « Pizza » compris. */
+  var PLATS = {
+    "Bresaola":"pizzas","Bruschetta":"pizzas","Cannelloni du Chef":"pates",
+    "Escalope Archiduc":"viandes","Escalope Gorgonzola":"viandes","Escalope Napolitaine":"viandes",
+    "Escalope Parmigiana":"viandes","Escalope Pizzaiola":"viandes",
+    "Escalope Poivre &amp; crème":"viandes","Escalope Valdostana":"viandes","Estate":"pizzas",
+    "Farfalles Primavera":"pates","Fraicheur":"pizzas","Gnocchi Romana":"pates",
+    "Gnocchi aux 4 fromages":"pates","Lasagne 4 fromages":"pates","Lasagne maison":"pates",
+    "Linguini allo Scoglio":"pates","Mousse au chocolat":"desserts","Osso Buco Maison":"viandes",
+    "Penne Ortolana":"pates","Pizza 4 Fromages":"pizzas","Pizza 4 Saisons":"pizzas",
+    "Pizza Adriana":"pizzas","Pizza Al Crudo":"pizzas","Pizza Antonio":"pizzas",
+    "Pizza Bosco":"pizzas","Pizza Bufala":"pizzas","Pizza Bufalina":"pizzas",
+    "Pizza Burrata":"pizzas","Pizza Calabrese":"pizzas","Pizza Calzone":"pizzas",
+    "Pizza Capricciosa":"pizzas","Pizza Caprino":"pizzas","Pizza Carbonara":"pizzas",
+    "Pizza Carpaccio":"pizzas","Pizza Coppa":"pizzas","Pizza César":"pizzas",
+    "Pizza Diavola":"pizzas","Pizza Dolce Latte":"pizzas","Pizza Du Chef":"pizzas",
+    "Pizza Fermière":"pizzas","Pizza Fiorentina":"pizzas","Pizza Focaccia al Formaggio":"pizzas",
+    "Pizza Fruits de mer":"pizzas","Pizza Genovese":"pizzas","Pizza Geppetto":"pizzas",
+    "Pizza Hawaïenne":"pizzas","Pizza Italia":"pizzas","Pizza Liégeoise":"pizzas",
+    "Pizza Mafiosa":"pizzas","Pizza Margherita":"pizzas","Pizza Marinara":"pizzas",
+    "Pizza Merguez":"pizzas","Pizza Mezzo Mezzo":"pizzas","Pizza Mont Blanc":"pizzas",
+    "Pizza Napoli":"pizzas","Pizza Nduja":"pizzas","Pizza Nerone":"pizzas","Pizza Nonna":"pizzas",
+    "Pizza Norvégienne":"pizzas","Pizza Palermo":"pizzas","Pizza Parmigiana":"pizzas",
+    "Pizza Paysanne":"pizzas","Pizza Pinocchio":"pizzas","Pizza Pomodoro":"pizzas",
+    "Pizza Poulet Archiduc":"pizzas","Pizza Poulet Provençal":"pizzas","Pizza Primavera":"pizzas",
+    "Pizza Primo":"pizzas","Pizza Regina":"pizzas","Pizza Romana":"pizzas","Pizza Romina":"pizzas",
+    "Pizza Siciliana":"pizzas","Pizza Sole Mio":"pizzas","Pizza Speck":"pizzas",
+    "Pizza Tartiflette":"pizzas","Pizza Tartufata":"pizzas","Pizza Tonnata":"pizzas",
+    "Pizza Vesuvio":"pizzas","Pizza Végétarienne":"pizzas","Pizza du Patron":"pizzas",
+    "Pizza Épinards":"pizzas","Rigatoni 4 fromages":"pates","Rigatoni Adriatica":"pates",
+    "Rigatoni Asparagi e Crudo":"pates","Rigatoni Brocolis Scampis":"pates",
+    "Rigatoni Cremoso di Tartufata":"pates","Rigatoni Indiana":"pates","Rigatoni Parmigiana":"pates",
+    "Rigatoni Pinocchio":"pates","Rigatoni Regiano":"pates","Rigatoni Romagnola":"pates",
+    "Rigatoni aux épinards":"pates","Risotto aux asperges":"pates",
+    "Risotto aux fruits de mer":"pates","Rotolo Parmigiana":"pates","Rotolo alla Ricotta":"pates",
+    "Salumi e Formaggi":"pizzas","Spaghetti \"Fantasia di Gamberoni\"":"pates",
+    "Spaghetti Arrabbiata":"pates","Spaghetti Bolognaise":"pates","Spaghetti Boscaiola":"pates",
+    "Spaghetti Carbonara":"pates","Spaghetti Nduja":"pates","Spaghetti Puttanesca":"pates",
+    "Spaghetti al Pomodoro":"pates","Spaghetti all'Amatriciana":"pates",
+    "Spaghetti alle Vongole":"pates","Spaghetti aux fruits de mer":"pates",
+    "Stracciatella di Burrata":"pates","Tagliatelle Piemontese":"pates",
+    "Tagliatelle aux scampis":"pates","Tagliatelle du Chef":"pates",
+    "Tagliatelle saumon fumé":"pates","Tiramisù":"desserts","Tiramisù Speculoos":"desserts",
+    "Tortelloni Genovese":"pates","Tortelloni alla Ricotta":"pates",
+    "Tortelloni crème jambon":"pates","Tortelloni saumon épinards":"pates"
+  };
+  /* plats:fin */
 
   /* pays:début — engendré par mesure/lieux.py, ne pas modifier à la main */
   /* Contour de la Belgique (Natural Earth, domaine public). Coordonnées
@@ -1239,6 +1332,121 @@ footer a{color:var(--texte-2)}
     });
   }
 
+  /* Le meme contenu en lignes : une part d'angle se lit mal au chiffre pres,
+     et tout le monde ne voit pas les couleurs de la meme facon. */
+  function partsEnTable(liste){
+    var par = {};
+    (liste || []).forEach(function(d){
+      var c = PLATS[d.nom] || 'autre';
+      par[c] = (par[c] || 0) + d.n;
+    });
+    return SECTIONS.filter(function(x){ return par[x.cle]; })
+                   .map(function(x){ return { nom: x.nom, n: par[x.cle] }; });
+  }
+
+  /* ── répartition par section de la carte ──
+     Quatre parts d'un tout : c'est le seul cas où un cercle vaut mieux qu'une
+     barre. Au-delà, ou pour comparer des valeurs proches, il induirait en
+     erreur — l'œil compare mal des angles. */
+  var SECTIONS = [
+    { cle: 'pizzas',   nom: 'Pizzas',   ton: '#B2863A' },
+    { cle: 'pates',    nom: 'Pâtes',    ton: '#149CAE' },
+    { cle: 'viandes',  nom: 'Viandes',  ton: '#C4483F' },
+    { cle: 'desserts', nom: 'Desserts', ton: '#9B7BD4' },
+    { cle: 'autre',    nom: 'Hors carte', ton: '#6E6252' }
+  ];
+
+  function dessineParts(liste){
+    var hote = document.getElementById('parts');
+    var par = {}, total = 0;
+    (liste || []).forEach(function(d){
+      var c = PLATS[d.nom] || 'autre';
+      par[c] = (par[c] || 0) + d.n;
+      total += d.n;
+    });
+    if(!total){
+      hote.innerHTML = '<p class="vide">Aucun plat mis au panier sur cette période.</p>';
+      return;
+    }
+
+    /* L'ordre suit la carte, jamais le classement : une section ne doit pas
+       changer de couleur parce qu'elle a fait un bon mois. */
+    var parts = SECTIONS.filter(function(x){ return par[x.cle]; })
+                        .map(function(x){ return { nom: x.nom, ton: x.ton, n: par[x.cle] }; });
+
+    var R = 78, ep = 26, C = R + ep / 2 + 4, D = C * 2;
+    var angle = -Math.PI / 2;                       // on démarre en haut
+    var ecart = parts.length > 1 ? 0.018 : 0;       // 2 px de fond entre deux parts
+
+    var arcs = parts.map(function(p, i){
+      var part = p.n / total;
+      var a0 = angle + ecart / 2, a1 = angle + part * 2 * Math.PI - ecart / 2;
+      angle += part * 2 * Math.PI;
+      if(a1 <= a0) a1 = a0 + 0.001;
+      var x0 = C + R * Math.cos(a0), y0 = C + R * Math.sin(a0);
+      var x1 = C + R * Math.cos(a1), y1 = C + R * Math.sin(a1);
+      var grand = (a1 - a0) > Math.PI ? 1 : 0;
+      /* Un anneau presque complet ne peut pas se tracer d'un seul arc : le
+         point de départ et celui d'arrivée se confondent et rien n'apparaît. */
+      var d = (a1 - a0) >= 2 * Math.PI - 0.001
+        ? 'M' + (C + R) + ' ' + C + 'A' + R + ' ' + R + ' 0 1 1 ' + (C - R) + ' ' + C
+          + 'A' + R + ' ' + R + ' 0 1 1 ' + (C + R) + ' ' + C
+        : 'M' + x0.toFixed(2) + ' ' + y0.toFixed(2) + 'A' + R + ' ' + R + ' 0 '
+          + grand + ' 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2);
+      return '<path class="arc" data-i="' + i + '" d="' + d + '" fill="none" stroke="'
+           + p.ton + '" stroke-width="' + ep + '"/>';
+    }).join('');
+
+    var dominante = parts.reduce(function(m, p){ return p.n > m.n ? p : m; }, parts[0]);
+    hote.innerHTML =
+      '<div class="cadre"><svg viewBox="0 0 ' + D + ' ' + D + '" width="' + D + '" height="' + D
+      + '" role="img" aria-label="Répartition des plats mis au panier : '
+      + parts.map(function(p){ return echappe(p.nom) + ' ' + pourcent(p.n, total) + ' %'; }).join(', ')
+      + '">' + arcs
+      + '<text class="coeur-n" x="' + C + '" y="' + (C - 2) + '" text-anchor="middle" '
+      + 'style="font-size:30px">' + pourcent(dominante.n, total) + '\u00a0%</text>'
+      + '<text class="coeur-l" x="' + C + '" y="' + (C + 18) + '" text-anchor="middle" '
+      + 'style="font-size:9px">' + echappe(dominante.nom) + '</text>'
+      + '</svg></div>'
+      + '<div class="legende">' + parts.map(function(p, i){
+          return '<div class="lg" data-i="' + i + '">'
+               + '<span class="pastille" style="background:' + p.ton + '"></span>'
+               + '<span class="lg-nom">' + echappe(p.nom) + '</span>'
+               + '<span class="lg-val">' + nb(p.n)
+               + ' <span>' + pourcent(p.n, total) + ' %</span></span></div>';
+        }).join('') + '</div>';
+
+    installeSurvolParts(hote, parts, total);
+  }
+
+  function installeSurvolParts(hote, parts, total){
+    var cadre = hote.querySelector('.cadre');
+    var bulle = document.createElement('div');
+    bulle.className = 'survol';
+    bulle.hidden = true;
+    cadre.appendChild(bulle);
+    hote.querySelectorAll('.arc').forEach(function(el){
+      function montre(){
+        var p = parts[+el.dataset.i];
+        var r = cadre.getBoundingClientRect(), c = el.getBoundingClientRect();
+        bulle.innerHTML = '<b>' + nb(p.n) + '</b> fois'
+                        + '<span>' + echappe(p.nom) + ' · ' + pourcent(p.n, total) + ' %</span>';
+        bulle.hidden = false;
+        var g = c.left + c.width / 2 - r.left;
+        bulle.style.left = g + 'px';
+        bulle.style.top = (c.top - r.top - 8) + 'px';
+        bulle.classList.toggle('agauche', g < r.width * 0.2);
+        bulle.classList.toggle('adroite', g > r.width * 0.8);
+        el.classList.add('vise');
+      }
+      el.addEventListener('pointerenter', montre);
+      el.addEventListener('pointerdown', montre);
+      el.addEventListener('pointerleave', function(){
+        bulle.hidden = true; el.classList.remove('vise');
+      });
+    });
+  }
+
   /* ── rendu complet ── */
   var dernier = null;
   function affiche(d){
@@ -1271,15 +1479,24 @@ footer a{color:var(--texte-2)}
 
     dessineCourbe(d.courbe);
     var qVilles = queueDe(d.villes_autres, d.villes_autres_n, 'autre ville', 'autres villes');
-    var qPlats  = queueDe(d.plats_autres,  d.plats_autres_n,  'autre plat',  'autres plats');
+
+    /* Le service renvoie desormais tous les plats — la repartition par section
+       l'exige. C'est donc ici qu'on decide combien en detailler. */
+    var tousPlats = d.plats || [];
+    var hautPlats = tousPlats.slice(0, 15);
+    var restePlats = tousPlats.slice(15);
+    var qPlats = queueDe(restePlats.reduce(function(a2, x){ return a2 + x.n; }, 0),
+                         restePlats.length, 'autre plat', 'autres plats');
 
     dessineBarres('barVilles',   d.villes,   'ouvertures', qVilles);
     dessineBarres('barSupports', d.supports, 'ouvertures');
-    dessineBarres('barPlats',    d.plats,    'fois',       qPlats);
+    dessineBarres('barPlats',    hautPlats,  'fois',       qPlats);
     dessineTable('tblVilles',   d.villes,   'Ville',    qVilles);
     dessineTable('tblSupports', d.supports, 'Appareil');
-    dessineTable('tblPlats',    d.plats,    'Plat',     qPlats);
+    dessineTable('tblPlats',    hautPlats,  'Plat',     qPlats);
     dessineCarte(d.villes, d.villes_autres);
+    dessineParts(tousPlats);
+    dessineTable('tblParts', partsEnTable(tousPlats), 'Section de la carte');
   }
 
   function banniere(html, classe){
@@ -1313,9 +1530,12 @@ footer a{color:var(--texte-2)}
                {nom:'Non localisé',n:Math.round(vues*.2)}],
       supports: [{nom:'Téléphone',n:Math.round(vues*.79)},{nom:'Ordinateur',n:Math.round(vues*.16)},
                  {nom:'Tablette',n:Math.round(vues*.05)}],
-      plats: [{nom:'Margherita',n:64},{nom:'Quattro formaggi',n:51},{nom:'Calzone',n:44},
-              {nom:'Diavola',n:38},{nom:'Tagliatelle bolognaise',n:31},{nom:'Prosciutto',n:27},
-              {nom:'Lasagne maison',n:22},{nom:'Tiramisù',n:18}],
+      plats: [{nom:'Pizza Margherita',n:64},{nom:'Pizza 4 Fromages',n:51},
+              {nom:'Pizza Calzone',n:44},{nom:'Pizza Diavola',n:38},
+              {nom:'Spaghetti Bolognaise',n:31},{nom:'Pizza Al Crudo',n:27},
+              {nom:'Lasagne maison',n:22},{nom:'Tiramisù',n:18},
+              {nom:'Escalope Parmigiana',n:14},{nom:'Rigatoni Romagnola',n:12},
+              {nom:'Mousse au chocolat',n:6}],
       courbe: courbe
     };
   }

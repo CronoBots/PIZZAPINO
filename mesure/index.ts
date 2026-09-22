@@ -235,12 +235,11 @@ async function stats(req: Request, origine: string): Promise<Response> {
     supports: agrege?.supports ?? [],
     plats:    agrege?.plats    ?? [],
     courbe:   agrege?.courbe   ?? [],
-    // Ce que pèse la queue du classement, que la page n'affiche pas en détail
-    // mais doit compter dans ses pourcentages.
+    // Ce que pèse la queue des villes, que la page n'affiche pas en détail mais
+    // doit compter dans ses pourcentages. Les plats, eux, sont renvoyés en
+    // entier : la page les répartit par section de la carte.
     villes_autres:   agrege?.villes_autres   ?? 0,
     villes_autres_n: agrege?.villes_autres_n ?? 0,
-    plats_autres:    agrege?.plats_autres    ?? 0,
-    plats_autres_n:  agrege?.plats_autres_n  ?? 0,
   }), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
