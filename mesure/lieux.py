@@ -2,13 +2,15 @@
 """
 Injecte la liste des localités dans les fichiers qui en ont besoin.
 
-Source unique : mesure/lieux.json — relevé OpenStreetMap : les localités
+Sources : mesure/lieux.json et mesure/geo.json
+
+mesure/lieux.json — relevé OpenStreetMap : les localités
 dans un rayon de 20 km autour de Nandrin, plus les villes et bourgs belges.
 
 Un destinataire :
-  aldente/index.html les lieux, leurs coordonnées, et l'index des graphies
+  aldente/index.html les lieux, leurs coordonnées, l'index des graphies
                      repliées qui permet d'y retrouver ce que le service de
-                     géolocalisation renvoie
+                     géolocalisation renvoie, et le contour du pays
 
 Les blocs sont délimités par des marqueurs et réécrits en entier ; on ne les
 modifie pas à la main. Relancer après toute mise à jour de lieux.json :
@@ -98,6 +100,22 @@ def main():
              '  /* lieux:début — engendré par mesure/lieux.py, ne pas modifier à la main */',
              '  /* lieux:fin */',
              js)
+
+    # ── le contour du pays, pour que la carte ressemble a une carte ──────
+    with open(os.path.join(RACINE, 'mesure', 'geo.json'), encoding='utf-8') as f:
+        geo = json.load(f)
+    anneaux = []
+    for anneau in geo['belgique']:
+        pts = ['[%s,%s]' % (x, y) for x, y in anneau]
+        anneaux.append('    [' + ','.join(pts) + ']')
+    pays = ('  /* Contour de la Belgique (Natural Earth, domaine public). Coordonnées\n'
+            '     brutes en degrés — longitude puis latitude — projetées au tracé,\n'
+            '     exactement comme les bulles, pour que tout reste superposable. */\n'
+            '  var PAYS = [\n%s\n  ];' % ',\n'.join(anneaux))
+    remplace('aldente/index.html',
+             '  /* pays:début — engendré par mesure/lieux.py, ne pas modifier à la main */',
+             '  /* pays:fin */',
+             pays)
     return 0
 
 
