@@ -319,6 +319,18 @@ footer a{color:var(--texte-2)}
     <div class="courbe" id="courbe"></div>
   </section>
 
+  <section id="secJours">
+    <div class="titre">
+      <h2>Le poids de chaque jour</h2>
+      <button class="bascule" type="button" data-cible="tblJours"
+              aria-expanded="false" aria-controls="tblJours">Voir en tableau</button>
+    </div>
+    <p class="chapo">Moyenne des ouvertures par jour de semaine, sur la période choisie.
+       Le jour en cours n’est pas compté&nbsp;: il n’est pas fini.</p>
+    <div class="barres" id="barJours"></div>
+    <div id="tblJours" hidden></div>
+  </section>
+
   <section id="secVilles">
     <div class="titre">
       <h2>D’où viennent vos visiteurs</h2>
@@ -1376,6 +1388,64 @@ footer a{color:var(--texte-2)}
                    .map(function(x){ return { nom: x.nom, n: par[x.cle] }; });
   }
 
+  /* ── le poids de chaque jour de semaine ──
+     Rien de nouveau n'est collecte : la courbe porte deja une date et un
+     nombre par jour. On range simplement ces jours par leur nom. */
+  var JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+
+  function moyennesParJour(courbe, jusqua){
+    var somme = [0,0,0,0,0,0,0], compte = [0,0,0,0,0,0,0];
+    (courbe || []).forEach(function(p){
+      /* Le jour en cours est tronque : l'inclure ferait plonger son jour de
+         semaine sans raison. On l'ecarte. */
+      if(p.j === jusqua) return;
+      var d = enDate(p.j);
+      if(!d) return;
+      var i = (d.getUTCDay() + 6) % 7;        // lundi = 0
+      somme[i] += p.n; compte[i]++;
+    });
+    return JOURS.map(function(nom, i){
+      return { nom: nom, n: compte[i] ? somme[i] / compte[i] : null, jours: compte[i] };
+    });
+  }
+
+  function dessineJours(courbe, jusqua){
+    var hote = document.getElementById('barJours');
+    var lignes = moyennesParJour(courbe, jusqua);
+    var tenus = lignes.filter(function(l){ return l.n !== null; });
+    if(!tenus.length){
+      hote.innerHTML = '<p class="vide">Pas encore de journée complète sur cette période.</p>';
+      return;
+    }
+    var max = tenus.reduce(function(m, l){ return l.n > m ? l.n : m; }, 0) || 1;
+    /* L'ordre est celui de la semaine, jamais celui du classement : un lundi
+       reste avant un mardi, meme s'il pese moins. */
+    hote.innerHTML = lignes.map(function(l){
+      if(l.n === null){
+        return '<div class="barre"><div class="haut"><span class="nom">' + l.nom
+             + '</span><span class="val"><span>aucune journée complète</span></span></div>'
+             + '<div class="piste"></div></div>';
+      }
+      return '<div class="barre"><div class="haut"><span class="nom">' + l.nom + '</span>'
+           + '<span class="val">' + frD.format(Math.round(l.n * 10) / 10)
+           + ' <span>en moyenne · ' + l.jours + (l.jours > 1 ? ' jours' : ' jour') + '</span>'
+           + '</span></div>'
+           + '<div class="piste"><div class="remplissage" data-l="' + (l.n * 100 / max)
+           + '"></div></div></div>';
+    }).join('');
+    requestAnimationFrame(function(){
+      hote.querySelectorAll('.remplissage').forEach(function(el){
+        el.style.width = el.dataset.l + '%';
+      });
+    });
+  }
+
+  function joursEnTable(courbe, jusqua){
+    return moyennesParJour(courbe, jusqua)
+      .filter(function(l){ return l.n !== null; })
+      .map(function(l){ return { nom: l.nom, n: Math.round(l.n * 10) / 10 }; });
+  }
+
   /* ── répartition par section de la carte ──
      Quatre parts d'un tout : c'est le seul cas où un cercle vaut mieux qu'une
      barre. Au-delà, ou pour comparer des valeurs proches, il induirait en
@@ -1528,6 +1598,8 @@ footer a{color:var(--texte-2)}
     dessineTable('tblSupports', d.supports, 'Appareil');
     dessineTable('tblSources',  d.sources,  'Provenance');
     dessineTable('tblPlats',    hautPlats,  'Plat',     qPlats);
+    dessineJours(d.courbe, d.jusqua);
+    dessineTable('tblJours', joursEnTable(d.courbe, d.jusqua), 'Jour');
     dessineCarte(d.villes, d.villes_autres);
     dessineParts(tousPlats);
     dessineTable('tblParts', partsEnTable(tousPlats), 'Section de la carte');
