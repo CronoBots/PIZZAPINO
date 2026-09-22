@@ -24,11 +24,12 @@ const TYPES = new Set(['vue', 'appel', 'itineraire', 'commande', 'reseau', 'phot
 
    Un clic sur « Suivre » n'est pas un abonné de plus : c'est un visiteur
    envoyé sur la page du compte. Ce qu'il y fait ensuite n'appartient qu'à
-   Meta, et n'arrivera jamais ici. */
+   Meta, et n'arrivera jamais ici. Un clic sur « Avis » n'est pas un avis
+   publié : c'est un client envoyé sur la fiche Google. */
 const PLACES = ['Suivre', 'Profil', 'Publication', 'Reel', 'Contact',
-                'Pied de page', 'Crédit photo', 'Autre'];
+                'Pied de page', 'Crédit photo', 'Avis', 'Autre'];
 const RESEAUX = new Set(
-  ['Instagram', 'Facebook'].flatMap(r => PLACES.map(p => `${r} · ${p}`)));
+  ['Instagram', 'Facebook', 'Google'].flatMap(r => PLACES.map(p => `${r} · ${p}`)));
 
 /* Le code court d'une publication Instagram, tel qu'il figure dans l'adresse :
    .../reel/DU5_qJLDO6m/. Rien d'autre n'entre sous ce type. */

@@ -20,7 +20,7 @@ clairement signalés. Utile pour la présentation aux gérants.
 | Heure de la visite, en total (« 19 h : 42 ») | L'horodatage d'une visite précise |
 | Appels et itinéraires lancés, en nombre | Numéro appelé, identité |
 | Intitulés des plats mis au panier, en nombre | Panier d'une personne donnée |
-| Clics vers Instagram et Facebook, et d'où ils partent | L'adresse cliquée, le compte visé |
+| Clics vers Instagram, Facebook et le bouton d'avis Google, et d'où ils partent | L'adresse cliquée, le compte visé |
 | Reels et publications ouverts, par code court | Les vues, les abonnés, ce qui se passe chez Meta |
 | Photos agrandies, par racine de fichier | Qui a ouvert quelle photo |
 
@@ -70,7 +70,17 @@ soi, sans rapport avec la mesure sans cookie faite ici. En attendant, ils se
 lisent dans Instagram (Insights) et dans Meta Business Suite.
 
 Un clic sur « Suivre » n'est donc pas un abonné de plus : c'est un visiteur
-envoyé sur le compte.
+envoyé sur le compte. Un clic sur « Laisser un avis Google » n'est pas un avis
+publié : c'est un client envoyé sur la fiche. Le nombre d'avis et la note se
+lisent dans la fiche Google, jamais ici.
+
+**Le bouton d'avis Google.** Son adresse est écrite en toutes lettres dans
+`index.html`, deux fois — dans le bloc contact et dans sa version « application ».
+Elle pointe pour l'instant sur la fiche (`maps?cid=…`), d'où « Rédiger un avis »
+est à un doigt. Le lien qui ouvre **directement** le formulaire s'obtient dans
+la fiche d'établissement Google : *Accueil → Demander des avis → copier le lien*.
+Il a la forme `https://g.page/r/<code>/review`. Le remplacer aux deux endroits
+suffit ; rien d'autre ne bouge.
 
 **L'heure est déduite à l'arrivée, jamais transmise.** Le visiteur n'envoie ni
 son horloge ni son fuseau : la fonction Edge lit l'heure de Bruxelles au moment
