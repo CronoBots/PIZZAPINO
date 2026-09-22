@@ -92,36 +92,60 @@ def echappe(v):
 
 
 def rendu(sections, supps):
-    out = []
+    """Le balisage du site, tel quel.
+
+    La page doit être la même au pixel près : on réemploie donc les classes de
+    la carte du site — .menu-panel, .dishes, .dish, .cat-title, .supplements —
+    et la feuille de style partagée fait le reste. Écrire ici un balisage à
+    nous, c'était se condamner à courir derrière chaque retouche du site.
+
+    Deux écarts, assumés : les titres sont de vrais <h2>/<h3> au lieu de
+    <div> — un moteur de recherche a besoin d'une hiérarchie, et la classe
+    reste la même donc l'apparence ne bouge pas ; et les quatre panneaux sont
+    tous ouverts, puisqu'il n'y a pas d'onglets pour en choisir un.
+    """
+    out = ['  <div class="wrap">']
     for cle, titre, groupes in sections:
-        out.append('  <section class="bloc" id="%s">' % cle)
-        out.append('    <h2>%s</h2>' % echappe(titre))
+        out.append('    <h2 class="cat-title cat-panneau" id="%s">%s</h2>' % (cle, echappe(titre)))
+        out.append('    <div class="menu-panel show">')
         for sous_titre, plats in groupes:
             if sous_titre:
-                out.append('    <h3>%s</h3>' % echappe(sous_titre))
-            out.append('    <ul class="plats">')
+                out.append('      <h3 class="cat-title">%s</h3>' % echappe(sous_titre))
+            out.append('      <div class="dishes">')
             for nom, prix, desc in plats:
-                ligne = ('      <li><span class="p-nom">%s</span>'
-                         '<span class="p-prix">%s&nbsp;€</span>' % (echappe(nom), echappe(prix)))
+                # Le .dish-line, sur le site, est posé par le script du panier :
+                # c'est lui qui tend la ligne pointillée entre le nom et le prix.
+                # Ici il n'y a pas de panier, donc on l'écrit d'emblée — sans
+                # quoi le prix vient se coller au nom.
+                ligne = ('        <div class="dish"><div class="dish-line">'
+                         '<span class="name">%s</span><span class="dot"></span>'
+                         '<span class="price">%s</span></div>'
+                         % (echappe(nom), echappe(prix)))
                 if desc:
-                    ligne += '<span class="p-desc">%s</span>' % echappe(desc)
-                out.append(ligne + '</li>')
-            out.append('    </ul>')
-        out.append('  </section>')
+                    ligne += '<small class="desc">%s</small>' % echappe(desc)
+                out.append(ligne + '</div>')
+            out.append('      </div>')
+        out.append('    </div>')
 
-    out.append('  <section class="bloc" id="supplements">')
-    out.append('    <h2>Suppléments</h2>')
-    out.append('    <p class="note">La Pizza Junior (moins de 14 ans) est à −2,00&nbsp;€ '
-               'du prix de la pizza choisie.</p>')
-    out.append('    <ul class="plats supps">')
+    out.append('    <h2 class="cat-title cat-panneau" id="supplements">Suppléments</h2>')
+    out.append('    <div class="center">')
+    out.append('      <div class="supplements">')
+    out.append('        <div class="supp-junior">')
+    out.append('          <span class="sj-name">Pizza Junior <span class="jn-age">−14 ans</span></span>')
+    out.append('          <span class="sj-price">−2,00 €</span>')
+    out.append('          <span class="sj-sub">à déduire du prix de la pizza choisie</span>')
+    out.append('        </div>')
+    out.append('        <p class="supp-h">Suppléments</p>')
+    out.append('        <ul class="supp-grid">')
     for nom, prix, offert in supps:
-        out.append('      <li%s><span class="p-nom">%s</span><span class="p-prix">%s</span></li>'
-                   % (' class="offert"' if offert else '', echappe(nom),
-                      echappe(prix) if offert else echappe(prix) + '&nbsp;€'))
-    out.append('    </ul>')
-    out.append('    <p class="note">Tarifs à emporter&nbsp;; les suppléments s’ajoutent au '
-               'prix du plat.</p>')
-    out.append('  </section>')
+        out.append('          <li%s><span>%s</span><i></i><b>%s</b></li>'
+                   % (' class="free"' if offert else '', echappe(nom), echappe(prix)))
+    out.append('        </ul>')
+    out.append('        <p class="supp-note">Tarifs à emporter · les suppléments '
+               's’ajoutent au prix du plat.</p>')
+    out.append('      </div>')
+    out.append('    </div>')
+    out.append('  </div>')
     return '\n'.join(out)
 
 
