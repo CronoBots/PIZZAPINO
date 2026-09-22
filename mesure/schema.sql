@@ -13,7 +13,7 @@ create table if not exists public.compteur (
   jour text    not null,                 -- 2026-09-18, en heure de Bruxelles
   type text    not null,                 -- vue | appel | itineraire | commande
                                          -- ville | support | source | plat
-                                         -- reseau | photo
+                                         -- reseau | photo | pub
   cle  text    not null default '',
   n    integer not null default 0,
   primary key (jour, type, cle)
@@ -123,6 +123,11 @@ as $$
     'photos', (
       select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
       from (select cle as nom, n from fenetre where type = 'photo') ph
+    ),
+    -- Les publications et reels ouverts, par code court Instagram.
+    'pubs', (
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
+      from (select cle as nom, n from fenetre where type = 'pub') pb
     ),
     -- Tous les plats : le tableau de bord les répartit par section de la carte,
     -- et une proportion calculée sur les quinze premiers seulement serait fausse.

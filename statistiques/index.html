@@ -99,6 +99,12 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 /* ── barres : une seule teinte, la longueur porte la grandeur ────── */
 .barres{display:flex;flex-direction:column;gap:14px}
 .barre .haut{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+/* La vignette ne s'aligne pas sur la ligne de base du texte : elle se pose au
+   milieu de la ligne, et laisse le nom occuper la place qui reste. */
+.barre .haut .vign{align-self:center;width:34px;height:34px;flex:0 0 auto;
+  border-radius:6px;object-fit:cover;margin-right:-4px;
+  border:1px solid var(--trait);background:var(--surface-2)}
+.barre .haut .nom{margin-right:auto}
 .barre .nom{font-size:.94rem;color:var(--texte);min-width:0;overflow-wrap:anywhere}
 .barre .val{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1rem;
   font-variant-numeric:tabular-nums;color:var(--texte);white-space:nowrap}
@@ -348,10 +354,25 @@ footer a{color:var(--texte-2)}
       <button class="bascule" type="button" data-cible="tblReseaux"
               aria-expanded="false" aria-controls="tblReseaux">Voir en tableau</button>
     </div>
-    <p class="chapo">Les clics sur vos liens Instagram et Facebook. Seul le nom du
-       réseau part du site, jamais l’adresse cliquée.</p>
+    <p class="chapo">Les clics sur vos liens Instagram et Facebook, avec l’endroit
+       d’où ils partent. Seuls le réseau et cet endroit quittent le site, jamais
+       l’adresse cliquée. Un clic sur «&nbsp;Suivre&nbsp;» est un visiteur envoyé sur
+       votre compte&nbsp;: ce qu’il y fait ensuite n’appartient qu’à Instagram.</p>
     <div class="barres" id="barReseaux"></div>
     <div id="tblReseaux" hidden></div>
+  </section>
+
+  <section id="secPubs">
+    <div class="titre">
+      <h2>Vos publications, vues d’ici</h2>
+      <button class="bascule" type="button" data-cible="tblPubs"
+              aria-expanded="false" aria-controls="tblPubs">Voir en tableau</button>
+    </div>
+    <p class="chapo">Quel reel, quelle publication du fil est ouvert depuis le site.
+       C’est le départ qui est compté, pas la vue&nbsp;: le nombre de lectures et
+       les nouveaux abonnés ne se lisent que dans Instagram.</p>
+    <div class="barres" id="barPubs"></div>
+    <div id="tblPubs" hidden></div>
   </section>
 
   <section id="secPlats">
@@ -511,6 +532,14 @@ footer a{color:var(--texte-2)}
     "w-17":"Pino Winter 2K25 n° 17","w-18":"Pino Winter 2K25 n° 18",
     "w-14":"Pino Winter 2K25 n° 14"};
 /* photos:fin */
+
+  /* pubs:début — engendré par mesure/photos.py, ne pas modifier à la main */
+  /* Code court Instagram → ce que la publication montre. */
+  var PUBS = {"DU5_qJLDO6m":"Reel Saint-Valentin","DUERqrZjXWr":"Reel du pizzaiolo",
+    "DS5fr2ZjUW5":"Reel Pizzeria Pino n° 3","DSXzLj-DVBc":"Publication Pizzeria Pino n° 4",
+    "DR-I5DXjQ3J":"Reel Pizzeria Pino n° 5","DR2iJLBDR0i":"Reel Pizzeria Pino n° 6",
+    "DPefSx_jeWb":"Reel Pizzeria Pino n° 7","DJ9ouSoMxJf":"Publication Pizzeria Pino n° 8"};
+/* pubs:fin */
 
   /* pays:début — engendré par mesure/lieux.py, ne pas modifier à la main */
   /* Contour de la Belgique (Natural Earth, domaine public). Coordonnées
@@ -1006,7 +1035,12 @@ footer a{color:var(--texte-2)}
     return rangs;
   }
 
-  function dessineBarres(cible, liste, unite, queue){
+  /* « 1 visites » se lit mal. Mais « fois » ne perd pas son s au singulier. */
+  function singulier(unite, n){
+    return (n === 1 && unite !== 'fois') ? unite.replace(/s$/, '') : unite;
+  }
+
+  function dessineBarres(cible, liste, unite, queue, vignette, entete){
     var hote = document.getElementById(cible);
     if(!liste || !liste.length){
       hote.innerHTML = '<p class="vide">Aucune donnée sur cette période.</p>';
@@ -1015,11 +1049,12 @@ footer a{color:var(--texte-2)}
     var rangs = avecQueue(liste, queue);
     var total = rangs.reduce(function(s, d){ return s + d.n; }, 0);
     var max = rangs.reduce(function(m, d){ return d.n > m ? d.n : m; }, 0) || 1;
-    hote.innerHTML = rangs.map(function(d){
+    hote.innerHTML = (entete || '') + rangs.map(function(d){
       return '<div class="barre' + (d.queue ? ' queue' : '') + '">'
-        + '<div class="haut"><span class="nom">' + echappe(d.nom) + '</span>'
+        + '<div class="haut">' + (vignette && !d.queue ? vignette(d) : '')
+        + '<span class="nom">' + echappe(d.nom) + '</span>'
         + '<span class="val">' + nb(d.n)
-        + ' <span>' + (unite ? unite + ' · ' : '') + pourcent(d.n, total) + ' %</span></span></div>'
+        + ' <span>' + (unite ? singulier(unite, d.n) + ' · ' : '') + pourcent(d.n, total) + ' %</span></span></div>'
         + '<div class="piste"><div class="remplissage" data-l="' + (d.n * 100 / max) + '"></div></div>'
         + '</div>';
     }).join('');
@@ -1482,9 +1517,45 @@ footer a{color:var(--texte-2)}
      bien eu lieu. */
   function nommePhotos(liste){
     return (liste || []).map(function(d){
-      return { nom: PHOTOS[d.nom] || d.nom, n: d.n };
+      return { nom: PHOTOS[d.nom] || d.nom, n: d.n, cle: d.nom };
     });
   }
+
+  /* Le détail par endroit répond « d'où partent-ils » ; le total, « combien
+     vers chacun ». Les deux tiennent dans le même compteur : il suffit de
+     couper le libellé au point médian. Une ligne ancienne, sans endroit,
+     compte pour son réseau tout entier. */
+  function totauxReseaux(liste){
+    var par = {}, ordre = [];
+    (liste || []).forEach(function(d){
+      var r = String(d.nom).split(' · ')[0];
+      if(!(r in par)){ par[r] = 0; ordre.push(r); }
+      par[r] += d.n;
+    });
+    if(!ordre.length) return '';
+    return '<p class="resume">' + ordre.map(function(r){
+      return '<b>' + nb(par[r]) + '</b> vers ' + echappe(r);
+    }).join(' · ') + '.</p>';
+  }
+
+  function nommePubs(liste){
+    return (liste || []).map(function(d){
+      return { nom: PUBS[d.nom] || ('Publication ' + d.nom), n: d.n, cle: d.nom };
+    });
+  }
+
+  /* « Pino Winter 2K25 n° 7 » ne dit pas laquelle : on montre la photo. Les
+     vignettes sont engendrées à part par mesure/photos.py — les fichiers de la
+     page pèsent jusqu'à cent kilo-octets pièce, de quoi charger plusieurs
+     mégaoctets pour des images de quarante pixels. Une vignette absente — une
+     photo retirée du site depuis — s'efface sans laisser de cadre vide. */
+  function vignettePhoto(d){
+    if(!d.cle) return '';
+    return '<img class="vign" src="../images/vignettes/stats/' + encodeURIComponent(d.cle)
+         + '.webp" alt="" loading="lazy" decoding="async" width="34" height="34"'
+         + ' onerror="this.remove()">';
+  }
+  var vignettePub = vignettePhoto;          // même dossier, même règle
 
   /* ── les plats que personne ne compose ──
      Aucune mesure nouvelle : la carte est déjà dans la page (PLATS, engendré
@@ -1773,10 +1844,14 @@ footer a{color:var(--texte-2)}
     dessineOublies(tousPlats);
     oubliesEnTable(tousPlats);
 
-    dessineBarres('barReseaux', d.reseaux, 'clics');
-    dessineTable('tblReseaux', d.reseaux, 'Réseau');
+    var reseaux = d.reseaux || [];
+    dessineBarres('barReseaux', reseaux, 'clics', null, null, totauxReseaux(reseaux));
+    dessineTable('tblReseaux', reseaux, 'Réseau et endroit');
+    var pubs = nommePubs(d.pubs);
+    dessineBarres('barPubs', pubs, 'ouvertures', null, vignettePub);
+    dessineTable('tblPubs', pubs, 'Publication');
     var photos = nommePhotos(d.photos);
-    dessineBarres('barPhotos', photos, 'ouvertures');
+    dessineBarres('barPhotos', photos, 'ouvertures', null, vignettePhoto);
     dessineTable('tblPhotos', photos, 'Photo');
   }
 
@@ -1814,7 +1889,15 @@ footer a{color:var(--texte-2)}
                 {nom:'Autre site',n:Math.round(vues*.03)}],
       supports: [{nom:'Téléphone',n:Math.round(vues*.79)},{nom:'Ordinateur',n:Math.round(vues*.16)},
                  {nom:'Tablette',n:Math.round(vues*.05)}],
-      reseaux: [{nom:'Instagram',n:Math.round(vues*.06)},{nom:'Facebook',n:Math.round(vues*.02)}],
+      reseaux: [{nom:'Instagram · Reel',n:Math.round(vues*.021)},
+                {nom:'Instagram · Profil',n:Math.round(vues*.014)},
+                {nom:'Instagram · Suivre',n:Math.round(vues*.009)},
+                {nom:'Instagram · Publication',n:Math.round(vues*.008)},
+                {nom:'Instagram · Contact',n:Math.round(vues*.005)},
+                {nom:'Instagram · Crédit photo',n:Math.round(vues*.003)},
+                {nom:'Facebook · Contact',n:Math.round(vues*.020)}],
+      pubs: [{nom:'DU5_qJLDO6m',n:9},{nom:'DUERqrZjXWr',n:6},{nom:'DS5fr2ZjUW5',n:4},
+             {nom:'DSXzLj-DVBc',n:3},{nom:'DPefSx_jeWb',n:1}],
       photos: [{nom:'etab-terrasse',n:24},{nom:'etab-facade',n:19},{nom:'w-07',n:11},
                {nom:'etab-salle',n:9},{nom:'w-02',n:6},{nom:'etab-bar',n:5},
                {nom:'w-14',n:3},{nom:'etab-entree',n:2}],
@@ -1831,7 +1914,7 @@ footer a{color:var(--texte-2)}
   /* Le service renvoie ses classements déjà triés ; le jeu fictif doit l'imiter,
      sans quoi la démonstration montre des barres dans le désordre. */
   function trieDemo(d){
-    ['villes', 'supports', 'sources', 'reseaux', 'photos', 'plats'].forEach(function(k){
+    ['villes', 'supports', 'sources', 'reseaux', 'photos', 'pubs', 'plats'].forEach(function(k){
       d[k].sort(function(a, b){ return b.n - a.n; });
     });
     return d;
@@ -1920,6 +2003,7 @@ footer a{color:var(--texte-2)}
     bloc('Appareils', dernier.supports);
     bloc('Réseaux', dernier.reseaux);
     bloc('Photos agrandies', nommePhotos(dernier.photos));
+    bloc('Publications ouvertes', nommePubs(dernier.pubs));
     bloc('Plats', dernier.plats,
          queueDe(dernier.plats_autres, dernier.plats_autres_n, 'autre plat', 'autres plats'));
 

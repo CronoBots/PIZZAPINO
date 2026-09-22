@@ -16,12 +16,23 @@
    une ville, le temps d'un appel, et n'est jamais écrite.
    ───────────────────────────────────────────────────────────────────────── */
 
-const TYPES = new Set(['vue', 'appel', 'itineraire', 'commande', 'reseau', 'photo']);
+const TYPES = new Set(['vue', 'appel', 'itineraire', 'commande', 'reseau', 'photo', 'pub']);
 
-/* Les départs vers un réseau. Deux noms fermés, comme les provenances : on ne
-   veut pas de l'adresse cliquée, qui porte le nom du compte et parfois un
-   identifiant de campagne. */
-const RESEAUX = new Set(['Instagram', 'Facebook']);
+/* Les départs vers un réseau : le nom du réseau ET l'endroit d'où part le
+   clic. Vocabulaire fermé, comme les provenances — on ne veut pas de l'adresse
+   cliquée, qui porte le nom du compte et parfois un identifiant de campagne.
+
+   Un clic sur « Suivre » n'est pas un abonné de plus : c'est un visiteur
+   envoyé sur la page du compte. Ce qu'il y fait ensuite n'appartient qu'à
+   Meta, et n'arrivera jamais ici. */
+const PLACES = ['Suivre', 'Profil', 'Publication', 'Reel', 'Contact',
+                'Pied de page', 'Crédit photo', 'Autre'];
+const RESEAUX = new Set(
+  ['Instagram', 'Facebook'].flatMap(r => PLACES.map(p => `${r} · ${p}`)));
+
+/* Le code court d'une publication Instagram, tel qu'il figure dans l'adresse :
+   .../reel/DU5_qJLDO6m/. Rien d'autre n'entre sous ce type. */
+const PUB = /^[A-Za-z0-9_-]{5,20}$/;
 
 /* La photo agrandie n'arrive ici que par la racine de son fichier. Aucune
    phrase, aucun accent, aucune espace : ce vocabulaire-là ne peut pas servir
@@ -196,9 +207,13 @@ async function evenement(req: Request, origine: string): Promise<Response> {
   // Ces deux-là comptent par clé, et une clé hors vocabulaire n'écrit rien du
   // tout : mieux vaut perdre un clic que d'accueillir un libellé inventé.
   if (type === 'reseau') {
-    const nom = nettoie(corps.c, 20);
+    const nom = nettoie(corps.c, 40);
     if (!RESEAUX.has(nom)) return vide;
     paires.push(['reseau', nom]);
+  } else if (type === 'pub') {
+    const code = nettoie(corps.c, 20);
+    if (!PUB.test(code)) return vide;
+    paires.push(['pub', code]);
   } else if (type === 'photo') {
     const racine = nettoie(corps.c, 40).toLowerCase();
     if (!PHOTO.test(racine)) return vide;
@@ -270,6 +285,7 @@ async function stats(req: Request, origine: string): Promise<Response> {
     sources:  agrege?.sources  ?? [],
     reseaux:  agrege?.reseaux  ?? [],
     photos:   agrege?.photos   ?? [],
+    pubs:     agrege?.pubs     ?? [],
     // Ce que pèse la queue des villes, que la page n'affiche pas en détail mais
     // doit compter dans ses pourcentages. Les plats, eux, sont renvoyés en
     // entier : la page les répartit par section de la carte.

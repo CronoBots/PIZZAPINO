@@ -19,7 +19,8 @@ clairement signalés. Utile pour la présentation aux gérants.
 | Type d'appareil, en total | Navigateur, système, empreinte |
 | Appels et itinéraires lancés, en nombre | Numéro appelé, identité |
 | Intitulés des plats mis au panier, en nombre | Panier d'une personne donnée |
-| Clics vers Instagram et Facebook, en nombre | L'adresse cliquée, le compte visé |
+| Clics vers Instagram et Facebook, et d'où ils partent | L'adresse cliquée, le compte visé |
+| Reels et publications ouverts, par code court | Les vues, les abonnés, ce qui se passe chez Meta |
 | Photos agrandies, par racine de fichier | Qui a ouvert quelle photo |
 
 **Une visite n'est pas une personne.** Sans cookie ni identifiant — c'est le
@@ -42,14 +43,33 @@ ne se modifient pas à la main :
 |---|---|---|
 | `python3 mesure/lieux.py` | coordonnées des localités, contour du pays | `mesure/lieux.json` change |
 | `python3 mesure/plats.py` | plat → section de la carte | la carte change dans `index.html` |
-| `python3 mesure/photos.py` | racine de fichier → nom lisible de la photo | une photo est ajoutée, retirée ou renommée |
+| `python3 mesure/photos.py` | noms lisibles et vignettes des photos et des publications | une photo ou une publication est ajoutée, retirée ou renommée |
 
 **La photo « la plus vue » n'existe pas** : en descendant la page, on les voit
 toutes. Ce qui est compté, c'est la photo *agrandie* — un geste délibéré. Et ce
 qui part du site n'est pas son nom mais la seule racine de son fichier
 (`etab-facade`, `w-07`) : le collecteur n'accepte que des minuscules, des
 chiffres et des traits d'union, donc aucun libellé libre ne peut entrer en base.
-Le nom lisible, lui, ne quitte jamais le site.
+Le nom lisible, lui, ne quitte jamais le site. Le script en tire aussi des
+vignettes de 160 px (`images/vignettes/stats/`) : sans elles, le classement
+chargerait plusieurs mégaoctets pour des images de quarante pixels de côté.
+Il a besoin de Pillow (`pip install pillow`) ; sans lui, il met à jour les noms
+et laisse les vignettes en l'état.
+
+**Les réseaux : ce que le site sait, et ce qu'il ne saura jamais.** Il compte
+les départs — un clic sur « Suivre », sur un reel, sur le lien du bloc contact —
+avec l'endroit d'où part le clic, écrit dans le lien lui-même (`data-res`).
+Le vocabulaire est fermé des deux côtés : un libellé hors liste n'écrit rien.
+
+Il ne compte pas, et ne comptera pas : les nouveaux abonnés, les vues d'un
+reel, les mentions J'aime. Ces chiffres n'existent que chez Meta. Les obtenir
+demanderait une application Meta, un compte professionnel relié, des jetons
+d'accès renouvelés côté serveur et une validation par Meta — un chantier en
+soi, sans rapport avec la mesure sans cookie faite ici. En attendant, ils se
+lisent dans Instagram (Insights) et dans Meta Business Suite.
+
+Un clic sur « Suivre » n'est donc pas un abonné de plus : c'est un visiteur
+envoyé sur le compte.
 
 **Les robots sont écartés avant toute écriture.** Un `user-agent` de robot, de
 sonde de surveillance ou d'aperçu de lien ne laisse aucune trace en base : sans
