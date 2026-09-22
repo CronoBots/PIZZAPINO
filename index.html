@@ -4233,12 +4233,13 @@
 
   var dernierPanier = '';
 
-  function envoie(type, plats, source){
+  function envoie(type, plats, source, cle){
     if(!API) return;
     try{
       var corps2 = { t:type };
       if(plats && plats.length) corps2.p = plats;
       if(source) corps2.r = source;
+      if(cle) corps2.c = cle;
       var charge = JSON.stringify(corps2);
       var corps = new Blob([charge], { type:'text/plain;charset=UTF-8' });
       if(navigator.sendBeacon && navigator.sendBeacon(API + '/e', corps)) return;
@@ -4277,14 +4278,48 @@
   /* La visite : une fois, à l'ouverture de la page. */
   if(document.visibilityState !== 'prerender') envoie('vue', null, provenance());
 
-  /* Appels et itinéraires : une seule écoute pour tous les liens, même ceux
+  /* La photo qu'on agrandit. Ce n'est pas « la plus vue » : tout le monde voit
+     toutes les vignettes en descendant la page. C'est celle qu'on a choisi
+     d'ouvrir — un geste, comme décrocher le téléphone.
+
+     Ce qui part d'ici n'est pas le nom de la photo mais la seule racine de son
+     fichier, « etab-facade », « w-07 ». Le collecteur n'accepte rien d'autre
+     que des minuscules, des chiffres et des traits d'union : aucun libellé
+     libre ne peut entrer en base. Le nom lisible reste dans cette page, et le
+     tableau de bord le retrouve de son côté. */
+  function clePhoto(src){
+    var m = /([^\/]+)\.(?:jpe?g|png|webp|avif)$/i.exec(src || '');
+    return m ? m[1].toLowerCase() : '';
+  }
+
+  /* Le domaine, et lui seul, décide du nom : un lien « …/redirect?u=facebook.com »
+     n'est pas un départ vers Facebook. */
+  function reseauDe(h){
+    if(/^https?:\/\/([a-z0-9-]+\.)*instagram\.com(\/|$)/i.test(h)) return 'Instagram';
+    if(/^https?:\/\/([a-z0-9-]+\.)*facebook\.com(\/|$)/i.test(h))  return 'Facebook';
+    return '';
+  }
+
+  /* Une seule écoute pour tous les liens et toutes les vignettes, même ceux
      ajoutés plus tard par le script. */
   document.addEventListener('click', function(e){
-    var a = e.target && e.target.closest && e.target.closest('a[href]');
+    var c = e.target && e.target.closest;
+    if(!c) return;
+
+    var vignette = e.target.closest('[data-full]');
+    if(vignette){
+      var cle = clePhoto(vignette.getAttribute('data-full'));
+      if(cle) envoie('photo', null, null, cle);
+    }
+
+    var a = e.target.closest('a[href]');
     if(!a) return;
     var h = a.getAttribute('href') || '';
     if(h.indexOf('tel:') === 0) envoie('appel');
     else if(/(google\.[a-z.]+\/maps|maps\.google\.)/.test(h)) envoie('itineraire');
+    /* Le départ vers un réseau. Deux noms fermés, jamais l'adresse cliquée :
+       une adresse Instagram porte le nom du compte, parfois une campagne. */
+    else { var r = reseauDe(h); if(r) envoie('reseau', null, null, r); }
   }, true);
 })();
 </script>

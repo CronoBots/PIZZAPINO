@@ -19,6 +19,8 @@ clairement signalés. Utile pour la présentation aux gérants.
 | Type d'appareil, en total | Navigateur, système, empreinte |
 | Appels et itinéraires lancés, en nombre | Numéro appelé, identité |
 | Intitulés des plats mis au panier, en nombre | Panier d'une personne donnée |
+| Clics vers Instagram et Facebook, en nombre | L'adresse cliquée, le compte visé |
+| Photos agrandies, par racine de fichier | Qui a ouvert quelle photo |
 
 **Une ouverture n'est pas une personne.** Sans cookie ni identifiant — c'est le
 choix de conception — un même client qui revient le lendemain est recompté. Le
@@ -31,6 +33,22 @@ bord la présente comme un bassin, jamais comme une adresse. Les coordonnées de
 lieux viennent de `mesure/lieux.json` (relevé OpenStreetMap, licence ODbL) ;
 après toute mise à jour de ce fichier, relancer `python3 mesure/lieux.py` pour
 réécrire le bloc engendré dans `statistiques/index.html`.
+
+**Trois blocs de `statistiques/index.html` sont engendrés**, entre marqueurs, et
+ne se modifient pas à la main :
+
+| Script | Ce qu'il écrit | À relancer quand |
+|---|---|---|
+| `python3 mesure/lieux.py` | coordonnées des localités, contour du pays | `mesure/lieux.json` change |
+| `python3 mesure/plats.py` | plat → section de la carte | la carte change dans `index.html` |
+| `python3 mesure/photos.py` | racine de fichier → nom lisible de la photo | une photo est ajoutée, retirée ou renommée |
+
+**La photo « la plus vue » n'existe pas** : en descendant la page, on les voit
+toutes. Ce qui est compté, c'est la photo *agrandie* — un geste délibéré. Et ce
+qui part du site n'est pas son nom mais la seule racine de son fichier
+(`etab-facade`, `w-07`) : le collecteur n'accepte que des minuscules, des
+chiffres et des traits d'union, donc aucun libellé libre ne peut entrer en base.
+Le nom lisible, lui, ne quitte jamais le site.
 
 **Les robots sont écartés avant toute écriture.** Un `user-agent` de robot, de
 sonde de surveillance ou d'aperçu de lien ne laisse aucune trace en base : sans

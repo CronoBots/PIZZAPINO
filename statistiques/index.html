@@ -325,6 +325,18 @@ footer a{color:var(--texte-2)}
     <div id="tblSources" hidden></div>
   </section>
 
+  <section id="secReseaux">
+    <div class="titre">
+      <h2>Et où ils repartent</h2>
+      <button class="bascule" type="button" data-cible="tblReseaux"
+              aria-expanded="false" aria-controls="tblReseaux">Voir en tableau</button>
+    </div>
+    <p class="chapo">Les clics sur vos liens Instagram et Facebook. Seul le nom du
+       réseau part du site, jamais l’adresse cliquée.</p>
+    <div class="barres" id="barReseaux"></div>
+    <div id="tblReseaux" hidden></div>
+  </section>
+
   <section id="secPlats">
     <div class="titre">
       <h2>Les plats les plus mis au panier</h2>
@@ -361,6 +373,19 @@ footer a{color:var(--texte-2)}
        un plat qui ne se vend pas&nbsp;: il ne se compose pas <em>sur le site</em>.</p>
     <div class="barres" id="barOublies"></div>
     <div id="tblOublies" hidden></div>
+  </section>
+
+  <section id="secPhotos">
+    <div class="titre">
+      <h2>Les photos qu’on ouvre en grand</h2>
+      <button class="bascule" type="button" data-cible="tblPhotos"
+              aria-expanded="false" aria-controls="tblPhotos">Voir en tableau</button>
+    </div>
+    <p class="chapo">Non pas la photo la plus vue — en descendant la page, on les voit
+       toutes — mais celle qu’on a choisi d’agrandir. Un geste, comme décrocher le
+       téléphone.</p>
+    <div class="barres" id="barPhotos"></div>
+    <div id="tblPhotos" hidden></div>
   </section>
 
   <footer>
@@ -452,6 +477,23 @@ footer a{color:var(--texte-2)}
     "Tortelloni crème jambon":"pates","Tortelloni saumon épinards":"pates"
   };
   /* plats:fin */
+
+  /* photos:début — engendré par mesure/photos.py, ne pas modifier à la main */
+  /* Racine du fichier → ce que la photo montre. La base ne retient que
+     la racine ; le nom lisible, lui, vit dans index.html. */
+  var PHOTOS = {"etab-facade":"La façade","etab-terrasse":"La terrasse",
+    "etab-bar":"Le bar à vins","etab-salle":"La salle","etab-salle2":"L'intérieur",
+    "etab-entree":"L'entrée","w-01":"Pino Winter 2K25 n° 1","w-02":"Pino Winter 2K25 n° 2",
+    "w-03":"Pino Winter 2K25 n° 3","w-04":"Pino Winter 2K25 n° 4",
+    "w-05":"Pino Winter 2K25 n° 5","w-06":"Pino Winter 2K25 n° 6",
+    "w-07":"Pino Winter 2K25 n° 7","w-08":"Pino Winter 2K25 n° 8",
+    "w-09":"Pino Winter 2K25 n° 9","w-10":"Pino Winter 2K25 n° 10",
+    "w-11":"Pino Winter 2K25 n° 11","w-12":"Pino Winter 2K25 n° 12",
+    "w-13":"Pino Winter 2K25 n° 13","w-19":"Pino Winter 2K25 n° 19",
+    "w-15":"Pino Winter 2K25 n° 15","w-16":"Pino Winter 2K25 n° 16",
+    "w-17":"Pino Winter 2K25 n° 17","w-18":"Pino Winter 2K25 n° 18",
+    "w-14":"Pino Winter 2K25 n° 14"};
+/* photos:fin */
 
   /* pays:début — engendré par mesure/lieux.py, ne pas modifier à la main */
   /* Contour de la Belgique (Natural Earth, domaine public). Coordonnées
@@ -1350,6 +1392,16 @@ footer a{color:var(--texte-2)}
                    .map(function(x){ return { nom: x.nom, n: par[x.cle] }; });
   }
 
+  /* La base ne retient que la racine du fichier : « w-07 ». On la rend lisible
+     ici. Une racine inconnue — une photo retirée du site depuis — garde son
+     nom brut plutôt que de disparaître du classement : les clics d'hier ont
+     bien eu lieu. */
+  function nommePhotos(liste){
+    return (liste || []).map(function(d){
+      return { nom: PHOTOS[d.nom] || d.nom, n: d.n };
+    });
+  }
+
   /* ── les plats que personne ne compose ──
      Aucune mesure nouvelle : la carte est déjà dans la page (PLATS, engendré
      depuis index.html) et le service renvoie déjà tous les plats du panier.
@@ -1642,6 +1694,12 @@ footer a{color:var(--texte-2)}
     dessineTable('tblParts', partsEnTable(tousPlats), 'Section de la carte');
     dessineOublies(tousPlats);
     oubliesEnTable(tousPlats);
+
+    dessineBarres('barReseaux', d.reseaux, 'clics');
+    dessineTable('tblReseaux', d.reseaux, 'Réseau');
+    var photos = nommePhotos(d.photos);
+    dessineBarres('barPhotos', photos, 'ouvertures');
+    dessineTable('tblPhotos', photos, 'Photo');
   }
 
   function banniere(html, classe){
@@ -1678,6 +1736,10 @@ footer a{color:var(--texte-2)}
                 {nom:'Autre site',n:Math.round(vues*.03)}],
       supports: [{nom:'Téléphone',n:Math.round(vues*.79)},{nom:'Ordinateur',n:Math.round(vues*.16)},
                  {nom:'Tablette',n:Math.round(vues*.05)}],
+      reseaux: [{nom:'Instagram',n:Math.round(vues*.06)},{nom:'Facebook',n:Math.round(vues*.02)}],
+      photos: [{nom:'etab-terrasse',n:24},{nom:'etab-facade',n:19},{nom:'w-07',n:11},
+               {nom:'etab-salle',n:9},{nom:'w-02',n:6},{nom:'etab-bar',n:5},
+               {nom:'w-14',n:3},{nom:'etab-entree',n:2}],
       plats: [{nom:'Pizza Margherita',n:64},{nom:'Pizza 4 Fromages',n:51},
               {nom:'Pizza Calzone',n:44},{nom:'Pizza Diavola',n:38},
               {nom:'Spaghetti Bolognaise',n:31},{nom:'Pizza Al Crudo',n:27},
@@ -1691,7 +1753,7 @@ footer a{color:var(--texte-2)}
   /* Le service renvoie ses classements déjà triés ; le jeu fictif doit l'imiter,
      sans quoi la démonstration montre des barres dans le désordre. */
   function trieDemo(d){
-    ['villes', 'supports', 'sources', 'plats'].forEach(function(k){
+    ['villes', 'supports', 'sources', 'reseaux', 'photos', 'plats'].forEach(function(k){
       d[k].sort(function(a, b){ return b.n - a.n; });
     });
     return d;
@@ -1778,6 +1840,8 @@ footer a{color:var(--texte-2)}
     bloc('Villes', dernier.villes,
          queueDe(dernier.villes_autres, dernier.villes_autres_n, 'autre ville', 'autres villes'));
     bloc('Appareils', dernier.supports);
+    bloc('Réseaux', dernier.reseaux);
+    bloc('Photos agrandies', nommePhotos(dernier.photos));
     bloc('Plats', dernier.plats,
          queueDe(dernier.plats_autres, dernier.plats_autres_n, 'autre plat', 'autres plats'));
 

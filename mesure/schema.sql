@@ -11,7 +11,9 @@
 
 create table if not exists public.compteur (
   jour text    not null,                 -- 2026-09-18, en heure de Bruxelles
-  type text    not null,                 -- vue | appel | itineraire | commande | ville | support | plat
+  type text    not null,                 -- vue | appel | itineraire | commande
+                                         -- ville | support | source | plat
+                                         -- reseau | photo
   cle  text    not null default '',
   n    integer not null default 0,
   primary key (jour, type, cle)
@@ -77,14 +79,13 @@ as $$
       and type in ('vue','appel','itineraire','commande')
     group by type
   ),
-  -- Villes et plats sont classés ICI, avec leur rang : la page n'affiche que
-  -- les premiers, mais on renvoie aussi ce que pèse la queue. Sans cela, elle
-  -- calculerait ses pourcentages sur le seul haut du classement et annoncerait
-  -- des parts trop grandes.
+  -- Les villes sont classées ICI, avec leur rang : la page n'affiche que les
+  -- douze premières, mais on renvoie aussi ce que pèse la queue. Sans cela,
+  -- elle calculerait ses pourcentages sur le seul haut du classement et
+  -- annoncerait des parts trop grandes.
   v as (
     select cle as nom, n, row_number() over (order by n desc, cle) as rang
     from fenetre where type = 'ville'
-  ),
   )
   select json_build_object(
     'totaux', (
@@ -106,14 +107,25 @@ as $$
       select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
       from (select cle as nom, n from fenetre where type = 'support') s
     ),
-    -- Tous les plats : le tableau de bord les repartit par section de la carte,
-    -- et une proportion calculee sur les quinze premiers seulement serait fausse.
-    -- D'ou viennent les ouvertures. Cinq etiquettes fermees, jamais un referent
-    -- brut : une adresse porterait le terme cherche ou un identifiant de campagne.
+    -- D'où viennent les ouvertures. Cinq étiquettes fermées, jamais un référent
+    -- brut : une adresse porterait le terme cherché ou un identifiant de campagne.
     'sources', (
       select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
       from (select cle as nom, n from fenetre where type = 'source') so
     ),
+    -- Et où ils repartent : deux réseaux, nommés à l'écriture.
+    'reseaux', (
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
+      from (select cle as nom, n from fenetre where type = 'reseau') r
+    ),
+    -- Les photos agrandies, par racine de fichier. Le tableau de bord les
+    -- traduit en noms lisibles ; la base, elle, n'en connaît que la racine.
+    'photos', (
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
+      from (select cle as nom, n from fenetre where type = 'photo') ph
+    ),
+    -- Tous les plats : le tableau de bord les répartit par section de la carte,
+    -- et une proportion calculée sur les quinze premiers seulement serait fausse.
     'plats', (
       select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
       from (select cle as nom, n from fenetre where type = 'plat') p

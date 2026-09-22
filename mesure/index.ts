@@ -16,7 +16,17 @@
    une ville, le temps d'un appel, et n'est jamais écrite.
    ───────────────────────────────────────────────────────────────────────── */
 
-const TYPES = new Set(['vue', 'appel', 'itineraire', 'commande']);
+const TYPES = new Set(['vue', 'appel', 'itineraire', 'commande', 'reseau', 'photo']);
+
+/* Les départs vers un réseau. Deux noms fermés, comme les provenances : on ne
+   veut pas de l'adresse cliquée, qui porte le nom du compte et parfois un
+   identifiant de campagne. */
+const RESEAUX = new Set(['Instagram', 'Facebook']);
+
+/* La photo agrandie n'arrive ici que par la racine de son fichier. Aucune
+   phrase, aucun accent, aucune espace : ce vocabulaire-là ne peut pas servir
+   à écrire n'importe quoi en base, et le nom lisible vit dans le site. */
+const PHOTO = /^[a-z0-9][a-z0-9-]{0,39}$/;
 
 /* Les robots chargent la page comme un client, mais ne poussent jamais la porte
    du restaurant. Les compter gonfle les totaux et noie les vraies villes : sur
@@ -176,12 +186,26 @@ async function evenement(req: Request, origine: string): Promise<Response> {
   // Écarté avant toute écriture : un robot ne laisse aucune trace en base.
   if (estRobot(req)) return vide;
 
-  let corps: { t?: string; p?: unknown[]; r?: unknown };
+  let corps: { t?: string; p?: unknown[]; r?: unknown; c?: unknown };
   try { corps = await req.json(); } catch { return vide; }
   if (!corps || !TYPES.has(String(corps.t))) return vide;
 
   const type = String(corps.t);
-  const paires: [string, string][] = [[type, '']];
+  const paires: [string, string][] = [];
+
+  // Ces deux-là comptent par clé, et une clé hors vocabulaire n'écrit rien du
+  // tout : mieux vaut perdre un clic que d'accueillir un libellé inventé.
+  if (type === 'reseau') {
+    const nom = nettoie(corps.c, 20);
+    if (!RESEAUX.has(nom)) return vide;
+    paires.push(['reseau', nom]);
+  } else if (type === 'photo') {
+    const racine = nettoie(corps.c, 40).toLowerCase();
+    if (!PHOTO.test(racine)) return vide;
+    paires.push(['photo', racine]);
+  } else {
+    paires.push([type, '']);
+  }
 
   // Le profil n'est relevé qu'à l'arrivée : une seule fois par visite.
   if (type === 'vue') {
@@ -244,6 +268,8 @@ async function stats(req: Request, origine: string): Promise<Response> {
     plats:    agrege?.plats    ?? [],
     courbe:   agrege?.courbe   ?? [],
     sources:  agrege?.sources  ?? [],
+    reseaux:  agrege?.reseaux  ?? [],
+    photos:   agrege?.photos   ?? [],
     // Ce que pèse la queue des villes, que la page n'affiche pas en détail mais
     // doit compter dans ses pourcentages. Les plats, eux, sont renvoyés en
     // entier : la page les répartit par section de la carte.
