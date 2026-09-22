@@ -214,7 +214,9 @@ async function stats(req: Request, origine: string): Promise<Response> {
   jours = Math.min(jours, MAX_JOURS);
 
   const depuis = jourBruxelles(new Date(Date.now() - (jours - 1) * 86_400_000));
-  const r = await rpc('stats', { depuis });
+  // La fenêtre juste avant, de même longueur : [depuis_prec, depuis[.
+  const depuis_prec = jourBruxelles(new Date(Date.now() - (2 * jours - 1) * 86_400_000));
+  const r = await rpc('stats', { depuis, depuis_prec });
   if (!r.ok) {
     return new Response(JSON.stringify({ erreur: 'base' }), {
       status: 502, headers: { 'Content-Type': 'application/json', ...cors(origine) },
@@ -222,11 +224,13 @@ async function stats(req: Request, origine: string): Promise<Response> {
   }
 
   const agrege = await r.json();
-  const totaux = { vue: 0, appel: 0, itineraire: 0, commande: 0, ...(agrege?.totaux ?? {}) };
+  const totaux    = { vue: 0, appel: 0, itineraire: 0, commande: 0, ...(agrege?.totaux ?? {}) };
+  const precedent = { vue: 0, appel: 0, itineraire: 0, commande: 0, ...(agrege?.precedent ?? {}) };
 
   return new Response(JSON.stringify({
-    depuis, jusqua: jourBruxelles(), jours,
+    depuis, jusqua: jourBruxelles(), jours, depuis_prec,
     totaux,
+    precedent,
     villes:   agrege?.villes   ?? [],
     supports: agrege?.supports ?? [],
     plats:    agrege?.plats    ?? [],

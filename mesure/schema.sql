@@ -57,7 +57,7 @@ $$;
 -- ---------------------------------------------------------------------
 --  Agrégats pour le tableau de bord, sur les N derniers jours.
 -- ---------------------------------------------------------------------
-create or replace function public.stats(depuis text)
+create or replace function public.stats(depuis text, depuis_prec text default null)
 returns json
 language sql
 security definer
@@ -68,6 +68,14 @@ as $$
     from public.compteur
     where jour >= depuis
     group by type, cle
+  ),
+  -- La fenêtre d'avant, de même longueur, pour dire si ça monte ou si ça baisse.
+  precedente as (
+    select type, sum(n)::int as n
+    from public.compteur
+    where depuis_prec is not null and jour >= depuis_prec and jour < depuis
+      and type in ('vue','appel','itineraire','commande')
+    group by type
   ),
   -- Villes et plats sont classés ICI, avec leur rang : la page n'affiche que
   -- les premiers, mais on renvoie aussi ce que pèse la queue. Sans cela, elle
@@ -87,6 +95,9 @@ as $$
       from (select type, sum(n)::int as n from fenetre
             where type in ('vue','appel','itineraire','commande')
             group by type) t
+    ),
+    'precedent', (
+      select coalesce(json_object_agg(type, n), '{}'::json) from precedente
     ),
     'villes', (
       select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by rang), '[]'::json)
@@ -115,7 +126,7 @@ $$;
 -- Ces deux fonctions ne sont accordées à personne d'autre qu'au rôle de
 -- service : la fonction Edge s'en sert, le web n'y touche pas.
 revoke execute on function public.incremente(jsonb, text) from public, anon, authenticated;
-revoke execute on function public.stats(text)             from public, anon, authenticated;
+revoke execute on function public.stats(text, text)       from public, anon, authenticated;
 
 -- =====================================================================
 --  Ensuite : déployer la fonction Edge (voir mesure/README.md), puis
