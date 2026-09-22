@@ -15,6 +15,7 @@ pizzas dans « inconnu ».
 
     python3 mesure/plats.py
 """
+import html as entites
 import json
 import os
 import re
@@ -44,7 +45,11 @@ def plats_par_categorie(html):
                     break
 
         for m in NOM.finditer(bloc):
-            nom = m.group(1).strip()
+            # Le panier relève le nom par textContent : « &amp; » y arrive déjà
+            # rendu en « & ». Garder l'entité ici rangeait « Escalope Poivre &
+            # crème » hors carte, et la disait jamais commandée alors qu'elle
+            # l'était.
+            nom = entites.unescape(m.group(1)).strip()
             if cat == 'pizzas' and m.start() < coupure and not re.match(r'^pizza\b', nom, re.I):
                 nom = 'Pizza ' + nom
             table.setdefault(nom, cat)
