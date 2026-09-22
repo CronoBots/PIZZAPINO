@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Al dente — Pizzeria Pino</title>
+<title>Statistiques — Pizzeria Pino</title>
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#14100D">
 <link rel="icon" type="image/png" sizes="512x512" href="../icons/icon-512.png">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="Al dente">
+<meta name="apple-mobile-web-app-title" content="Statistiques">
 
 <style>
 @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;src:url('../fonts/fraunces-normal-400_700.woff2') format('woff2')}
@@ -222,10 +222,9 @@ footer a{color:var(--texte-2)}
 <div class="voile" id="porte">
  <div class="porte" role="dialog" aria-modal="true" aria-labelledby="porteTitre">
   <p class="marque">Pizzeria Pino</p>
-  <h1 id="porteTitre">Al <em>dente</em></h1>
-  <p>Vos chiffres, réservés à la maison.</p>
+  <h1 id="porteTitre">Statistiques</h1>
   <form id="formCle" autocomplete="off">
-    <input type="password" id="champCle" placeholder="Votre clé" aria-label="Clé d'accès"
+    <input type="password" id="champCle" placeholder="Mot de passe" aria-label="Mot de passe"
            autocomplete="current-password" enterkeyhint="go">
     <button type="submit">Entrer</button>
   </form>
@@ -237,8 +236,8 @@ footer a{color:var(--texte-2)}
 <div class="enveloppe" id="bord">
 
   <header>
-    <p class="marque">Pizzeria Pino · Tableau de bord</p>
-    <h1>Al <em>dente</em></h1>
+    <p class="marque">Pizzeria Pino</p>
+    <h1>Statistiques</h1>
     <p class="periode-info" id="periodeInfo">Chargement…</p>
   </header>
 
@@ -333,7 +332,7 @@ footer a{color:var(--texte-2)}
   /* Un en-tête HTTP ne transporte pas les accents : une clé qui en contient
      arriverait mutilée au serveur, et l'accès échouerait sans explication. */
   var ASCII = /^[\x20-\x7E]+$/;
-  var PLAINTE = 'La clé ne peut contenir ni accent ni caractère spécial : '
+  var PLAINTE = 'Le mot de passe ne peut contenir ni accent ni caractère spécial : '
               + 'lettres non accentuées, chiffres, tirets et points seulement.';
   var porte  = document.getElementById('porte');
   var bord   = document.getElementById('bord');
@@ -1356,7 +1355,7 @@ footer a{color:var(--texte-2)}
 
     fetch(API + '/stats?j=' + jours, { headers: { 'X-Pino-Cle': cle }, signal: appel.signal })
       .then(function(r){
-        if(r.status === 401){ deconnecte('Clé refusée.'); throw new Error('cle'); }
+        if(r.status === 401){ deconnecte('Mot de passe refusé.'); throw new Error('cle'); }
         if(!r.ok) throw new Error('http ' + r.status);
         return r.json();
       })
@@ -1440,7 +1439,7 @@ footer a{color:var(--texte-2)}
   document.getElementById('formCle').addEventListener('submit', function(e){
     e.preventDefault();
     var v = document.getElementById('champCle').value.trim();
-    if(!v){ document.getElementById('erreurCle').textContent = 'Saisissez votre clé.'; return; }
+    if(!v){ document.getElementById('erreurCle').textContent = 'Saisissez votre mot de passe.'; return; }
     if(!ASCII.test(v)){ document.getElementById('erreurCle').textContent = PLAINTE; return; }
     sessionStorage.setItem(STOCK, v);
     document.getElementById('erreurCle').textContent = '';
@@ -1479,7 +1478,7 @@ footer a{color:var(--texte-2)}
     var lien = document.createElement('a');
     var url = URL.createObjectURL(new Blob([texte], { type: 'text/csv;charset=utf-8' }));
     lien.href = url;
-    lien.download = 'al-dente-' + (dernier.depuis || '') + '-au-' + (dernier.jusqua || '') + '.csv';
+    lien.download = 'statistiques-' + (dernier.depuis || '') + '-au-' + (dernier.jusqua || '') + '.csv';
     document.body.appendChild(lien);
     lien.click();
     lien.remove();

@@ -3285,9 +3285,8 @@
       stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect
       x="4" y="10.5" width="16" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></span>
     <h3 id="gerantTitre">Espace gérant</h3>
-    <p>Vos chiffres, réservés à la maison.</p>
     <form id="gerantForm" autocomplete="off">
-      <input type="password" id="gerantCle" placeholder="Votre clé" aria-label="Clé d'accès"
+      <input type="password" id="gerantCle" placeholder="Mot de passe" aria-label="Mot de passe"
              autocomplete="current-password" enterkeyhint="go" spellcheck="false">
       <p class="gerant-err" id="gerantErr" role="alert"></p>
       <div class="confirm-actions">
@@ -4119,17 +4118,49 @@
     if(e.key === 'Escape' && !ov.hidden) ferme();
   });
 
+  var valider = document.querySelector('#gerantForm button[type=submit]');
+  var libelle = valider.textContent;
+  function attend(oui){
+    valider.disabled = oui;
+    valider.textContent = oui ? 'Vérification…' : libelle;
+    champ.disabled = oui;
+  }
+
+  /* Le mot de passe est juge ici, avant d'emmener qui que ce soit : un refus
+     doit s'afficher la ou il a ete tape, pas apres un changement de page. Le
+     tableau de bord le reverifiera de son cote — c'est lui qui detient la
+     regle, cette fenetre ne fait que la consulter. */
   document.getElementById('gerantForm').addEventListener('submit', function(e){
     e.preventDefault();
     var v = champ.value.trim();
-    if(!v){ err.textContent = 'Saisissez votre clé.'; return; }
+    err.textContent = '';
+    if(!v){ err.textContent = 'Saisissez votre mot de passe.'; return; }
     if(!ASCII.test(v)){
       err.textContent = 'Ni accent ni caractère spécial : lettres non accentuées, '
                       + 'chiffres, tirets et points seulement.';
       return;
     }
-    try{ sessionStorage.setItem(STOCK, v); }catch(e2){}
-    location.href = 'aldente/';
+    var API = window.pinoMesureAPI;
+    if(!API){                       // mesure inactive : on ne peut rien juger ici
+      try{ sessionStorage.setItem(STOCK, v); }catch(e2){}
+      location.href = 'aldente/';
+      return;
+    }
+    attend(true);
+    fetch(API + '/stats?j=7', { headers: { 'X-Pino-Cle': v } })
+      .then(function(r){
+        if(r.status === 401) throw new Error('refus');
+        if(!r.ok) throw new Error('service');
+        try{ sessionStorage.setItem(STOCK, v); }catch(e2){}
+        location.href = 'aldente/';
+      })
+      .catch(function(e2){
+        attend(false);
+        err.textContent = e2.message === 'refus'
+          ? 'Mot de passe refusé.'
+          : 'Le service ne répond pas. Réessayez dans quelques minutes.';
+        champ.select();
+      });
   });
 })();
 </script>
@@ -4142,6 +4173,9 @@
 (function(){
   /* Adresse du collecteur, sans barre oblique finale. Vide = mesure inactive. */
   var API = 'https://pnizdddritizjbsksoir.supabase.co/functions/v1/mesure';
+  /* Le module de connexion juge le mot de passe aupres du meme service : on
+     lui evite de redeclarer cette adresse, qui finirait par diverger. */
+  window.pinoMesureAPI = API;
 
   var dernierPanier = '';
 
