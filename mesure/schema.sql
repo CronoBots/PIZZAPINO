@@ -115,6 +115,12 @@ as $$
     ),
     'plats_autres',   (select coalesce(sum(n), 0)::int from p where rang > 15),
     'plats_autres_n', (select count(*)::int          from p where rang > 15),
+    -- Les communes declarees par les clients eux-memes : exactes, contrairement
+    -- a la ville deduite du reseau. Toutes renvoyees, elles sont peu nombreuses.
+    'communes', (
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
+      from (select cle as nom, n from fenetre where type = 'commune') co
+    ),
     'courbe', (
       select coalesce(json_agg(json_build_object('j', j, 'n', n) order by j), '[]'::json)
       from (select jour as j, sum(n)::int as n from public.compteur

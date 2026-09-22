@@ -130,6 +130,23 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 .survol span{display:block;color:var(--texte-3);font-size:.72rem;margin-top:2px}
 .survol.adroite{transform:translateX(-100%)}
 .survol.agauche{transform:translateX(0)}
+.carteLieux .survol{transform:translate(-50%,-100%)}
+.carteLieux .survol.adroite{transform:translate(-100%,-100%)}
+.carteLieux .survol.agauche{transform:translate(0,-100%)}
+
+/* La carte garde ses proportions (xMidYMid meet) : un cercle y reste rond,
+   et les distances restent comparables d'un bout a l'autre. */
+.carteLieux{position:relative;margin-top:8px}
+.carteLieux svg{display:block;width:100%;height:auto;overflow:visible}
+.carteLieux .bulle{fill:var(--or);fill-opacity:.26;stroke:var(--or);stroke-width:1.1;
+  cursor:pointer;transition:fill-opacity .15s}
+.carteLieux .bulle:hover,.carteLieux .bulle.vise{fill-opacity:.5}
+.carteLieux .maison{fill:none;stroke:var(--texte);stroke-width:1.5}
+.carteLieux .etiq{fill:var(--texte-2);font-family:'Inter',sans-serif;font-size:8px;
+  paint-order:stroke;stroke:var(--surface);stroke-width:2.5px;stroke-linejoin:round}
+.carteLieux .etiq.chez{fill:var(--texte);font-size:8.5px}
+.carteLieux .regle{stroke:var(--texte-3);stroke-width:1}
+.carteLieux .regle-txt{fill:var(--texte-3);font-family:'Inter',sans-serif;font-size:8px}
 
 /* Pendant une mise a jour, les chiffres affiches sont peut-etre perimes :
    on le montre plutot que de les laisser passer pour frais. */
@@ -250,6 +267,19 @@ footer a{color:var(--texte-2)}
     <div id="tblVilles" hidden></div>
   </section>
 
+  <section id="secCarte">
+    <div class="titre">
+      <h2>Sur la carte</h2>
+      <button class="bascule" type="button" data-cible="tblCommunes"
+              aria-expanded="false" aria-controls="tblCommunes">Voir en tableau</button>
+    </div>
+    <p class="chapo">Les communes que les clients indiquent eux-mêmes en composant leur
+       liste. Celle-ci est exacte&nbsp;— contrairement à la section précédente, déduite
+       du réseau, qui situe l’opérateur plutôt que le client.</p>
+    <div class="carteLieux" id="carteLieux"></div>
+    <div id="tblCommunes" hidden></div>
+  </section>
+
   <section id="secSupports">
     <div class="titre">
       <h2>Sur quel appareil</h2>
@@ -314,6 +344,83 @@ footer a{color:var(--texte-2)}
       history.replaceState(null, '', location.pathname + propre + location.hash);
     }
   })();
+
+  /* communes:début — engendré par mesure/lieux.py, ne pas modifier à la main */
+  /* Coordonnées des localités, relevées sur OpenStreetMap (ODbL). */
+  var CENTRE = [50.51623, 5.39926];
+  var LIEUX = {
+    "Fraineux":[50.5139,5.40063],"Yernée":[50.52824,5.38295],"Saint-Séverin":[50.52991,5.41183],
+    "Nandrin":[50.50634,5.41934],"Villers-le-Temple":[50.50811,5.37084],"Scry":[50.49942,5.37663],
+    "Aux Houx":[50.54877,5.39935],"Soheit-Tinlot":[50.47899,5.38335],"Fraiture":[50.47883,5.41858],
+    "Tinlot":[50.47774,5.3787],"Ehein":[50.54451,5.44443],"Outrelouxhe":[50.50423,5.33529],
+    "Hermalle-sous-Huy":[50.55699,5.36225],"Ombret-Rawsa":[50.54428,5.33717],
+    "Neuville-en-Condroz":[50.55203,5.45143],"Tavier":[50.496,5.47066],"Abée":[50.47353,5.35646],
+    "Strée-lez-Huy":[50.49256,5.32605],"Berleur":[50.51877,5.48512],"Les Gottes":[50.50403,5.31574],
+    "Rotheux-Rimière":[50.53534,5.48118],"Seny":[50.45955,5.40294],"Ellemelle":[50.46651,5.44333],
+    "Amay":[50.54978,5.3241],"Limont":[50.50774,5.4923],"Neupré":[50.54318,5.49011],
+    "Engis":[50.5825,5.40402],"Ramelot":[50.46445,5.32863],"Béemont":[50.4468,5.40371],
+    "Warzée":[50.44879,5.4271],"Hody":[50.48691,5.501],"Stockay":[50.58438,5.36024],
+    "Ivoz-Ramet":[50.58228,5.45235],"Pair":[50.44213,5.40223],"Villers-aux-Tours":[50.49694,5.5123],
+    "Vierset-Barse":[50.48112,5.29489],"Ampsin":[50.54024,5.28674],"Terwagne":[50.44458,5.34849],
+    "Vien":[50.47385,5.50536],"Jehay":[50.5749,5.31405],"Awirs":[50.59852,5.4093],
+    "Plainevaux":[50.54481,5.52153],"Houte-Si-Plou":[50.52794,5.52929],"Anthisnes":[50.48166,5.52253],
+    "Saint-Georges-sur-Meuse":[50.60007,5.35843],"Ouffet":[50.43773,5.46533],"Ochain":[50.43011,5.36185],
+    "Strivay":[50.53708,5.53543],"Tihange":[50.52759,5.25937],"Flémalle-Haute":[50.60184,5.44747],
+    "Bodegnée":[50.58579,5.30413],"Amostrennes":[50.52788,5.54196],"Flémalle":[50.59945,5.46996],
+    "Modave":[50.44161,5.30179],"Clavier-Station":[50.42885,5.32557],"Bende":[50.41763,5.41424],
+    "Huy":[50.51809,5.24081],"Fize-Fontaine":[50.58498,5.28351],"Les Cahottes":[50.61571,5.42355],
+    "Atrin":[50.41569,5.37044],"Boncelles":[50.57028,5.53785],"Verlaine":[50.60751,5.31844],
+    "Dommartin":[50.61765,5.36299],"Villers-le-Bouillet":[50.57537,5.26071],"Clavier":[50.41189,5.35774],
+    "Jenneret":[50.41285,5.44558],"Mont":[50.4851,5.56191],"Vyle-et-Tharoul":[50.44627,5.26827],
+    "Hozémont":[50.62487,5.39654],"Esneux":[50.53359,5.56862],"Flémalle-Grande":[50.61539,5.47309],
+    "Antheit":[50.5512,5.23585],"Mons-lez-Liège":[50.62245,5.46006],"Fairon":[50.44545,5.54287],
+    "Marchin":[50.48021,5.22634],"Horion":[50.63118,5.37817],"Poulseur":[50.5098,5.58232],
+    "Hony":[50.54007,5.57912],"Comblain-au-Pont":[50.4757,5.57485],"Ougrée":[50.59115,5.54396],
+    "Wanze":[50.53686,5.21439],"Ocquier":[50.39664,5.39614],"Les Avins":[50.41542,5.29936],
+    "Vinalmont":[50.56275,5.22614],"Jemeppe-sur-Meuse":[50.61809,5.49972],"Seraing":[50.61524,5.50894],
+    "Fontin":[50.52796,5.58877],"Seraing-le-Château":[50.62154,5.29967],
+    "Chapon-Seraing":[50.60967,5.27345],"Hamoir":[50.42541,5.53261],
+    "Comblain-la-Tour":[50.45531,5.56995],"Molu":[50.44624,5.23855],"Bois":[50.39753,5.3371],
+    "Rivage":[50.48331,5.58865],"Chanxhe":[50.49935,5.59556],"Grâce-Hollogne":[50.6323,5.47684],
+    "Méry":[50.54776,5.59185],"Liotte":[50.48218,5.59146],"Wanzoul":[50.56599,5.21389],
+    "Velroux":[50.64374,5.42527],"Pailhe":[50.4225,5.25862],"Tilff":[50.56957,5.5844],
+    "Bois-et-Borsu":[50.39463,5.33027],"Haneffe":[50.63869,5.31912],
+    "Hollogne-aux-Pierres":[50.63875,5.47587],"Roloux":[50.64949,5.39601],"Betgné":[50.52666,5.60817],
+    "Bas-Oha":[50.5224,5.18806],"Tilleur":[50.62066,5.53067],"Oneux":[50.47295,5.5987],
+    "Hautgné":[50.5379,5.60824],"Warnant":[50.59484,5.22734],"Goesnes":[50.4401,5.22178],
+    "Verlaine-sur-Ourthe":[50.40037,5.51043],"Borsu":[50.38876,5.32314],"Moha":[50.54716,5.18789],
+    "Borlon":[50.37851,5.40489],"Sy":[50.40472,5.5249],"Warnant-Dreye":[50.5957,5.22154],
+    "Jeneffe":[50.65323,5.35595],"Filot":[50.42675,5.56805],"Voroux-Goreux":[50.6547,5.42715],
+    "Hayen":[50.54582,5.6151],"Ben":[50.51259,5.17896],"Donceel":[50.6479,5.31994],
+    "Bierset":[50.65471,5.45126],"Ben-Ahin":[50.50332,5.17735],"Solières":[50.48522,5.18122],
+    "Noville":[50.65993,5.38341],"Bonsin":[50.37276,5.37888],"Vaux-et-Borset":[50.61318,5.23176],
+    "Tohogne":[50.38104,5.4814],"Saint-Nicolas":[50.63167,5.53763],"Grâce-Berleur":[50.64395,5.50611],
+    "Presseux":[50.49598,5.62485],"Dolembreux":[50.53685,5.62515],"Lincé":[50.51369,5.62831],
+    "Xhoris":[50.44398,5.60207],"Montegnée":[50.64234,5.51861],
+    "Fexhe-le-Haut-Clocher":[50.66431,5.39938],"Borlez":[50.63302,5.24511],"Embourg":[50.59164,5.61057],
+    "Fumal":[50.58679,5.1843],"Vieuxville":[50.39551,5.55124],"Palenge":[50.3632,5.43727],
+    "Awans":[50.66703,5.46222],"Gives":[50.50768,5.15467],"Ville":[50.41661,5.58782],
+    "My":[50.40579,5.57364],"Jallet":[50.44326,5.18216],"Viemme":[50.64829,5.26831],
+    "Lillé":[50.50089,5.64475],"Huccorgne":[50.56759,5.16476],"Perwez":[50.45328,5.17211],
+    "Warre":[50.36489,5.46525],"Beaufays":[50.55905,5.63857],"Vieux-Waleffe":[50.61653,5.20431],
+    "Méan":[50.36192,5.33386],"Septon":[50.35716,5.42281],"Bomal":[50.3762,5.52296],
+    "Rouvreux":[50.49024,5.65006],"Fooz":[50.67625,5.43762],"Ogné":[50.5164,5.65343],
+    "Loncin":[50.66515,5.50273],"Ans":[50.65287,5.54061],"Havelange":[50.38709,5.23958],
+    "Bohon":[50.35702,5.4753],"Petite-Somme":[50.34972,5.40175],"Sprimont":[50.50553,5.66172],
+    "Verlée":[50.36754,5.27956],"Septroux":[50.47206,5.65242],"Hognoul":[50.68081,5.45564],
+    "Durbuy":[50.35241,5.45625],"Bovenistier":[50.66761,5.28443],"Les Waleffes":[50.64024,5.21804],
+    "Celles":[50.65388,5.24556],"Awan":[50.46002,5.65122],"Momalle":[50.68523,5.37301],
+    "Remicourt":[50.67848,5.31999],"Liège":[50.64509,5.57361],"Fallais":[50.60928,5.17352],
+    "Couthuin":[50.53309,5.13229],"Noidré":[50.51727,5.6685],"Florzé":[50.48959,5.66585],
+    "Vaux-sous-Chèvremont":[50.6018,5.63393],"Chaudfontaine":[50.58479,5.64697],
+    "Maffe":[50.35379,5.31155],"Faimes":[50.66522,5.26274],"Marneffe":[50.5791,5.14489],
+    "Alleur":[50.67425,5.51299],"Ozo":[50.37333,5.55578],"Izier":[50.38489,5.57933],
+    "Ferrières":[50.4002,5.60639],"Barvaux":[50.35061,5.49328],"Haillot":[50.4406,5.14919],
+    "Gomzé":[50.54053,5.67378],"Lavoir":[50.54864,5.12558],"Évelette":[50.41358,5.17144],
+    "Damré":[50.5057,5.67842],"Miécret":[50.36579,5.24954],"Lamine":[50.68908,5.33467],
+    "Sendrogne":[50.52408,5.68036],"Surlemez":[50.51911,5.11748],"Kemexhe":[50.69618,5.40604]
+  };
+  /* communes:fin */
 
   var fr  = new Intl.NumberFormat('fr-BE');
   var frD = new Intl.NumberFormat('fr-BE', { maximumFractionDigits: 1 });
@@ -521,6 +628,167 @@ footer a{color:var(--texte-2)}
              classe: v > 0 ? 'd hausse' : 'd' };
   }
 
+  /* ── carte des communes déclarées ──
+     Projection équirectangulaire centrée sur le restaurant, la longitude
+     resserrée par le cosinus de la latitude : sans cela, à 50° de latitude,
+     un degré de longitude paraîtrait aussi large qu'un degré de latitude et
+     la région serait étirée d'est en ouest. Le SVG garde ses proportions,
+     donc une bulle reste ronde et deux distances égales le restent. */
+  function dessineCarte(liste){
+    var hote = document.getElementById('carteLieux');
+    var connus = [], inconnus = [];
+    (liste || []).forEach(function(d){
+      var c = LIEUX[d.nom];
+      if(c) connus.push({ nom: d.nom, n: d.n, lat: c[0], lon: c[1] });
+      else inconnus.push(d);
+    });
+
+    if(!connus.length){
+      /* Rien à placer : soit personne n'a répondu, soit les réponses tombent
+         hors de la zone cartographiée. Ce n'est pas la même chose. */
+      var horsZone = inconnus.reduce(function(a, d){ return a + d.n; }, 0);
+      hote.innerHTML = horsZone
+        ? '<p class="vide">' + nb(horsZone)
+          + (horsZone > 1 ? ' listes déclarées' : ' liste déclarée')
+          + ', mais aucune commune de la zone cartographiée.</p>'
+        : '<p class="vide">Aucune commune déclarée sur cette période.<br>'
+          + 'Le champ est facultatif&nbsp;: la carte se remplit à mesure que les clients '
+          + 'le renseignent en composant leur liste.</p>';
+      return;
+    }
+
+    var W = 600, H = 360, marge = 38;
+    var k = Math.cos(CENTRE[0] * Math.PI / 180);
+    var px = function(lon){ return (lon - CENTRE[1]) * k; };
+    var py = function(lat){ return -(lat - CENTRE[0]); };
+
+    var tous = connus.concat([{ lat: CENTRE[0], lon: CENTRE[1] }]);
+    var xs = tous.map(function(p){ return px(p.lon); });
+    var ys = tous.map(function(p){ return py(p.lat); });
+    var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs);
+    var y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
+    /* Une seule commune ne définit aucune étendue : on impose une fenêtre
+       d'environ dix kilomètres pour que la bulle ne remplisse pas l'écran. */
+    var etX = Math.max(x1 - x0, 0.09), etY = Math.max(y1 - y0, 0.09);
+    var mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+    var ech = Math.min((W - 2 * marge) / etX, (H - 2 * marge) / etY);
+    var X = function(p){ return W / 2 + (px(p.lon) - mx) * ech; };
+    var Y = function(p){ return H / 2 + (py(p.lat) - my) * ech; };
+
+    var maxi = connus.reduce(function(m, d){ return d.n > m ? d.n : m; }, 0) || 1;
+    var rayon = function(n){ return 4 + 17 * Math.sqrt(n / maxi); };
+
+    /* Les plus grosses bulles d'abord : les petites restent cliquables. */
+    var ordre = connus.slice().sort(function(a, b){ return b.n - a.n; });
+    var bulles = ordre.map(function(d, i){
+      return '<circle class="bulle" data-i="' + i + '" cx="' + X(d).toFixed(1)
+           + '" cy="' + Y(d).toFixed(1) + '" r="' + rayon(d.n).toFixed(1) + '"></circle>';
+    }).join('');
+
+    var cxm = W / 2 + (0 - mx) * ech, cym = H / 2 + (0 - my) * ech;
+    var maison = '<g class="maison"><circle cx="' + cxm.toFixed(1) + '" cy="' + cym.toFixed(1)
+      + '" r="5"/><path d="M' + (cxm - 8).toFixed(1) + ' ' + cym.toFixed(1) + 'h4M'
+      + (cxm + 4).toFixed(1) + ' ' + cym.toFixed(1) + 'h4M' + cxm.toFixed(1) + ' '
+      + (cym - 8).toFixed(1) + 'v4M' + cxm.toFixed(1) + ' ' + (cym + 4).toFixed(1) + 'v4"/></g>';
+
+    /* Placement des étiquettes. Posées bêtement au-dessus de chaque bulle,
+       elles se chevauchent et mordent sur les voisines — « Villers-le-Temple »
+       finissait à cheval sur Nandrin. On essaie donc quatre positions, et l'on
+       renonce à nommer plutôt que d'écrire par-dessus. */
+    var cases = [];                       // rectangles déjà occupés
+    function libre(b){
+      for(var i = 0; i < cases.length; i++){
+        var c = cases[i];
+        if(b.x < c.x + c.l && b.x + b.l > c.x && b.y < c.y + c.h && b.y + b.h > c.y) return false;
+      }
+      for(var j = 0; j < ordre.length; j++){
+        var d = ordre[j], r = rayon(d.n), cx = X(d), cy = Y(d);
+        var px2 = Math.max(b.x, Math.min(cx, b.x + b.l));
+        var py2 = Math.max(b.y, Math.min(cy, b.y + b.h));
+        if((px2 - cx) * (px2 - cx) + (py2 - cy) * (py2 - cy) < r * r) return false;
+      }
+      return true;
+    }
+    function pose(texte, cx, cy, r, classe){
+      var l = texte.length * 4.35, h = 9;
+      var essais = [
+        { x: cx - l / 2,  y: cy - r - 4 - h, a: 'middle', tx: cx, ty: cy - r - 5 },
+        { x: cx - l / 2,  y: cy + r + 3,     a: 'middle', tx: cx, ty: cy + r + 11 },
+        { x: cx + r + 4,  y: cy - h / 2,     a: 'start',  tx: cx + r + 5, ty: cy + 3 },
+        { x: cx - r - 4 - l, y: cy - h / 2,  a: 'end',    tx: cx - r - 5, ty: cy + 3 }
+      ];
+      for(var i = 0; i < essais.length; i++){
+        var e = essais[i], b = { x: e.x, y: e.y, l: l, h: h };
+        if(b.x < 2 || b.x + b.l > W - 2 || b.y < 2 || b.y + b.h > H - 2) continue;
+        if(!libre(b)) continue;
+        cases.push(b);
+        return '<text class="etiq' + (classe ? ' ' + classe : '') + '" x="' + e.tx.toFixed(1)
+             + '" y="' + e.ty.toFixed(1) + '" text-anchor="' + e.a + '">'
+             + echappe(texte) + '</text>';
+      }
+      return '';
+    }
+
+    /* Le restaurant se nomme en premier : c'est le repère de la carte. */
+    var etiquettes = pose('Pizzeria Pino', cxm, cym, 9, 'chez');
+    ordre.slice(0, Math.min(ordre.length, 10)).forEach(function(d){
+      etiquettes += pose(d.nom, X(d), Y(d), rayon(d.n));
+    });
+
+    /* Une règle : sans échelle, une carte ne dit pas les distances. */
+    var kmRegle = 5, lg = (kmRegle / 111.32) * ech;
+    var rx = 12, ry = H - 12;
+    var regle = '<g><path class="regle" d="M' + rx + ' ' + ry + 'h' + lg.toFixed(1)
+      + 'M' + rx + ' ' + (ry - 3) + 'v6M' + (rx + lg).toFixed(1) + ' ' + (ry - 3) + 'v6"/>'
+      + '<text class="regle-txt" x="' + (rx + lg / 2).toFixed(1) + '" y="' + (ry - 6)
+      + '" text-anchor="middle">' + kmRegle + ' km</text></g>';
+
+    var total = connus.reduce(function(a, d){ return a + d.n; }, 0);
+    var reste = inconnus.reduce(function(a, d){ return a + d.n; }, 0);
+    var pied = nb(total) + (total > 1 ? ' listes situées' : ' liste située')
+             + ' sur ' + connus.length + (connus.length > 1 ? ' communes' : ' commune')
+             + (reste ? ' · ' + nb(reste) + ' hors de la zone cartographiée' : '');
+
+    hote.innerHTML =
+      '<div class="cadre">'
+      + '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" '
+      + 'role="img" aria-label="Carte des communes déclarées, ' + echappe(pied) + '">'
+      + regle + maison + bulles + etiquettes
+      + '</svg></div>'
+      + '<div class="bornes"><span>' + echappe(pied) + '</span></div>';
+
+    installeSurvolCarte(hote, ordre);
+  }
+
+  function installeSurvolCarte(hote, ordre){
+    var cadre = hote.querySelector('.cadre');
+    var bulle = document.createElement('div');
+    bulle.className = 'survol';
+    bulle.hidden = true;
+    cadre.appendChild(bulle);
+
+    hote.querySelectorAll('.bulle').forEach(function(el){
+      function montre(){
+        var d = ordre[+el.dataset.i];
+        var r = cadre.getBoundingClientRect();
+        var c = el.getBoundingClientRect();
+        bulle.innerHTML = '<b>' + nb(d.n) + '</b> ' + (d.n === 1 ? 'liste' : 'listes')
+                        + '<span>' + echappe(d.nom) + '</span>';
+        bulle.hidden = false;
+        var gauche = c.left + c.width / 2 - r.left;
+        bulle.style.left = gauche + 'px';
+        bulle.style.top = (c.top - r.top - 8) + 'px';
+        bulle.classList.toggle('agauche', gauche < r.width * 0.12);
+        bulle.classList.toggle('adroite', gauche > r.width * 0.88);
+        el.classList.add('vise');
+      }
+      function cache(){ bulle.hidden = true; el.classList.remove('vise'); }
+      el.addEventListener('pointerenter', montre);
+      el.addEventListener('pointerdown', montre);
+      el.addEventListener('pointerleave', cache);
+    });
+  }
+
   /* ── rendu complet ── */
   var dernier = null;
   function affiche(d){
@@ -561,6 +829,8 @@ footer a{color:var(--texte-2)}
     dessineTable('tblVilles',   d.villes,   'Ville',    qVilles);
     dessineTable('tblSupports', d.supports, 'Appareil');
     dessineTable('tblPlats',    d.plats,    'Plat',     qPlats);
+    dessineCarte(d.communes);
+    dessineTable('tblCommunes', d.communes, 'Commune déclarée');
   }
 
   function banniere(html, classe){
@@ -586,6 +856,10 @@ footer a{color:var(--texte-2)}
                 commande: Math.round(vues * .06) },
       precedent: { vue: Math.round(vues * .88), appel: Math.round(vues * .13),
                    itineraire: Math.round(vues * .10), commande: Math.round(vues * .05) },
+      communes: [{nom:'Nandrin',n:31},{nom:'Villers-le-Temple',n:22},{nom:'Neupré',n:18},
+                 {nom:'Tinlot',n:12},{nom:'Modave',n:11},{nom:'Anthisnes',n:9},
+                 {nom:'Ouffet',n:7},{nom:'Esneux',n:6},{nom:'Huy',n:6},
+                 {nom:'Clavier',n:5},{nom:'Marchin',n:4},{nom:'Amay',n:3}],
       villes_autres: Math.round(vues * .06), villes_autres_n: 14,
       plats_autres: 19, plats_autres_n: 11,
       villes: [{nom:'Nandrin',n:Math.round(vues*.28)},{nom:'Liège',n:Math.round(vues*.19)},
