@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carte et prix — Pizzeria Pino, Nandrin</title>
+<meta name="description" content="La carte complète de la Pizzeria Pino à Nandrin : pizzas au feu de bois, pâtes fraîches, viandes et desserts, avec les prix. À emporter ou sur place, route du Condroz 131.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0d0b0a">
+<link rel="canonical" href="https://pizzeriapino.be/carte/">
+<link rel="icon" type="image/png" sizes="512x512" href="../icons/icon-512.png">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_BE">
+<meta property="og:site_name" content="Pizzeria Pino">
+<meta property="og:title" content="Carte et prix — Pizzeria Pino, Nandrin">
+<meta property="og:description" content="Pizzas au feu de bois, pâtes fraîches, viandes et desserts. La carte complète, avec les prix.">
+<meta property="og:url" content="https://pizzeriapino.be/carte/">
+<meta property="og:image" content="https://pizzeriapino.be/images/etab-facade.jpg">
+
+<link rel="preload" as="font" type="font/woff2" href="../fonts/fraunces-normal-400_700.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../fonts/inter-normal-400.woff2" crossorigin>
+
+<style>
+/* Polices auto-hébergées, comme sur le reste du site : aucun appel externe,
+   donc rien à demander au visiteur côté vie privée. */
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;
+  src:url('../fonts/fraunces-normal-400_700.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}
+@font-face{font-family:'Fraunces';font-style:italic;font-weight:400 600;font-display:swap;
+  src:url('../fonts/fraunces-italic-400_600.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;
+  src:url('../fonts/inter-normal-400.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:400;font-display:swap;
+  src:url('../fonts/oswald-normal-400.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}
+
+:root{
+  --fond:#0D0906; --surface:#141010; --trait:rgba(233,206,150,.16);
+  --texte:#F5EEDF; --texte-2:#C9BEAB; --texte-3:#948977;
+  --or:#C69A4D; --or-l:#E9CE96; --rouge:#C4483F;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--fond);color:var(--texte-2);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.6;
+  padding:0 16px env(safe-area-inset-bottom)}
+.enveloppe{max-width:760px;margin:0 auto;padding:0 0 56px}
+
+a{color:var(--or-l)}
+header{padding:30px 0 4px}
+.fil{font-family:'Oswald',sans-serif;font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--texte-3);margin:0 0 18px}
+.fil a{color:var(--texte-3);text-decoration:none}
+.fil a:hover{color:var(--or)}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:600;color:var(--texte);
+  font-size:clamp(1.9rem,6.5vw,2.7rem);line-height:1.1;letter-spacing:-.01em;margin:0 0 14px}
+h1 em{font-style:italic;color:var(--or-l)}
+.intro{font-size:1.02rem;margin:0 0 6px}
+.intro + .intro{margin-top:12px}
+
+/* Les deux actions qui comptent : appeler, et composer sa commande. */
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 6px}
+.bouton{display:inline-flex;align-items:center;gap:9px;padding:13px 18px;border-radius:999px;
+  font-weight:600;font-size:.98rem;text-decoration:none;transition:.2s;
+  border:1px solid rgba(233,206,150,.42);background:rgba(233,206,150,.09);color:var(--or-l)}
+.bouton:hover{background:rgba(233,206,150,.18);border-color:var(--or-l)}
+.bouton.plein{background:var(--rouge);border-color:var(--rouge);color:#fff}
+.bouton.plein:hover{background:#d4564c;border-color:#d4564c}
+.bouton svg{width:17px;height:17px;flex:0 0 auto}
+
+/* Sommaire : sur un téléphone, cent vingt plats font une longue page. */
+.sommaire{display:flex;flex-wrap:wrap;gap:7px;margin:26px 0 8px;padding:0;list-style:none}
+.sommaire a{display:inline-block;padding:7px 13px;border-radius:999px;font-size:.8rem;
+  text-decoration:none;color:var(--texte-2);border:1px solid var(--trait)}
+.sommaire a:hover{color:var(--or-l);border-color:var(--or)}
+
+.bloc{margin-top:46px;scroll-margin-top:16px}
+.bloc h2{font-family:'Fraunces',Georgia,serif;font-weight:600;color:var(--texte);
+  font-size:clamp(1.4rem,4.6vw,1.8rem);margin:0 0 4px;
+  padding-bottom:10px;border-bottom:1px solid var(--trait)}
+.bloc h3{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:400;
+  color:var(--or-l);font-size:1.08rem;margin:30px 0 2px}
+
+.plats{list-style:none;margin:0;padding:0}
+.plats li{display:grid;grid-template-columns:1fr auto;gap:0 14px;
+  padding:13px 0;border-bottom:1px solid rgba(233,206,150,.09)}
+.plats li:last-child{border-bottom:0}
+.p-nom{color:var(--texte);font-weight:600;font-size:1.02rem}
+.p-prix{font-family:'Fraunces',Georgia,serif;font-weight:600;color:var(--or-l);
+  font-size:1.02rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.p-desc{grid-column:1/-1;color:var(--texte-3);font-size:.88rem;margin-top:3px}
+.supps li{padding:9px 0}
+.supps .p-nom{font-weight:400;color:var(--texte-2)}
+.offert .p-prix{color:var(--texte-3);font-family:'Inter',sans-serif;font-size:.86rem;
+  font-weight:400;font-style:italic}
+.note{color:var(--texte-3);font-size:.88rem;margin:10px 0 0}
+
+footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--trait);
+  color:var(--texte-3);font-size:.86rem}
+footer p{margin:0 0 8px}
+footer a{color:var(--texte-2)}
+
+@media print{
+  body{background:#fff;color:#000}
+  .actions,.sommaire,.fil{display:none}
+  .p-nom,.p-prix,.bloc h2{color:#000}
+  .p-desc,.note,footer{color:#333}
+}
+</style>
+
+<!-- carte-structuree:début — engendré par menu/balisage.py, ne pas modifier à la main -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Menu","@id":"https://pizzeriapino.be/carte/#menu","name":"Carte de la Pizzeria Pino","inLanguage":"fr-BE","url":"https://pizzeriapino.be/carte/","hasMenuSection":[{"@type":"MenuSection","name":"Pâtes fraîches","hasMenuItem":[{"@type":"MenuItem","name":"Rigatoni 4 fromages","description":"Jambon, 4 fromages, crème","offers":{"@type":"Offer","price":"8.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni Pinocchio","description":"Bolognaise, crème, jambon","offers":{"@type":"Offer","price":"8.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni Romagnola","description":"Tomate, 4 fromages, jambon de Parme","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni Parmigiana","description":"Tomate, aubergines, basilic, ail","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni Asparagi e Crudo","description":"Crème, asperges, jambon de Parme, ail","offers":{"@type":"Offer","price":"10.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni aux épinards","description":"Épinards, crème, ail, lardons","offers":{"@type":"Offer","price":"10.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni Brocolis Scampis","description":"Crème, brocolis, scampis, basilic, ail","offers":{"@type":"Offer","price":"13.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni Indiana","description":"Tomates fraîches, basilic, aubergines, scampis, ail","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni Adriatica","description":"Tomate, crème, poireaux, scampis, ail","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rigatoni Cremoso di Tartufata","description":"Bresaola, crème, tomate, huile de truffe, salsa tartufata","offers":{"@type":"Offer","price":"15.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tagliatelle Piemontese","description":"Jambon de Parme, ail, roquette, tomates séchées, oignons, huile d'olive","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tagliatelle saumon fumé","description":"Tomate, crème, saumon, ail","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tagliatelle aux scampis","description":"Scampis, crème, tomates, ail","offers":{"@type":"Offer","price":"12.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tagliatelle du Chef","description":"Bresaola, roquette, copeaux de parmesan, huile de truffe, crème de balsamique","offers":{"@type":"Offer","price":"13.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti Arrabbiata","description":"Tomate, crème, pancetta, piment","offers":{"@type":"Offer","price":"8.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti al Pomodoro","description":"Tomates fraîches, ail, basilic","offers":{"@type":"Offer","price":"9.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti Carbonara","description":"Crème, pancetta, œuf, parmesan","offers":{"@type":"Offer","price":"9.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti Bolognaise","description":"Tomate, viande hachée","offers":{"@type":"Offer","price":"8.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti alle Vongole","description":"Vongole veraci, tomates, ail","offers":{"@type":"Offer","price":"14.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti Boscaiola","description":"Champignons, crème, lardons, ail","offers":{"@type":"Offer","price":"9.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti Puttanesca","description":"Tomate, thon, câpres, olives noires, ail","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti aux fruits de mer","description":"Tomate, fruits de mer, basilic, ail","offers":{"@type":"Offer","price":"10.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Linguini allo Scoglio","description":"Fruits de mer, scampis, vongole, langoustines, pesto, ail","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Lasagne maison","description":"Bolognaise, crème, jambon, mozzarella","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Lasagne 4 fromages","description":"Bolognaise, sauce 4 fromages, jambon","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Cannelloni du Chef","description":"Tomate, crème, viande hachée","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tortelloni Genovese","description":"Bolognaise, crème, jambon","offers":{"@type":"Offer","price":"9.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tortelloni crème jambon","description":"Crème, jambon, fromage","offers":{"@type":"Offer","price":"9.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tortelloni alla Ricotta","description":"Tomate, crème, ricotta, épinards","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Gnocchi Romana","description":"Tomate, crème, Porto, fromage","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Gnocchi aux 4 fromages","description":"Sauce 4 fromages, crème","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rotolo alla Ricotta","description":"Tomate, crème, ricotta, épinards, jambon","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Rotolo Parmigiana","description":"Tomate, aubergines, jambon, parmesan, basilic","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Penne Ortolana","description":"Tomates, courgettes, aubergines, basilic","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}}],"hasMenuSection":[{"@type":"MenuSection","name":"Les incontournables","hasMenuItem":[{"@type":"MenuItem","name":"Rigatoni Regiano","description":"Parmesan reggiano 24 mois, taleggio, speck, crème, salsa tartufata","offers":{"@type":"Offer","price":"15.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tortelloni saumon épinards","description":"Tortelloni, crème, saumon, ail, épinards","offers":{"@type":"Offer","price":"14.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Stracciatella di Burrata","description":"Tomates fraîches, aubergines, stracciatella di burrata","offers":{"@type":"Offer","price":"13.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti Nduja","description":"Tomate, nduja","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Risotto aux fruits de mer","description":"Tomates fraîches, fruits de mer","offers":{"@type":"Offer","price":"15.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Risotto aux asperges","description":"Asperges, crème, speck","offers":{"@type":"Offer","price":"15.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Farfalles Primavera","description":"Mascarpone, saumon fumé, courgettes, ail","offers":{"@type":"Offer","price":"14.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti all'Amatriciana","description":"Oignons, pancetta, vin rouge, tomates fraîches","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Spaghetti \"Fantasia di Gamberoni\"","description":"Tomates fraîches, gambas flambés, ½ moules","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}}]}]},{"@type":"MenuSection","name":"Viandes","hasMenuItem":[{"@type":"MenuItem","name":"Escalope Parmigiana","description":"Escalope panée, accompagnée de pâtes","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Escalope Archiduc","description":"Escalope panée, accompagnée de pâtes","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Escalope Napolitaine","description":"Escalope panée, accompagnée de pâtes","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Escalope Pizzaiola","description":"Escalope panée, accompagnée de pâtes","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Escalope Gorgonzola","description":"Escalope panée, accompagnée de pâtes","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Escalope Poivre & crème","description":"Escalope panée, poivre vert, crème, accompagnée de pâtes","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Escalope Valdostana","description":"Escalope panée, jambon, vin blanc, fromage","offers":{"@type":"Offer","price":"14.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Osso Buco Maison","description":"Accompagné de pâtes","offers":{"@type":"Offer","price":"16.00","priceCurrency":"EUR"}}]},{"@type":"MenuSection","name":"Pizzas au feu de bois","hasMenuItem":[{"@type":"MenuItem","name":"Nerone","description":"Tomate, mozzarella, salami piquant, poivrons","offers":{"@type":"Offer","price":"10.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Vesuvio","description":"Tomate, mozzarella, jambon, oignons","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Marinara","description":"Tomate, mozzarella, thon, oignons","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Caprino","description":"Tomate, mozzarella, fromage de chèvre, pesto","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pomodoro","description":"Tomate, mozzarella, tomates fraîches, basilic","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Romana","description":"Tomate, mozzarella, thon, oignons, champignons","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Regina","description":"Tomate, mozzarella, jambon, champignons","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Du Chef","description":"Tomate, mozzarella, champignons, artichauts, poivrons, thon, anchois, jambon","offers":{"@type":"Offer","price":"11.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"César","description":"Mozzarella, crème, jambon de Parme, parmesan","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Fermière","description":"Tomate, mozzarella, fromage de chèvre, speck, herbes de Provence","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Fiorentina","description":"Mozzarella, crème, épinards, ricotta","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Margherita","description":"Tomate, mozzarella","offers":{"@type":"Offer","price":"7.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Nonna","description":"Tomate, mozzarella, jambon","offers":{"@type":"Offer","price":"9.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Napoli","description":"Tomate, mozzarella, anchois, câpres","offers":{"@type":"Offer","price":"8.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Siciliana","description":"Tomate, mozzarella, olives, anchois","offers":{"@type":"Offer","price":"8.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"4 Saisons","description":"Tomate, mozzarella, jambon, artichauts, olives","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Capricciosa","description":"Tomate, mozzarella, jambon, champignons, artichauts, anchois, œuf dur","offers":{"@type":"Offer","price":"10.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Fruits de mer","description":"Tomate, mozzarella, fruits de mer","offers":{"@type":"Offer","price":"11.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tonnata","description":"Tomate, mozzarella, thon, câpres","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Végétarienne","description":"Tomate, mozzarella, légumes divers","offers":{"@type":"Offer","price":"10.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Calzone","description":"Tomate, mozzarella, jambon, poivrons, champignons (fermée)","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Parmigiana","description":"Tomate, mozzarella, aubergines, parmesan","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"4 Fromages","description":"Tomate, mozzarella, gorgonzola, taleggio, fontina","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Genovese","description":"Mozzarella, crème, pesto, parmesan","offers":{"@type":"Offer","price":"9.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Focaccia al Formaggio","description":"Double pâte, mozzarella, gorgonzola, jambon","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Calabrese","description":"Tomate, mozzarella, salami piquant","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Diavola","description":"Tomate, mozzarella, salami piquant, champignons","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Palermo","description":"Tomate, mozzarella, aubergines, oignons, ricotta","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Épinards","description":"Tomate, mozzarella, épinards, brocolis, olives","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Sole Mio","description":"Tomate, mozzarella, jambon, champignons, œuf frais","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Al Crudo","description":"Tomate, mozzarella, jambon de Parme","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Speck","description":"Tomate, mozzarella, speck, ricotta","offers":{"@type":"Offer","price":"11.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Hawaïenne","description":"Tomate, mozzarella, jambon, ananas","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Merguez","description":"Tomate, mozzarella, merguez, œuf frais","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pinocchio","description":"Tomate, mozzarella, jambon de Parme, roquette","offers":{"@type":"Offer","price":"13.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Geppetto","description":"Tomate, mozzarella, jambon, bolognaise","offers":{"@type":"Offer","price":"9.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Adriana","description":"Tomate, mozzarella, scampis, ail, persil","offers":{"@type":"Offer","price":"12.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Romina","description":"Tomate, mozzarella, bresaola, roquette, parmesan","offers":{"@type":"Offer","price":"13.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Italia","description":"Tomate, mozzarella, épinards, aubergines, ricotta","offers":{"@type":"Offer","price":"11.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Dolce Latte","description":"Tomate, mozzarella, gorgonzola, ricotta, aubergines","offers":{"@type":"Offer","price":"11.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Mezzo Mezzo","description":"Tomate, mozzarella, champignons, jambon, pâtes 4 fromages","offers":{"@type":"Offer","price":"12.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Mafiosa","description":"Tomate, mozzarella, jambon, poivrons, olives","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Carbonara","description":"Mozzarella, pancetta, crème, parmesan, œuf frais","offers":{"@type":"Offer","price":"10.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Mont Blanc","description":"Mozzarella, crème, oignons, saumon","offers":{"@type":"Offer","price":"12.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Norvégienne","description":"Tomate, mozzarella, saumon, oignons","offers":{"@type":"Offer","price":"12.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Liégeoise","description":"Tomate, mozzarella, lardons, Zwan","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Bosco","description":"Tomate, mozzarella, lardons, champignons des bois","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Carpaccio","description":"Tomate, mozzarella, carpaccio, champignons, parmesan","offers":{"@type":"Offer","price":"13.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Poulet Provençal","description":"Tomate, mozzarella, poulet, poivrons, oignons","offers":{"@type":"Offer","price":"12.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Poulet Archiduc","description":"Tomate, mozzarella, poulet, crème, champignons","offers":{"@type":"Offer","price":"12.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Paysanne","description":"Tomate, mozzarella, salami, courgettes, oignons","offers":{"@type":"Offer","price":"10.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Coppa","description":"Tomate, mozzarella, coppa, roquette, tomates séchées, parmesan","offers":{"@type":"Offer","price":"14.00","priceCurrency":"EUR"}}],"hasMenuSection":[{"@type":"MenuSection","name":"Les incontournables","hasMenuItem":[{"@type":"MenuItem","name":"Pizza Tartufata","description":"Sauce tomate, tapenade de truffe, mascarpone, roquette, coppa, copeaux de parmesan","offers":{"@type":"Offer","price":"14.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza Burrata","description":"Burrata, roquette, coppa, tomates confites","offers":{"@type":"Offer","price":"13.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza Bufalina","description":"Tomate, mozzarella di bufala cuite, tomates cerises, roquette, coppa","offers":{"@type":"Offer","price":"13.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza Bufala","description":"Pâte blanche, roquette, tomates cerises, jambon de Parme, mozzarella di bufala","offers":{"@type":"Offer","price":"13.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza Nduja","description":"Tomate, mozzarella, nduja","offers":{"@type":"Offer","price":"13.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza du Patron","description":"Tomate, mozzarella, jambon, salami nduja piccante, mozzarella di bufala","offers":{"@type":"Offer","price":"14.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza Primo","description":"Tomate, mozzarella, speck, 4 fromages, tomates cerises, roquette","offers":{"@type":"Offer","price":"15.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza Antonio","description":"Mozzarella, ricotta, speck, truffe","offers":{"@type":"Offer","price":"15.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza Primavera","description":"Mozzarella, scampis, courgettes, tomates cerises, balsamique","offers":{"@type":"Offer","price":"15.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Pizza Tartiflette","description":"Mozzarella, roblochon, pommes de terre, lardons (en saison)","offers":{"@type":"Offer","price":"13.50","priceCurrency":"EUR"}}]},{"@type":"MenuSection","name":"Pizza Bianca","hasMenuItem":[{"@type":"MenuItem","name":"Salumi e Formaggi","description":"Assortiment de charcuteries, roquette, taleggio, gorgonzola","offers":{"@type":"Offer","price":"13.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Bresaola","description":"Bresaola, roquette, copeaux de parmesan, crème de truffe","offers":{"@type":"Offer","price":"13.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Estate","description":"Carpaccio, roquette, tomates séchées, copeaux de parmesan","offers":{"@type":"Offer","price":"13.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Bruschetta","description":"Tomates fraîches, ail, basilic, origan","offers":{"@type":"Offer","price":"9.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Fraicheur","description":"Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)","offers":{"@type":"Offer","price":"11.00","priceCurrency":"EUR"}}]}]},{"@type":"MenuSection","name":"Desserts","hasMenuItem":[{"@type":"MenuItem","name":"Tiramisù","offers":{"@type":"Offer","price":"4.50","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Tiramisù Speculoos","offers":{"@type":"Offer","price":"4.00","priceCurrency":"EUR"}},{"@type":"MenuItem","name":"Mousse au chocolat","offers":{"@type":"Offer","price":"4.00","priceCurrency":"EUR"}}]}]}</script>
+<!-- carte-structuree:fin -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://pizzeriapino.be/"},{"@type":"ListItem","position":2,"name":"La carte","item":"https://pizzeriapino.be/carte/"}]}</script>
+</head>
+<body>
+
+<div class="enveloppe">
+
+  <header>
+    <p class="fil"><a href="../">Pizzeria Pino</a> · La carte</p>
+    <h1>La carte de la <em>Pizzeria Pino</em></h1>
+    <p class="intro">Pizzas cuites au feu de bois, pâtes fraîches, viandes et desserts maison —
+      la carte complète du restaurant, avec les prix. Route du Condroz 131 à Nandrin, entre
+      Liège et Huy.</p>
+    <p class="intro">À emporter ou sur place. Les prix affichés sont ceux à emporter&nbsp;;
+      la carte est la même dans la salle.</p>
+
+    <div class="actions">
+      <a class="bouton plein" href="../#carte">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg>
+        Composer ma commande</a>
+      <a class="bouton" href="tel:+3285513339">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.6 9.8a16 16 0 0 0 6 6l1.4-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
+        085 51 33 39</a>
+    </div>
+
+    <ul class="sommaire">
+      <li><a href="#pizzas">Pizzas</a></li>
+      <li><a href="#pates">Pâtes</a></li>
+      <li><a href="#viandes">Viandes</a></li>
+      <li><a href="#desserts">Desserts</a></li>
+      <li><a href="#supplements">Suppléments</a></li>
+    </ul>
+  </header>
+
+<!-- carte:début — engendré par outils/carte.py, ne pas modifier à la main -->
+  <section class="bloc" id="pizzas">
+    <h2>Pizzas au feu de bois</h2>
+    <ul class="plats">
+      <li><span class="p-nom">Pizza Nerone</span><span class="p-prix">10,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, salami piquant, poivrons</span></li>
+      <li><span class="p-nom">Pizza Vesuvio</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, oignons</span></li>
+      <li><span class="p-nom">Pizza Marinara</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, thon, oignons</span></li>
+      <li><span class="p-nom">Pizza Caprino</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, fromage de chèvre, pesto</span></li>
+      <li><span class="p-nom">Pizza Pomodoro</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, tomates fraîches, basilic</span></li>
+      <li><span class="p-nom">Pizza Romana</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, thon, oignons, champignons</span></li>
+      <li><span class="p-nom">Pizza Regina</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, champignons</span></li>
+      <li><span class="p-nom">Pizza Du Chef</span><span class="p-prix">11,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, champignons, artichauts, poivrons, thon, anchois, jambon</span></li>
+      <li><span class="p-nom">Pizza César</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Mozzarella, crème, jambon de Parme, parmesan</span></li>
+      <li><span class="p-nom">Pizza Fermière</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, fromage de chèvre, speck, herbes de Provence</span></li>
+      <li><span class="p-nom">Pizza Fiorentina</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Mozzarella, crème, épinards, ricotta</span></li>
+      <li><span class="p-nom">Pizza Margherita</span><span class="p-prix">7,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella</span></li>
+      <li><span class="p-nom">Pizza Nonna</span><span class="p-prix">9,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon</span></li>
+      <li><span class="p-nom">Pizza Napoli</span><span class="p-prix">8,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, anchois, câpres</span></li>
+      <li><span class="p-nom">Pizza Siciliana</span><span class="p-prix">8,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, olives, anchois</span></li>
+      <li><span class="p-nom">Pizza 4 Saisons</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, artichauts, olives</span></li>
+      <li><span class="p-nom">Pizza Capricciosa</span><span class="p-prix">10,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, champignons, artichauts, anchois, œuf dur</span></li>
+      <li><span class="p-nom">Pizza Fruits de mer</span><span class="p-prix">11,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, fruits de mer</span></li>
+      <li><span class="p-nom">Pizza Tonnata</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, thon, câpres</span></li>
+      <li><span class="p-nom">Pizza Végétarienne</span><span class="p-prix">10,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, légumes divers</span></li>
+      <li><span class="p-nom">Pizza Calzone</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, poivrons, champignons (fermée)</span></li>
+      <li><span class="p-nom">Pizza Parmigiana</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, aubergines, parmesan</span></li>
+      <li><span class="p-nom">Pizza 4 Fromages</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, gorgonzola, taleggio, fontina</span></li>
+      <li><span class="p-nom">Pizza Genovese</span><span class="p-prix">9,00&nbsp;€</span><span class="p-desc">Mozzarella, crème, pesto, parmesan</span></li>
+      <li><span class="p-nom">Pizza Focaccia al Formaggio</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Double pâte, mozzarella, gorgonzola, jambon</span></li>
+      <li><span class="p-nom">Pizza Calabrese</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, salami piquant</span></li>
+      <li><span class="p-nom">Pizza Diavola</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, salami piquant, champignons</span></li>
+      <li><span class="p-nom">Pizza Palermo</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, aubergines, oignons, ricotta</span></li>
+      <li><span class="p-nom">Pizza Épinards</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, épinards, brocolis, olives</span></li>
+      <li><span class="p-nom">Pizza Sole Mio</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, champignons, œuf frais</span></li>
+      <li><span class="p-nom">Pizza Al Crudo</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon de Parme</span></li>
+      <li><span class="p-nom">Pizza Speck</span><span class="p-prix">11,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, speck, ricotta</span></li>
+      <li><span class="p-nom">Pizza Hawaïenne</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, ananas</span></li>
+      <li><span class="p-nom">Pizza Merguez</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, merguez, œuf frais</span></li>
+      <li><span class="p-nom">Pizza Pinocchio</span><span class="p-prix">13,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon de Parme, roquette</span></li>
+      <li><span class="p-nom">Pizza Geppetto</span><span class="p-prix">9,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, bolognaise</span></li>
+      <li><span class="p-nom">Pizza Adriana</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, scampis, ail, persil</span></li>
+      <li><span class="p-nom">Pizza Romina</span><span class="p-prix">13,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, bresaola, roquette, parmesan</span></li>
+      <li><span class="p-nom">Pizza Italia</span><span class="p-prix">11,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, épinards, aubergines, ricotta</span></li>
+      <li><span class="p-nom">Pizza Dolce Latte</span><span class="p-prix">11,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, gorgonzola, ricotta, aubergines</span></li>
+      <li><span class="p-nom">Pizza Mezzo Mezzo</span><span class="p-prix">12,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, champignons, jambon, pâtes 4 fromages</span></li>
+      <li><span class="p-nom">Pizza Mafiosa</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, poivrons, olives</span></li>
+      <li><span class="p-nom">Pizza Carbonara</span><span class="p-prix">10,50&nbsp;€</span><span class="p-desc">Mozzarella, pancetta, crème, parmesan, œuf frais</span></li>
+      <li><span class="p-nom">Pizza Mont Blanc</span><span class="p-prix">12,00&nbsp;€</span><span class="p-desc">Mozzarella, crème, oignons, saumon</span></li>
+      <li><span class="p-nom">Pizza Norvégienne</span><span class="p-prix">12,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, saumon, oignons</span></li>
+      <li><span class="p-nom">Pizza Liégeoise</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, lardons, Zwan</span></li>
+      <li><span class="p-nom">Pizza Bosco</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, lardons, champignons des bois</span></li>
+      <li><span class="p-nom">Pizza Carpaccio</span><span class="p-prix">13,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, carpaccio, champignons, parmesan</span></li>
+      <li><span class="p-nom">Pizza Poulet Provençal</span><span class="p-prix">12,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, poulet, poivrons, oignons</span></li>
+      <li><span class="p-nom">Pizza Poulet Archiduc</span><span class="p-prix">12,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, poulet, crème, champignons</span></li>
+      <li><span class="p-nom">Pizza Paysanne</span><span class="p-prix">10,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, salami, courgettes, oignons</span></li>
+      <li><span class="p-nom">Pizza Coppa</span><span class="p-prix">14,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, coppa, roquette, tomates séchées, parmesan</span></li>
+    </ul>
+    <h3>Les incontournables</h3>
+    <ul class="plats">
+      <li><span class="p-nom">Pizza Tartufata</span><span class="p-prix">14,00&nbsp;€</span><span class="p-desc">Sauce tomate, tapenade de truffe, mascarpone, roquette, coppa, copeaux de parmesan</span></li>
+      <li><span class="p-nom">Pizza Burrata</span><span class="p-prix">13,50&nbsp;€</span><span class="p-desc">Burrata, roquette, coppa, tomates confites</span></li>
+      <li><span class="p-nom">Pizza Bufalina</span><span class="p-prix">13,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella di bufala cuite, tomates cerises, roquette, coppa</span></li>
+      <li><span class="p-nom">Pizza Bufala</span><span class="p-prix">13,50&nbsp;€</span><span class="p-desc">Pâte blanche, roquette, tomates cerises, jambon de Parme, mozzarella di bufala</span></li>
+      <li><span class="p-nom">Pizza Nduja</span><span class="p-prix">13,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, nduja</span></li>
+      <li><span class="p-nom">Pizza du Patron</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Tomate, mozzarella, jambon, salami nduja piccante, mozzarella di bufala</span></li>
+      <li><span class="p-nom">Pizza Primo</span><span class="p-prix">15,00&nbsp;€</span><span class="p-desc">Tomate, mozzarella, speck, 4 fromages, tomates cerises, roquette</span></li>
+      <li><span class="p-nom">Pizza Antonio</span><span class="p-prix">15,50&nbsp;€</span><span class="p-desc">Mozzarella, ricotta, speck, truffe</span></li>
+      <li><span class="p-nom">Pizza Primavera</span><span class="p-prix">15,50&nbsp;€</span><span class="p-desc">Mozzarella, scampis, courgettes, tomates cerises, balsamique</span></li>
+      <li><span class="p-nom">Pizza Tartiflette</span><span class="p-prix">13,50&nbsp;€</span><span class="p-desc">Mozzarella, roblochon, pommes de terre, lardons (en saison)</span></li>
+    </ul>
+    <h3>Pizza Bianca</h3>
+    <ul class="plats">
+      <li><span class="p-nom">Salumi e Formaggi</span><span class="p-prix">13,00&nbsp;€</span><span class="p-desc">Assortiment de charcuteries, roquette, taleggio, gorgonzola</span></li>
+      <li><span class="p-nom">Bresaola</span><span class="p-prix">13,00&nbsp;€</span><span class="p-desc">Bresaola, roquette, copeaux de parmesan, crème de truffe</span></li>
+      <li><span class="p-nom">Estate</span><span class="p-prix">13,50&nbsp;€</span><span class="p-desc">Carpaccio, roquette, tomates séchées, copeaux de parmesan</span></li>
+      <li><span class="p-nom">Bruschetta</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomates fraîches, ail, basilic, origan</span></li>
+      <li><span class="p-nom">Fraicheur</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)</span></li>
+    </ul>
+  </section>
+  <section class="bloc" id="pates">
+    <h2>Pâtes fraîches</h2>
+    <ul class="plats">
+      <li><span class="p-nom">Rigatoni 4 fromages</span><span class="p-prix">8,50&nbsp;€</span><span class="p-desc">Jambon, 4 fromages, crème</span></li>
+      <li><span class="p-nom">Rigatoni Pinocchio</span><span class="p-prix">8,50&nbsp;€</span><span class="p-desc">Bolognaise, crème, jambon</span></li>
+      <li><span class="p-nom">Rigatoni Romagnola</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, 4 fromages, jambon de Parme</span></li>
+      <li><span class="p-nom">Rigatoni Parmigiana</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, aubergines, basilic, ail</span></li>
+      <li><span class="p-nom">Rigatoni Asparagi e Crudo</span><span class="p-prix">10,50&nbsp;€</span><span class="p-desc">Crème, asperges, jambon de Parme, ail</span></li>
+      <li><span class="p-nom">Rigatoni aux épinards</span><span class="p-prix">10,50&nbsp;€</span><span class="p-desc">Épinards, crème, ail, lardons</span></li>
+      <li><span class="p-nom">Rigatoni Brocolis Scampis</span><span class="p-prix">13,50&nbsp;€</span><span class="p-desc">Crème, brocolis, scampis, basilic, ail</span></li>
+      <li><span class="p-nom">Rigatoni Indiana</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Tomates fraîches, basilic, aubergines, scampis, ail</span></li>
+      <li><span class="p-nom">Rigatoni Adriatica</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Tomate, crème, poireaux, scampis, ail</span></li>
+      <li><span class="p-nom">Rigatoni Cremoso di Tartufata</span><span class="p-prix">15,00&nbsp;€</span><span class="p-desc">Bresaola, crème, tomate, huile de truffe, salsa tartufata</span></li>
+      <li><span class="p-nom">Tagliatelle Piemontese</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Jambon de Parme, ail, roquette, tomates séchées, oignons, huile d'olive</span></li>
+      <li><span class="p-nom">Tagliatelle saumon fumé</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Tomate, crème, saumon, ail</span></li>
+      <li><span class="p-nom">Tagliatelle aux scampis</span><span class="p-prix">12,00&nbsp;€</span><span class="p-desc">Scampis, crème, tomates, ail</span></li>
+      <li><span class="p-nom">Tagliatelle du Chef</span><span class="p-prix">13,50&nbsp;€</span><span class="p-desc">Bresaola, roquette, copeaux de parmesan, huile de truffe, crème de balsamique</span></li>
+      <li><span class="p-nom">Spaghetti Arrabbiata</span><span class="p-prix">8,50&nbsp;€</span><span class="p-desc">Tomate, crème, pancetta, piment</span></li>
+      <li><span class="p-nom">Spaghetti al Pomodoro</span><span class="p-prix">9,00&nbsp;€</span><span class="p-desc">Tomates fraîches, ail, basilic</span></li>
+      <li><span class="p-nom">Spaghetti Carbonara</span><span class="p-prix">9,00&nbsp;€</span><span class="p-desc">Crème, pancetta, œuf, parmesan</span></li>
+      <li><span class="p-nom">Spaghetti Bolognaise</span><span class="p-prix">8,50&nbsp;€</span><span class="p-desc">Tomate, viande hachée</span></li>
+      <li><span class="p-nom">Spaghetti alle Vongole</span><span class="p-prix">14,00&nbsp;€</span><span class="p-desc">Vongole veraci, tomates, ail</span></li>
+      <li><span class="p-nom">Spaghetti Boscaiola</span><span class="p-prix">9,00&nbsp;€</span><span class="p-desc">Champignons, crème, lardons, ail</span></li>
+      <li><span class="p-nom">Spaghetti Puttanesca</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, thon, câpres, olives noires, ail</span></li>
+      <li><span class="p-nom">Spaghetti aux fruits de mer</span><span class="p-prix">10,50&nbsp;€</span><span class="p-desc">Tomate, fruits de mer, basilic, ail</span></li>
+      <li><span class="p-nom">Linguini allo Scoglio</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Fruits de mer, scampis, vongole, langoustines, pesto, ail</span></li>
+      <li><span class="p-nom">Lasagne maison</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Bolognaise, crème, jambon, mozzarella</span></li>
+      <li><span class="p-nom">Lasagne 4 fromages</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Bolognaise, sauce 4 fromages, jambon</span></li>
+      <li><span class="p-nom">Cannelloni du Chef</span><span class="p-prix">10,00&nbsp;€</span><span class="p-desc">Tomate, crème, viande hachée</span></li>
+      <li><span class="p-nom">Tortelloni Genovese</span><span class="p-prix">9,00&nbsp;€</span><span class="p-desc">Bolognaise, crème, jambon</span></li>
+      <li><span class="p-nom">Tortelloni crème jambon</span><span class="p-prix">9,00&nbsp;€</span><span class="p-desc">Crème, jambon, fromage</span></li>
+      <li><span class="p-nom">Tortelloni alla Ricotta</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, crème, ricotta, épinards</span></li>
+      <li><span class="p-nom">Gnocchi Romana</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomate, crème, Porto, fromage</span></li>
+      <li><span class="p-nom">Gnocchi aux 4 fromages</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Sauce 4 fromages, crème</span></li>
+      <li><span class="p-nom">Rotolo alla Ricotta</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Tomate, crème, ricotta, épinards, jambon</span></li>
+      <li><span class="p-nom">Rotolo Parmigiana</span><span class="p-prix">11,00&nbsp;€</span><span class="p-desc">Tomate, aubergines, jambon, parmesan, basilic</span></li>
+      <li><span class="p-nom">Penne Ortolana</span><span class="p-prix">9,50&nbsp;€</span><span class="p-desc">Tomates, courgettes, aubergines, basilic</span></li>
+    </ul>
+    <h3>Les incontournables</h3>
+    <ul class="plats">
+      <li><span class="p-nom">Rigatoni Regiano</span><span class="p-prix">15,00&nbsp;€</span><span class="p-desc">Parmesan reggiano 24 mois, taleggio, speck, crème, salsa tartufata</span></li>
+      <li><span class="p-nom">Tortelloni saumon épinards</span><span class="p-prix">14,00&nbsp;€</span><span class="p-desc">Tortelloni, crème, saumon, ail, épinards</span></li>
+      <li><span class="p-nom">Stracciatella di Burrata</span><span class="p-prix">13,50&nbsp;€</span><span class="p-desc">Tomates fraîches, aubergines, stracciatella di burrata</span></li>
+      <li><span class="p-nom">Spaghetti Nduja</span><span class="p-prix">12,50&nbsp;€</span><span class="p-desc">Tomate, nduja</span></li>
+      <li><span class="p-nom">Risotto aux fruits de mer</span><span class="p-prix">15,00&nbsp;€</span><span class="p-desc">Tomates fraîches, fruits de mer</span></li>
+      <li><span class="p-nom">Risotto aux asperges</span><span class="p-prix">15,00&nbsp;€</span><span class="p-desc">Asperges, crème, speck</span></li>
+      <li><span class="p-nom">Farfalles Primavera</span><span class="p-prix">14,00&nbsp;€</span><span class="p-desc">Mascarpone, saumon fumé, courgettes, ail</span></li>
+      <li><span class="p-nom">Spaghetti all'Amatriciana</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Oignons, pancetta, vin rouge, tomates fraîches</span></li>
+      <li><span class="p-nom">Spaghetti "Fantasia di Gamberoni"</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Tomates fraîches, gambas flambés, ½ moules</span></li>
+    </ul>
+  </section>
+  <section class="bloc" id="viandes">
+    <h2>Viandes</h2>
+    <ul class="plats">
+      <li><span class="p-nom">Escalope Parmigiana</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Escalope panée, accompagnée de pâtes</span></li>
+      <li><span class="p-nom">Escalope Archiduc</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Escalope panée, accompagnée de pâtes</span></li>
+      <li><span class="p-nom">Escalope Napolitaine</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Escalope panée, accompagnée de pâtes</span></li>
+      <li><span class="p-nom">Escalope Pizzaiola</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Escalope panée, accompagnée de pâtes</span></li>
+      <li><span class="p-nom">Escalope Gorgonzola</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Escalope panée, accompagnée de pâtes</span></li>
+      <li><span class="p-nom">Escalope Poivre &amp; crème</span><span class="p-prix">14,50&nbsp;€</span><span class="p-desc">Escalope panée, poivre vert, crème, accompagnée de pâtes</span></li>
+      <li><span class="p-nom">Escalope Valdostana</span><span class="p-prix">14,00&nbsp;€</span><span class="p-desc">Escalope panée, jambon, vin blanc, fromage</span></li>
+      <li><span class="p-nom">Osso Buco Maison</span><span class="p-prix">16,00&nbsp;€</span><span class="p-desc">Accompagné de pâtes</span></li>
+    </ul>
+  </section>
+  <section class="bloc" id="desserts">
+    <h2>Desserts</h2>
+    <ul class="plats">
+      <li><span class="p-nom">Tiramisù</span><span class="p-prix">4,50&nbsp;€</span></li>
+      <li><span class="p-nom">Tiramisù Speculoos</span><span class="p-prix">4,00&nbsp;€</span></li>
+      <li><span class="p-nom">Mousse au chocolat</span><span class="p-prix">4,00&nbsp;€</span></li>
+    </ul>
+  </section>
+  <section class="bloc" id="supplements">
+    <h2>Suppléments</h2>
+    <p class="note">La Pizza Junior (moins de 14 ans) est à −2,00&nbsp;€ du prix de la pizza choisie.</p>
+    <ul class="plats supps">
+      <li><span class="p-nom">Bresaola</span><span class="p-prix">2,50&nbsp;€</span></li>
+      <li><span class="p-nom">Jambon de Parme</span><span class="p-prix">2,50&nbsp;€</span></li>
+      <li><span class="p-nom">Roquette</span><span class="p-prix">2,50&nbsp;€</span></li>
+      <li><span class="p-nom">Fruits de mer</span><span class="p-prix">2,50&nbsp;€</span></li>
+      <li><span class="p-nom">Scampis</span><span class="p-prix">2,50&nbsp;€</span></li>
+      <li><span class="p-nom">Merguez</span><span class="p-prix">2,50&nbsp;€</span></li>
+      <li><span class="p-nom">Coppa</span><span class="p-prix">2,50&nbsp;€</span></li>
+      <li><span class="p-nom">Nduja</span><span class="p-prix">2,00&nbsp;€</span></li>
+      <li><span class="p-nom">Burrata</span><span class="p-prix">4,00&nbsp;€</span></li>
+      <li><span class="p-nom">Tout autre supplément</span><span class="p-prix">1,00&nbsp;€</span></li>
+      <li class="offert"><span class="p-nom">Beurre d'ail</span><span class="p-prix">Offert</span></li>
+    </ul>
+    <p class="note">Tarifs à emporter&nbsp;; les suppléments s’ajoutent au prix du plat.</p>
+  </section>
+<!-- carte:fin -->
+
+  <div class="actions" style="margin-top:40px">
+    <a class="bouton plein" href="../#carte">Composer ma commande</a>
+    <a class="bouton" href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener">Itinéraire</a>
+  </div>
+
+  <footer>
+    <p><strong style="color:var(--texte-2)">Pizzeria Pino</strong> · Route du Condroz 131,
+      4550 Nandrin · <a href="tel:+3285513339">085 51 33 39</a></p>
+    <p>Les prix peuvent évoluer&nbsp;; la carte affichée en salle fait foi.
+      <a href="../">Retour au site</a> · <a href="../legal.html">Informations légales</a></p>
+  </footer>
+
+</div>
+
+<script>
+/* La même mesure que sur le reste du site : un compteur agrégé, sans cookie,
+   sans identifiant, sans adresse IP conservée. La page compte sa visite et les
+   appels lancés depuis ici — rien d'autre ne la concerne. */
+(function(){
+  'use strict';
+  var API = 'https://pnizdddritizjbsksoir.supabase.co/functions/v1/mesure';
+
+  function envoie(type){
+    try{
+      var charge = JSON.stringify({ t: type });
+      var corps = new Blob([charge], { type:'text/plain;charset=UTF-8' });
+      if(navigator.sendBeacon && navigator.sendBeacon(API + '/e', corps)) return;
+      fetch(API + '/e', { method:'POST', body:charge, keepalive:true, mode:'cors',
+                          headers:{ 'Content-Type':'text/plain;charset=UTF-8' } }).catch(function(){});
+    }catch(e){}
+  }
+
+  /* La provenance n'est relevée que sur la page d'accueil : la mesurer ici
+     ferait passer pour « Autre site » un visiteur venu de notre propre page. */
+  if(document.visibilityState !== 'prerender') envoie('vue');
+
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest && e.target.closest('a[href]');
+    if(!a) return;
+    var h = a.getAttribute('href') || '';
+    if(h.indexOf('tel:') === 0) envoie('appel');
+    else if(/(google\.[a-z.]+\/maps|maps\.google\.)/.test(h)) envoie('itineraire');
+  }, true);
+})();
+</script>
+
+</body>
+</html>

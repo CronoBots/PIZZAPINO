@@ -22,7 +22,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import extrait
 
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAGE = os.path.join(RACINE, 'index.html')
+# Le balisage vit désormais avec la carte, pas avec l'accueil : un objet Menu
+# doit porter l'adresse de la page qui le montre, sinon Google le rattache à une
+# page dont le titre parle d'autre chose.
+PAGE = os.path.join(RACINE, 'carte', 'index.html')
 SITE = 'https://pizzeriapino.be/'
 DEBUT = '<!-- carte-structuree:début — engendré par menu/balisage.py, ne pas modifier à la main -->'
 FIN = '<!-- carte-structuree:fin -->'
@@ -69,10 +72,10 @@ def menu():
     return {
         '@context': 'https://schema.org',
         '@type': 'Menu',
-        '@id': SITE + '#menu',
+        '@id': SITE + 'carte/#menu',
         'name': 'Carte de la Pizzeria Pino',
         'inLanguage': 'fr-BE',
-        'url': SITE + '#carte',
+        'url': SITE + 'carte/',
         'hasMenuSection': sections,
     }
 
@@ -99,7 +102,7 @@ def main():
     neuf = bloc_html(donnees)
 
     if DEBUT not in page:
-        print('Repères absents de index.html : ajoutez-les une fois près du JSON-LD.')
+        print('Repères absents de carte/index.html : ajoutez-les une fois dans la page.')
         return 2
 
     actuel = page[page.index(DEBUT):page.index(FIN) + len(FIN)]
