@@ -101,6 +101,22 @@ function jourBruxelles(d = new Date()): string {
   }).format(d);
 }
 
+/**
+ * Heure de Bruxelles, « 00 » à « 23 ».
+ *
+ * Déduite ici, à l'écriture, et jamais transmise par le visiteur : son fuseau,
+ * son horloge, son décalage ne nous regardent pas. Ce qui entre en base est un
+ * compteur de plus — « 19 h : 42 » — au même titre que la ville ou l'appareil.
+ * Aucun horodatage individuel, donc aucun parcours à reconstituer.
+ */
+function heureBruxelles(d = new Date()): string {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Brussels', hour: '2-digit', hour12: false, hourCycle: 'h23',
+  }).formatToParts(d);
+  const h = parts.find(p => p.type === 'hour')?.value ?? '';
+  return h.padStart(2, '0');
+}
+
 /** Un libellé propre : ni balise, ni saut de ligne, longueur bornée. */
 function nettoie(v: unknown, max = 60): string {
   return String(v).replace(/[\x00-\x1f<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
@@ -224,7 +240,8 @@ async function evenement(req: Request, origine: string): Promise<Response> {
 
   // Le profil n'est relevé qu'à l'arrivée : une seule fois par visite.
   if (type === 'vue') {
-    paires.push(['ville', await ville(req)], ['support', support(req)]);
+    paires.push(['ville', await ville(req)], ['support', support(req)],
+                ['heure', heureBruxelles()]);
     const src = nettoie(corps.r, 20);
     if (SOURCES.has(src)) paires.push(['source', src]);
   }
@@ -286,6 +303,9 @@ async function stats(req: Request, origine: string): Promise<Response> {
     reseaux:  agrege?.reseaux  ?? [],
     photos:   agrege?.photos   ?? [],
     pubs:     agrege?.pubs     ?? [],
+    heures:   agrege?.heures   ?? [],
+    // Les quatre mesures jour par jour. La page laisse choisir celle qu'elle suit.
+    courbes:  agrege?.courbes  ?? {},
     // Ce que pèse la queue des villes, que la page n'affiche pas en détail mais
     // doit compter dans ses pourcentages. Les plats, eux, sont renvoyés en
     // entier : la page les répartit par section de la carte.

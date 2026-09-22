@@ -13,7 +13,7 @@ create table if not exists public.compteur (
   jour text    not null,                 -- 2026-09-18, en heure de Bruxelles
   type text    not null,                 -- vue | appel | itineraire | commande
                                          -- ville | support | source | plat
-                                         -- reseau | photo | pub
+                                         -- reseau | photo | pub | heure
   cle  text    not null default '',
   n    integer not null default 0,
   primary key (jour, type, cle)
@@ -134,6 +134,27 @@ as $$
     'plats', (
       select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
       from (select cle as nom, n from fenetre where type = 'plat') p
+    ),
+    -- Les heures de la journée, en heure de Bruxelles. Déduites au moment de
+    -- l'écriture, jamais transmises par le visiteur : ce n'est qu'un compteur
+    -- de plus, « 19 h : 42 », et aucun parcours n'en sort.
+    'heures', (
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by nom), '[]'::json)
+      from (select cle as nom, n from fenetre where type = 'heure') hr
+    ),
+    -- Les quatre mesures jour par jour, et non plus les seules visites : le
+    -- tableau de bord laisse choisir celle qu'on suit. Rien de neuf n'est
+    -- collecté — ces lignes sont en base depuis le premier jour.
+    'courbes', (
+      select coalesce(json_object_agg(type, serie), '{}'::json)
+      from (
+        select type, json_agg(json_build_object('j', j, 'n', n) order by j) as serie
+        from (select jour as j, type, sum(n)::int as n
+              from public.compteur
+              where type in ('vue','appel','itineraire','commande') and jour >= depuis
+              group by jour, type) x
+        group by type
+      ) y
     ),
     'courbe', (
       select coalesce(json_agg(json_build_object('j', j, 'n', n) order by j), '[]'::json)

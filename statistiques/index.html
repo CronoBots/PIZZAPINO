@@ -87,6 +87,24 @@ h1 em{font-style:italic;color:var(--or)}
   font-variant-numeric:tabular-nums;min-height:1.15em}
 .cle .d.hausse{color:var(--or-l)}
 
+/* ── intertitres : quatre chapitres, pour qu'on sache où l'on est ── */
+.chapitre{font-family:'Oswald',sans-serif;font-size:.68rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--or);margin:40px 0 14px;
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+.chapitre::after{content:"";flex:1 1 40px;height:1px;background:var(--trait)}
+.chapitre span{font-family:'Inter',system-ui,sans-serif;font-size:.78rem;
+  letter-spacing:0;text-transform:none;color:var(--texte-3)}
+.chapitre:first-of-type{margin-top:30px}
+
+/* ── choix de la mesure suivie par la courbe ─────────────────────── */
+.mesures{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.mesures button{font-family:'Oswald',sans-serif;font-size:.6rem;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--texte-3);background:none;
+  border:1px solid var(--trait);border-radius:999px;padding:7px 12px;
+  cursor:pointer;transition:.2s;min-height:34px}
+.mesures button:hover{color:var(--texte);border-color:var(--or)}
+.mesures button[aria-pressed="true"]{color:#14100D;background:var(--or);border-color:var(--or)}
+
 /* ── sections ────────────────────────────────────────────────────── */
 section{background:var(--surface);border:1px solid var(--trait);border-radius:var(--rayon);
   padding:clamp(18px,3.4vw,26px);margin-bottom:16px}
@@ -110,6 +128,34 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
   font-variant-numeric:tabular-nums;color:var(--texte);white-space:nowrap}
 .barre .val span{font-family:'Inter',sans-serif;font-weight:400;font-size:.78rem;color:var(--texte-3)}
 .piste{height:10px;background:var(--piste);border-radius:0 5px 5px 0;overflow:hidden}
+
+/* ── les vingt-quatre heures ──
+   Des barres debout, dans l'ordre de l'horloge : on y cherche un creux et une
+   pointe, pas un palmarès. Les règles générales des barres ne conviennent pas
+   — elles couchent la barre et lui donnent une piste de fond ; on les reprend
+   ici, avec la précision qu'il faut pour passer devant. */
+.barres.heures{display:grid;grid-template-columns:repeat(24,1fr);gap:0 2px;
+  align-items:end;margin-top:4px}
+/* La phrase de résumé est un enfant de la grille : sans cela elle se range
+   dans la première colonne et pousse toutes les heures d'un cran. */
+.barres.heures .resume{grid-column:1/-1;margin:0 0 12px}
+.barres.heures .barre .haut{display:block;margin:5px 0 0;text-align:center}
+.barres.heures .barre .nom{font-family:'Oswald',sans-serif;font-size:.58rem;
+  color:var(--texte-3);letter-spacing:.02em}
+.barres.heures .barre .piste{height:72px;display:flex;align-items:flex-end;
+  background:none;border-radius:0;overflow:visible}
+.barres.heures .barre .remplissage{width:100%;height:0;border-radius:3px 3px 0 0;
+  transition:height .5s ease-out}
+/* La pointe se nomme, les autres se lisent à leur hauteur : un nombre sur
+   chacune des vingt-quatre barres, ce n'est plus un graphique. */
+.barres.heures .barre.pointe .remplissage{background:var(--or-l)}
+.barres.heures .barre.pointe .nom{color:var(--texte);font-weight:600}
+/* Une heure creuse garde sa place : un zéro à 4 h fait partie de la réponse. */
+.barres.heures .barre.creuse .remplissage{opacity:.3}
+@media(max-width:600px){
+  .barres.heures{grid-template-columns:repeat(12,1fr);gap:10px 3px}
+  .barres.heures .barre .piste{height:52px}
+}
 .remplissage{height:100%;background:var(--or);border-radius:0 5px 5px 0;
   width:0;transition:width .6s cubic-bezier(.22,1,.36,1)}
 /* La ligne de regroupement n'est pas un lieu ni un plat : elle se distingue
@@ -282,8 +328,16 @@ footer a{color:var(--texte-2)}
     <div class="cle"><div class="n" id="kCmd">—</div><div class="l">Commandes composées</div><p class="d" id="dCmd"></p></div>
   </div>
 
+  <p class="chapitre">L’activité<span>combien, quand, et dans quel sens ça va</span></p>
+
   <section id="secCourbe">
-    <div class="titre"><h2>Les visites, jour par jour</h2></div>
+    <div class="titre"><h2 id="titreCourbe">Les visites, jour par jour</h2></div>
+    <div class="mesures" role="group" aria-label="Mesure suivie">
+      <button type="button" data-m="vue" aria-pressed="true">Visites</button>
+      <button type="button" data-m="appel">Appels</button>
+      <button type="button" data-m="itineraire">Itinéraires</button>
+      <button type="button" data-m="commande">Paniers</button>
+    </div>
     <p class="chapo">
       <span class="cle-we"><span class="ech-jour" aria-hidden="true"></span>en semaine</span>
       <span class="cle-we"><span class="ech-we" aria-hidden="true"></span>samedis et dimanches</span>
@@ -298,11 +352,26 @@ footer a{color:var(--texte-2)}
       <button class="bascule" type="button" data-cible="tblJours"
               aria-expanded="false" aria-controls="tblJours">Voir en tableau</button>
     </div>
-    <p class="chapo">Moyenne des visites par jour de semaine, sur la période choisie.
+    <p class="chapo">Moyenne par jour de semaine, pour la mesure choisie ci-dessus, sur la période choisie.
        Le jour en cours n’est pas compté&nbsp;: il n’est pas fini.</p>
     <div class="barres" id="barJours"></div>
     <div id="tblJours" hidden></div>
   </section>
+
+  <section id="secHeures">
+    <div class="titre">
+      <h2>À quelle heure on vous cherche</h2>
+      <button class="bascule" type="button" data-cible="tblHeures"
+              aria-expanded="false" aria-controls="tblHeures">Voir en tableau</button>
+    </div>
+    <p class="chapo">Les visites par heure, en heure belge, sur toute la période.
+       L’heure est déduite à l’arrivée&nbsp;; le visiteur ne transmet ni son horloge
+       ni son fuseau. Utile pour savoir quand publier, et quand être joignable.</p>
+    <div class="barres heures" id="barHeures"></div>
+    <div id="tblHeures" hidden></div>
+  </section>
+
+  <p class="chapitre">Qui vous cherche<span>d’où l’on vient, et avec quoi</span></p>
 
   <section id="secVilles">
     <div class="titre">
@@ -310,18 +379,12 @@ footer a{color:var(--texte-2)}
       <button class="bascule" type="button" data-cible="tblVilles"
               aria-expanded="false" aria-controls="tblVilles">Voir en tableau</button>
     </div>
-    <p class="chapo">Ville approximative, déduite du réseau.</p>
+    <p class="chapo">Ville approximative, déduite du réseau — qui situe l’opérateur
+       plutôt que le client. Un habitant du Condroz sur son téléphone ressort le plus
+       souvent «&nbsp;Liège&nbsp;». À lire comme un bassin, pas comme des adresses.</p>
+    <div class="carteLieux" id="carteLieux"></div>
     <div class="barres" id="barVilles"></div>
     <div id="tblVilles" hidden></div>
-  </section>
-
-  <section id="secCarte">
-    <div class="titre"><h2>Les mêmes, sur la carte</h2></div>
-    <p class="chapo">Le classement ci-dessus, posé sur le territoire. Même réserve&nbsp;:
-       ces villes viennent du réseau, qui situe l’opérateur plutôt que le client — un
-       habitant du Condroz sur son téléphone ressort le plus souvent « Liège ». À lire
-       comme un bassin, pas comme des adresses.</p>
-    <div class="carteLieux" id="carteLieux"></div>
   </section>
 
   <section id="secSupports">
@@ -334,6 +397,8 @@ footer a{color:var(--texte-2)}
     <div class="barres" id="barSupports"></div>
     <div id="tblSupports" hidden></div>
   </section>
+
+  <p class="chapitre">Par où ils passent<span>ce qui les amène, ce qui les retient</span></p>
 
   <section id="secSources">
     <div class="titre">
@@ -375,6 +440,21 @@ footer a{color:var(--texte-2)}
     <div id="tblPubs" hidden></div>
   </section>
 
+  <section id="secPhotos">
+    <div class="titre">
+      <h2>Les photos qu’on ouvre en grand</h2>
+      <button class="bascule" type="button" data-cible="tblPhotos"
+              aria-expanded="false" aria-controls="tblPhotos">Voir en tableau</button>
+    </div>
+    <p class="chapo">Non pas la photo la plus vue — en descendant la page, on les voit
+       toutes — mais celle qu’on a choisi d’agrandir. Un geste, comme décrocher le
+       téléphone.</p>
+    <div class="barres" id="barPhotos"></div>
+    <div id="tblPhotos" hidden></div>
+  </section>
+
+  <p class="chapitre">Ce qu’ils composent<span>la carte, vue du panier</span></p>
+
   <section id="secPlats">
     <div class="titre">
       <h2>Les plats les plus mis au panier</h2>
@@ -413,18 +493,6 @@ footer a{color:var(--texte-2)}
     <div id="tblOublies" hidden></div>
   </section>
 
-  <section id="secPhotos">
-    <div class="titre">
-      <h2>Les photos qu’on ouvre en grand</h2>
-      <button class="bascule" type="button" data-cible="tblPhotos"
-              aria-expanded="false" aria-controls="tblPhotos">Voir en tableau</button>
-    </div>
-    <p class="chapo">Non pas la photo la plus vue — en descendant la page, on les voit
-       toutes — mais celle qu’on a choisi d’agrandir. Un geste, comme décrocher le
-       téléphone.</p>
-    <div class="barres" id="barPhotos"></div>
-    <div id="tblPhotos" hidden></div>
-  </section>
 
   <footer>
     <span>Sans cookie, sans profil, sans donnée personnelle. <a href="../legal.html#confidentialite">En savoir plus</a></span>
@@ -449,6 +517,16 @@ footer a{color:var(--texte-2)}
   var ASCII = /^[\x20-\x7E]+$/;
   var bord   = document.getElementById('bord');
   var jours  = 30;
+
+  /* Les quatre mesures que la courbe sait suivre. Rien de neuf n'est collecté :
+     ces lignes sont en base depuis le premier jour, seule la lecture change. */
+  var MESURES = {
+    vue:        { titre: 'Les visites, jour par jour',     unite: 'visites' },
+    appel:      { titre: 'Les appels, jour par jour',      unite: 'appels' },
+    itineraire: { titre: 'Les itinéraires, jour par jour', unite: 'itinéraires' },
+    commande:   { titre: 'Les paniers, jour par jour',     unite: 'paniers' }
+  };
+  var mesure = 'vue';
   var enCours = null;                 // requête en vol, annulable
   var demo   = /[?&]demo=1/.test(location.search);
 
@@ -1079,6 +1157,85 @@ footer a{color:var(--texte-2)}
       + '</tbody></table>';
   }
 
+  /* Changer de mesure ne redemande rien au service : les quatre séries sont
+     déjà là. On redessine, c'est tout. */
+  function dessineMesure(d){
+    var serie = serieDe(d, mesure);
+    document.getElementById('titreCourbe').textContent = MESURES[mesure].titre;
+    dessineCourbe(serie);
+    dessineJours(serie, d.jusqua);
+    dessineTable('tblJours', joursEnTable(serie, d.jusqua), 'Jour');
+  }
+
+  /* ── à quelle heure on vous cherche ──
+     Vingt-quatre barres, dans l'ordre de l'horloge et jamais du classement :
+     on cherche un creux et une pointe, pas un palmarès. Les heures mortes de
+     la nuit restent visibles — un zéro à 4 h fait partie de la réponse. */
+  function dessineHeures(liste){
+    var hote = document.getElementById('barHeures');
+    var par = {};
+    (liste || []).forEach(function(d){ par[String(d.nom)] = d.n; });
+    var total = 0, max = 0;
+    for(var k in par){ total += par[k]; if(par[k] > max) max = par[k]; }
+    if(!total){
+      hote.innerHTML = '<p class="vide">Pas encore d’heure mesurée sur cette période.</p>';
+      return;
+    }
+    /* Les deux pointes de la journée : c'est ce qu'on vient chercher ici.
+       On les nomme en toutes lettres plutôt que d'écrire un nombre sur
+       chacune des vingt-quatre barres. */
+    var rangs = [];
+    for(var h = 0; h < 24; h++) rangs.push({ h: h, n: par[(h < 10 ? '0' : '') + h] || 0 });
+    var fortes = rangs.slice().sort(function(a2, b2){ return b2.n - a2.n; })
+                      .slice(0, 2).filter(function(x){ return x.n; });
+    var pointes = {};
+    fortes.forEach(function(x){ pointes[x.h] = true; });
+
+    var resume = fortes.length
+      ? '<p class="resume">Le plus de monde vers <b>' + fortes[0].h + ' h</b> ('
+        + nb(fortes[0].n) + ' ' + singulier('visites', fortes[0].n) + ')'
+        + (fortes[1] ? ', puis vers <b>' + fortes[1].h + ' h</b> (' + nb(fortes[1].n) + ')' : '')
+        + '.</p>'
+      : '';
+
+    hote.innerHTML = resume + rangs.map(function(x){
+      return '<div class="barre' + (x.n ? '' : ' creuse') + (pointes[x.h] ? ' pointe' : '')
+        + '" title="' + x.h + ' h : ' + nb(x.n) + ' ' + singulier('visites', x.n) + '">'
+        + '<div class="piste"><div class="remplissage" data-l="'
+        + (max ? x.n * 100 / max : 0) + '"></div></div>'
+        + '<div class="haut"><span class="nom">' + x.h + '</span></div></div>';
+    }).join('');
+    requestAnimationFrame(function(){
+      hote.querySelectorAll('.remplissage').forEach(function(el){
+        el.style.height = Math.max(2, +el.dataset.l) + '%';
+      });
+    });
+  }
+
+  function heuresEnTable(liste){
+    return (liste || []).map(function(d){
+      return { nom: String(d.nom) + ' h', n: d.n };
+    });
+  }
+
+  /* Le service ne renvoie que les jours où il s'est passé quelque chose. Un
+     jour sans appel n'a pas de ligne — et sans lui, la courbe sauterait ce
+     jour au lieu de descendre à zéro, et la moyenne du mardi se calculerait
+     sur les seuls mardis où le téléphone a sonné. On remplit donc les trous. */
+  function serieDe(d, m){
+    var brut = {};
+    var src = (d.courbes && d.courbes[m]) || (m === 'vue' ? d.courbe : null) || [];
+    src.forEach(function(p){ brut[p.j] = p.n; });
+
+    var a = enDate(d.depuis), b = enDate(d.jusqua), out = [];
+    if(!a || !b) return src.slice();
+    for(var t = a.getTime(); t <= b.getTime(); t += 86400000){
+      var j = new Date(t).toISOString().slice(0, 10);
+      out.push({ j: j, n: brut[j] || 0 });
+    }
+    return out;
+  }
+
   /* ── les visites, jour par jour ──
      Une barre par jour, et par-dessus la tendance : la moyenne glissante sur
      sept jours. Les deux disent la même mesure, sur la même échelle — jamais
@@ -1188,12 +1345,12 @@ footer a{color:var(--texte-2)}
     hote.innerHTML =
       '<div class="cadre">'
       + '<svg viewBox="0 0 ' + L + ' ' + HT + '" width="' + L + '" height="' + HT + '" role="img" '
-      + 'aria-label="Visites jour par jour, du ' + dateLongue(points[0].j) + ' au '
+      + 'aria-label="' + MESURES[mesure].titre + ', du ' + dateLongue(points[0].j) + ' au '
       + dateLongue(der.j) + '. Maximum ' + nb(max) + ' en un jour.">'
       + barres + ligne + lettres
       + '</svg></div>'
       + '<div class="bornes"><span>' + dateCourte(points[0].j) + '</span>'
-      + '<span>' + nb(max) + ' visites au plus haut</span>'
+      + '<span>' + nb(max) + ' ' + singulier(MESURES[mesure].unite, max) + ' au plus haut</span>'
       + '<span>' + dateCourte(der.j) + '</span></div>';
 
     /* La légende porte la pente : une droite qui monte, c'est bien, mais de
@@ -1226,7 +1383,7 @@ footer a{color:var(--texte-2)}
       i = Math.max(0, Math.min(points.length - 1, i));
       var pt = points[i];
 
-      bulle.innerHTML = '<b>' + nb(pt.n) + '</b> ' + (pt.n === 1 ? 'visite' : 'visites')
+      bulle.innerHTML = '<b>' + nb(pt.n) + '</b> ' + singulier(MESURES[mesure].unite, pt.n)
                       + '<span>' + dateLongue(pt.j) + '</span>';
       bulle.hidden = false;
       var gauche = (i + 0.5) / points.length * r.width;
@@ -1817,7 +1974,7 @@ footer a{color:var(--texte-2)}
         el.title = e.texte ? 'Comparé aux ' + d.jours + ' jours précédents' : '';
       });
 
-    dessineCourbe(d.courbe);
+    dessineMesure(d);
     var qVilles = queueDe(d.villes_autres, d.villes_autres_n, 'autre ville', 'autres villes');
 
     /* Le service renvoie desormais tous les plats — la repartition par section
@@ -1831,13 +1988,23 @@ footer a{color:var(--texte-2)}
     dessineBarres('barVilles',   d.villes,   'visites', qVilles);
     dessineBarres('barSupports', d.supports, 'visites');
     dessineBarres('barSources',  d.sources,  'visites');
-    dessineBarres('barPlats',    hautPlats,  'fois',       qPlats);
+    /* Combien de plats dans un panier : deux chiffres déjà là, jamais
+       rapprochés. Un panier à une pizza et un panier à quatre ne disent pas
+       la même chose du site. */
+    var totalPlats = tousPlats.reduce(function(a2, x){ return a2 + x.n; }, 0);
+    var paniers = d.totaux.commande || 0;
+    dessineBarres('barPlats', hautPlats, 'fois', qPlats,
+      null,
+      paniers ? '<p class="resume"><b>' + frD.format(Math.round(totalPlats * 10 / paniers) / 10)
+              + '</b> plats par panier en moyenne, sur ' + nb(paniers) + ' '
+              + (paniers === 1 ? 'panier composé' : 'paniers composés') + '.</p>'
+              : '');
     dessineTable('tblVilles',   d.villes,   'Ville',    qVilles);
     dessineTable('tblSupports', d.supports, 'Appareil');
     dessineTable('tblSources',  d.sources,  'Provenance');
     dessineTable('tblPlats',    hautPlats,  'Plat',     qPlats);
-    dessineJours(d.courbe, d.jusqua);
-    dessineTable('tblJours', joursEnTable(d.courbe, d.jusqua), 'Jour');
+    dessineHeures(d.heures);
+    dessineTable('tblHeures', heuresEnTable(d.heures), 'Heure');
     dessineCarte(d.villes, d.villes_autres);
     dessineParts(tousPlats);
     dessineTable('tblParts', partsEnTable(tousPlats), 'Section de la carte');
@@ -1907,7 +2074,26 @@ footer a{color:var(--texte-2)}
               {nom:'Lasagne maison',n:22},{nom:'Tiramisù',n:18},
               {nom:'Escalope Parmigiana',n:14},{nom:'Rigatoni Romagnola',n:12},
               {nom:'Mousse au chocolat',n:6}],
-      courbe: courbe
+      courbe: courbe,
+      /* Les trois autres mesures suivent les visites, en plus rare : c'est ce
+         que montre la vraie base, et une démonstration qui mentirait sur les
+         ordres de grandeur ne servirait à rien. */
+      courbes: (function(){
+        var c = { vue: courbe };
+        [['appel', .14], ['itineraire', .09], ['commande', .06]].forEach(function(x){
+          c[x[0]] = courbe.map(function(p, i){
+            return { j: p.j, n: Math.max(0, Math.round(p.n * x[1] + (i % 3) - 1)) };
+          }).filter(function(p){ return p.n > 0; });
+        });
+        return c;
+      })(),
+      /* Deux pointes : le midi et le soir, comme un restaurant. */
+      heures: (function(){
+        var poids = [2,1,1,0,0,0,1,3,6,11,19,34,46,31,18,14,17,26,52,61,44,27,14,6];
+        return poids.map(function(w, h){
+          return { nom: (h < 10 ? '0' : '') + h, n: Math.round(vues * w / 465) };
+        }).filter(function(x){ return x.n > 0; });
+      })()
     };
   }
 
@@ -1988,8 +2174,10 @@ footer a{color:var(--texte-2)}
     lignes.push(['Total', 'Itinéraires demandés', t.itineraire, part(t.itineraire)]);
     lignes.push(['Total', 'Commandes composées', t.commande, part(t.commande)]);
 
-    (dernier.courbe || []).forEach(function(p){
-      lignes.push(['Visites par jour', p.j, p.n, '']);
+    Object.keys(MESURES).forEach(function(m){
+      serieDe(dernier, m).forEach(function(p){
+        lignes.push([MESURES[m].titre, p.j, p.n, '']);
+      });
     });
     var bloc = function(nom, liste, queue){
       var rangs = avecQueue(liste, queue);
@@ -2001,6 +2189,7 @@ footer a{color:var(--texte-2)}
     bloc('Villes', dernier.villes,
          queueDe(dernier.villes_autres, dernier.villes_autres_n, 'autre ville', 'autres villes'));
     bloc('Appareils', dernier.supports);
+    bloc('Heures de la journée', heuresEnTable(dernier.heures));
     bloc('Réseaux', dernier.reseaux);
     bloc('Photos agrandies', nommePhotos(dernier.photos));
     bloc('Publications ouvertes', nommePubs(dernier.pubs));
@@ -2062,6 +2251,18 @@ footer a{color:var(--texte-2)}
       /* Le libellé change à l'écran ; sans cet attribut, rien ne le dit à
          qui navigue au lecteur d'écran. */
       b.setAttribute('aria-expanded', ouvert ? 'true' : 'false');
+    });
+  });
+
+  /* Changer de mesure ne rappelle pas le service : tout est déjà chargé. */
+  document.querySelectorAll('.mesures button[data-m]').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.mesures button[data-m]').forEach(function(o){
+        o.removeAttribute('aria-pressed');
+      });
+      b.setAttribute('aria-pressed', 'true');
+      mesure = b.dataset.m;
+      if(dernier) dessineMesure(dernier);
     });
   });
 

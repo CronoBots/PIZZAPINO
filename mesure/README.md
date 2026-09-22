@@ -17,6 +17,7 @@ clairement signalés. Utile pour la présentation aux gérants.
 | Nombre de visites du site par jour | Qui a visité |
 | Ville approximative, en total (« Liège : 34 ») | Adresse IP |
 | Type d'appareil, en total | Navigateur, système, empreinte |
+| Heure de la visite, en total (« 19 h : 42 ») | L'horodatage d'une visite précise |
 | Appels et itinéraires lancés, en nombre | Numéro appelé, identité |
 | Intitulés des plats mis au panier, en nombre | Panier d'une personne donnée |
 | Clics vers Instagram et Facebook, et d'où ils partent | L'adresse cliquée, le compte visé |
@@ -70,6 +71,18 @@ lisent dans Instagram (Insights) et dans Meta Business Suite.
 
 Un clic sur « Suivre » n'est donc pas un abonné de plus : c'est un visiteur
 envoyé sur le compte.
+
+**L'heure est déduite à l'arrivée, jamais transmise.** Le visiteur n'envoie ni
+son horloge ni son fuseau : la fonction Edge lit l'heure de Bruxelles au moment
+où elle écrit, et incrémente un compteur de plus — au même titre que la ville
+ou l'appareil. Aucun horodatage individuel n'existe, donc aucun parcours n'en
+sort. Le tableau de bord n'affiche l'heure que pour les visites.
+
+**Les quatre mesures sont disponibles jour par jour.** Visites, appels,
+itinéraires et paniers : la base les porte toutes depuis le premier jour, et
+le tableau de bord laisse choisir celle que suit sa courbe. Un jour sans appel
+n'a pas de ligne en base ; la page comble le trou par un zéro, sans quoi la
+moyenne du mardi se calculerait sur les seuls mardis où le téléphone a sonné.
 
 **Les robots sont écartés avant toute écriture.** Un `user-agent` de robot, de
 sonde de surveillance ou d'aperçu de lien ne laisse aucune trace en base : sans
