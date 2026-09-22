@@ -19,10 +19,21 @@ clairement signalés. Utile pour la présentation aux gérants.
 | Type d'appareil, en total | Navigateur, système, empreinte |
 | Appels et itinéraires lancés, en nombre | Numéro appelé, identité |
 | Intitulés des plats mis au panier, en nombre | Panier d'une personne donnée |
+| Commune déclarée au panier, en nombre | Qui l'a déclarée |
 
 **Une ouverture n'est pas une personne.** Sans cookie ni identifiant — c'est le
 choix de conception — un même client qui revient le lendemain est recompté. Le
 tableau de bord dit donc « ouvertures du site », jamais « visiteurs uniques ».
+
+**La commune est déclarée, pas déduite.** Le panneau « Ma liste » propose un
+champ facultatif « votre commune ». C'est la seule façon d'obtenir une commune
+exacte : la géolocalisation par IP situe le point de sortie de l'opérateur, pas
+le client — avec 90 % de trafic mobile, un habitant de Villers-le-Temple
+ressort « Liège ». La liste proposée vient de `mesure/lieux.json` (relevé
+OpenStreetMap dans un rayon de 20 km autour de Nandrin, licence ODbL) ; après
+toute mise à jour de ce fichier, relancer `python3 mesure/lieux.py` pour
+réécrire les blocs engendrés. La page ne relève que les localités de sa propre
+liste, accents et casse normalisés ; le collecteur revérifie la forme.
 
 **Les robots sont écartés avant toute écriture.** Un `user-agent` de robot, de
 sonde de surveillance ou d'aperçu de lien ne laisse aucune trace en base : sans
