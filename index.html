@@ -1368,6 +1368,9 @@
     padding:13px 15px;border-radius:11px;border:1px solid rgba(233,206,150,.24);
     background:#100b08;color:#F5EEDF}
   .gerant-box input:focus{outline:2px solid #c69a4d;outline-offset:1px;border-color:#c69a4d}
+  /* Le curseur clignote deja la : « Mot de passe » ne sert plus a rien et
+     genait la lecture de ce qu'on tape. */
+  .gerant-box input:focus::placeholder{color:transparent}
   .gerant-box .gerant-err{min-height:1.15em;margin:9px 0 14px;font-size:.82rem;color:#e0574b}
   .gerant-ok{background:#c69a4d;border-color:#c69a4d;color:#14100D}
   .gerant-ok:hover{background:#d9ae62}
@@ -4179,10 +4182,13 @@
 
   var dernierPanier = '';
 
-  function envoie(type, plats){
+  function envoie(type, plats, source){
     if(!API) return;
     try{
-      var charge = JSON.stringify(plats && plats.length ? { t:type, p:plats } : { t:type });
+      var corps2 = { t:type };
+      if(plats && plats.length) corps2.p = plats;
+      if(source) corps2.r = source;
+      var charge = JSON.stringify(corps2);
       var corps = new Blob([charge], { type:'text/plain;charset=UTF-8' });
       if(navigator.sendBeacon && navigator.sendBeacon(API + '/e', corps)) return;
       fetch(API + '/e', { method:'POST', body:charge, keepalive:true, mode:'cors',
@@ -4200,8 +4206,25 @@
     envoie(type, plats);
   };
 
+  /* D'où vient le visiteur. On n'envoie JAMAIS le référent brut : une adresse
+     peut porter des paramètres, un terme de recherche, un identifiant de
+     campagne. Seule une catégorie parmi cinq valeurs fixes part d'ici — de
+     quoi savoir si la fiche Google travaille, rien de plus. */
+  function provenance(){
+    var r = '';
+    try{ r = document.referrer || ''; }catch(e){ return 'Accès direct'; }
+    if(!r) return 'Accès direct';
+    var h;
+    try{ h = new URL(r).hostname.toLowerCase(); }catch(e){ return 'Autre site'; }
+    if(h === location.hostname) return '';               // navigation interne : on ne compte pas
+    if(/(^|\.)google\./.test(h)) return 'Google';
+    if(/(^|\.)(facebook|fb)\.(com|me)$/.test(h)) return 'Facebook';
+    if(/(^|\.)instagram\.com$/.test(h)) return 'Instagram';
+    return 'Autre site';
+  }
+
   /* La visite : une fois, à l'ouverture de la page. */
-  if(document.visibilityState !== 'prerender') envoie('vue');
+  if(document.visibilityState !== 'prerender') envoie('vue', null, provenance());
 
   /* Appels et itinéraires : une seule écoute pour tous les liens, même ceux
      ajoutés plus tard par le script. */

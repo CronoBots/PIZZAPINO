@@ -232,6 +232,7 @@ body.verrouille #bord{filter:blur(3px);pointer-events:none;user-select:none}
 .porte input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--trait);
   color:var(--texte);border-radius:10px;padding:13px 15px;font-size:1rem;font-family:inherit}
 .porte input:focus{outline:2px solid var(--or);outline-offset:1px;border-color:var(--or)}
+.porte input:focus::placeholder{color:transparent}
 .porte button{background:var(--or);color:#14100D;border:0;border-radius:10px;padding:13px 20px;
   font-family:'Oswald',sans-serif;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
   cursor:pointer;min-height:48px}
@@ -293,9 +294,7 @@ footer a{color:var(--texte-2)}
 
   <section id="secCourbe">
     <div class="titre"><h2>Les ouvertures, jour par jour</h2></div>
-    <p class="chapo">Une ouverture = un chargement du site. Faute de cookie — c’est voulu —
-       un même client qui revient le lendemain est recompté.
-       <span class="cle-we"><span class="ech-we" aria-hidden="true"></span>samedis et dimanches</span></p>
+    <p class="chapo"><span class="cle-we"><span class="ech-we" aria-hidden="true"></span>samedis et dimanches</span></p>
     <div class="courbe" id="courbe"></div>
   </section>
 
@@ -305,8 +304,7 @@ footer a{color:var(--texte-2)}
       <button class="bascule" type="button" data-cible="tblVilles"
               aria-expanded="false" aria-controls="tblVilles">Voir en tableau</button>
     </div>
-    <p class="chapo">Ville approximative, déduite du réseau. Aucun visiteur n’est identifié.
-       Les douze premières sont détaillées&nbsp;; le reste est regroupé, mais compte dans les parts.</p>
+    <p class="chapo">Ville approximative, déduite du réseau. Aucun visiteur n’est identifié.</p>
     <div class="barres" id="barVilles"></div>
     <div id="tblVilles" hidden></div>
   </section>
@@ -329,6 +327,19 @@ footer a{color:var(--texte-2)}
     <p class="chapo">Ce que vos clients ont en main au moment de vous chercher.</p>
     <div class="barres" id="barSupports"></div>
     <div id="tblSupports" hidden></div>
+  </section>
+
+  <section id="secSources">
+    <div class="titre">
+      <h2>Comment ils arrivent</h2>
+      <button class="bascule" type="button" data-cible="tblSources"
+              aria-expanded="false" aria-controls="tblSources">Voir en tableau</button>
+    </div>
+    <p class="chapo">Le site d’où vient le clic, rien de plus&nbsp;: ni le terme cherché,
+       ni la page précise. « Accès direct » = adresse tapée, favori, ou navigateur qui
+       ne dit pas d’où il vient.</p>
+    <div class="barres" id="barSources"></div>
+    <div id="tblSources" hidden></div>
   </section>
 
   <section id="secPlats">
@@ -1490,9 +1501,11 @@ footer a{color:var(--texte-2)}
 
     dessineBarres('barVilles',   d.villes,   'ouvertures', qVilles);
     dessineBarres('barSupports', d.supports, 'ouvertures');
+    dessineBarres('barSources',  d.sources,  'ouvertures');
     dessineBarres('barPlats',    hautPlats,  'fois',       qPlats);
     dessineTable('tblVilles',   d.villes,   'Ville',    qVilles);
     dessineTable('tblSupports', d.supports, 'Appareil');
+    dessineTable('tblSources',  d.sources,  'Provenance');
     dessineTable('tblPlats',    hautPlats,  'Plat',     qPlats);
     dessineCarte(d.villes, d.villes_autres);
     dessineParts(tousPlats);
@@ -1528,6 +1541,9 @@ footer a{color:var(--texte-2)}
                {nom:'Neupré',n:Math.round(vues*.12)},{nom:'Huy',n:Math.round(vues*.09)},
                {nom:'Esneux',n:Math.round(vues*.07)},{nom:'Seraing',n:Math.round(vues*.05)},
                {nom:'Non localisé',n:Math.round(vues*.2)}],
+      sources: [{nom:'Google',n:Math.round(vues*.52)},{nom:'Accès direct',n:Math.round(vues*.24)},
+                {nom:'Facebook',n:Math.round(vues*.13)},{nom:'Instagram',n:Math.round(vues*.08)},
+                {nom:'Autre site',n:Math.round(vues*.03)}],
       supports: [{nom:'Téléphone',n:Math.round(vues*.79)},{nom:'Ordinateur',n:Math.round(vues*.16)},
                  {nom:'Tablette',n:Math.round(vues*.05)}],
       plats: [{nom:'Pizza Margherita',n:64},{nom:'Pizza 4 Fromages',n:51},
@@ -1543,7 +1559,7 @@ footer a{color:var(--texte-2)}
   /* Le service renvoie ses classements déjà triés ; le jeu fictif doit l'imiter,
      sans quoi la démonstration montre des barres dans le désordre. */
   function trieDemo(d){
-    ['villes', 'supports', 'plats'].forEach(function(k){
+    ['villes', 'supports', 'sources', 'plats'].forEach(function(k){
       d[k].sort(function(a, b){ return b.n - a.n; });
     });
     return d;
@@ -1666,7 +1682,13 @@ footer a{color:var(--texte-2)}
     ouvre();
   });
 
-  document.getElementById('quitter').addEventListener('click', function(){ deconnecte(''); });
+  /* Fermer la session ramene au site : rester sur un tableau floute derriere un
+     voile n'est pas une sortie, c'est une impasse. La cle part d'abord — si la
+     navigation echoue, elle ne doit plus trainer. */
+  document.getElementById('quitter').addEventListener('click', function(){
+    try{ sessionStorage.removeItem(STOCK); }catch(e){}
+    location.href = '../';
+  });
 
   document.querySelectorAll('.filtres button[data-j]').forEach(function(b){
     b.addEventListener('click', function(){

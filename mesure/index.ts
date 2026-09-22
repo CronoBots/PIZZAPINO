@@ -56,6 +56,12 @@ const EXONYMES: Record<string, string> = {
   'hoei': 'Huy',
   'bergen': 'Mons',
 };
+/* D'ou vient le visiteur. Le site ne transmet qu'une de ces cinq etiquettes,
+   jamais le referent brut — une adresse porterait le terme cherche ou un
+   identifiant de campagne. Le vocabulaire etant ferme, on le verifie ici :
+   rien d'autre n'entre en base. */
+const SOURCES = new Set(['Google', 'Facebook', 'Instagram', 'Autre site', 'Accès direct']);
+
 const MAX_PLATS = 40;
 const MAX_JOURS = 365;
 
@@ -170,7 +176,7 @@ async function evenement(req: Request, origine: string): Promise<Response> {
   // Écarté avant toute écriture : un robot ne laisse aucune trace en base.
   if (estRobot(req)) return vide;
 
-  let corps: { t?: string; p?: unknown[] };
+  let corps: { t?: string; p?: unknown[]; r?: unknown };
   try { corps = await req.json(); } catch { return vide; }
   if (!corps || !TYPES.has(String(corps.t))) return vide;
 
@@ -180,6 +186,8 @@ async function evenement(req: Request, origine: string): Promise<Response> {
   // Le profil n'est relevé qu'à l'arrivée : une seule fois par visite.
   if (type === 'vue') {
     paires.push(['ville', await ville(req)], ['support', support(req)]);
+    const src = nettoie(corps.r, 20);
+    if (SOURCES.has(src)) paires.push(['source', src]);
   }
 
   // Les plats déposés au panier, dédoublonnés et bornés.
@@ -235,6 +243,7 @@ async function stats(req: Request, origine: string): Promise<Response> {
     supports: agrege?.supports ?? [],
     plats:    agrege?.plats    ?? [],
     courbe:   agrege?.courbe   ?? [],
+    sources:  agrege?.sources  ?? [],
     // Ce que pèse la queue des villes, que la page n'affiche pas en détail mais
     // doit compter dans ses pourcentages. Les plats, eux, sont renvoyés en
     // entier : la page les répartit par section de la carte.

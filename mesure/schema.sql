@@ -108,6 +108,12 @@ as $$
     ),
     -- Tous les plats : le tableau de bord les repartit par section de la carte,
     -- et une proportion calculee sur les quinze premiers seulement serait fausse.
+    -- D'ou viennent les ouvertures. Cinq etiquettes fermees, jamais un referent
+    -- brut : une adresse porterait le terme cherche ou un identifiant de campagne.
+    'sources', (
+      select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
+      from (select cle as nom, n from fenetre where type = 'source') so
+    ),
     'plats', (
       select coalesce(json_agg(json_build_object('nom', nom, 'n', n) order by n desc, nom), '[]'::json)
       from (select cle as nom, n from fenetre where type = 'plat') p
