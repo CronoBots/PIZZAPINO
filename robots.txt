@@ -1,8 +1,15 @@
 User-agent: *
 Allow: /
 
-# Scan du menu officiel : sert de référence au contrôle de synchronisation,
-# n'a pas de couche texte et n'a rien à faire dans l'index.
-Disallow: /menu.pdf
+# Le scan du menu a quitté la racine : il vit dans menu/, où le contrôle de
+# synchronisation le lit. Plus de page à écarter de l'index — la carte se lit
+# désormais sur /carte/, en texte, et c'est elle qu'on veut voir indexée.
+
+# Les dossiers d'outillage : scripts, empreintes, aperçus, scan du menu. Rien
+# qui s'adresse à un visiteur, rien qui doive peser dans l'index.
+Disallow: /menu/
+Disallow: /outils/
+Disallow: /mesure/
+Disallow: /statistiques/
 
 Sitemap: https://pizzeriapino.be/sitemap.xml

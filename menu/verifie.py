@@ -3,7 +3,7 @@
 """
 Chien de garde du menu.
 
-menu.pdf est le menu officiel de la maison — un scan, sans couche texte.
+menu/menu.pdf est le menu officiel de la maison — un scan, sans couche texte.
 On ne peut donc pas en recopier les prix automatiquement : la lecture
 optique se trompe (« NEROME » pour NERONE, « 117,50 » pour 11,50). Écrire
 un prix faux sur le site d'un restaurant est pire que ne rien écrire.
@@ -25,7 +25,11 @@ import subprocess
 import sys
 
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PDF     = os.path.join(RACINE, 'menu.pdf')
+# Le scan a quitté la racine : servi par GitHub Pages, il y était une adresse
+# publique — 567 Ko sans couche texte, illisible sur un téléphone, et Google
+# l'affichait en lien sous le site. Depuis que /carte/ existe, il n'a plus
+# aucune raison d'être atteignable. Il reste ici, où le chien de garde le lit.
+PDF     = os.path.join(RACINE, 'menu', 'menu.pdf')
 SITE    = os.path.join(RACINE, 'index.html')
 SCELLE  = os.path.join(RACINE, 'menu', 'synchro.json')
 SORTIE  = os.path.join(RACINE, 'menu', 'apercu')
@@ -75,7 +79,7 @@ def prix_normalises(texte):
 
 def main():
     if not os.path.exists(PDF):
-        print('menu.pdf est absent.'); return 1
+        print('menu/menu.pdf est absent.'); return 1
 
     actuel = empreinte(PDF)
     scelle = {}
@@ -104,7 +108,7 @@ def main():
     L = []
     L.append('## Le menu officiel a changé')
     L.append('')
-    L.append('`menu.pdf` ne correspond plus à la version avec laquelle le site '
+    L.append('`menu/menu.pdf` ne correspond plus à la version avec laquelle le site '
              'a été synchronisé. **Le site n’a pas été modifié** : il faut le '
              'reprendre à la main.')
     L.append('')
