@@ -131,7 +131,7 @@ Détail complet dans [`mesure/README.md`](mesure/README.md). En résumé :
    supabase secrets set ORIGINES="https://pizzeriapino.be,https://cronobots.github.io"
    ```
 4. Reporter l'adresse `https://<ref>.supabase.co/functions/v1/mesure` dans les
-   deux `var API = '';` — `index.html` et `aldente/index.html`.
+   deux `var API = '';` — `index.html` et `statistiques/index.html`.
 5. Incrémenter `CACHE` dans `sw.js`, pousser sur `main`.
 
 ---
@@ -145,7 +145,7 @@ Détail complet dans [`mesure/README.md`](mesure/README.md). En résumé :
 | L'ancienne adresse redirige | `cronobots.github.io/PIZZAPINO/` → doit basculer sur le nouveau domaine |
 | **La messagerie vit toujours** | s'envoyer un message à `info@pizzeriapino.be` depuis une adresse extérieure |
 | L'application s'installe | ouvrir sur téléphone → « Ajouter à l'écran d'accueil » |
-| Le tableau de bord | `pizzeriapino.be/aldente/` → la clé est demandée, les chiffres montent |
+| Le tableau de bord | `pizzeriapino.be/statistiques/` → la clé est demandée, les chiffres montent |
 | L'aperçu de partage | coller le lien dans WhatsApp → logo et phrase du hero |
 
 ---

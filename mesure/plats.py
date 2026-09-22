@@ -5,7 +5,7 @@ Associe chaque plat de la carte à sa catégorie, pour le tableau de bord.
 La base n'enregistre que des intitulés de plats : « Pizza Capricciosa »,
 « Spaghetti Carbonara ». Elle ignore à quelle section de la carte ils
 appartiennent. Ce script lit index.html et en tire la correspondance, qu'il
-injecte dans aldente/index.html entre deux marqueurs.
+injecte dans statistiques/index.html entre deux marqueurs.
 
 Un piège à reproduire fidèlement : un script de la page ajoute « Pizza »
 devant les noms du panneau pizzas — mais il s'arrête à la section
@@ -89,7 +89,7 @@ def main():
     js = ('  /* Plat → section de la carte, engendré depuis index.html.\n'
           '     Les noms sont ceux qui arrivent en base, préfixe « Pizza » compris. */\n'
           '  var PLATS = {\n%s\n  };' % '\n'.join(lignes))
-    remplace('aldente/index.html',
+    remplace('statistiques/index.html',
              '  /* plats:début — engendré par mesure/plats.py, ne pas modifier à la main */',
              '  /* plats:fin */',
              js)

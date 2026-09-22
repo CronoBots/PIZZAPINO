@@ -215,41 +215,6 @@ td:last-child,th:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .alerte b{color:var(--texte)}
 .alerte.demo{border-left-color:var(--rouge)}
 
-/* ── porte d'entrée ──────────────────────────────────────────────── */
-/* La connexion se fait maintenant depuis le site, dans une fenêtre. Ici,
-   elle reste en secours : quiconque ouvre l'adresse directement tombe sur
-   ce voile, le tableau estompé derrière lui et hors d'atteinte. */
-.voile{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
-  padding:24px;background:rgba(10,7,5,.84);
-  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-body.verrouille #bord{filter:blur(3px);pointer-events:none;user-select:none}
-.porte{width:100%;max-width:380px;text-align:center;background:var(--surface);
-  border:1px solid var(--trait);border-radius:16px;padding:30px 26px 24px;
-  box-shadow:0 30px 70px -20px #000}
-.porte h1{margin-bottom:20px}
-/* Le champ porte son libelle au-dessus, pas dedans : un repere qui s'efface
-   des qu'on clique laisse un rectangle vide et muet. */
-.porte-lab{display:block;text-align:left;font-family:'Oswald',sans-serif;
-  text-transform:uppercase;letter-spacing:.13em;font-size:.6rem;color:var(--texte-3);
-  margin-bottom:8px}
-.porte-champ{position:relative}
-.porte input{width:100%;box-sizing:border-box;background:var(--fond);
-  border:1px solid var(--trait);color:var(--texte);border-radius:10px;
-  padding:12px 46px 12px 14px;font-size:.98rem;font-family:inherit;letter-spacing:.05em}
-.porte input:focus{outline:none;border-color:var(--or);
-  box-shadow:0 0 0 3px rgba(198,154,77,.16)}
-.porte-oeil{position:absolute;right:5px;top:50%;transform:translateY(-50%);
-  width:36px;height:36px;display:grid;place-items:center;background:none;border:0;
-  color:var(--texte-3);cursor:pointer;border-radius:9px;transition:color .2s}
-.porte-oeil:hover,.porte-oeil[aria-pressed="true"]{color:var(--or-l)}
-.porte-oeil svg{width:17px;height:17px}
-.porte-ok{width:100%;margin-top:15px;background:var(--or);color:#14100D;border:0;
-  border-radius:10px;padding:13px 20px;font-family:'Oswald',sans-serif;font-size:.74rem;
-  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;min-height:48px}
-.porte .erreur{color:#E8836F;font-size:.85rem;margin:10px 0 0;min-height:1.2em;
-  text-align:left}
-.porte .erreur:empty{min-height:0}
-
 footer{color:var(--texte-3);font-size:.78rem;margin-top:34px;padding-top:18px;
   border-top:1px solid var(--trait);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 footer a{color:var(--texte-2)}
@@ -259,31 +224,9 @@ footer a{color:var(--texte-2)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
-<body class="verrouille">
+<body>
 
 <!-- ══════════ Porte : la page ne montre rien sans la clé ══════════ -->
-<div class="voile" id="porte">
- <div class="porte" role="dialog" aria-modal="true" aria-labelledby="porteTitre">
-  <p class="marque">Pizzeria Pino</p>
-  <h1 id="porteTitre">Statistiques</h1>
-  <form id="formCle" autocomplete="off">
-    <label class="porte-lab" for="champCle">Mot de passe</label>
-    <div class="porte-champ">
-      <input type="password" id="champCle" autocomplete="current-password"
-             enterkeyhint="go" spellcheck="false">
-      <button type="button" class="porte-oeil" id="porteVoir" aria-pressed="false"
-              aria-label="Afficher le mot de passe" title="Afficher le mot de passe"><svg
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
-        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
-        d="M1.8 12S5.5 5.5 12 5.5 22.2 12 22.2 12 18.5 18.5 12 18.5 1.8 12 1.8 12Z"/><circle
-        cx="12" cy="12" r="3.1"/></svg></button>
-    </div>
-    <p class="erreur" id="erreurCle" role="alert"></p>
-    <button type="submit" class="porte-ok">Entrer</button>
-  </form>
- </div>
-</div>
-
 <!-- ══════════ Tableau de bord ══════════ -->
 <div class="enveloppe" id="bord">
 
@@ -414,20 +357,17 @@ footer a{color:var(--texte-2)}
   var API = 'https://pnizdddritizjbsksoir.supabase.co/functions/v1/mesure';
   /* ═══════════════════════════════════════════════════════════════════ */
 
-  var STOCK = 'pino.aldente.cle';
+  var STOCK = 'pino.stats.cle';
 
   /* Un en-tête HTTP ne transporte pas les accents : une clé qui en contient
      arriverait mutilée au serveur, et l'accès échouerait sans explication. */
   var ASCII = /^[\x20-\x7E]+$/;
-  var PLAINTE = 'Le mot de passe ne peut contenir ni accent ni caractère spécial : '
-              + 'lettres non accentuées, chiffres, tirets et points seulement.';
-  var porte  = document.getElementById('porte');
   var bord   = document.getElementById('bord');
   var jours  = 30;
   var enCours = null;                 // requête en vol, annulable
   var demo   = /[?&]demo=1/.test(location.search);
 
-  /* Le lien remis aux gérants porte la clé : .../aldente/?k=…
+  /* Le lien remis aux gérants porte la clé : .../statistiques/?k=…
      On la range en mémoire de session puis on l'efface de la barre d'adresse,
      pour qu'elle ne traîne ni à l'écran ni dans une capture. La page est en
      « no-referrer » : elle ne la transmet à aucun site tiers. */
@@ -1673,7 +1613,7 @@ footer a{color:var(--texte-2)}
       return;
     }
     var cle = sessionStorage.getItem(STOCK) || '';
-    if(!ASCII.test(cle)){ deconnecte(PLAINTE); return; }
+    if(!ASCII.test(cle)){ renvoie('refus'); return; }
 
     /* Deux clics rapides sur les périodes lançaient deux requêtes, et c'est la
        plus lente qui gagnait : on pouvait lire « 90 jours » au-dessus des
@@ -1684,7 +1624,7 @@ footer a{color:var(--texte-2)}
 
     fetch(API + '/stats?j=' + jours, { headers: { 'X-Pino-Cle': cle }, signal: appel.signal })
       .then(function(r){
-        if(r.status === 401){ deconnecte('Mot de passe refusé.'); throw new Error('cle'); }
+        if(r.status === 401){ renvoie('refus'); throw new Error('cle'); }
         if(!r.ok) throw new Error('http ' + r.status);
         return r.json();
       })
@@ -1750,49 +1690,18 @@ footer a{color:var(--texte-2)}
     }).join('\r\n');
   }
 
-  /* ── porte ── */
-  function ouvre(){
-    porte.hidden = true;
-    document.body.classList.remove('verrouille');
-    charge();
-  }
-  function deconnecte(msg){
-    sessionStorage.removeItem(STOCK);
-    porte.hidden = false;
-    document.body.classList.add('verrouille');
-    document.getElementById('erreurCle').textContent = msg || '';
-    document.getElementById('champCle').value = '';
-    document.getElementById('champCle').focus();
+  /* ── l'entree se fait sur le site, jamais ici ──
+     Une seule porte : la fenetre de connexion du pied de page. Sans mot de
+     passe range, on renvoie au site plutot que d'en dresser une seconde —
+     deux endroits ou se connecter, c'est un de trop, et celui d'ici obligeait
+     a garder un voile par-dessus les chiffres. */
+  function renvoie(motif){
+    try{ sessionStorage.removeItem(STOCK); }catch(e){}
+    location.replace('../' + (motif ? '?gerant=' + motif : '?gerant=1'));
   }
 
-  /* Voir ce qu'on tape : sur un telephone, un mot de passe saisi a l'aveugle
-     se trompe une fois sur deux. */
-  (function(){
-    var champ = document.getElementById('champCle');
-    var oeil = document.getElementById('porteVoir');
-    oeil.addEventListener('click', function(){
-      var visible = champ.type === 'text';
-      champ.type = visible ? 'password' : 'text';
-      oeil.setAttribute('aria-pressed', visible ? 'false' : 'true');
-      var t = visible ? 'Afficher le mot de passe' : 'Masquer le mot de passe';
-      oeil.setAttribute('aria-label', t); oeil.title = t;
-      champ.focus();
-    });
-  })();
-
-  document.getElementById('formCle').addEventListener('submit', function(e){
-    e.preventDefault();
-    var v = document.getElementById('champCle').value.trim();
-    if(!v){ document.getElementById('erreurCle').textContent = 'Saisissez votre mot de passe.'; return; }
-    if(!ASCII.test(v)){ document.getElementById('erreurCle').textContent = PLAINTE; return; }
-    sessionStorage.setItem(STOCK, v);
-    document.getElementById('erreurCle').textContent = '';
-    ouvre();
-  });
-
-  /* Fermer la session ramene au site : rester sur un tableau floute derriere un
-     voile n'est pas une sortie, c'est une impasse. La cle part d'abord — si la
-     navigation echoue, elle ne doit plus trainer. */
+  /* Fermer la session ramene au site. La cle part d'abord : si la navigation
+     echoue, elle ne doit plus trainer. */
   document.getElementById('quitter').addEventListener('click', function(){
     try{ sessionStorage.removeItem(STOCK); }catch(e){}
     location.href = '../';
@@ -1836,7 +1745,8 @@ footer a{color:var(--texte-2)}
   });
 
   /* En démonstration la clé n'a pas de sens : on entre directement. */
-  if(demo || sessionStorage.getItem(STOCK)) ouvre();
+  if(demo || sessionStorage.getItem(STOCK)) charge();
+  else renvoie('');
 })();
 </script>
 </body>

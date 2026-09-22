@@ -3,7 +3,7 @@
    Fonction Edge Supabase. Deux points d'entrée :
 
      POST  /mesure/e       le site signale un événement
-     GET   /mesure/stats   la page /aldente lit les totaux, clé exigée
+     GET   /mesure/stats   la page /statistiques lit les totaux, clé exigée
 
    Pourquoi une fonction Edge plutôt qu'un appel direct à la base : la clé
    de service reste ici, côté serveur. La table est fermée à « anon », et

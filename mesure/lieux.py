@@ -8,7 +8,7 @@ mesure/lieux.json — relevé OpenStreetMap : les localités
 dans un rayon de 20 km autour de Nandrin, plus les villes et bourgs belges.
 
 Un destinataire :
-  aldente/index.html les lieux, leurs coordonnées, l'index des graphies
+  statistiques/index.html les lieux, leurs coordonnées, l'index des graphies
                      repliées qui permet d'y retrouver ce que le service de
                      géolocalisation renvoie, et le contour du pays
 
@@ -63,7 +63,7 @@ def main():
     lieux = d['lieux']
     print('%d localités, centre %s' % (len(lieux), d['_centre']['nom']))
 
-    # ── aldente/index.html : les coordonnées de la carte ─────────────────
+    # ── statistiques/index.html : les coordonnées de la carte ─────────────────
     # Un tableau des lieux, et un index des graphies repliées (sans accent ni
     # ponctuation) qui pointe vers eux. Le service de géolocalisation écrit
     # « Ferrieres » pour Ferrières et « Dendermonde » pour Termonde : sans cet
@@ -96,7 +96,7 @@ def main():
              enroule(tableau),
              enroule('%s:%d' % (json.dumps(k, ensure_ascii=False), v)
                      for k, v in sorted(index.items()))))
-    remplace('aldente/index.html',
+    remplace('statistiques/index.html',
              '  /* lieux:début — engendré par mesure/lieux.py, ne pas modifier à la main */',
              '  /* lieux:fin */',
              js)
@@ -112,7 +112,7 @@ def main():
             '     brutes en degrés — longitude puis latitude — projetées au tracé,\n'
             '     exactement comme les bulles, pour que tout reste superposable. */\n'
             '  var PAYS = [\n%s\n  ];' % ',\n'.join(anneaux))
-    remplace('aldente/index.html',
+    remplace('statistiques/index.html',
              '  /* pays:début — engendré par mesure/lieux.py, ne pas modifier à la main */',
              '  /* pays:fin */',
              pays)

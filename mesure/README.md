@@ -1,11 +1,11 @@
 # Mesure de fréquentation — mise en service
 
-Le tableau de bord vit à **`/aldente/`**. Il lit ses chiffres auprès d'une
+Le tableau de bord vit à **`/statistiques/`**. Il lit ses chiffres auprès d'une
 fonction Edge hébergée sur **Supabase**, qui reçoit les événements du site et
 n'en conserve que des totaux.
 
 Tant que la fonction n'est pas déployée, la page affiche un message d'attente et
-propose `/aldente/?demo=1`, qui montre la mise en page avec des chiffres fictifs
+propose `/statistiques/?demo=1`, qui montre la mise en page avec des chiffres fictifs
 clairement signalés. Utile pour la présentation aux gérants.
 
 ---
@@ -30,7 +30,7 @@ mobile, un habitant du Condroz ressort le plus souvent « Liège ». Le tableau 
 bord la présente comme un bassin, jamais comme une adresse. Les coordonnées des
 lieux viennent de `mesure/lieux.json` (relevé OpenStreetMap, licence ODbL) ;
 après toute mise à jour de ce fichier, relancer `python3 mesure/lieux.py` pour
-réécrire le bloc engendré dans `aldente/index.html`.
+réécrire le bloc engendré dans `statistiques/index.html`.
 
 **Les robots sont écartés avant toute écriture.** Un `user-agent` de robot, de
 sonde de surveillance ou d'aperçu de lien ne laisse aucune trace en base : sans
@@ -116,7 +116,7 @@ L'adresse de la fonction est
 `https://<ref-du-projet>.supabase.co/functions/v1/mesure`.
 Reportez-la, **sans barre oblique finale**, à deux endroits :
 
-- `aldente/index.html` → `var API = '';` en tête du script
+- `statistiques/index.html` → `var API = '';` en tête du script
 - `index.html` → `var API = '';` dans le bloc « Mesure de fréquentation », en fin de fichier
 
 Puis incrémentez `CACHE` dans `sw.js` et poussez sur `main`.
@@ -126,7 +126,7 @@ Puis incrémentez `CACHE` dans `sw.js` et poussez sur `main`.
 ## Vérifier que tout fonctionne
 
 1. Ouvrez le site en navigation privée, cliquez sur « Appeler », composez un panier.
-2. Ouvrez `/aldente/`, entrez la clé : les compteurs doivent bouger (le jour
+2. Ouvrez `/statistiques/`, entrez la clé : les compteurs doivent bouger (le jour
    courant est en heure de Bruxelles).
 3. Contrôle direct, depuis le *SQL Editor* :
 
@@ -156,7 +156,7 @@ Un en-tête HTTP ne transporte pas les accents : une clé qui en contient arrive
 mutilée au serveur. La page refuse désormais ces clés avec un message clair plutôt
 que de laisser l'accès échouer sans raison.
 
-**La clé est remise sous forme de lien** : `https://pizzeriapino.be/aldente/?k=VOTRE-CLE`.
+**La clé est remise sous forme de lien** : `https://pizzeriapino.be/statistiques/?k=VOTRE-CLE`.
 La page la range en mémoire de session puis l'efface de la barre d'adresse. Les gérants
 ajoutent ce lien à leur écran d'accueil et n'ont jamais rien à saisir.
 

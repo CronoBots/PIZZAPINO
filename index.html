@@ -4111,7 +4111,7 @@
      traînerait dans l'historique et dans les captures d'écran. -->
 <script>
 (function(){
-  var STOCK = 'pino.aldente.cle';
+  var STOCK = 'pino.stats.cle';
   /* Un en-tête HTTP ne transporte pas les accents : une clé qui en contient
      arriverait mutilée au serveur. On le dit tout de suite plutôt que de
      laisser le tableau de bord refuser sans expliquer. */
@@ -4151,6 +4151,21 @@
   });
 
   bouton.addEventListener('click', ouvre);
+
+  /* Les statistiques renvoient ici quand elles n'ont pas de mot de passe en
+     memoire : on rouvre la fenetre tout de suite, et l'on dit pourquoi si
+     c'est un refus. Le parametre est efface aussitot — il n'a rien a faire
+     dans l'historique ni dans un lien partage. */
+  (function(){
+    var m = /[?&]gerant=([^&]*)/.exec(location.search);
+    if(!m) return;
+    if(history.replaceState){
+      var propre = location.search.replace(/([?&])gerant=[^&]*&?/, '$1').replace(/[?&]$/, '');
+      history.replaceState(null, '', location.pathname + propre + location.hash);
+    }
+    ouvre();
+    if(m[1] === 'refus') err.textContent = 'Mot de passe refusé.';
+  })();
   document.getElementById('gerantAnnuler').addEventListener('click', ferme);
   ov.addEventListener('click', function(e){ if(e.target === ov) ferme(); });
   document.addEventListener('keydown', function(e){
@@ -4182,7 +4197,7 @@
     var API = window.pinoMesureAPI;
     if(!API){                       // mesure inactive : on ne peut rien juger ici
       try{ sessionStorage.setItem(STOCK, v); }catch(e2){}
-      location.href = 'aldente/';
+      location.href = 'statistiques/';
       return;
     }
     attend(true);
@@ -4191,7 +4206,7 @@
         if(r.status === 401) throw new Error('refus');
         if(!r.ok) throw new Error('service');
         try{ sessionStorage.setItem(STOCK, v); }catch(e2){}
-        location.href = 'aldente/';
+        location.href = 'statistiques/';
       })
       .catch(function(e2){
         attend(false);
