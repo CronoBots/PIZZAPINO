@@ -138,15 +138,15 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
    et les distances restent comparables d'un bout a l'autre. */
 .carteLieux{position:relative;margin-top:8px}
 .carteLieux svg{display:block;width:100%;height:auto;overflow:visible}
-.carteLieux .bulle{fill:var(--or);fill-opacity:.26;stroke:var(--or);stroke-width:1.1;
+.carteLieux .bulle{fill:var(--or);fill-opacity:.34;stroke:var(--or);stroke-width:1.4;
   cursor:pointer;transition:fill-opacity .15s}
 .carteLieux .bulle:hover,.carteLieux .bulle.vise{fill-opacity:.5}
 .carteLieux .maison{fill:none;stroke:var(--texte);stroke-width:1.5}
-.carteLieux .etiq{fill:var(--texte-2);font-family:'Inter',sans-serif;font-size:8px;
+.carteLieux .etiq{fill:var(--texte-2);font-family:'Inter',sans-serif;
   paint-order:stroke;stroke:var(--surface);stroke-width:2.5px;stroke-linejoin:round}
 .carteLieux .etiq.chez{fill:var(--texte);font-size:8.5px}
 .carteLieux .regle{stroke:var(--texte-3);stroke-width:1}
-.carteLieux .regle-txt{fill:var(--texte-3);font-family:'Inter',sans-serif;font-size:8px}
+.carteLieux .regle-txt{fill:var(--texte-3);font-family:'Inter',sans-serif}
 
 /* Pendant une mise a jour, les chiffres affiches sont peut-etre perimes :
    on le montre plutot que de les laisser passer pour frais. */
@@ -1016,7 +1016,21 @@ footer a{color:var(--texte-2)}
     return v.replace(/[^a-z]+/g, '');
   }
 
+  /* Le dessin depend de la largeur du conteneur : il faut le refaire quand
+     elle change, sinon la carte garde les proportions d'une autre fenetre
+     — au basculement portrait/paysage d'un telephone, notamment. */
+  var derniereCarte = null;
+  var minuteurCarte = null;
+  window.addEventListener('resize', function(){
+    if(!derniereCarte) return;
+    clearTimeout(minuteurCarte);
+    minuteurCarte = setTimeout(function(){
+      dessineCarte(derniereCarte.liste, derniereCarte.reste);
+    }, 180);
+  });
+
   function dessineCarte(liste, reste){
+    derniereCarte = { liste: liste, reste: reste };
     var hote = document.getElementById('carteLieux');
     var parLieu = {}, situees = 0, perdues = reste || 0;
 
@@ -1035,7 +1049,16 @@ footer a{color:var(--texte-2)}
       return;
     }
 
-    var W = 600, H = 360, marge = 38;
+    /* Le dessin est fait aux dimensions reelles du conteneur, en pixels. Avec
+       un gabarit fixe reduit par le CSS, tout retrecissait a l'identique sur
+       telephone — la carte tombait a 320 x 192 px et ses etiquettes a moins de
+       huit pixels, illisibles. Ici une unite du dessin vaut un pixel a l'ecran,
+       quelle que soit la largeur. */
+    var W = Math.max(hote.clientWidth || 600, 280);
+    var H = Math.round(Math.min(Math.max(W * 0.68, 300), 460));
+    var marge = W < 420 ? 26 : 38;
+    var corps = W < 420 ? 10.5 : 11.5;        // taille des étiquettes, en pixels
+    var marqueur = W < 420 ? 4.5 : 5.5;
     var k = Math.cos(CENTRE[0] * Math.PI / 180);
     var px = function(lon){ return (lon - CENTRE[1]) * k; };
     var py = function(lat){ return -(lat - CENTRE[0]); };
@@ -1054,7 +1077,11 @@ footer a{color:var(--texte-2)}
     var Y = function(p){ return H / 2 + (py(p.lat) - my) * ech; };
 
     var maxi = connus.reduce(function(m, d){ return d.n > m ? d.n : m; }, 0) || 1;
-    var rayon = function(n){ return 4 + 17 * Math.sqrt(n / maxi); };
+    /* La plus grosse bulle occupe au plus un neuvieme du petit cote : au-dela
+       elle avale ses voisines : autour de Liege, quatre villes tiennent dans
+       vingt kilometres. */
+    var rMax = Math.min(W, H) / 13;
+    var rayon = function(n){ return rMax * (0.28 + 0.72 * Math.sqrt(n / maxi)); };
 
     var ordre = connus.slice().sort(function(a, b){ return b.n - a.n; });
     var bulles = ordre.map(function(d, i){
@@ -1063,20 +1090,24 @@ footer a{color:var(--texte-2)}
     }).join('');
 
     var cxm = W / 2 + (0 - mx) * ech, cym = H / 2 + (0 - my) * ech;
+    var mq = marqueur, mb = marqueur * 1.6;
     var maison = '<g class="maison"><circle cx="' + cxm.toFixed(1) + '" cy="' + cym.toFixed(1)
-      + '" r="5"/><path d="M' + (cxm - 8).toFixed(1) + ' ' + cym.toFixed(1) + 'h4M'
-      + (cxm + 4).toFixed(1) + ' ' + cym.toFixed(1) + 'h4M' + cxm.toFixed(1) + ' '
-      + (cym - 8).toFixed(1) + 'v4M' + cxm.toFixed(1) + ' ' + (cym + 4).toFixed(1) + 'v4"/></g>';
+      + '" r="' + mq + '"/><path d="M' + (cxm - mb).toFixed(1) + ' ' + cym.toFixed(1)
+      + 'h' + (mb - mq).toFixed(1) + 'M' + (cxm + mq).toFixed(1) + ' ' + cym.toFixed(1)
+      + 'h' + (mb - mq).toFixed(1) + 'M' + cxm.toFixed(1) + ' ' + (cym - mb).toFixed(1)
+      + 'v' + (mb - mq).toFixed(1) + 'M' + cxm.toFixed(1) + ' ' + (cym + mq).toFixed(1)
+      + 'v' + (mb - mq).toFixed(1) + '"/></g>';
 
     /* Placement des étiquettes. Posées bêtement au-dessus de chaque bulle,
        elles se chevauchent et mordent sur les voisines. On essaie quatre
        positions, et l'on renonce à nommer plutôt que d'écrire par-dessus. */
     var cases = [];
-    function libre(b){
+    function libre(b, surBulles){
       for(var i = 0; i < cases.length; i++){
         var c = cases[i];
         if(b.x < c.x + c.l && b.x + b.l > c.x && b.y < c.y + c.h && b.y + b.h > c.y) return false;
       }
+      if(surBulles) return true;    // le repere du restaurant passe par-dessus
       for(var j = 0; j < ordre.length; j++){
         var d = ordre[j], r = rayon(d.n), cx = X(d), cy = Y(d);
         var qx = Math.max(b.x, Math.min(cx, b.x + b.l));
@@ -1085,26 +1116,29 @@ footer a{color:var(--texte-2)}
       }
       return true;
     }
-    function pose(texte, cx, cy, r, classe){
-      var l = texte.length * 4.35, h = 9;
+    function pose(texte, cx, cy, r, classe, surBulles){
+      var l = texte.length * corps * 0.54, h = corps;
       var essais = [
         { x: cx - l / 2,     y: cy - r - 4 - h, a: 'middle', tx: cx,         ty: cy - r - 5 },
-        { x: cx - l / 2,     y: cy + r + 3,     a: 'middle', tx: cx,         ty: cy + r + 11 },
-        { x: cx + r + 4,     y: cy - h / 2,     a: 'start',  tx: cx + r + 5, ty: cy + 3 },
-        { x: cx - r - 4 - l, y: cy - h / 2,     a: 'end',    tx: cx - r - 5, ty: cy + 3 }
+        { x: cx - l / 2,     y: cy + r + 3,     a: 'middle', tx: cx,         ty: cy + r + h },
+        { x: cx + r + 4,     y: cy - h / 2,     a: 'start',  tx: cx + r + 5, ty: cy + h / 3 },
+        { x: cx - r - 4 - l, y: cy - h / 2,     a: 'end',    tx: cx - r - 5, ty: cy + h / 3 }
       ];
       for(var i = 0; i < essais.length; i++){
         var e = essais[i], b = { x: e.x, y: e.y, l: l, h: h };
         if(b.x < 2 || b.x + b.l > W - 2 || b.y < 2 || b.y + b.h > H - 2) continue;
-        if(!libre(b)) continue;
+        if(!libre(b, surBulles)) continue;
         cases.push(b);
-        return '<text class="etiq' + (classe ? ' ' + classe : '') + '" x="' + e.tx.toFixed(1)
+        return '<text class="etiq' + (classe ? ' ' + classe : '') + '" style="font-size:'
+             + corps.toFixed(1) + 'px" x="' + e.tx.toFixed(1)
              + '" y="' + e.ty.toFixed(1) + '" text-anchor="' + e.a + '">'
              + echappe(texte) + '</text>';
       }
       return '';
     }
-    var etiquettes = pose('Pizzeria Pino', cxm, cym, 9, 'chez');
+    /* Le restaurant est le repere de la carte : son nom s'ecrit meme s'il
+       chevauche une bulle, quitte a se poser par-dessus. */
+    var etiquettes = pose('Pizzeria Pino', cxm, cym, marqueur * 1.8, 'chez', true);
     ordre.slice(0, Math.min(ordre.length, 10)).forEach(function(d){
       etiquettes += pose(d.nom, X(d), Y(d), rayon(d.n));
     });
@@ -1114,7 +1148,8 @@ footer a{color:var(--texte-2)}
     var rx = 12, ry = H - 12;
     var regle = '<g><path class="regle" d="M' + rx + ' ' + ry + 'h' + lg.toFixed(1)
       + 'M' + rx + ' ' + (ry - 3) + 'v6M' + (rx + lg).toFixed(1) + ' ' + (ry - 3) + 'v6"/>'
-      + '<text class="regle-txt" x="' + (rx + lg / 2).toFixed(1) + '" y="' + (ry - 6)
+      + '<text class="regle-txt" style="font-size:' + (corps - 1.5).toFixed(1) + 'px" x="'
+      + (rx + lg / 2).toFixed(1) + '" y="' + (ry - 6)
       + '" text-anchor="middle">' + kmRegle + ' km</text></g>';
 
     var pied = nb(situees) + (situees > 1 ? ' ouvertures situées' : ' ouverture située')
@@ -1123,9 +1158,10 @@ footer a{color:var(--texte-2)}
 
     hote.innerHTML =
       '<div class="cadre">'
-      + '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" '
+      + '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" '
+      + 'preserveAspectRatio="xMidYMid meet" '
       + 'role="img" aria-label="Carte des villes, ' + echappe(pied) + '">'
-      + regle + maison + bulles + etiquettes
+      + regle + bulles + maison + etiquettes
       + '</svg></div>'
       + '<div class="bornes"><span>' + echappe(pied) + '</span></div>';
 
