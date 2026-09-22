@@ -270,18 +270,18 @@ footer a{color:var(--texte-2)}
   </div>
 
   <div class="cles">
-    <div class="cle"><div class="n" id="kVues">—</div><div class="l">Ouvertures du site</div><p class="d" id="dVues"></p></div>
+    <div class="cle"><div class="n" id="kVues">—</div><div class="l">Visites du site</div><p class="d" id="dVues"></p></div>
     <div class="cle"><div class="n" id="kAppels">—</div><div class="l">Appels lancés</div><p class="d" id="dAppels"></p></div>
     <div class="cle"><div class="n" id="kItin">—</div><div class="l">Itinéraires demandés</div><p class="d" id="dItin"></p></div>
     <div class="cle"><div class="n" id="kCmd">—</div><div class="l">Commandes composées</div><p class="d" id="dCmd"></p></div>
   </div>
 
   <section id="secCourbe">
-    <div class="titre"><h2>Les ouvertures, jour par jour</h2></div>
+    <div class="titre"><h2>Les visites, jour par jour</h2></div>
     <p class="chapo">
       <span class="cle-we"><span class="ech-jour" aria-hidden="true"></span>en semaine</span>
       <span class="cle-we"><span class="ech-we" aria-hidden="true"></span>samedis et dimanches</span>
-      <span class="cle-we" id="cleTendance" hidden><span class="ech-tend" aria-hidden="true"></span>tendance sur <span id="cleTendanceN">7 jours</span></span>
+      <span class="cle-we" id="cleTendance" hidden><span class="ech-tend" aria-hidden="true"></span>tendance&nbsp;: <span id="cleTendanceN">stable</span></span>
     </p>
     <div class="courbe" id="courbe"></div>
   </section>
@@ -292,7 +292,7 @@ footer a{color:var(--texte-2)}
       <button class="bascule" type="button" data-cible="tblJours"
               aria-expanded="false" aria-controls="tblJours">Voir en tableau</button>
     </div>
-    <p class="chapo">Moyenne des ouvertures par jour de semaine, sur la période choisie.
+    <p class="chapo">Moyenne des visites par jour de semaine, sur la période choisie.
        Le jour en cours n’est pas compté&nbsp;: il n’est pas fini.</p>
     <div class="barres" id="barJours"></div>
     <div id="tblJours" hidden></div>
@@ -1044,7 +1044,7 @@ footer a{color:var(--texte-2)}
       + '</tbody></table>';
   }
 
-  /* ── les ouvertures, jour par jour ──
+  /* ── les visites, jour par jour ──
      Une barre par jour, et par-dessus la tendance : la moyenne glissante sur
      sept jours. Les deux disent la même mesure, sur la même échelle — jamais
      deux axes. La barre répond « combien ce jour-là », la ligne « où va-t-on »
@@ -1063,24 +1063,24 @@ footer a{color:var(--texte-2)}
     minuteurCourbe = setTimeout(function(){ dessineCourbe(derniereCourbe); }, 180);
   });
 
-  /** Largeur de la fenêtre de lissage. Sept jours effacent l'effet du week-end,
-      mais sur une semaine ils rendraient une ligne plate : on lisse alors sur
-      trois. En deçà de cinq jours, il n'y a rien à lisser. */
-  function fenetreTendance(n){
-    if(n >= 14) return 7;
-    if(n >= 5)  return 3;
-    return 0;
-  }
+  /** La tendance de toute la période : une seule droite, celle des moindres
+      carrés, qui passe au plus près de tous les jours à la fois.
 
-  /** Moyenne centrée. Aux deux bouts la fenêtre se réduit à ce qui existe :
-      mieux vaut une ligne qui va jusqu'au bord qu'un trou. */
-  function tendance(points, fenetre){
-    var demi = Math.floor(fenetre / 2);
-    return points.map(function(_, i){
-      var a = Math.max(0, i - demi), b = Math.min(points.length - 1, i + demi), t = 0;
-      for(var k = a; k <= b; k++) t += points[k].n;
-      return t / (b - a + 1);
-    });
+      Une moyenne glissante lissait les à-coups mais ne tranchait rien — et sa
+      fenêtre changeait avec la période, si bien que « la tendance » ne voulait
+      pas dire la même chose sur sept jours et sur un an. Une droite, si : elle
+      répond « ça monte » ou « ça baisse », et sa pente se lit en visites
+      gagnées ou perdues par jour. */
+  function droiteTendance(points){
+    var n = points.length;
+    if(n < 2) return null;
+    var sx = 0, sy = 0, sxy = 0, sxx = 0;
+    points.forEach(function(p, i){ sx += i; sy += p.n; sxy += i * p.n; sxx += i * i; });
+    var denom = n * sxx - sx * sx;
+    if(!denom) return null;
+    var pente = (n * sxy - sx * sy) / denom;
+    var origine = (sy - pente * sx) / n;
+    return { pente: pente, en: function(i){ return origine + pente * i; } };
   }
 
   function dessineCourbe(points){
@@ -1125,13 +1125,17 @@ footer a{color:var(--texte-2)}
            + r.toFixed(2) + 'V' + (H - m).toFixed(2) + 'Z"/>';
     }).join('');
 
-    var fenetre = fenetreTendance(n);
-    var moyennes = fenetre ? tendance(points, fenetre) : null;
+    /* La droite peut sortir du cadre par le haut ou par le bas — une pente
+       forte sur une longue période. On la coupe au bord plutôt que de la
+       coucher, ce qui en fausserait la lecture. */
+    var droite = droiteTendance(points);
     var ligne = '';
-    if(moyennes){
-      ligne = '<path class="tendance" d="' + moyennes.map(function(v, i){
-        return (i ? 'L' : 'M') + centre(i).toFixed(2) + ' ' + haut(v).toFixed(2);
-      }).join(' ') + '"/>';
+    if(droite){
+      ligne = '<defs><clipPath id="cadreCourbe"><rect x="0" y="0" width="' + L
+            + '" height="' + H + '"/></clipPath></defs>'
+            + '<path class="tendance" clip-path="url(#cadreCourbe)" d="M'
+            + centre(0).toFixed(2) + ' ' + haut(droite.en(0)).toFixed(2)
+            + 'L' + centre(n - 1).toFixed(2) + ' ' + haut(droite.en(n - 1)).toFixed(2) + '"/>';
     }
 
     var lettres = '';
@@ -1149,25 +1153,29 @@ footer a{color:var(--texte-2)}
     hote.innerHTML =
       '<div class="cadre">'
       + '<svg viewBox="0 0 ' + L + ' ' + HT + '" width="' + L + '" height="' + HT + '" role="img" '
-      + 'aria-label="Ouvertures jour par jour, du ' + dateLongue(points[0].j) + ' au '
+      + 'aria-label="Visites jour par jour, du ' + dateLongue(points[0].j) + ' au '
       + dateLongue(der.j) + '. Maximum ' + nb(max) + ' en un jour.">'
       + barres + ligne + lettres
       + '</svg></div>'
       + '<div class="bornes"><span>' + dateCourte(points[0].j) + '</span>'
-      + '<span>' + nb(max) + ' ouvertures au plus haut</span>'
+      + '<span>' + nb(max) + ' visites au plus haut</span>'
       + '<span>' + dateCourte(der.j) + '</span></div>';
 
-    /* La légende dit sur combien de jours on lisse : « tendance » tout court
-       laisserait croire que c'est toujours la même. */
-    var cle = document.getElementById('cleTendance');
-    cle.hidden = !moyennes;
-    if(moyennes) document.getElementById('cleTendanceN').textContent = fenetre + ' jours';
-    installeSurvol(hote, points, moyennes);
+    /* La légende porte la pente : une droite qui monte, c'est bien, mais de
+       combien ? Sous un dixième de visite par jour, le mot « stable » dit la
+       vérité mieux qu'un « +0,0 ». */
+    document.getElementById('cleTendance').hidden = !droite;
+    if(droite){
+      var pj = Math.round(droite.pente * 10) / 10;
+      document.getElementById('cleTendanceN').textContent =
+        pj === 0 ? 'stable' : (pj > 0 ? '+' : '−') + frD.format(Math.abs(pj)) + ' par jour';
+    }
+    installeSurvol(hote, points);
   }
 
   /* Lire un jour précis, au doigt comme à la souris : on vise la barre sous le
      pointeur, et c'est elle qui s'éclaire. */
-  function installeSurvol(hote, points, moyennes){
+  function installeSurvol(hote, points){
     var cadre = hote.querySelector('.cadre');
     var svg   = hote.querySelector('svg');
     var bulle = document.createElement('div');
@@ -1183,11 +1191,8 @@ footer a{color:var(--texte-2)}
       i = Math.max(0, Math.min(points.length - 1, i));
       var pt = points[i];
 
-      bulle.innerHTML = '<b>' + nb(pt.n) + '</b> ' + (pt.n === 1 ? 'ouverture' : 'ouvertures')
-                      + '<span>' + dateLongue(pt.j)
-                      + (moyennes ? ' · tendance ' + frD.format(Math.round(moyennes[i] * 10) / 10)
-                                    + ' sur ' + fenetreTendance(points.length) + ' jours' : '')
-                      + '</span>';
+      bulle.innerHTML = '<b>' + nb(pt.n) + '</b> ' + (pt.n === 1 ? 'visite' : 'visites')
+                      + '<span>' + dateLongue(pt.j) + '</span>';
       bulle.hidden = false;
       var gauche = (i + 0.5) / points.length * r.width;
       bulle.style.left = gauche + 'px';
@@ -1413,7 +1418,7 @@ footer a{color:var(--texte-2)}
       + (rx + lg / 2).toFixed(1) + '" y="' + (ry - 6)
       + '" text-anchor="middle">' + kmRegle + ' km</text></g>';
 
-    var pied = nb(situees) + (situees > 1 ? ' ouvertures situées' : ' ouverture située')
+    var pied = nb(situees) + (situees > 1 ? ' visites situées' : ' visite située')
              + ' sur ' + connus.length + (connus.length > 1 ? ' villes' : ' ville')
              + (perdues ? ' · ' + nb(perdues) + ' non situées' : '');
 
@@ -1442,7 +1447,7 @@ footer a{color:var(--texte-2)}
         var r = cadre.getBoundingClientRect();
         var c = el.getBoundingClientRect();
         bulle.innerHTML = '<b>' + nb(d.n) + '</b> '
-                        + (d.n === 1 ? 'ouverture' : 'ouvertures')
+                        + (d.n === 1 ? 'visite' : 'visites')
                         + '<span>' + echappe(d.nom) + '</span>';
         bulle.hidden = false;
         var gauche = c.left + c.width / 2 - r.left;
@@ -1752,9 +1757,9 @@ footer a{color:var(--texte-2)}
     var qPlats = queueDe(restePlats.reduce(function(a2, x){ return a2 + x.n; }, 0),
                          restePlats.length, 'autre plat', 'autres plats');
 
-    dessineBarres('barVilles',   d.villes,   'ouvertures', qVilles);
-    dessineBarres('barSupports', d.supports, 'ouvertures');
-    dessineBarres('barSources',  d.sources,  'ouvertures');
+    dessineBarres('barVilles',   d.villes,   'visites', qVilles);
+    dessineBarres('barSupports', d.supports, 'visites');
+    dessineBarres('barSources',  d.sources,  'visites');
     dessineBarres('barPlats',    hautPlats,  'fois',       qPlats);
     dessineTable('tblVilles',   d.villes,   'Ville',    qVilles);
     dessineTable('tblSupports', d.supports, 'Appareil');
@@ -1895,13 +1900,13 @@ footer a{color:var(--texte-2)}
     var t = dernier.totaux, v = t.vue || 0;
     var part = function(n){ return v ? String(Math.round(n * 1000 / v) / 10).replace('.', ',') : ''; };
 
-    lignes.push(['Total', 'Ouvertures du site', t.vue, '']);
+    lignes.push(['Total', 'Visites du site', t.vue, '']);
     lignes.push(['Total', 'Appels lancés', t.appel, part(t.appel)]);
     lignes.push(['Total', 'Itinéraires demandés', t.itineraire, part(t.itineraire)]);
     lignes.push(['Total', 'Commandes composées', t.commande, part(t.commande)]);
 
     (dernier.courbe || []).forEach(function(p){
-      lignes.push(['Ouvertures par jour', p.j, p.n, '']);
+      lignes.push(['Visites par jour', p.j, p.n, '']);
     });
     var bloc = function(nom, liste, queue){
       var rangs = avecQueue(liste, queue);

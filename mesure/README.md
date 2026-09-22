@@ -14,7 +14,7 @@ clairement signalés. Utile pour la présentation aux gérants.
 
 | Enregistré | Jamais enregistré |
 |---|---|
-| Nombre d'ouvertures du site par jour | Qui a visité |
+| Nombre de visites du site par jour | Qui a visité |
 | Ville approximative, en total (« Liège : 34 ») | Adresse IP |
 | Type d'appareil, en total | Navigateur, système, empreinte |
 | Appels et itinéraires lancés, en nombre | Numéro appelé, identité |
@@ -22,9 +22,10 @@ clairement signalés. Utile pour la présentation aux gérants.
 | Clics vers Instagram et Facebook, en nombre | L'adresse cliquée, le compte visé |
 | Photos agrandies, par racine de fichier | Qui a ouvert quelle photo |
 
-**Une ouverture n'est pas une personne.** Sans cookie ni identifiant — c'est le
+**Une visite n'est pas une personne.** Sans cookie ni identifiant — c'est le
 choix de conception — un même client qui revient le lendemain est recompté. Le
-tableau de bord dit donc « ouvertures du site », jamais « visiteurs uniques ».
+tableau de bord dit donc « visites du site », jamais « visiteurs uniques ».
+Une visite = un chargement de la page.
 
 **La ville est approximative, et la carte le dit.** Elle vient de l'adresse IP,
 qui situe le point de sortie de l'opérateur, pas le client : avec 90 % de trafic
