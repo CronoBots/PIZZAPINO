@@ -1145,10 +1145,11 @@
   /* Acces au tableau de bord, reserve a la maison. Discret par choix : ce qui
      protege la page est sa cle, pas le fait qu'on ignore son adresse. */
   .gerant{margin-top:16px;font-size:.72rem}
-  .gerant a{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);
+  .gerant button{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);
     text-decoration:none;padding:7px 14px;border:1px solid rgba(233,206,150,.18);
     border-radius:999px;transition:color .25s,border-color .25s}
-  .gerant a:hover{color:var(--or);border-color:rgba(233,206,150,.45)}
+  .gerant button{background:none;font:inherit;cursor:pointer}
+  .gerant button:hover{color:var(--or);border-color:rgba(233,206,150,.45)}
   .gerant svg{width:13px;height:13px;flex:0 0 auto}
   .credit{margin-top:18px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.66rem;color:var(--gris-d)}
   .credit a,.credit b{color:var(--or);text-decoration:none;font-weight:500}
@@ -1362,6 +1363,14 @@
   .cf-cancel:hover{border-color:#E9CE96;color:#fff}
   .cf-ok{background:var(--rouge);border-color:var(--rouge);color:#fff}
   .cf-ok:hover{background:var(--rouge-d)}
+  .gerant-ico{background:rgba(198,154,77,.14);border-color:rgba(198,154,77,.42);color:#E9CE96}
+  .gerant-box input{width:100%;box-sizing:border-box;font:inherit;font-size:1rem;text-align:center;
+    padding:13px 15px;border-radius:11px;border:1px solid rgba(233,206,150,.24);
+    background:#100b08;color:#F5EEDF}
+  .gerant-box input:focus{outline:2px solid #c69a4d;outline-offset:1px;border-color:#c69a4d}
+  .gerant-box .gerant-err{min-height:1.15em;margin:9px 0 14px;font-size:.82rem;color:#e0574b}
+  .gerant-ok{background:#c69a4d;border-color:#c69a4d;color:#14100D}
+  .gerant-ok:hover{background:#d9ae62}
   @keyframes cfIn{from{opacity:0}to{opacity:1}}
   @keyframes cfPop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
   @media(prefers-reduced-motion:reduce){.confirm-ov,.confirm-box{animation:none}}
@@ -2386,10 +2395,10 @@
       <span class="sep">·</span>
       <button type="button" id="manageCookies" class="linkbtn">Gérer les cookies</button>
     </nav>
-    <p class="gerant"><a href="aldente/" rel="nofollow"><svg viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-         aria-hidden="true"><rect x="4" y="10.5" width="16" height="10" rx="2"/><path
-         d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>Espace gérant</a></p>
+    <p class="gerant"><button type="button" id="ouvrirGerant" aria-haspopup="dialog"><svg
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10.5"
+         width="16" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>Espace gérant</button></p>
     <p class="credit">Réalisation : <b>CLICK&amp;CONNECT</b></p>
   </div>
 </footer>
@@ -3269,6 +3278,26 @@
   </div>
 </div>
 
+<!-- Connexion à l'espace gérant -->
+<div class="confirm-ov" id="gerantOv" hidden>
+  <div class="confirm-box gerant-box" role="dialog" aria-modal="true" aria-labelledby="gerantTitre">
+    <span class="confirm-ico gerant-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect
+      x="4" y="10.5" width="16" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></span>
+    <h3 id="gerantTitre">Espace gérant</h3>
+    <p>Vos chiffres, réservés à la maison.</p>
+    <form id="gerantForm" autocomplete="off">
+      <input type="password" id="gerantCle" placeholder="Votre clé" aria-label="Clé d'accès"
+             autocomplete="current-password" enterkeyhint="go" spellcheck="false">
+      <p class="gerant-err" id="gerantErr" role="alert"></p>
+      <div class="confirm-actions">
+        <button type="button" class="cf-cancel" id="gerantAnnuler">Annuler</button>
+        <button type="submit" class="cf-ok gerant-ok">Entrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Confirmation « vider la commande » (maison, remplace la fenêtre native) -->
 <div class="confirm-ov" id="confirmOv" hidden>
   <div class="confirm-box" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
@@ -4047,6 +4076,61 @@
     if(deferred || isIOS) setTimeout(show, 400);
   }
   setTimeout(maybeShow, 3200);
+})();
+</script>
+
+<!-- ══════════ Connexion à l'espace gérant ══════════
+     La clé n'est pas jugée ici : elle est rangée pour la session, et le
+     tableau de bord — seul à savoir la vérifier auprès du service — s'en
+     charge. Les deux pages vivent sur le même domaine, donc ce rangement
+     leur est commun : la clé ne passe jamais par l'adresse, où elle
+     traînerait dans l'historique et dans les captures d'écran. -->
+<script>
+(function(){
+  var STOCK = 'pino.aldente.cle';
+  /* Un en-tête HTTP ne transporte pas les accents : une clé qui en contient
+     arriverait mutilée au serveur. On le dit tout de suite plutôt que de
+     laisser le tableau de bord refuser sans expliquer. */
+  var ASCII = /^[\x20-\x7E]+$/;
+
+  var ov     = document.getElementById('gerantOv');
+  var bouton = document.getElementById('ouvrirGerant');
+  if(!ov || !bouton) return;
+  var champ  = document.getElementById('gerantCle');
+  var err    = document.getElementById('gerantErr');
+  var rendre = null;
+
+  function ouvre(){
+    rendre = document.activeElement;
+    champ.value = ''; err.textContent = '';
+    ov.hidden = false;
+    setTimeout(function(){ champ.focus(); }, 30);
+  }
+  function ferme(){
+    ov.hidden = true;
+    champ.value = '';
+    if(rendre && rendre.focus) rendre.focus();
+  }
+
+  bouton.addEventListener('click', ouvre);
+  document.getElementById('gerantAnnuler').addEventListener('click', ferme);
+  ov.addEventListener('click', function(e){ if(e.target === ov) ferme(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !ov.hidden) ferme();
+  });
+
+  document.getElementById('gerantForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = champ.value.trim();
+    if(!v){ err.textContent = 'Saisissez votre clé.'; return; }
+    if(!ASCII.test(v)){
+      err.textContent = 'Ni accent ni caractère spécial : lettres non accentuées, '
+                      + 'chiffres, tirets et points seulement.';
+      return;
+    }
+    try{ sessionStorage.setItem(STOCK, v); }catch(e2){}
+    location.href = 'aldente/';
+  });
 })();
 </script>
 

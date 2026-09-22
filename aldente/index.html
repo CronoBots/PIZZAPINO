@@ -186,7 +186,16 @@ td:last-child,th:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .alerte.demo{border-left-color:var(--rouge)}
 
 /* ── porte d'entrée ──────────────────────────────────────────────── */
-.porte{max-width:380px;margin:14vh auto 0;text-align:center}
+/* La connexion se fait maintenant depuis le site, dans une fenêtre. Ici,
+   elle reste en secours : quiconque ouvre l'adresse directement tombe sur
+   ce voile, le tableau estompé derrière lui et hors d'atteinte. */
+.voile{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(10,7,5,.84);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+body.verrouille #bord{filter:blur(3px);pointer-events:none;user-select:none}
+.porte{width:100%;max-width:380px;text-align:center;background:var(--surface);
+  border:1px solid var(--trait);border-radius:16px;padding:30px 26px 24px;
+  box-shadow:0 30px 70px -20px #000}
 .porte h1{margin-bottom:10px}
 .porte p{color:var(--texte-3);font-size:.9rem;margin-bottom:24px}
 .porte form{display:flex;gap:8px}
@@ -207,24 +216,25 @@ footer a{color:var(--texte-2)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
-<body>
+<body class="verrouille">
 
 <!-- ══════════ Porte : la page ne montre rien sans la clé ══════════ -->
-<div class="enveloppe porte" id="porte">
+<div class="voile" id="porte">
+ <div class="porte" role="dialog" aria-modal="true" aria-labelledby="porteTitre">
   <p class="marque">Pizzeria Pino</p>
-  <h1>Al <em>dente</em></h1>
-  <p>Vos chiffres, réservés à la maison.<br>
-     Utilisez le lien qui vous a été remis&nbsp;; la clé ci-dessous n'est qu'un secours.</p>
+  <h1 id="porteTitre">Al <em>dente</em></h1>
+  <p>Vos chiffres, réservés à la maison.</p>
   <form id="formCle" autocomplete="off">
     <input type="password" id="champCle" placeholder="Votre clé" aria-label="Clé d'accès"
            autocomplete="current-password" enterkeyhint="go">
     <button type="submit">Entrer</button>
   </form>
   <p class="erreur" id="erreurCle" role="alert"></p>
+ </div>
 </div>
 
 <!-- ══════════ Tableau de bord ══════════ -->
-<div class="enveloppe" id="bord" hidden>
+<div class="enveloppe" id="bord">
 
   <header>
     <p class="marque">Pizzeria Pino · Tableau de bord</p>
@@ -1414,13 +1424,17 @@ footer a{color:var(--texte-2)}
 
   /* ── porte ── */
   function ouvre(){
-    porte.hidden = true; bord.hidden = false; charge();
+    porte.hidden = true;
+    document.body.classList.remove('verrouille');
+    charge();
   }
   function deconnecte(msg){
     sessionStorage.removeItem(STOCK);
-    bord.hidden = true; porte.hidden = false;
+    porte.hidden = false;
+    document.body.classList.add('verrouille');
     document.getElementById('erreurCle').textContent = msg || '';
     document.getElementById('champCle').value = '';
+    document.getElementById('champCle').focus();
   }
 
   document.getElementById('formCle').addEventListener('submit', function(e){
