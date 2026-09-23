@@ -1009,17 +1009,6 @@
   }
 
   /* ===== LIENS LÉGAUX (footer) ===== */
-  /* Où l'on parle de nous. Plus présent que les liens légaux juste dessous —
-     ce sont deux endroits où le client va lire, et d'où il revient souvent —
-     mais sans peser plus que le pied de page ne doit peser. */
-  .avis-liens{margin-top:20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
-    gap:10px 22px;font-family:"Oswald",sans-serif;text-transform:uppercase;
-    letter-spacing:.08em;font-size:.68rem}
-  .avis-liens a{display:inline-flex;align-items:center;gap:7px;color:var(--or-l);
-    text-decoration:none;border-bottom:1px solid rgba(233,206,150,.28);padding-bottom:3px;
-    transition:border-color .25s,color .25s}
-  .avis-liens a:hover{color:#fff;border-bottom-color:var(--or-l)}
-  .avis-liens svg{width:13px;height:13px;flex:0 0 auto;color:var(--or)}
 
   .legal-links{margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.64rem}
