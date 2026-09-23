@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pizzeria Pino — Restaurant &amp; pizzas au feu de bois à Nandrin</title>
-<meta name="description" content="Pizzeria Pino, route du Condroz à Nandrin, entre Liège et Huy. Pizzas au feu de bois, pâtes fraîches, spécialités italiennes. Sur place, à emporter et traiteur.">
+<meta name="description" content="Pizzas au feu de bois et pâtes fraîches à Nandrin, entre Liège et Huy. Sur place, à emporter, traiteur. Route du Condroz 131.">
 <meta name="keywords" content="pizzeria Nandrin, restaurant italien Nandrin, pizza feu de bois, pâtes fraîches, Condroz, à emporter, traiteur, osso buco">
 <meta name="author" content="Pizzeria Pino">
 <meta name="robots" content="index, follow">
@@ -35,8 +35,14 @@
   window.addEventListener('orientationchange', function(){ lastW=0; setTimeout(set,250); });
   window.addEventListener('resize', set); /* ne met à jour que si la LARGEUR change (rotation), pas la barre d'URL */
 }catch(e){}})();</script>
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
-<link rel="shortcut icon" type="image/png" href="icons/icon-512.png">
+<!-- Le logo dans les résultats Google. Trois tailles multiples de 48 px,
+     comme Google le demande, et le favicon.ico à la racine que ses robots
+     vont chercher d'office. Le dessin est l'arche du four : le logo entier,
+     réduit à 16 px, n'est qu'une tache sombre. Il reste partout ailleurs. -->
+<link rel="icon" type="image/png" sizes="192x192" href="icons/favicon-192.png">
+<link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96.png">
+<link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
+<link rel="icon" href="favicon.ico" sizes="any">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -66,19 +72,19 @@
 <meta property="og:type" content="restaurant">
 <meta property="og:title" content="Pizzeria Pino — Restaurant italien & pizzas au feu de bois à Nandrin">
 <meta property="og:description" content="Pizzas au feu de bois, pâtes fraîches maison et spécialités italiennes, sur la route du Condroz depuis plus de 25 ans.">
-<meta property="og:image" content="https://pizzeriapino.be/icons/icon-512.png">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="512">
-<meta property="og:image:height" content="512">
-<meta property="og:image:alt" content="Logo de la Pizzeria Pino">
+<meta property="og:image" content="https://pizzeriapino.be/images/partage-1200x630.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pizza margherita sortant du four à bois de la Pizzeria Pino">
 <meta property="og:url" content="https://pizzeriapino.be/">
 <meta property="og:site_name" content="Pizzeria Pino">
 <meta property="og:locale" content="fr_BE">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pizzeria Pino — Restaurant italien à Nandrin">
 <meta name="twitter:description" content="Pizzas au feu de bois, pâtes fraîches maison et spécialités italiennes, sur la route du Condroz depuis plus de 25 ans.">
-<meta name="twitter:image" content="https://pizzeriapino.be/icons/icon-512.png">
-<meta name="twitter:image:alt" content="Logo de la Pizzeria Pino">
+<meta name="twitter:image" content="https://pizzeriapino.be/images/partage-1200x630.jpg">
+<meta name="twitter:image:alt" content="Pizza margherita sortant du four à bois de la Pizzeria Pino">
 
 <!-- Données structurées Google (fiche restaurant enrichie) -->
 <script type="application/ld+json">
@@ -96,7 +102,12 @@
   "paymentAccepted": "Au restaurant : espèces, Bancontact, Visa et Mastercard. À emporter : espèces ou Mastercard (classic ou débit).",
   "url": "https://pizzeriapino.be/",
   "telephone": "+32 85 51 33 39",
-  "image": "https://pizzeriapino.be/images/hero-feast.jpg",
+  "image": [
+    "https://pizzeriapino.be/images/gal-pizza.jpg",
+    "https://pizzeriapino.be/images/hero-pizza.jpg",
+    "https://pizzeriapino.be/images/four-bois.jpg"
+  ],
+  "logo": "https://pizzeriapino.be/icons/icon-512.png",
   "hasMap": "https://www.google.com/maps?cid=8822678863966983754",
   "geo": { "@type": "GeoCoordinates", "latitude": 50.51001, "longitude": 5.39903 },
   "hasMenu": { "@id": "https://pizzeriapino.be/#menu" },
