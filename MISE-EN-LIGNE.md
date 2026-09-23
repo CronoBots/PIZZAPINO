@@ -131,8 +131,7 @@ Détail complet dans [`mesure/README.md`](mesure/README.md). En résumé :
    supabase secrets set ORIGINES="https://pizzeriapino.be,https://cronobots.github.io"
    ```
 4. Reporter l'adresse `https://<ref>.supabase.co/functions/v1/mesure` dans les
-   trois `var API = '';` — `index.html`, `carte/index.html` et
-   `statistiques/index.html`.
+   deux `var API = '';` — `index.html` et `statistiques/index.html`.
 5. Incrémenter `CACHE` dans `sw.js`, pousser sur `main`.
 
 ---

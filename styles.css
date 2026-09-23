@@ -1,11 +1,10 @@
 /* ═══════════════════════════════════════════════════════════════════
    Pizzeria Pino — feuille de style du site
 
-   Sortie de index.html pour être partagée avec /carte/ : cette page doit
-   être la même au pixel près, et deux copies d'une feuille de style
-   finissent toujours par diverger. Les chemins (polices, images) sont
-   relatifs à CE fichier, donc à la racine — ils valent pour toutes les
-   pages qui l'appellent.
+   Sortie de index.html : un fichier à part se met en cache une fois pour
+   toutes, là où le style écrit dans la page est retéléchargé à chaque
+   visite. Les chemins (polices, images) sont relatifs à CE fichier, donc à
+   la racine — ils valent pour toutes les pages qui l'appellent.
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ===== POLICES AUTO-HÉBERGÉES (RGPD, sans Google) ===== */
@@ -296,13 +295,6 @@
   body.searching #carte .menu-panel .dishes.dishes-first:not(.dishes-last){border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:0}
   body.searching #carte .menu-panel .dishes:not(.dishes-first):not(.dishes-empty){border-top-left-radius:0;border-top-right-radius:0}
   .dish.hide{display:none}
-  /* Le passage vers la page carte : discret, mais pas caché — c'est lui qui
-     dit a Google qu'une page dediee existe, et au visiteur qu'il peut tout
-     lire d'un coup. */
-  .lien-carte{margin:16px 0 0;font-size:.94rem;opacity:1}
-  .lien-carte a{color:var(--or-l);text-decoration:none;border-bottom:1px solid rgba(233,206,150,.35);
-    padding-bottom:2px;transition:.2s}
-  .lien-carte a:hover{border-bottom-color:var(--or-l)}
   .menu-panel{display:none;margin-top:30px}
   .menu-panel.show{display:block}
   .menu-panel.show .dish{animation:dishin .5s both}

@@ -27,8 +27,8 @@ import sys
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Le scan a quitté la racine : servi par GitHub Pages, il y était une adresse
 # publique — 567 Ko sans couche texte, illisible sur un téléphone, et Google
-# l'affichait en lien sous le site. Depuis que /carte/ existe, il n'a plus
-# aucune raison d'être atteignable. Il reste ici, où le chien de garde le lit.
+# l'affichait en lien sous le site. La carte se lit sur l'accueil, en texte :
+# le scan n'a plus à être atteignable. Il reste ici, où le chien de garde le lit.
 PDF     = os.path.join(RACINE, 'menu', 'menu.pdf')
 SITE    = os.path.join(RACINE, 'index.html')
 SCELLE  = os.path.join(RACINE, 'menu', 'synchro.json')

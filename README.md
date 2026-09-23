@@ -4,26 +4,20 @@ Site vitrine pour la Pizzeria Pino, Route du Condroz 131, 4550 Nandrin.
 
 ## Contenu
 - `index.html` — le site (une seule page : accueil, carte interactive, galeries, contact)
-- `carte/` — la carte seule, à son adresse propre, pour la recherche Google
 - `statistiques/` — le tableau de bord du gérant (non indexé, protégé par mot de passe)
 - `legal.html` — mentions légales, CGU, confidentialité
 - `images/` — toutes les photos
 
-## Pourquoi `/carte/` existe
+## La carte et le scan du menu
 
-La carte est le contenu le plus riche du site — 121 plats, avec prix et
-composition — et elle vivait dans un onglet de la page d'accueil, sans adresse
-à elle. Or une page ne peut porter qu'un seul titre : celui de l'accueil parle
-du restaurant, pas de la carte ni des prix. Quelqu'un qui cherche « carte
-pizzeria pino » ou « prix pizza Nandrin » a maintenant une page qui lui répond.
-
-**La carte reste écrite une seule fois, dans `index.html`.** La page `/carte/`
-en est engendrée, entre marqueurs :
+La carte est écrite une seule fois, dans `index.html` : c'est la source. Le
+scan du menu officiel vit dans `menu/`, hors de l'index, et un contrôle dit si
+le site s'en est écarté.
 
 ```
-python3 outils/carte.py              réécrit la page
-python3 outils/carte.py --verifie    dit seulement si elle a divergé
-python3 menu/balisage.py             réécrit le balisage Schema.org de /carte/
+python3 menu/balisage.py             réécrit le balisage Schema.org de la carte
+python3 menu/balisage.py --verifie   dit seulement s'il a divergé
+python3 menu/verifie.py              compare le site au scan du menu officiel
 ```
 
 **À relancer après toute modification de la carte dans `index.html`** — un prix

@@ -3,12 +3,12 @@
    — les pages doivent être fraîches : réseau d'abord, cache en secours ;
    — polices, photos et icônes ne changent jamais sans changer de nom :
      cache d'abord, zéro attente réseau, et rafraîchissement en arrière-plan. */
-var CACHE = 'pino-v258';
+var CACHE = 'pino-v259';
 var CORE = [
-  './', './index.html', './carte/', './legal.html', './manifest.webmanifest',
-  /* Le style vit dans son propre fichier depuis qu'il est partagé avec
-     /carte/. Sans lui dans cette liste, une page servie du cache hors ligne
-     arriverait sans habillage — du texte nu sur fond blanc. */
+  './', './index.html', './legal.html', './manifest.webmanifest',
+  /* Le style vit dans son propre fichier. Sans lui dans cette liste, une page
+     servie du cache hors ligne arriverait sans habillage — du texte nu sur
+     fond blanc. */
   './styles.css',
   './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png',
   './icons/pino-logo.webp', './icons/pino-logo.png',
