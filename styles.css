@@ -1707,6 +1707,12 @@
     padding:11px 20px;border-radius:999px;border:1px solid rgba(198,154,77,.38);color:var(--or-l);font-weight:600;font-size:1rem;
     font-family:"Oswald",sans-serif;letter-spacing:.04em;text-decoration:none;background:rgba(198,154,77,.07)}
   html.app-mode #infos .app-tel svg{width:16px;height:16px;flex:0 0 auto}
+  /* Le bouton d'avis est un inline-flex posé dans un <p>, donc collé à
+     gauche de son paragraphe. Sur grand écran c'est juste : il s'aligne
+     sur l'adresse et le téléphone, tous à gauche. Ici tout le bloc est
+     centré — il se retrouvait seul, décalé de 41 px. On le centre comme
+     ses voisins, de la même façon qu'eux. */
+  html.app-mode #infos .avis-line{display:flex;justify-content:center;margin:13px 0 0}
   html.app-mode #infos .app-social{display:flex;justify-content:center;gap:12px;margin-top:13px}
   html.app-mode #infos .app-social a{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;
     border-radius:50%;border:1px solid rgba(198,154,77,.24);color:var(--or-l);background:rgba(255,255,255,.02)}
