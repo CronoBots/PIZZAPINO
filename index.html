@@ -666,6 +666,10 @@
     <a href="#top" class="brand"><span class="brand-pre">Restaurant</span>Pizzeria <b>Pino</b></a>
     <p><span style="white-space:nowrap">Restaurant italien</span> · <span style="white-space:nowrap">Pizzas au feu de bois</span> · <span style="white-space:nowrap">Pâtes fraîches</span></p>
     <p class="fine">© <span id="year"></span> Pizzeria Pino · <span style="white-space:nowrap">Route du Condroz 131, 4550 Nandrin</span></p>
+    <nav class="avis-liens" aria-label="Nos avis en ligne">
+      <a href="https://www.google.com/maps?cid=8822678863966983754" target="_blank" rel="noopener" data-res="Pied de page"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5L2.6 9.4l6.5-.9L12 2.6z"/></svg>Avis Google</a>
+      <a href="https://www.tripadvisor.fr/Restaurant_Review-g3176689-d4006830-Reviews-Pizzeria_Pino-Nandrin_Liege_Province_The_Ardennes_Wallonia.html" target="_blank" rel="noopener" data-res="Pied de page"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5L2.6 9.4l6.5-.9L12 2.6z"/></svg>TripAdvisor</a>
+    </nav>
     <nav class="legal-links" aria-label="Informations légales">
       <a href="legal.html#mentions">Mentions légales</a>
       <span class="sep">·</span>
@@ -2570,6 +2574,10 @@
   function reseauDe(h){
     if(/^https?:\/\/([a-z0-9-]+\.)*instagram\.com(\/|$)/i.test(h)) return 'Instagram';
     if(/^https?:\/\/([a-z0-9-]+\.)*facebook\.com(\/|$)/i.test(h))  return 'Facebook';
+    if(/^https?:\/\/([a-z0-9-]+\.)*tripadvisor\.[a-z.]+(\/|$)/i.test(h)) return 'Tripadvisor';
+    /* g.page est le raccourci d'une fiche Google ; maps en est l'adresse
+       longue. Les deux mènent au même endroit, la fiche du restaurant. */
+    if(/^https?:\/\/(g\.page|([a-z0-9-]+\.)*google\.[a-z.]+\/maps|maps\.google\.)/i.test(h)) return 'Google';
     return '';
   }
 
@@ -2609,10 +2617,12 @@
     if(!a) return;
     var h = a.getAttribute('href') || '';
     if(h.indexOf('tel:') === 0) envoie('appel');
-    /* L'avis avant l'itinéraire : le bouton pointe vers Maps lui aussi, et
-       serait compté comme un itinéraire demandé si l'ordre était inverse. */
-    else if(a.getAttribute('data-res') === 'Avis') envoie('reseau', null, null, 'Google · Avis');
-    else if(/(google\.[a-z.]+\/maps|maps\.google\.)/.test(h)) envoie('itineraire');
+    /* Le bouton « Itinéraire » et le bouton « Avis » pointent tous deux vers
+       Maps : l'adresse ne les distingue pas. C'est la marque data-res qui le
+       fait — elle dit « ce lien mène à une fiche », et son absence « ce lien
+       demande la route ». Sans elle, on compterait des lecteurs d'avis comme
+       des clients en chemin. */
+    else if(!a.hasAttribute('data-res') && /(google\.[a-z.]+\/maps|maps\.google\.)/.test(h)) envoie('itineraire');
     /* Le départ vers un réseau, avec l'endroit d'où il part : le bouton
        « Suivre » et un lien du pied de page ne racontent pas la même chose. */
     else {

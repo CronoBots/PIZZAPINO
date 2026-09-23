@@ -29,7 +29,7 @@ const TYPES = new Set(['vue', 'appel', 'itineraire', 'commande', 'reseau', 'phot
 const PLACES = ['Suivre', 'Profil', 'Publication', 'Reel', 'Contact',
                 'Pied de page', 'Crédit photo', 'Avis', 'Autre'];
 const RESEAUX = new Set(
-  ['Instagram', 'Facebook', 'Google'].flatMap(r => PLACES.map(p => `${r} · ${p}`)));
+  ['Instagram', 'Facebook', 'Google', 'Tripadvisor'].flatMap(r => PLACES.map(p => `${r} · ${p}`)));
 
 /* Le code court d'une publication Instagram, tel qu'il figure dans l'adresse :
    .../reel/DU5_qJLDO6m/. Rien d'autre n'entre sous ce type. */
