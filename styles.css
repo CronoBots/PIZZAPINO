@@ -1707,12 +1707,23 @@
     padding:11px 20px;border-radius:999px;border:1px solid rgba(198,154,77,.38);color:var(--or-l);font-weight:600;font-size:1rem;
     font-family:"Oswald",sans-serif;letter-spacing:.04em;text-decoration:none;background:rgba(198,154,77,.07)}
   html.app-mode #infos .app-tel svg{width:16px;height:16px;flex:0 0 auto}
-  /* Le bouton d'avis est un inline-flex posé dans un <p>, donc collé à
-     gauche de son paragraphe. Sur grand écran c'est juste : il s'aligne
-     sur l'adresse et le téléphone, tous à gauche. Ici tout le bloc est
-     centré — il se retrouvait seul, décalé de 41 px. On le centre comme
-     ses voisins, de la même façon qu'eux. */
-  html.app-mode #infos .avis-line{display:flex;justify-content:center;margin:13px 0 0}
+  /* Les trois actions du bloc « Nous trouver » : appeler, s'y rendre,
+     laisser un avis. Elles vivaient en trois largeurs differentes, chacune
+     taillee sur son texte — 159, 224 px — ce qui donnait une colonne
+     bancale. Une grille centree prend la largeur du plus large, et les
+     trois s'y rangent : l'oeil suit une seule arete.
+
+     L'ordre est celui des besoins : on telephone, on s'y rend, et l'on
+     remercie ensuite. */
+  html.app-mode #infos .app-actions{display:grid;gap:10px;justify-content:center;margin-top:15px}
+  html.app-mode #infos .app-actions > a{width:100%;margin:0;justify-content:center}
+  /* L'itineraire : meme pilule que le telephone, sans le remplissage — c'est
+     la seconde chose qu'on demande a cette page, pas la premiere. */
+  html.app-mode #infos .app-route{display:flex;align-items:center;justify-content:center;gap:9px;
+    padding:11px 20px;border-radius:999px;border:1px solid rgba(198,154,77,.38);
+    color:var(--or-l);font-weight:600;font-size:1rem;font-family:"Oswald",sans-serif;
+    letter-spacing:.04em;text-decoration:none;background:rgba(198,154,77,.07)}
+  html.app-mode #infos .app-route svg{width:16px;height:16px;flex:0 0 auto}
   html.app-mode #infos .app-social{display:flex;justify-content:center;gap:12px;margin-top:13px}
   html.app-mode #infos .app-social a{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;
     border-radius:50%;border:1px solid rgba(198,154,77,.24);color:var(--or-l);background:rgba(255,255,255,.02)}
