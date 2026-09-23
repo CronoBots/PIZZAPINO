@@ -294,6 +294,25 @@ footer a{color:var(--texte-2)}
 .quitter{background:none;border:0;color:var(--texte-3);font:inherit;cursor:pointer;
   text-decoration:underline;padding:0}
 
+/* ── remonter en haut ─────────────────────────────────────────────
+   Le même bouton que sur le site : carré rouge sur grand écran, cercle
+   sombre et discret sur téléphone, où il doit s'effacer devant la donnée.
+   Il n'apparaît qu'après 600 px de défilement — plus tôt, il masquerait
+   un chiffre alors qu'il ne sert encore à rien. */
+#toTop{position:fixed;right:22px;bottom:22px;z-index:90;width:48px;height:48px;border-radius:0;
+  background:var(--rouge);color:#fff;border:0;cursor:pointer;font-size:1.2rem;line-height:1;
+  opacity:0;visibility:hidden;transform:translateY(14px);transition:.35s;
+  box-shadow:0 14px 30px -12px rgba(0,0,0,.55)}
+#toTop.show{opacity:.62;visibility:visible;transform:none}
+#toTop:hover,#toTop:focus-visible,#toTop:active{opacity:1}
+#toTop:hover{background:#8C1C14;transform:translateY(-3px)}
+@media(max-width:760px){
+  #toTop{bottom:calc(20px + env(safe-area-inset-bottom));right:18px;border-radius:50%;
+    background:rgba(15,11,8,.82);border:1px solid rgba(198,154,77,.2);
+    box-shadow:0 8px 24px -9px rgba(0,0,0,.8)}
+  #toTop:hover{background:rgba(15,11,8,.82)}
+}
+
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -503,6 +522,8 @@ footer a{color:var(--texte-2)}
       <button class="quitter" type="button" id="quitter">Fermer la session</button></span>
   </footer>
 </div>
+
+<button id="toTop" type="button" aria-label="Remonter en haut">↑</button>
 
 <script>
 (function(){
@@ -2284,6 +2305,31 @@ footer a{color:var(--texte-2)}
     lien.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 0);
   });
+
+  /* Remonter en haut. Le site suit le défilement dans une requête d'animation
+     plutôt qu'à chaque événement : sur une page de trois mille pixels, lue au
+     pouce, c'est la différence entre un défilement lisse et un défilement qui
+     accroche. On ne touche au DOM que lorsque l'état change vraiment. */
+  (function(){
+    var bouton = document.getElementById('toTop');
+    if(!bouton) return;
+    var doux = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var attente = false, montre = null;
+    function suit(){
+      attente = false;
+      var v = (window.scrollY || window.pageYOffset) > 600;
+      if(v !== montre){ bouton.classList.toggle('show', v); montre = v; }
+    }
+    addEventListener('scroll', function(){
+      if(attente) return;
+      attente = true;
+      requestAnimationFrame(suit);
+    }, { passive:true });
+    suit();
+    bouton.addEventListener('click', function(){
+      window.scrollTo({ top:0, behavior: doux ? 'smooth' : 'auto' });
+    });
+  })();
 
   /* En démonstration la clé n'a pas de sens : on entre directement. */
   if(demo || sessionStorage.getItem(STOCK)) charge();
