@@ -313,6 +313,30 @@ footer a{color:var(--texte-2)}
   #toTop:hover{background:rgba(15,11,8,.82)}
 }
 
+/* ── fermer la session ─────────────────────────────────────────────
+   Le meme bouton que « remonter », dans le coin oppose. Il ferme la
+   session sans avoir a redescendre jusqu'au pied de page : sur une page
+   de plusieurs milliers de pixels, se deconnecter demandait un voyage.
+   Celui du pied de page reste : c'est la ou l'on cherche d'instinct. */
+#quitterFlottant{position:fixed;left:22px;bottom:22px;z-index:90;width:48px;height:48px;border-radius:0;
+  background:var(--rouge);color:#fff;border:0;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  opacity:.62;transition:.35s;box-shadow:0 14px 30px -12px rgba(0,0,0,.55)}
+#quitterFlottant:hover,#quitterFlottant:focus-visible,#quitterFlottant:active{opacity:1}
+#quitterFlottant:hover{background:#8C1C14;transform:translateY(-3px)}
+#quitterFlottant svg{width:20px;height:20px;display:block}
+@media(max-width:760px){
+  #quitterFlottant{bottom:calc(20px + env(safe-area-inset-bottom));left:18px;border-radius:50%;
+    background:rgba(15,11,8,.82);border:1px solid rgba(198,154,77,.2);
+    box-shadow:0 8px 24px -9px rgba(0,0,0,.8)}
+  #quitterFlottant:hover{background:rgba(15,11,8,.82)}
+  /* Sur telephone le pied de page passe a la ligne, et « Exporter en CSV »
+     vient se ranger en bas a gauche — sous le bouton flottant, qui le
+     recouvrait. On donne au corps de quoi laisser passer les deux boutons :
+     48 px de haut, 20 px du bord, et de la marge. */
+  body{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+}
+
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -523,6 +547,7 @@ footer a{color:var(--texte-2)}
   </footer>
 </div>
 
+<button id="quitterFlottant" type="button" aria-label="Fermer la session" title="Fermer la session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
 <button id="toTop" type="button" aria-label="Remonter en haut">↑</button>
 
 <script>
@@ -2248,11 +2273,16 @@ footer a{color:var(--texte-2)}
   }
 
   /* Fermer la session ramene au site. La cle part d'abord : si la navigation
-     echoue, elle ne doit plus trainer. */
-  document.getElementById('quitter').addEventListener('click', function(){
+     echoue, elle ne doit plus trainer. Deux boutons y menent — celui du pied
+     de page, ou l'on cherche d'instinct, et celui qui flotte en bas a gauche,
+     pour ne pas avoir a redescendre toute la page — mais une seule sortie. */
+  function ferme(){
     try{ sessionStorage.removeItem(STOCK); }catch(e){}
     location.href = '../';
-  });
+  }
+  document.getElementById('quitter').addEventListener('click', ferme);
+  var sortie = document.getElementById('quitterFlottant');
+  if(sortie) sortie.addEventListener('click', ferme);
 
   document.querySelectorAll('.filtres button[data-j]').forEach(function(b){
     b.addEventListener('click', function(){
