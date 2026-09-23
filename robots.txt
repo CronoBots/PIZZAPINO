@@ -8,7 +8,6 @@ Allow: /
 # Les dossiers d'outillage : scripts, empreintes, aperçus, scan du menu. Rien
 # qui s'adresse à un visiteur, rien qui doive peser dans l'index.
 Disallow: /menu/
-Disallow: /outils/
 Disallow: /mesure/
 Disallow: /statistiques/
 
