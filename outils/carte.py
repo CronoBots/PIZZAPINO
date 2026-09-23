@@ -37,10 +37,19 @@ MORCEAU = re.compile(
     re.S)
 SUPPLEMENT = re.compile(r'<li( class="free")?><span>([^<]+)</span><i></i><b>([^<]+)</b></li>')
 ONGLET = re.compile(r'<button class="tab[^"]*" data-tab="([a-z]+)">([^<]+)</button>')
+# Les titres de l'application, avec leur mot en or — repris tels quels du site.
+TITRES_HTML = re.compile(r'var TITLES_HTML = \{([^}]*)\}')
+PAIRE_TITRE = re.compile(r"(\w+)\s*:\s*'([^']*)'")
 
 
 def texte(v):
     return entites.unescape(v or '').strip()
+
+
+def titres_app(html):
+    """{ identifiant : titre avec son <em> }, tel que l'application l'affiche."""
+    m = TITRES_HTML.search(html)
+    return dict(PAIRE_TITRE.findall(m.group(1))) if m else {}
 
 
 def carte(html):
@@ -91,7 +100,7 @@ def echappe(v):
     return (v.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'))
 
 
-def rendu(sections, supps):
+def rendu(sections, supps, titres_riches=None):
     """Le balisage du site, tel quel.
 
     La page doit être la même au pixel près : on réemploie donc les classes de
@@ -104,9 +113,18 @@ def rendu(sections, supps):
     reste la même donc l'apparence ne bouge pas ; et les quatre panneaux sont
     tous ouverts, puisqu'il n'y a pas d'onglets pour en choisir un.
     """
+    titres_riches = titres_riches or {}
     out = ['  <div class="wrap">']
     for cle, titre, groupes in sections:
-        out.append('    <h2 class="cat-title cat-panneau" id="%s">%s</h2>' % (cle, echappe(titre)))
+        # Sur telephone, le site coiffe chaque categorie d'un grand titre et du
+        # nombre de plats. On met les deux DANS le titre plutot qu'a cote : un
+        # lecteur d'ecran n'a pas a entendre « Pizzas » deux fois de suite.
+        n = sum(len(p) for _, p in groupes)
+        riche = titres_riches.get(cle) or echappe(titre)
+        out.append('    <h2 class="cat-title cat-panneau" id="%s" data-cat="%s">'
+                   '<span class="ach-txt">%s</span>'
+                   '<span class="ach-count">%d plat%s</span></h2>'
+                   % (cle, cle, riche, n, 's' if n > 1 else ''))
         out.append('    <div class="menu-panel show">')
         for sous_titre, plats in groupes:
             if sous_titre:
@@ -127,7 +145,8 @@ def rendu(sections, supps):
             out.append('      </div>')
         out.append('    </div>')
 
-    out.append('    <h2 class="cat-title cat-panneau" id="supplements">Suppléments</h2>')
+    out.append('    <h2 class="cat-title cat-panneau" id="supplements" data-cat="supplements">'
+               '<span class="ach-txt">Suppléments</span></h2>')
     out.append('    <div class="center">')
     out.append('      <div class="supplements">')
     out.append('        <div class="supp-junior">')
@@ -177,6 +196,7 @@ def main():
 
     sections = carte(html)
     supps = supplements(html)
+    riches = titres_app(html)
     total = sum(len(p) for _, _, g in sections for _, p in g)
     print('%d plats en %d sections, %d suppléments'
           % (total, len(sections), len(supps)))
@@ -190,7 +210,7 @@ def main():
     return remplace('carte/index.html',
                     '<!-- carte:début — engendré par outils/carte.py, ne pas modifier à la main -->',
                     '<!-- carte:fin -->',
-                    rendu(sections, supps),
+                    rendu(sections, supps, riches),
                     verifie='--verifie' in sys.argv)
 
 

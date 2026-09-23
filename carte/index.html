@@ -73,6 +73,30 @@ html.app-mode .page-carte #carte .lead{display:block!important}
 /* Le titre de chaque section : sur l'accueil, l'application le masque parce
    que ses onglets le disent déjà. Ici il n'y a pas d'onglets. */
 html.app-mode .page-carte #carte>.wrap>h2{display:block!important}
+/* Sur telephone, le titre de section prend l'allure du bandeau de categorie
+   de l'application : grand, italique, avec le nombre de plats dessous. Ce
+   sont les memes regles que .app-cat-head, appliquees au titre lui-meme —
+   plutot qu'un second element qui ferait dire « Pizzas » deux fois a un
+   lecteur d'ecran. */
+html.app-mode .page-carte .cat-panneau{
+  padding:14px 6px 2px;margin:34px 0 0;text-align:center;
+  font-family:'Fraunces',Georgia,serif;font-style:normal;color:#F7F1E5}
+html.app-mode .page-carte .cat-panneau::before,
+html.app-mode .page-carte .cat-panneau::after{display:none}
+html.app-mode .page-carte .cat-panneau .ach-txt{display:block;font-weight:600;font-style:italic;
+  font-size:2.15rem;line-height:1.02;color:#F7F1E5;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+html.app-mode .page-carte .cat-panneau .ach-txt em{color:#E9CE96;font-style:italic}
+html.app-mode .page-carte .cat-panneau .ach-count{display:block;margin-top:7px;
+  font-family:'Oswald',sans-serif;font-weight:600;font-size:.66rem;letter-spacing:.24em;
+  text-transform:uppercase;color:#C69A4D}
+/* Sur ecran large, le nombre de plats reste discret sous le titre. */
+.page-carte .cat-panneau .ach-count{font-family:'Oswald',sans-serif;font-size:.62rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--or,#C69A4D)}
+
+/* La barre d'onglets de l'application, en bas : ici elle mene aux sections de
+   la page, et l'accueil ramene au site. */
+html.app-mode .page-carte{padding-bottom:78px}
+.page-carte .tabbar .tb{text-decoration:none}
 /* Un retour vers le site, à la place des onglets de l'application. */
 .page-carte .retour-site{display:none}
 html.app-mode .page-carte .retour-site{display:flex;justify-content:center;margin:0 0 4px}
@@ -141,6 +165,9 @@ html.app-mode .page-carte .retour-site a{font-family:'Oswald',sans-serif;font-si
   <span class="m-tel">085 51 33 39</span>
 </div>
 
+<div class="app-bg-layer" id="fondA" aria-hidden="true"></div>
+<div class="app-bg-layer" id="fondB" aria-hidden="true"></div>
+
 <section id="carte" class="menu">
   <!-- Le fond photo de la carte du site. Là-bas il change d'un onglet à
        l'autre ; ici il n'y a pas d'onglets, donc une seule image, posée
@@ -179,7 +206,7 @@ html.app-mode .page-carte .retour-site a{font-family:'Oswald',sans-serif;font-si
 
 <!-- carte:début — engendré par outils/carte.py, ne pas modifier à la main -->
   <div class="wrap">
-    <h2 class="cat-title cat-panneau" id="pizzas">Pizzas au feu de bois</h2>
+    <h2 class="cat-title cat-panneau" id="pizzas" data-cat="pizzas"><span class="ach-txt">Pizzas <em>au feu de bois</em></span><span class="ach-count">67 plats</span></h2>
     <div class="menu-panel show">
       <div class="dishes">
         <div class="dish"><div class="dish-line"><span class="name">Pizza Nerone</span><span class="dot"></span><span class="price">10,50</span></div><small class="desc">Tomate, mozzarella, salami piquant, poivrons</small></div>
@@ -257,7 +284,7 @@ html.app-mode .page-carte .retour-site a{font-family:'Oswald',sans-serif;font-si
         <div class="dish"><div class="dish-line"><span class="name">Fraicheur</span><span class="dot"></span><span class="price">11,00</span></div><small class="desc">Salade, olives, taleggio, jambon de Parme, pancetta, melon, parmesan (en été)</small></div>
       </div>
     </div>
-    <h2 class="cat-title cat-panneau" id="pates">Pâtes fraîches</h2>
+    <h2 class="cat-title cat-panneau" id="pates" data-cat="pates"><span class="ach-txt">Pâtes <em>fraîches</em></span><span class="ach-count">43 plats</span></h2>
     <div class="menu-panel show">
       <div class="dishes">
         <div class="dish"><div class="dish-line"><span class="name">Rigatoni 4 fromages</span><span class="dot"></span><span class="price">8,50</span></div><small class="desc">Jambon, 4 fromages, crème</small></div>
@@ -308,7 +335,7 @@ html.app-mode .page-carte .retour-site a{font-family:'Oswald',sans-serif;font-si
         <div class="dish"><div class="dish-line"><span class="name">Spaghetti "Fantasia di Gamberoni"</span><span class="dot"></span><span class="price">14,50</span></div><small class="desc">Tomates fraîches, gambas flambés, ½ moules</small></div>
       </div>
     </div>
-    <h2 class="cat-title cat-panneau" id="viandes">Viandes</h2>
+    <h2 class="cat-title cat-panneau" id="viandes" data-cat="viandes"><span class="ach-txt">Viandes</span><span class="ach-count">8 plats</span></h2>
     <div class="menu-panel show">
       <div class="dishes">
         <div class="dish"><div class="dish-line"><span class="name">Escalope Parmigiana</span><span class="dot"></span><span class="price">14,50</span></div><small class="desc">Escalope panée, accompagnée de pâtes</small></div>
@@ -321,7 +348,7 @@ html.app-mode .page-carte .retour-site a{font-family:'Oswald',sans-serif;font-si
         <div class="dish"><div class="dish-line"><span class="name">Osso Buco Maison</span><span class="dot"></span><span class="price">16,00</span></div><small class="desc">Accompagné de pâtes</small></div>
       </div>
     </div>
-    <h2 class="cat-title cat-panneau" id="desserts">Desserts</h2>
+    <h2 class="cat-title cat-panneau" id="desserts" data-cat="desserts"><span class="ach-txt">Desserts</span><span class="ach-count">3 plats</span></h2>
     <div class="menu-panel show">
       <div class="dishes">
         <div class="dish"><div class="dish-line"><span class="name">Tiramisù</span><span class="dot"></span><span class="price">4,50</span></div></div>
@@ -329,7 +356,7 @@ html.app-mode .page-carte .retour-site a{font-family:'Oswald',sans-serif;font-si
         <div class="dish"><div class="dish-line"><span class="name">Mousse au chocolat</span><span class="dot"></span><span class="price">4,00</span></div></div>
       </div>
     </div>
-    <h2 class="cat-title cat-panneau" id="supplements">Suppléments</h2>
+    <h2 class="cat-title cat-panneau" id="supplements" data-cat="supplements"><span class="ach-txt">Suppléments</span></h2>
     <div class="center">
       <div class="supplements">
         <div class="supp-junior">
@@ -356,6 +383,27 @@ html.app-mode .page-carte .retour-site a{font-family:'Oswald',sans-serif;font-si
   </div>
 <!-- carte:fin -->
 </section>
+
+<nav class="tabbar" aria-label="Navigation de la carte">
+  <a class="tb tb-home" href="../">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+    <span>Accueil</span></a>
+  <a class="tb" href="#pizzas" data-cat="pizzas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.2l8 12.8 8-12.8A18 18 0 0 0 4 7.2z"/><circle cx="10.5" cy="10.5" r="1"/><circle cx="13.5" cy="13.5" r="1"/></svg>
+    <span>Pizzas</span></a>
+  <a class="tb" href="#pates" data-cat="pates">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M6 9c1.5-1.2 3-1.2 4.5 0S13.5 10.2 15 9s3-1.2 4.5 0"/></svg>
+    <span>Pâtes</span></a>
+  <a class="tb" href="#viandes" data-cat="viandes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7.5c4-2.2 8-2.2 12 0 1.6.9 1.6 3.1 0 4-4 2.2-8 2.2-12 0-1.6-.9-1.6-3.1 0-4z"/><path d="M8 14v4.5M16 14v4.5"/></svg>
+    <span>Viandes</span></a>
+  <a class="tb" href="#desserts" data-cat="desserts">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h16a8 8 0 0 1-16 0z"/><path d="M12 6v4"/><circle cx="12" cy="4.5" r="1.2"/></svg>
+    <span>Desserts</span></a>
+  <a class="tb" href="../#carte">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg>
+    <span>Ma liste</span></a>
+</nav>
 
 <footer>
   <div class="wrap">
@@ -401,6 +449,57 @@ html.app-mode .page-carte .retour-site a{font-family:'Oswald',sans-serif;font-si
       });
     });
   }
+
+  /* ── le fond photo suit la section qu'on lit ──
+     Sur l'accueil, l'application change de photo quand on change d'onglet.
+     Ici les quatre sections défilent à la suite : c'est donc celle qu'on a
+     sous les yeux qui décide. Deux calques alternés, comme sur le site, pour
+     que le fondu ne fasse pas clignoter le fond.
+
+     Les photos ne sont demandées qu'à l'approche de la carte : sur un
+     téléphone au bord de la route, quatre images de fond chargées d'emblée
+     retarderaient l'affichage des prix, qui est ce qu'on vient chercher. */
+  var FONDS = { pizzas:'bg-pizzas', pates:'bg-pates', viandes:'bg-viandes', desserts:'bg-desserts' };
+  (function(){
+    var calques = [document.getElementById('fondA'), document.getElementById('fondB')];
+    if(!calques[0] || !calques[1]) return;
+    var actif = 0, pose = '';
+
+    function montre(cat){
+      var img = FONDS[cat];
+      if(!img || img === pose) return;
+      pose = img;
+      var suivant = calques[1 - actif];
+      suivant.style.backgroundImage = "url('../images/" + img + ".webp')";
+      void suivant.offsetWidth;
+      suivant.style.opacity = '1';
+      calques[actif].style.opacity = '0';
+      actif = 1 - actif;
+    }
+
+    var titres = [].slice.call(document.querySelectorAll('.cat-panneau[data-cat]'))
+                   .filter(function(h){ return FONDS[h.dataset.cat]; });
+    if(!titres.length) return;
+
+    /* La section « en cours » est la dernière dont le titre est passé sous le
+       haut de l'écran. Une simple lecture au défilement suffit, et coûte moins
+       qu'un observateur par section. */
+    var enAttente = false;
+    function suit(){
+      enAttente = false;
+      var courant = titres[0].dataset.cat;
+      for(var i = 0; i < titres.length; i++){
+        if(titres[i].getBoundingClientRect().top <= innerHeight * 0.45) courant = titres[i].dataset.cat;
+      }
+      montre(courant);
+    }
+    addEventListener('scroll', function(){
+      if(enAttente) return;
+      enAttente = true;
+      requestAnimationFrame(suit);
+    }, { passive:true });
+    suit();
+  })();
 
   /* L'en-tête se rétracte au défilement, comme sur l'accueil. */
   var hdr = document.getElementById('hdr');
