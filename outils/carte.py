@@ -110,8 +110,10 @@ def rendu(sections, supps, titres_riches=None):
 
     Deux écarts, assumés : les titres sont de vrais <h2>/<h3> au lieu de
     <div> — un moteur de recherche a besoin d'une hiérarchie, et la classe
-    reste la même donc l'apparence ne bouge pas ; et les quatre panneaux sont
-    tous ouverts, puisqu'il n'y a pas d'onglets pour en choisir un.
+    reste la même donc l'apparence ne bouge pas ; et chaque catégorie est
+    enveloppée dans un .cat-bloc, que le script de la page montre ou cache.
+    Sur ordinateur ils restent tous ouverts — la carte tient sur une page ;
+    sur téléphone, un seul à la fois, comme les onglets du site.
     """
     titres_riches = titres_riches or {}
     out = ['  <div class="wrap">']
@@ -121,39 +123,50 @@ def rendu(sections, supps, titres_riches=None):
         # lecteur d'ecran n'a pas a entendre « Pizzas » deux fois de suite.
         n = sum(len(p) for _, p in groupes)
         riche = titres_riches.get(cle) or echappe(titre)
-        out.append('    <h2 class="cat-title cat-panneau" id="%s" data-cat="%s">'
+        # La première catégorie est ouverte dans le balisage lui-même. Sans
+        # cela, un téléphone dont le script n'a pas tourné — une erreur, un
+        # réseau coupé en route — afficherait une carte entièrement vide.
+        out.append('    <div class="cat-bloc%s" data-cat="%s">'
+                   % (' on' if cle == sections[0][0] else '', cle))
+        out.append('      <h2 class="cat-title cat-panneau" id="%s" data-cat="%s">'
                    '<span class="ach-txt">%s</span>'
                    '<span class="ach-count">%d plat%s</span></h2>'
                    % (cle, cle, riche, n, 's' if n > 1 else ''))
-        out.append('    <div class="menu-panel show">')
+        out.append('      <div class="menu-panel show" data-cat="%s">' % cle)
         for sous_titre, plats in groupes:
             if sous_titre:
-                out.append('      <h3 class="cat-title">%s</h3>' % echappe(sous_titre))
-            out.append('      <div class="dishes">')
+                out.append('        <h3 class="cat-title">%s</h3>' % echappe(sous_titre))
+            out.append('        <div class="dishes">')
             for nom, prix, desc in plats:
                 # Le .dish-line, sur le site, est posé par le script du panier :
                 # c'est lui qui tend la ligne pointillée entre le nom et le prix.
                 # Ici il n'y a pas de panier, donc on l'écrit d'emblée — sans
                 # quoi le prix vient se coller au nom.
-                ligne = ('        <div class="dish"><div class="dish-line">'
+                ligne = ('          <div class="dish"><div class="dish-line">'
                          '<span class="name">%s</span><span class="dot"></span>'
                          '<span class="price">%s</span></div>'
                          % (echappe(nom), echappe(prix)))
                 if desc:
                     ligne += '<small class="desc">%s</small>' % echappe(desc)
                 out.append(ligne + '</div>')
-            out.append('      </div>')
+            out.append('        </div>')
+        out.append('      </div>')
         out.append('    </div>')
 
-    out.append('    <h2 class="cat-title cat-panneau" id="supplements" data-cat="supplements">'
-               '<span class="ach-txt">Suppléments</span></h2>')
-    out.append('    <div class="center">')
+    # Les suppléments ne sont pas une catégorie : sur le site ils suivent la
+    # carte, sous n'importe quel onglet, parce qu'ils s'appliquent à tous les
+    # plats. Ils restent donc hors des .cat-bloc, toujours visibles.
+    out.append('    <div class="center supp-zone" style="margin-top:42px">')
     out.append('      <div class="supplements">')
     out.append('        <div class="supp-junior">')
     out.append('          <span class="sj-name">Pizza Junior <span class="jn-age">−14 ans</span></span>')
     out.append('          <span class="sj-price">−2,00 €</span>')
     out.append('          <span class="sj-sub">à déduire du prix de la pizza choisie</span>')
     out.append('        </div>')
+    # Un vrai titre plutôt qu'un simple paragraphe comme sur le site : la
+    # classe, donc l'apparence, ne change pas, mais « Suppléments » devient
+    # une section repérable — et l'ancre du sommaire a où se poser.
+    out.append('        <h2 class="supp-h" id="supplements">Suppléments</h2>')
     out.append('        <ul class="supp-grid">')
     for nom, prix, offert in supps:
         out.append('          <li%s><span>%s</span><i></i><b>%s</b></li>'
