@@ -1374,7 +1374,23 @@
 
   /* Barre d'onglets du bas (catégories + commande) */
   html.app-mode .menu-tabs,html.app-mode .order-bar,html.app-mode .cart-fab{display:none!important}
-  html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+  /* La barre d'onglets est en position:fixed, bas 0. Sur iOS, quand le corps
+     est plus court que l'ecran — un onglet peu rempli, « Desserts » et ses
+     trois plats — le navigateur la pose au bas du CORPS et non de la vue :
+     elle remonte, et la page apparait sous elle. Chromium ne fait pas cette
+     lecture, ce qui rend le defaut invisible ici.
+
+     Plutot que de chercher quelle propriete d'un ancetre declenche la mauvaise
+     lecture — elle change d'une version d'iOS a l'autre — on supprime l'ecart
+     entre les deux reperes : un corps au moins aussi haut que la vue, et « bas
+     du corps » veut dire « bas de l'ecran » dans les deux lectures. Le defaut
+     ne peut plus se produire, quelle qu'en soit la cause.
+
+     dvh plutot que vh : sur telephone, vh ignore la barre d'adresse et
+     depasse. box-sizing:border-box est global, la marge basse est donc
+     comprise dans la hauteur — aucun defilement ajoute. */
+  html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom));
+    min-height:100vh;min-height:100dvh}
   /* Bandeau cookies : au-dessus de la barre d'onglets en PWA (sinon masqué derrière) */
   html.app-mode .cookie-banner{bottom:calc(70px + env(safe-area-inset-bottom));z-index:131;
     padding:16px 0;border-bottom:1px solid rgba(198,154,77,.18)}
