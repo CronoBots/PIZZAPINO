@@ -508,6 +508,8 @@
           <li><span>Tout autre supplément</span><i></i><b>1,00</b></li>
           <li class="free"><span>Beurre d'ail</span><i></i><b>Offert</b></li>
         </ul>
+        <p class="supp-un-h">Les autres suppléments, à 1,00&nbsp;€</p>
+        <ul class="supp-un" data-prix="1"><li>Ail</li><li>Ananas</li><li>Anchois</li><li>Artichauts</li><li>Aubergines</li><li>Basilic</li><li>Bolognaise</li><li>Brocolis</li><li>Câpres</li><li>Chair à saucisse</li><li>Champignons</li><li>Champignons des bois</li><li>Chèvre</li><li>Copeaux de parmesan</li><li>Courgettes</li><li>Crème</li><li>Crème de balsamique</li><li>Épinards</li><li>Gorgonzola</li><li>Gratiné</li><li>Huile piquante</li><li>Jambon</li><li>Lardons</li><li>Miel</li><li>Mortadelle</li><li>Mozzarella</li><li>Mozzarella di bufala</li><li>Œuf dur</li><li>Œuf frais</li><li>Oignons</li><li>Olives</li><li>Origan</li><li>Pancetta</li><li>Parmesan</li><li>Pesto</li><li>Piment</li><li>Pizza fermée</li><li>Poivrons</li><li>Poulet champignons</li><li>Poulet poivrons</li><li>Ricotta</li><li>Salami</li><li>Sauce 4 fromages</li><li>Sauce tomate</li><li>Saumon</li><li>Speck</li><li>Taleggio</li><li>Thon</li><li>Tomates cerises</li><li>Tomates fraîches</li><li>Tomates séchées</li><li>Zwan</li></ul>
         <p class="supp-note">Tarifs à emporter · les suppléments s'ajoutent au prix du plat.</p>
       </div>
     </div>
@@ -1635,6 +1637,13 @@
     var p = parsePrice(pEl.textContent); if(p == null) p = 0; // « Offert » -> 0
     SUPPS.push({ name: nm, price: p });
   });
+  /* Les suppléments à prix unique (« Tout autre supplément »), nommés un à un */
+  Array.prototype.slice.call(document.querySelectorAll('.supplements .supp-un')).forEach(function(ul){
+    var p = parseFloat(ul.getAttribute('data-prix')) || 0;
+    Array.prototype.slice.call(ul.querySelectorAll('li')).forEach(function(li){
+      SUPPS.push({ name: li.textContent.trim(), price: p, un: true });
+    });
+  });
   var JUNIOR = { name: 'Formule Junior (−14 ans)', price: -2 };
   /* prix unitaire d'une ligne = base du plat + suppléments (+ remise Junior sur pizzas) */
   function unitPrice(dish, line){
@@ -1923,11 +1932,14 @@
       if(SUPPS.length){
         var sel = document.createElement('select'); sel.className = 'ci-supp-sel'; sel.setAttribute('aria-label', 'Ajouter un supplément');
         var opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = line.qty > 1 ? '+ ajouter un supplément (1 unité)' : '+ ajouter un supplément'; sel.appendChild(opt0);
+        var grpA = document.createElement('optgroup'); grpA.label = 'Suppléments';
+        var grpB = document.createElement('optgroup'); grpB.label = 'À 1,00 €';
         SUPPS.forEach(function(s, i){
           var o = document.createElement('option'); o.value = String(i);
           o.textContent = s.name + '  ' + fmtSupp(s.price);
-          sel.appendChild(o);
+          (s.un ? grpB : grpA).appendChild(o);
         });
+        sel.appendChild(grpA); if(grpB.children.length) sel.appendChild(grpB);
         sel.addEventListener('change', function(){ var v = sel.value; if(v !== ''){ addSupp(id, li, parseInt(v, 10)); } sel.value = ''; });
         add.appendChild(sel);
       }

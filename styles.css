@@ -362,6 +362,12 @@
   .supp-grid li b::after{content:" €";font-size:.82em;color:#c69a4d}
   .supp-grid li.free b{color:#7fd39a}
   .supp-grid li.free b::after{content:""}
+  /* Les suppléments à 1 € : une liste qui coule, sans pointillés ni prix répétés */
+  .supp-un-h{margin:18px 0 8px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.74rem;color:#E9CE96;text-align:left}
+  .supp-un{list-style:none;margin:0;padding:0;text-align:left;font-family:"Inter",sans-serif;font-size:.86rem;line-height:1.7;color:#d9ccb4}
+  .supp-un li{display:inline;white-space:nowrap}
+  /* Espace insécable avant le point : la ligne se coupe après lui, jamais avant */
+  .supp-un li:not(:last-child)::after{content:"\00a0· ";white-space:normal;color:#8a7a60}
   .supp-note{margin:14px 0 0;font-family:"Inter",sans-serif;font-size:.82rem;color:#b9ac96;font-style:italic;text-transform:none;letter-spacing:0}
   /* Les suppléments ne concernent pas les desserts */
   body[data-menucat="desserts"]:not(.searching) .supplements{display:none}
