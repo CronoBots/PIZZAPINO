@@ -120,12 +120,24 @@ par réseau dans la table `abonnes` (`mesure/abonnes.sql`). La courbe commence a
 premier relevé — le 24 septembre 2026 pour Instagram — : l'historique d'avant
 n'existe nulle part. Un jour sans visite garde le chiffre de la veille.
 
-Pour ajouter Facebook, quand son module Trustindex existe : mettre les deux
-identifiants dans la variable `FLUX_ABONNES`, séparés par une virgule
-(`supabase secrets set FLUX_ABONNES="fa288d1828901758c5563445c70,<id-facebook>"`).
-Sans cette variable, seul le module Instagram est lu. Si Facebook est affiché
-par le Page Plugin de Meta plutôt que par Trustindex, son nombre d'abonnés
-n'est pas accessible de cette façon.
+**Facebook, sans Trustindex.** La page est lue directement auprès de l'API de
+Facebook, avec une clé de page rangée dans le secret `FB_JETON` (jamais dans le
+code ni sur le site). La fonction lit, au plus toutes les trois heures, le nom
+de la page, son nombre d'abonnés et ses huit dernières publications ; elle
+recopie les photos dans le bucket public `facebook` de Supabase et garde le
+tout dans la table `cache_facebook`. Le site lit ce contenu par
+`GET /mesure/facebook` : afficher le fil n'ouvre aucune connexion vers
+Facebook et ne pose aucun cookie. Le nombre d'abonnés entre dans la table
+`abonnes` comme celui d'Instagram.
+
+Obtenir la clé (administrateur de la page, une seule fois) : application Meta
+en mode développement → Explorateur de l'API Graph → token utilisateur avec
+`pages_show_list`, `pages_read_engagement`, `pages_read_user_content` → le
+prolonger dans l'outil Token d'accès → `me/accounts` avec la clé prolongée →
+l'`access_token` de la page, qui n'expire pas. Elle cesse de fonctionner si le
+mot de passe du compte change ou s'il perd son rôle sur la page : le tableau de
+bord l'annonce alors dans « Et combien vous suivent », et le site continue
+d'afficher les dernières publications connues.
 
 ---
 

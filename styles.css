@@ -571,14 +571,41 @@
   .ti-insta{max-width:760px;margin-left:auto;margin-right:auto}
   /* L'en-tête du module est prévu pour un fond clair : nom et chiffres en noir,
      illisibles sur le fond sombre de la section. On les remet aux couleurs du site. */
-  #tiInsta .ti-header .ti-username,#tiInsta .ti-header .ti-value,
-  #tiFb .ti-header .ti-username,#tiFb .ti-header .ti-value{color:var(--paper,#F5EFE4)!important}
-  #tiInsta .ti-header .ti-number,#tiFb .ti-header .ti-number{color:#B5AB99!important}
+  #tiInsta .ti-header .ti-username,#tiInsta .ti-header .ti-value{color:var(--paper,#F5EFE4)!important}
+  #tiInsta .ti-header .ti-number{color:#B5AB99!important}
   /* Facebook, sous Instagram dans la même section : un filet et un titre plus petit */
   .fb-bloc{margin-top:clamp(48px,7vw,72px);padding-top:clamp(36px,5vw,52px);border-top:1px solid rgba(233,206,150,.14)}
   .fb-bloc[hidden]{display:none}
   .fb-titre{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.1;margin:0}
   .fb-titre em{color:var(--or);font-style:italic}
+  /* Fil Facebook maison : en-tête de la page, puis un carrousel de cartes */
+  .fb-fil{max-width:760px;margin:clamp(22px,4vw,32px) auto 0;text-align:left}
+  .fb-tete{display:flex;align-items:center;gap:14px;margin:0 0 16px}
+  .fb-av{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #1877F2;background:#111}
+  .fb-id{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .fb-nom{font-family:"Inter",sans-serif;font-weight:600;font-size:1rem;color:var(--paper,#F5EFE4)}
+  .fb-abo{font-family:"Inter",sans-serif;font-size:.84rem;color:#B5AB99}
+  .fb-cartes{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;
+    scroll-snap-type:x mandatory;padding:0 0 10px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+  @media(min-width:761px){.fb-cartes{grid-auto-columns:calc((100% - 28px) / 3)}}
+  .fb-carte{scroll-snap-align:start;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;
+    background:rgba(255,255,255,.04);border:1px solid rgba(233,206,150,.14);color:inherit;text-decoration:none;
+    transition:border-color .2s,transform .2s}
+  .fb-carte:hover{border-color:rgba(233,206,150,.4);transform:translateY(-2px)}
+  .fb-img{display:block;aspect-ratio:4/5;background:#111;overflow:hidden}
+  .fb-img img{width:100%;height:100%;object-fit:cover;display:block}
+  .fb-corps{display:flex;flex-direction:column;gap:8px;padding:12px 14px 14px;flex:1}
+  .fb-texte{font-family:"Inter",sans-serif;font-size:.86rem;line-height:1.5;color:#E6DDCB;white-space:pre-line;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .fb-carte.sans-image .fb-texte{-webkit-line-clamp:12}
+  .fb-date{margin-top:auto;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.64rem;color:#9f9483}
+  .fb-follow-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 28px;border-radius:999px;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.86rem;font-weight:600;color:#fff;text-decoration:none;
+    background:#1877F2;box-shadow:0 8px 24px rgba(24,119,242,.28);transition:transform .2s,filter .2s}
+  .fb-follow-btn svg{width:20px;height:20px;flex:0 0 auto}
+  .fb-follow-btn:hover{filter:brightness(1.08);transform:translateY(-2px)}
+  @media(max-width:560px){.fb-follow-btn{width:100%;max-width:360px}}
+  @media(prefers-reduced-motion:reduce){.fb-carte,.fb-follow-btn{transition:none}}
   @media(max-width:760px){#instagram .lead{margin-bottom:6px}}
   /* « En direct » : dit que le fil suit le compte tout seul */
   .ig-live{display:inline-flex;align-items:center;gap:9px;margin:18px auto 0;padding:7px 14px;border-radius:999px;

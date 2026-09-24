@@ -191,6 +191,7 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
 .ech-tend{display:inline-block;width:16px;height:2px;border-radius:2px;background:#149CAE}
 /* ── abonnés : une carte par réseau, chiffre du jour et courbe de la période ── */
 .abonnes{display:grid;gap:14px}
+.abonnes .alerte{grid-column:1/-1;margin:0}
 @media(min-width:680px){.abonnes{grid-template-columns:1fr 1fr}}
 .ab-carte{background:var(--surface-2);border:1px solid var(--trait);border-radius:12px;padding:14px 16px 12px}
 .ab-tete{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
@@ -519,8 +520,8 @@ footer a{color:var(--texte-2)}
       <button class="bascule" type="button" data-cible="tblAbonnes"
               aria-expanded="false" aria-controls="tblAbonnes">Voir en tableau</button>
     </div>
-    <p class="chapo">Le nombre d’abonnés de vos comptes, relevé chaque jour dans le module
-       du site. La courbe commence au premier relevé&nbsp;: personne ne fournit
+    <p class="chapo">Le nombre d’abonnés de vos comptes, relevé chaque jour&nbsp;: dans le
+       module du site pour Instagram, auprès de Facebook pour la page. La courbe commence au premier relevé&nbsp;: personne ne fournit
        l’historique d’avant. Un abonné gagné ne vient pas forcément du site.</p>
     <div class="abonnes" id="abonnes"></div>
     <div id="tblAbonnes" hidden></div>
@@ -1620,16 +1621,32 @@ footer a{color:var(--texte-2)}
       + '<circle class="point" cx="' + der[0].toFixed(1) + '" cy="' + der[1].toFixed(1) + '" r="3.5"/></svg>';
   }
 
+  /* La lecture de la page Facebook dépend d'une clé que Meta peut retirer
+     (mot de passe changé, administrateur retiré). On le dit ici, en clair,
+     plutôt que de laisser la courbe s'aplatir sans explication. */
+  var ALERTES_FB = {
+    cle_invalide: 'La clé Facebook ne fonctionne plus (mot de passe changé, accès retiré ?). '
+                + 'Le site affiche les dernières publications connues. Il faut recréer la clé '
+                + 'et la ranger dans Supabase sous le nom FB_JETON.',
+    sans_cle: 'Aucune clé Facebook n’est enregistrée (secret FB_JETON dans Supabase).',
+    erreur: 'Facebook n’a pas répondu au dernier relevé. S’il persiste, vérifier la clé FB_JETON.'
+  };
+  function alerteFacebook(d){
+    var f = d.facebook;
+    if(!f || f.etat === 'ok' || !ALERTES_FB[f.etat]) return '';
+    return '<p class="alerte">' + echappe(ALERTES_FB[f.etat]) + '</p>';
+  }
+
   function dessineAbonnes(d){
     derniersAbonnes = d;
     var hote = document.getElementById('abonnes');
     var liste = resumeAbonnes(d);
     if(!liste.length){
-      hote.innerHTML = '<p class="vide">Pas encore de relevé. Le premier arrive avec la prochaine visite du site.</p>';
+      hote.innerHTML = alerteFacebook(d) + '<p class="vide">Pas encore de relevé. Le premier arrive avec la prochaine visite du site.</p>';
       document.getElementById('tblAbonnes').innerHTML = '';
       return;
     }
-    hote.innerHTML = liste.map(function(x){
+    hote.innerHTML = alerteFacebook(d) + liste.map(function(x){
       var g = x.fin - x.debut;
       var gain = x.connus.length < 2 && x.premier
         ? '' : (g > 0 ? '↗ +' : (g < 0 ? '↘ −' : '→ ')) + nb(Math.abs(g)) + ' sur la période';

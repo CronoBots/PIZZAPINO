@@ -2,8 +2,9 @@
    Mesure de fréquentation — Pizzeria Pino
    Fonction Edge Supabase. Deux points d'entrée :
 
-     POST  /mesure/e       le site signale un événement
-     GET   /mesure/stats   la page /statistiques lit les totaux, clé exigée
+     POST  /mesure/e         le site signale un événement
+     GET   /mesure/stats     la page /statistiques lit les totaux, clé exigée
+     GET   /mesure/facebook  le site lit les dernières publications de la page
 
    Pourquoi une fonction Edge plutôt qu'un appel direct à la base : la clé
    de service reste ici, côté serveur. La table est fermée à « anon », et
@@ -95,6 +96,15 @@ const FLUX_ABONNES = (Deno.env.get('FLUX_ABONNES') ?? 'fa288d1828901758c5563445c
 const RESEAUX_SUIVIS = new Set(['Instagram', 'Facebook']);
 const INTERVALLE_RELEVE = 3 * 3600_000;
 let dernierReleve = 0;
+
+/* La page Facebook, lue avec la clé de page rangée dans les secrets
+   (FB_JETON). La clé ne quitte jamais ce fichier : le site ne reçoit que le
+   contenu public de la page, et les photos recopiées chez nous. */
+const FB_JETON = Deno.env.get('FB_JETON') ?? '';
+const GRAPH = 'https://graph.facebook.com/v21.0';
+const FRAICHEUR_FB = 3 * 3600_000;
+const MAX_PUBLICATIONS = 8;
+let fbEnCours: Promise<unknown> | null = null;
 
 const MAX_PLATS = 40;
 const MAX_JOURS = 365;
@@ -253,6 +263,154 @@ function enArrierePlan(p: Promise<unknown>): void {
   try { (globalThis as any).EdgeRuntime?.waitUntil?.(p); } catch { /* rien */ }
 }
 
+/* ── Facebook ────────────────────────────────────────────────────────────── */
+
+const ENTETES_SERVICE = () => ({
+  'apikey': SERVICE, 'Authorization': `Bearer ${SERVICE}`,
+});
+
+async function lisCacheFacebook(): Promise<{ valeur: any; maj: string } | null> {
+  try {
+    const r = await fetch(`${URL_BASE}/rest/v1/cache_facebook?cle=eq.page&select=valeur,maj`,
+                          { headers: ENTETES_SERVICE() });
+    if (!r.ok) return null;
+    const l = await r.json();
+    return l?.[0] ?? null;
+  } catch { return null; }
+}
+
+async function ecritCacheFacebook(valeur: unknown): Promise<void> {
+  await fetch(`${URL_BASE}/rest/v1/cache_facebook`, {
+    method: 'POST',
+    headers: { ...ENTETES_SERVICE(), 'Content-Type': 'application/json',
+               'Prefer': 'resolution=merge-duplicates' },
+    body: JSON.stringify({ cle: 'page', valeur, maj: new Date().toISOString() }),
+  });
+}
+
+async function avecDelai(url: string, ms: number): Promise<Response> {
+  const ctrl = new AbortController();
+  const m = setTimeout(() => ctrl.abort(), ms);
+  try { return await fetch(url, { signal: ctrl.signal }); } finally { clearTimeout(m); }
+}
+
+/** Recopie une image de Facebook dans le bucket public « facebook ». Les
+    adresses de Facebook expirent au bout de quelques jours, et les charger
+    depuis le site ouvrirait une connexion vers Meta à chaque visiteur. */
+async function recopieImage(source: string, nom: string): Promise<string | null> {
+  try {
+    const r = await avecDelai(source, 6000);
+    if (!r.ok) return null;
+    const type = r.headers.get('content-type') ?? 'image/jpeg';
+    if (!type.startsWith('image/')) return null;
+    const corps = new Uint8Array(await r.arrayBuffer());
+    if (corps.byteLength > 5_000_000) return null;
+    const up = await fetch(`${URL_BASE}/storage/v1/object/facebook/${nom}`, {
+      method: 'POST',
+      headers: { ...ENTETES_SERVICE(), 'Content-Type': type, 'x-upsert': 'true',
+                 'Cache-Control': 'max-age=86400' },
+      body: corps,
+    });
+    if (!up.ok) return null;
+    return `${URL_BASE}/storage/v1/object/public/facebook/${nom}`;
+  } catch { return null; }
+}
+
+/** Lit la page (nom, abonnés, publications) et met le résultat en mémoire.
+    En cas d'échec, on garde les publications déjà connues et l'on note
+    l'erreur : le site continue d'afficher, le tableau de bord prévient. */
+async function rafraichitFacebook(ancien: any): Promise<any> {
+  const base = { publications: ancien?.publications ?? [], nom: ancien?.nom ?? 'Pizzeria Pino Nandrin',
+                 abonnes: ancien?.abonnes ?? null, lien: ancien?.lien ?? null, avatar: ancien?.avatar ?? null };
+  if (!FB_JETON) {
+    const v = { ...base, etat: 'sans_cle', message: 'Aucune clé FB_JETON dans les secrets.' };
+    await ecritCacheFacebook(v).catch(() => {});
+    return v;
+  }
+  try {
+    const cle = encodeURIComponent(FB_JETON);
+    const [rp, rs] = await Promise.all([
+      avecDelai(`${GRAPH}/me?fields=id,name,followers_count,fan_count,link,picture.width(200).height(200)&access_token=${cle}`, 8000),
+      avecDelai(`${GRAPH}/me/posts?fields=id,message,created_time,permalink_url,full_picture&limit=20&access_token=${cle}`, 8000),
+    ]);
+    const page = await rp.json();
+    const posts = await rs.json();
+    const err = page?.error ?? posts?.error;
+    if (err) {
+      const v = { ...base, etat: err.code === 190 ? 'cle_invalide' : 'erreur',
+                  message: String(err.message ?? 'Erreur Facebook').slice(0, 200) };
+      await ecritCacheFacebook(v).catch(() => {});
+      return v;
+    }
+    const abonnes = Number.isInteger(page.followers_count) ? page.followers_count
+                  : (Number.isInteger(page.fan_count) ? page.fan_count : null);
+    const avatarSrc = page?.picture?.data?.url;
+    const avatar = avatarSrc ? (await recopieImage(avatarSrc, 'avatar.jpg')) ?? base.avatar : base.avatar;
+
+    const retenus = (posts?.data ?? [])
+      .filter((p: any) => p && (p.message || p.full_picture) && /^[0-9_]+$/.test(String(p.id)))
+      .slice(0, MAX_PUBLICATIONS);
+    const connus: Record<string, any> = {};
+    for (const p of base.publications) connus[p.id] = p;
+    const publications = [];
+    for (const p of retenus) {
+      let image: string | null = null;
+      if (p.full_picture) {
+        image = connus[p.id]?.image ?? await recopieImage(p.full_picture, `${p.id}.jpg`);
+      }
+      publications.push({
+        id: String(p.id),
+        texte: nettoieTexte(p.message ?? '', 600),
+        date: String(p.created_time ?? ''),
+        lien: /^https:\/\/(www\.)?facebook\.com\//.test(p.permalink_url ?? '') ? p.permalink_url : null,
+        image,
+      });
+    }
+    const v = { etat: 'ok', message: '', nom: String(page.name ?? base.nom).slice(0, 80),
+                abonnes, lien: 'https://www.facebook.com/profile.php?id=100064486855231',
+                avatar, publications };
+    await ecritCacheFacebook(v);
+    if (abonnes != null) {
+      await rpc('releve_abonnes', { releves: [{ reseau: 'Facebook', n: abonnes }], le_jour: jourBruxelles() })
+        .catch(() => {});
+    }
+    return v;
+  } catch {
+    return { ...base, etat: 'erreur', message: 'Facebook ne répond pas.' };
+  }
+}
+
+/** Texte d'une publication : sauts de ligne gardés, balises et caractères de
+    contrôle retirés. Le site l'insère en texte, jamais en HTML. */
+function nettoieTexte(v: string, max: number): string {
+  return String(v).replace(/[\x00-\x09\x0b-\x1f<>]/g, ' ').replace(/[ \t]+/g, ' ').trim().slice(0, max);
+}
+
+/** Le contenu à jour, en relisant Facebook si la mémoire a plus de 3 heures.
+    Sans mémoire du tout, on attend la lecture ; sinon on sert l'ancienne
+    version tout de suite et l'on rafraîchit en arrière-plan. */
+async function contenuFacebook(attendre = false): Promise<any> {
+  const c = await lisCacheFacebook();
+  const perime = !c || Date.now() - Date.parse(c.maj) > FRAICHEUR_FB;
+  if (perime) {
+    if (!fbEnCours) fbEnCours = rafraichitFacebook(c?.valeur).finally(() => { fbEnCours = null; });
+    if (!c || attendre) return await fbEnCours;
+    enArrierePlan(fbEnCours);
+  }
+  return { ...c!.valeur, maj: c!.maj };
+}
+
+async function facebook(origine: string): Promise<Response> {
+  const v = await contenuFacebook();
+  // Le site ne reçoit que le contenu public ; l'état détaillé reste au tableau de bord.
+  const publique = { disponible: (v?.publications ?? []).length > 0, nom: v?.nom, abonnes: v?.abonnes,
+                     lien: v?.lien, avatar: v?.avatar, publications: v?.publications ?? [] };
+  return new Response(JSON.stringify(publique), {
+    headers: { 'Content-Type': 'application/json; charset=utf-8',
+               'Cache-Control': 'public, max-age=600', ...cors(origine) },
+  });
+}
+
 /* ── écriture ────────────────────────────────────────────────────────────── */
 
 async function evenement(req: Request, origine: string): Promise<Response> {
@@ -330,7 +488,7 @@ async function stats(req: Request, origine: string): Promise<Response> {
   // La fenêtre juste avant, de même longueur : [depuis_prec, depuis[.
   const depuis_prec = jourBruxelles(new Date(Date.now() - (2 * jours - 1) * 86_400_000));
   // Le tableau de bord ouvert, c'est aussi l'occasion d'un relevé frais.
-  await releveAbonnes();
+  const [, fb] = await Promise.all([releveAbonnes(), contenuFacebook(true).catch(() => null)]);
   const [r, ra] = await Promise.all([
     rpc('stats', { depuis, depuis_prec }),
     rpc('stats_abonnes', { depuis }),
@@ -368,6 +526,9 @@ async function stats(req: Request, origine: string): Promise<Response> {
     villes_autres_n: agrege?.villes_autres_n ?? 0,
     // Les abonnés par réseau : la série de la période et le chiffre d'avant.
     abonnes: abonnes ?? {},
+    // L'état de la lecture Facebook : le tableau de bord prévient si la clé
+    // ne marche plus, pour qu'on ne le découvre pas des semaines plus tard.
+    facebook: fb ? { etat: fb.etat, message: fb.message ?? '', maj: fb.maj ?? null } : null,
   }), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
@@ -393,6 +554,7 @@ Deno.serve(async (req: Request) => {
   const chemin = new URL(req.url).pathname.replace(/^\/mesure/, '') || '/';
   if (req.method === 'POST' && chemin === '/e')     return await evenement(req, origine);
   if (req.method === 'GET'  && chemin === '/stats') return await stats(req, origine);
+  if (req.method === 'GET'  && chemin === '/facebook') return await facebook(origine);
 
   return new Response('Introuvable', { status: 404, headers: cors(origine) });
 });

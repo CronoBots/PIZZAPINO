@@ -56,3 +56,21 @@ $$;
 
 revoke execute on function public.releve_abonnes(jsonb, text) from public, anon, authenticated;
 revoke execute on function public.stats_abonnes(text)         from public, anon, authenticated;
+
+-- =====================================================================
+--  Fil Facebook : la dernière lecture de la page, gardée en mémoire.
+--  Une seule ligne (cle = 'page'). Fermée au web : seule la fonction Edge
+--  la lit et l'écrit, et ne renvoie au site que le contenu public de la page.
+--  Les photos sont copiées dans le bucket public « facebook ».
+-- =====================================================================
+create table if not exists public.cache_facebook (
+  cle    text primary key,
+  valeur jsonb not null,
+  maj    timestamptz not null default now()
+);
+alter table public.cache_facebook enable row level security;
+revoke all on public.cache_facebook from anon, authenticated;
+
+insert into storage.buckets (id, name, public)
+values ('facebook', 'facebook', true)
+on conflict (id) do nothing;

@@ -574,20 +574,17 @@
       <p class="ig-follow-sub">Gratuit, en un clic depuis l'application Instagram</p>
     </div>
 
-    <!-- Fil Facebook — module Trustindex, même régime qu'Instagram.
-         EN ATTENTE : tant que data-ti est vide, le bloc entier reste masqué.
-         Pour l'activer, coller dans data-ti l'adresse du script donné par
-         Trustindex (https://cdn.trustindex.io/loader-feed.js?…), rien d'autre. -->
+    <!-- Fil Facebook — lu par notre service (fonction mesure, route /facebook),
+         qui interroge l'API de Facebook toutes les trois heures et recopie les
+         photos chez nous. Le visiteur ne se connecte à Facebook qu'en cliquant :
+         pas de cookie, pas d'accord à demander. Le bloc reste masqué tant que
+         rien n'est arrivé ; si le service ne répond pas, il se réduit au lien. -->
     <div class="fb-bloc" id="fbBloc" hidden>
-      <p class="eyebrow reveal">Facebook</p>
-      <h3 class="fb-titre reveal" style="--i:1">Retrouvez-nous <em>sur Facebook</em></h3>
-      <div class="ti-reviews ti-insta ti-fb reveal" style="--i:2" id="tiFb" data-ti="">
-        <div class="ti-ph" id="tiFbPh">
-          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          <p>Les publications Facebook sont affichées via Trustindex, un service tiers. Elles se chargent avec votre accord.</p>
-          <button type="button" class="map-load" id="tiFbLoad">Afficher les publications</button>
-          <a class="map-alt" href="https://www.facebook.com/profile.php?id=100064486855231" target="_blank" rel="noopener" data-res="Profil">Voir la page Facebook ↗</a>
-        </div>
+      <p class="eyebrow">Facebook</p>
+      <h3 class="fb-titre">Retrouvez-nous <em>sur Facebook</em></h3>
+      <div class="fb-fil" id="fbFil" aria-live="polite"></div>
+      <div class="ig-follow">
+        <a class="fb-follow-btn" href="https://www.facebook.com/profile.php?id=100064486855231" target="_blank" rel="noopener" data-res="Suivre"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg>Suivre la page Facebook</a>
       </div>
     </div>
   </div>
@@ -685,7 +682,7 @@
 <!-- BANDEAU COOKIES -->
 <div id="cookieBanner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Gestion des cookies" hidden>
   <div class="ck-inner">
-    <p class="ck-text">Ce site utilise uniquement des cookies nécessaires à son fonctionnement. La carte Google Maps n'est chargée qu'avec votre accord, comme les avis clients et les publications Instagram et Facebook, affichés via un service tiers (Trustindex). Aucun cookie publicitaire ni de suivi. <a href="legal.html#cookies">En savoir plus</a>.</p>
+    <p class="ck-text">Ce site utilise uniquement des cookies nécessaires à son fonctionnement. La carte Google Maps n'est chargée qu'avec votre accord, comme les avis clients et les publications Instagram, affichés via un service tiers (Trustindex). Aucun cookie publicitaire ni de suivi. <a href="legal.html#cookies">En savoir plus</a>.</p>
     <div class="ck-actions">
       <button type="button" class="ck-btn ck-refuse" data-consent="essential">Refuser</button>
       <button type="button" class="ck-btn ck-accept" data-consent="all">Tout accepter</button>
@@ -1503,13 +1500,7 @@
     var loadInsta = tiModule("tiInsta", "tiInstaPh", "Chargement des publications…",
       '<p>Les publications ne s\'affichent pas pour le moment.</p>'
       + '<a class="map-alt" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" data-res="Profil">Voir le profil sur Instagram ↗</a>');
-    var loadFb = tiModule("tiFb", "tiFbPh", "Chargement des publications\u2026",
-      '<p>Les publications ne s\'affichent pas pour le moment.</p>'
-      + '<a class="map-alt" href="https://www.facebook.com/profile.php?id=100064486855231" target="_blank" rel="noopener" data-res="Profil">Voir la page Facebook \u2197</a>');
-    // Le bloc Facebook n'apparaît qu'une fois son code Trustindex renseigné.
-    var fbBloc = document.getElementById("fbBloc"), tiFb = document.getElementById("tiFb");
-    if(fbBloc && tiFb && tiFb.getAttribute("data-ti")) fbBloc.hidden = false;
-    function loadReviews(){ loadAvis(); loadInsta(); loadFb(); }
+    function loadReviews(){ loadAvis(); loadInsta(); }
     function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
     function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
 
@@ -1532,8 +1523,6 @@
     if(tiLoad) tiLoad.addEventListener("click", function(){ set("all"); loadReviews(); loadMap(); });
     var tiInstaLoad = document.getElementById("tiInstaLoad");
     if(tiInstaLoad) tiInstaLoad.addEventListener("click", function(){ set("all"); loadReviews(); loadMap(); });
-    var tiFbLoad = document.getElementById("tiFbLoad");
-    if(tiFbLoad) tiFbLoad.addEventListener("click", function(){ set("all"); loadReviews(); loadMap(); });
     var manage = document.getElementById("manageCookies");
     if(manage) manage.addEventListener("click", function(e){ e.preventDefault(); showBanner(); });
 
@@ -2612,6 +2601,85 @@
       }
     }
   }, true);
+})();
+</script>
+
+<script>
+/* ===== Fil Facebook : les dernières publications de la page ===== */
+(function(){
+  var bloc = document.getElementById('fbBloc');
+  var fil = document.getElementById('fbFil');
+  if(!bloc || !fil) return;
+  var charge = false;
+
+  function el(tag, cls, texte){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(texte != null) e.textContent = texte;   // jamais d'HTML venu de Facebook
+    return e;
+  }
+  function dateFr(iso){
+    var d = new Date(iso);
+    if(isNaN(d)) return '';
+    return d.toLocaleDateString('fr-BE', { day:'numeric', month:'long', year:'numeric' });
+  }
+  function nombre(n){ return new Intl.NumberFormat('fr-BE').format(n); }
+  function sur(u){ return /^https:\/\/([a-z0-9-]+\.)*(facebook\.com|supabase\.co)\//.test(u || ''); }
+
+  function affiche(d){
+    var tete = el('div', 'fb-tete');
+    if(sur(d.avatar)){
+      var av = el('img', 'fb-av'); av.src = d.avatar; av.alt = ''; av.width = 56; av.height = 56; av.loading = 'lazy';
+      tete.appendChild(av);
+    }
+    var id = el('div', 'fb-id');
+    id.appendChild(el('span', 'fb-nom', d.nom || 'Pizzeria Pino Nandrin'));
+    if(d.abonnes != null) id.appendChild(el('span', 'fb-abo', nombre(d.abonnes) + ' abonnés'));
+    tete.appendChild(id);
+    fil.appendChild(tete);
+
+    var liste = el('div', 'fb-cartes');
+    (d.publications || []).forEach(function(p){
+      var carte = el(sur(p.lien) ? 'a' : 'div', 'fb-carte' + (sur(p.image) ? '' : ' sans-image'));
+      if(sur(p.lien)){
+        carte.href = p.lien; carte.target = '_blank'; carte.rel = 'noopener';
+        carte.setAttribute('data-res', 'Publication');
+        carte.setAttribute('aria-label', 'Publication Facebook du ' + dateFr(p.date));
+      }
+      if(sur(p.image)){
+        var img = el('img'); img.src = p.image; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
+        var cadre = el('span', 'fb-img'); cadre.appendChild(img); carte.appendChild(cadre);
+      }
+      var corps = el('span', 'fb-corps');
+      if(p.texte) corps.appendChild(el('span', 'fb-texte', p.texte));
+      corps.appendChild(el('span', 'fb-date', dateFr(p.date)));
+      carte.appendChild(corps);
+      liste.appendChild(carte);
+    });
+    fil.appendChild(liste);
+    bloc.hidden = false;
+  }
+
+  function lance(){
+    if(charge) return; charge = true;
+    var API = window.pinoMesureAPI;
+    if(!API){ bloc.hidden = false; return; }
+    fetch(API + '/facebook').then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if(d && d.disponible && (d.publications || []).length) affiche(d);
+        else bloc.hidden = false;            // au pire, le bouton vers la page
+      })
+      .catch(function(){ bloc.hidden = false; });
+  }
+
+  /* Rien n'est demandé avant que le visiteur approche de la section. */
+  var cible = document.getElementById('instagram') || bloc;
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      if(es.some(function(e){ return e.isIntersecting; })){ io.disconnect(); lance(); }
+    }, { rootMargin: '600px 0px' });
+    io.observe(cible);
+  } else lance();
 })();
 </script>
 
