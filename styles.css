@@ -578,34 +578,66 @@
   .fb-bloc[hidden]{display:none}
   .fb-titre{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.1;margin:0}
   .fb-titre em{color:var(--or);font-style:italic}
-  /* Fil Facebook maison : en-tête de la page, puis un carrousel de cartes */
-  .fb-fil{max-width:760px;margin:clamp(22px,4vw,32px) auto 0;text-align:left}
-  .fb-tete{display:flex;align-items:center;gap:14px;margin:0 0 16px}
-  .fb-av{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #1877F2;background:#111}
-  .fb-id{display:flex;flex-direction:column;gap:2px;min-width:0}
-  .fb-nom{font-family:"Inter",sans-serif;font-weight:600;font-size:1rem;color:var(--paper,#F5EFE4)}
-  .fb-abo{font-family:"Inter",sans-serif;font-size:.84rem;color:#B5AB99}
-  .fb-cartes{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;
-    scroll-snap-type:x mandatory;padding:0 0 10px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-  @media(min-width:761px){.fb-cartes{grid-auto-columns:calc((100% - 28px) / 3)}}
-  .fb-carte{scroll-snap-align:start;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;
-    background:rgba(255,255,255,.04);border:1px solid rgba(233,206,150,.14);color:inherit;text-decoration:none;
-    transition:border-color .2s,transform .2s}
-  .fb-carte:hover{border-color:rgba(233,206,150,.4);transform:translateY(-2px)}
-  .fb-img{display:block;aspect-ratio:4/5;background:#111;overflow:hidden}
-  .fb-img img{width:100%;height:100%;object-fit:cover;display:block}
-  .fb-corps{display:flex;flex-direction:column;gap:8px;padding:12px 14px 14px;flex:1}
-  .fb-texte{font-family:"Inter",sans-serif;font-size:.86rem;line-height:1.5;color:#E6DDCB;white-space:pre-line;
-    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  .fb-carte.sans-image .fb-texte{-webkit-line-clamp:12}
-  .fb-date{margin-top:auto;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.64rem;color:#9f9483}
+  /* Fil Facebook maison, dessiné sur le module Instagram (Trustindex) :
+     mêmes proportions, même en-tête, mêmes cartes, mêmes flèches. */
+  .sf{max-width:760px;margin:clamp(22px,4vw,32px) auto 0;text-align:left;font-family:"Inter",system-ui,sans-serif}
+  .sf-tete{display:flex;align-items:center;gap:10px 15px;padding:10px 0;margin-bottom:10px}
+  .sf-profil{display:flex;align-items:center;gap:15px;min-width:0;flex:1 1 auto;color:inherit;text-decoration:none}
+  .sf-av{flex:0 0 auto;width:55px;height:55px;border-radius:50%;padding:3px;box-sizing:content-box;
+    background:linear-gradient(45deg,#1877F2,#4A90FF);display:block}
+  .sf-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:3px solid var(--noir-2,#14100D);box-sizing:border-box;background:#111}
+  .sf-id{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .sf-nom{font-weight:600;font-size:15px;line-height:1.25;color:var(--paper,#F5EFE4)}
+  @media(min-width:761px){.sf-nom{white-space:nowrap}}
+  .sf-chiffres{display:flex;flex-wrap:wrap;gap:2px 16px;font-size:14px;color:#B5AB99}
+  .sf-chiffres b{color:var(--paper,#F5EFE4);font-weight:700}
+  .sf-suivre{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:6px;
+    background:#1877F2;color:#fff;font-size:15px;font-weight:500;text-decoration:none;transition:filter .2s}
+  .sf-suivre:hover{filter:brightness(1.1)}
+  .sf-suivre svg{width:20px;height:20px}
+  @media(min-width:761px){
+    .sf-tete{justify-content:center}
+    .sf-profil{flex:0 1 auto}
+    .sf-id{flex-direction:row;align-items:center;gap:30px}
+  }
+  .sf-cadre{position:relative}
+  .sf-piste{display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  .sf-piste::-webkit-scrollbar{display:none}
+  @media(min-width:561px){.sf-piste{grid-auto-columns:calc((100% - 14px) / 2)}}
+  .sf-carte{position:relative;display:block;aspect-ratio:4/5;border-radius:6px;overflow:hidden;background:#000;
+    scroll-snap-align:start;color:#fff;text-decoration:none}
+  .sf-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+  .sf-carte:hover .sf-media{transform:scale(1.03)}
+  .sf-texte-seul{background:linear-gradient(160deg,#1c2a44,#0f1523)}
+  .sf-texte{position:absolute;inset:22px 22px 86px;font-size:15px;line-height:1.55;white-space:pre-line;overflow:hidden;
+    display:-webkit-box;-webkit-line-clamp:12;-webkit-box-orient:vertical;color:#eef2fa}
+  .sf-voile{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:40px 18px 16px;
+    background:linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,0))}
+  .sf-av-petit{flex:0 0 auto;width:36px;height:36px;border-radius:50%;border:2px solid #fff;overflow:hidden;background:#111;display:block}
+  .sf-av-petit img{width:100%;height:100%;object-fit:cover;display:block}
+  .sf-qui{display:flex;flex-direction:column;min-width:0;flex:1}
+  .sf-qui b{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sf-qui small{font-size:12px;color:rgba(255,255,255,.7)}
+  .sf-reseau{flex:0 0 auto;width:24px;height:24px;color:#fff}
+  .sf-reseau svg{width:100%;height:100%}
+  .sf-nav{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;cursor:pointer;
+    display:grid;place-items:center;background:rgba(255,255,255,.92);color:#111;box-shadow:0 2px 8px rgba(0,0,0,.35);z-index:2}
+  .sf-nav svg{width:16px;height:16px}
+  .sf-nav[hidden]{display:none}
+  .sf-prec{left:10px}
+  .sf-prec svg{transform:rotate(180deg)}
+  .sf-suiv{right:10px}
+  .ig-live-dot.fb{background:#1877F2;animation-name:fbPouls}
+  @keyframes fbPouls{0%{box-shadow:0 0 0 0 rgba(24,119,242,.6)}70%{box-shadow:0 0 0 8px rgba(24,119,242,0)}100%{box-shadow:0 0 0 0 rgba(24,119,242,0)}}
+  @media(prefers-reduced-motion:reduce){.sf-media{transition:none}.sf-carte:hover .sf-media{transform:none}}
   .fb-follow-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 28px;border-radius:999px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.86rem;font-weight:600;color:#fff;text-decoration:none;
     background:#1877F2;box-shadow:0 8px 24px rgba(24,119,242,.28);transition:transform .2s,filter .2s}
   .fb-follow-btn svg{width:20px;height:20px;flex:0 0 auto}
   .fb-follow-btn:hover{filter:brightness(1.08);transform:translateY(-2px)}
   @media(max-width:560px){.fb-follow-btn{width:100%;max-width:360px}}
-  @media(prefers-reduced-motion:reduce){.fb-carte,.fb-follow-btn{transition:none}}
+  @media(prefers-reduced-motion:reduce){.fb-follow-btn{transition:none}}
   @media(max-width:760px){#instagram .lead{margin-bottom:6px}}
   /* « En direct » : dit que le fil suit le compte tout seul */
   .ig-live{display:inline-flex;align-items:center;gap:9px;margin:18px auto 0;padding:7px 14px;border-radius:999px;

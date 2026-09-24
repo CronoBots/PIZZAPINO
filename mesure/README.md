@@ -123,7 +123,8 @@ n'existe nulle part. Un jour sans visite garde le chiffre de la veille.
 **Facebook, sans Trustindex.** La page est lue directement auprès de l'API de
 Facebook, avec une clé de page rangée dans le secret `FB_JETON` (jamais dans le
 code ni sur le site). La fonction lit, au plus toutes les trois heures, le nom
-de la page, son nombre d'abonnés et ses huit dernières publications ; elle
+de la page, son nombre d'abonnés, son nombre total de publications et ses
+huit dernières publications des douze derniers mois ; elle
 recopie les photos dans le bucket public `facebook` de Supabase et garde le
 tout dans la table `cache_facebook`. Le site lit ce contenu par
 `GET /mesure/facebook` : afficher le fil n'ouvre aucune connexion vers

@@ -347,8 +347,12 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
     const avatarSrc = page?.picture?.data?.url;
     const avatar = avatarSrc ? (await recopieImage(avatarSrc, 'avatar.jpg')) ?? base.avatar : base.avatar;
 
+    // Les douze derniers mois seulement : une annonce de 2023 (« suite à un
+    // incendie… ») lue sans sa date laisserait croire le restaurant fermé.
+    const limite = Date.now() - 365 * 86_400_000;
     const retenus = (posts?.data ?? [])
-      .filter((p: any) => p && (p.message || p.full_picture) && /^[0-9_]+$/.test(String(p.id)))
+      .filter((p: any) => p && (p.message || p.full_picture) && /^[0-9_]+$/.test(String(p.id))
+                          && Date.parse(p.created_time) >= limite)
       .slice(0, MAX_PUBLICATIONS);
     const connus: Record<string, any> = {};
     for (const p of base.publications) connus[p.id] = p;
@@ -367,7 +371,8 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
       });
     }
     const v = { etat: 'ok', message: '', nom: String(page.name ?? base.nom).slice(0, 80),
-                abonnes, lien: 'https://www.facebook.com/profile.php?id=100064486855231',
+                abonnes, nb_publications: await compteFacebook(cle),
+                lien: 'https://www.facebook.com/profile.php?id=100064486855231',
                 avatar, publications };
     await ecritCacheFacebook(v);
     if (abonnes != null) {
@@ -378,6 +383,24 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
   } catch {
     return { ...base, etat: 'erreur', message: 'Facebook ne répond pas.' };
   }
+}
+
+/** Le nombre total de publications de la page, pour l'en-tête du fil, comme
+    Instagram l'affiche. Facebook ne le donne pas d'un coup : on parcourt la
+    liste des identifiants, page par page, dans une limite raisonnable. */
+async function compteFacebook(cle: string): Promise<number | null> {
+  try {
+    let url: string | null = `${GRAPH}/me/posts?fields=id&limit=100&access_token=${cle}`;
+    let n = 0;
+    for (let i = 0; url && i < 10; i++) {
+      const r = await avecDelai(url, 8000);
+      const d = await r.json();
+      if (d?.error) return null;
+      n += (d?.data ?? []).length;
+      url = d?.paging?.next ?? null;
+    }
+    return n;
+  } catch { return null; }
 }
 
 /** Texte d'une publication : sauts de ligne gardés, balises et caractères de
@@ -404,6 +427,7 @@ async function facebook(origine: string): Promise<Response> {
   const v = await contenuFacebook();
   // Le site ne reçoit que le contenu public ; l'état détaillé reste au tableau de bord.
   const publique = { disponible: (v?.publications ?? []).length > 0, nom: v?.nom, abonnes: v?.abonnes,
+                     nb_publications: v?.nb_publications ?? null,
                      lien: v?.lien, avatar: v?.avatar, publications: v?.publications ?? [] };
   return new Response(JSON.stringify(publique), {
     headers: { 'Content-Type': 'application/json; charset=utf-8',

@@ -582,9 +582,11 @@
     <div class="fb-bloc" id="fbBloc" hidden>
       <p class="eyebrow">Facebook</p>
       <h3 class="fb-titre">Retrouvez-nous <em>sur Facebook</em></h3>
-      <div class="fb-fil" id="fbFil" aria-live="polite"></div>
+      <p class="ig-live"><span class="ig-live-dot fb" aria-hidden="true"></span>Nos dernières publications, en direct</p>
+      <div class="sf" id="fbFil" aria-label="Publications de la page Facebook de Pizzeria Pino"></div>
       <div class="ig-follow">
-        <a class="fb-follow-btn" href="https://www.facebook.com/profile.php?id=100064486855231" target="_blank" rel="noopener" data-res="Suivre"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg>Suivre la page Facebook</a>
+        <a class="fb-follow-btn" href="https://www.facebook.com/profile.php?id=100064486855231" target="_blank" rel="noopener" data-res="Suivre"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg>S'abonner à Pizzeria Pino</a>
+        <p class="ig-follow-sub">Gratuit, en un clic depuis l'application Facebook</p>
       </div>
     </div>
   </div>
@@ -2605,12 +2607,17 @@
 </script>
 
 <script>
-/* ===== Fil Facebook : les dernières publications de la page ===== */
+/* ===== Fil Facebook : les dernières publications de la page =====
+   Dessiné sur le modèle du module Instagram, pièce pour pièce : en-tête
+   (photo, nom, publications, abonnés, « Suivre »), puis un carrousel de
+   grandes cartes avec, en bas, la page, la date et le logo du réseau. */
 (function(){
   var bloc = document.getElementById('fbBloc');
   var fil = document.getElementById('fbFil');
   if(!bloc || !fil) return;
   var charge = false;
+  var ICONE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg>';
+  var FLECHE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
 
   function el(tag, cls, texte){
     var e = document.createElement(tag);
@@ -2621,43 +2628,88 @@
   function dateFr(iso){
     var d = new Date(iso);
     if(isNaN(d)) return '';
-    return d.toLocaleDateString('fr-BE', { day:'numeric', month:'long', year:'numeric' });
+    return d.toLocaleDateString('fr-BE', { day:'2-digit', month:'long', year:'numeric' })
+            .replace(/^(\d+) (\S)/, function(m, j, l){ return j + ' ' + l.toUpperCase(); });
   }
   function nombre(n){ return new Intl.NumberFormat('fr-BE').format(n); }
   function sur(u){ return /^https:\/\/([a-z0-9-]+\.)*(facebook\.com|supabase\.co)\//.test(u || ''); }
+  function avatar(src, cls){
+    var a = el('span', cls);
+    if(sur(src)){ var i = el('img'); i.src = src; i.alt = ''; i.loading = 'lazy'; a.appendChild(i); }
+    return a;
+  }
 
   function affiche(d){
-    var tete = el('div', 'fb-tete');
-    if(sur(d.avatar)){
-      var av = el('img', 'fb-av'); av.src = d.avatar; av.alt = ''; av.width = 56; av.height = 56; av.loading = 'lazy';
-      tete.appendChild(av);
+    var lien = sur(d.lien) ? d.lien : 'https://www.facebook.com/profile.php?id=100064486855231';
+
+    /* En-tête : comme celui d'Instagram */
+    var tete = el('div', 'sf-tete');
+    var profil = el('a', 'sf-profil'); profil.href = lien; profil.target = '_blank'; profil.rel = 'noopener';
+    profil.setAttribute('data-res', 'Profil');
+    profil.appendChild(avatar(d.avatar, 'sf-av'));
+    var id = el('span', 'sf-id');
+    id.appendChild(el('span', 'sf-nom', d.nom || 'Pizzeria Pino Nandrin'));
+    var chiffres = el('span', 'sf-chiffres');
+    if(d.nb_publications != null){
+      var c1 = el('span'); c1.appendChild(el('b', null, nombre(d.nb_publications))); c1.appendChild(document.createTextNode(' publications')); chiffres.appendChild(c1);
     }
-    var id = el('div', 'fb-id');
-    id.appendChild(el('span', 'fb-nom', d.nom || 'Pizzeria Pino Nandrin'));
-    if(d.abonnes != null) id.appendChild(el('span', 'fb-abo', nombre(d.abonnes) + ' abonnés'));
-    tete.appendChild(id);
+    if(d.abonnes != null){
+      var c2 = el('span'); c2.appendChild(el('b', null, nombre(d.abonnes))); c2.appendChild(document.createTextNode(' abonnés')); chiffres.appendChild(c2);
+    }
+    id.appendChild(chiffres);
+    profil.appendChild(id);
+    tete.appendChild(profil);
+    var suivre = el('a', 'sf-suivre'); suivre.href = lien; suivre.target = '_blank'; suivre.rel = 'noopener';
+    suivre.setAttribute('data-res', 'Suivre');
+    suivre.innerHTML = ICONE; suivre.appendChild(document.createTextNode('Suivre'));
+    tete.appendChild(suivre);
     fil.appendChild(tete);
 
-    var liste = el('div', 'fb-cartes');
+    /* Carrousel */
+    var cadre = el('div', 'sf-cadre');
+    var piste = el('div', 'sf-piste');
     (d.publications || []).forEach(function(p){
-      var carte = el(sur(p.lien) ? 'a' : 'div', 'fb-carte' + (sur(p.image) ? '' : ' sans-image'));
+      var carte = el(sur(p.lien) ? 'a' : 'div', 'sf-carte' + (sur(p.image) ? '' : ' sf-texte-seul'));
       if(sur(p.lien)){
         carte.href = p.lien; carte.target = '_blank'; carte.rel = 'noopener';
         carte.setAttribute('data-res', 'Publication');
         carte.setAttribute('aria-label', 'Publication Facebook du ' + dateFr(p.date));
       }
       if(sur(p.image)){
-        var img = el('img'); img.src = p.image; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
-        var cadre = el('span', 'fb-img'); cadre.appendChild(img); carte.appendChild(cadre);
+        var img = el('img', 'sf-media'); img.src = p.image; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
+        carte.appendChild(img);
+      } else if(p.texte){
+        carte.appendChild(el('span', 'sf-texte', p.texte));
       }
-      var corps = el('span', 'fb-corps');
-      if(p.texte) corps.appendChild(el('span', 'fb-texte', p.texte));
-      corps.appendChild(el('span', 'fb-date', dateFr(p.date)));
-      carte.appendChild(corps);
-      liste.appendChild(carte);
+      var voile = el('span', 'sf-voile');
+      voile.appendChild(avatar(d.avatar, 'sf-av-petit'));
+      var qui = el('span', 'sf-qui');
+      qui.appendChild(el('b', null, d.nom || 'Pizzeria Pino Nandrin'));
+      qui.appendChild(el('small', null, dateFr(p.date)));
+      voile.appendChild(qui);
+      var logo = el('span', 'sf-reseau'); logo.innerHTML = ICONE; voile.appendChild(logo);
+      carte.appendChild(voile);
+      piste.appendChild(carte);
     });
-    fil.appendChild(liste);
+    cadre.appendChild(piste);
+
+    var prec = el('button', 'sf-nav sf-prec'); prec.type = 'button'; prec.setAttribute('aria-label', 'Publication précédente'); prec.innerHTML = FLECHE;
+    var suiv = el('button', 'sf-nav sf-suiv'); suiv.type = 'button'; suiv.setAttribute('aria-label', 'Publication suivante'); suiv.innerHTML = FLECHE;
+    cadre.appendChild(prec); cadre.appendChild(suiv);
+    fil.appendChild(cadre);
+
+    function pas(){ var c = piste.querySelector('.sf-carte'); return c ? c.getBoundingClientRect().width + 14 : piste.clientWidth; }
+    function etat(){
+      var max = piste.scrollWidth - piste.clientWidth - 2;
+      prec.hidden = piste.scrollLeft <= 2;
+      suiv.hidden = piste.scrollLeft >= max;
+    }
+    prec.addEventListener('click', function(){ piste.scrollBy({ left: -pas(), behavior: 'smooth' }); });
+    suiv.addEventListener('click', function(){ piste.scrollBy({ left: pas(), behavior: 'smooth' }); });
+    piste.addEventListener('scroll', etat, { passive: true });
+    window.addEventListener('resize', etat);
     bloc.hidden = false;
+    requestAnimationFrame(etat);
   }
 
   function lance(){
