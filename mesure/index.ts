@@ -123,6 +123,7 @@ const G_PLACES   = Deno.env.get('GOOGLE_PLACES_CLE') ?? '';
 const G_PLACE_ID = Deno.env.get('GOOGLE_PLACE_ID') ?? '';
 const RECHERCHE_FICHE = 'Pizzeria Pino, Route du Condroz 131, 4550 Nandrin';
 const FRAICHEUR_AVIS = 3 * 3600_000;
+const FRAICHEUR_PLACES = 24 * 3600_000;   // une lecture par jour : ~30 par mois, dans la part gratuite
 const MAX_AVIS = 12;           // comme le module Trustindex : les douze plus récents
 const NOTE_MIN = 4;            // … parmi les avis à 4 et 5 étoiles
 let avisEnCours: Promise<unknown> | null = null;
@@ -626,7 +627,8 @@ async function rafraichitAvisPlaces(ancien: any, base: any): Promise<any> {
 
 async function contenuAvis(attendre = false): Promise<any> {
   const c = await lisCache('cache_avis', 'google');
-  const perime = !c || Date.now() - Date.parse(c.maj) > FRAICHEUR_AVIS;
+  const fraicheur = c?.valeur?.source === 'places' || (!G_REFRESH && G_PLACES) ? FRAICHEUR_PLACES : FRAICHEUR_AVIS;
+  const perime = !c || Date.now() - Date.parse(c.maj) > fraicheur;
   if (perime) {
     if (!avisEnCours) avisEnCours = rafraichitAvis(c?.valeur).finally(() => { avisEnCours = null; });
     if (!c || attendre) return await avisEnCours;
