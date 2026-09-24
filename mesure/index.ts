@@ -116,6 +116,12 @@ const G_ID      = Deno.env.get('GOOGLE_CLIENT_ID') ?? '';
 const G_SECRET  = Deno.env.get('GOOGLE_CLIENT_SECRET') ?? '';
 const G_REFRESH = Deno.env.get('GOOGLE_REFRESH_TOKEN') ?? '';
 const G_LIEU    = Deno.env.get('GOOGLE_LIEU') ?? '';
+/* À défaut, l'API Places (clé GOOGLE_PLACES_CLE ; GOOGLE_PLACE_ID facultatif) :
+   accès ouvert à tous, mais cinq avis par lecture, choisis par Google. On les
+   accumule d'une lecture à l'autre pour remonter jusqu'aux douze. */
+const G_PLACES   = Deno.env.get('GOOGLE_PLACES_CLE') ?? '';
+const G_PLACE_ID = Deno.env.get('GOOGLE_PLACE_ID') ?? '';
+const RECHERCHE_FICHE = 'Pizzeria Pino, Route du Condroz 131, 4550 Nandrin';
 const FRAICHEUR_AVIS = 3 * 3600_000;
 const MAX_AVIS = 12;           // comme le module Trustindex : les douze plus récents
 const NOTE_MIN = 4;            // … parmi les avis à 4 et 5 étoiles
@@ -505,6 +511,7 @@ async function rafraichitAvis(ancien: any): Promise<any> {
   const base = { avis: ancien?.avis ?? [], note: ancien?.note ?? null, nombre: ancien?.nombre ?? null,
                  lien_avis: ancien?.lien_avis ?? null, fiche: ancien?.fiche ?? null };
   if (!G_ID || !G_SECRET || !G_REFRESH) {
+    if (G_PLACES) return await rafraichitAvisPlaces(ancien, base);
     return { ...base, etat: 'sans_cle', message: 'Identifiants Google absents des secrets.' };
   }
   try {
@@ -544,6 +551,73 @@ async function rafraichitAvis(ancien: any): Promise<any> {
     return v;
   } catch (e) {
     const v = { ...base, etat: (e as any)?.cle ? 'cle_invalide' : 'erreur',
+                message: String((e as Error)?.message ?? 'Google ne répond pas.').slice(0, 200) };
+    await ecritCache('cache_avis', 'google', v).catch(() => {});
+    return v;
+  }
+}
+
+/** La photo d'un auteur, recopiée chez nous (une fois par avis). */
+async function photoAuteur(src: string, id: string, connue: string | null | undefined): Promise<string | null> {
+  if (connue) return connue;
+  if (!/^https:\/\/[a-z0-9.-]*googleusercontent\.com\//.test(src)) return null;
+  return await recopieImage(src.replace(/=s\d+[^/]*$/, '') + '=s120-c', `${id}.jpg`, 'avis');
+}
+
+async function idFiche(ancien: any): Promise<string> {
+  if (G_PLACE_ID) return G_PLACE_ID;
+  if (ancien?.place_id) return ancien.place_id;
+  // Recherche « identifiants seulement » : gratuite et sans limite chez Google.
+  const r = await fetch('https://places.googleapis.com/v1/places:searchText', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': G_PLACES, 'X-Goog-FieldMask': 'places.id' },
+    body: JSON.stringify({ textQuery: RECHERCHE_FICHE, languageCode: 'fr' }),
+  });
+  const d = await r.json();
+  if (d?.error) throw Object.assign(new Error(d.error.message ?? 'Erreur Google'), { cle: r.status === 403 || r.status === 400 });
+  const id = d?.places?.[0]?.id;
+  if (!id) throw new Error('Fiche Google introuvable.');
+  return id;
+}
+
+async function rafraichitAvisPlaces(ancien: any, base: any): Promise<any> {
+  try {
+    const placeId = await idFiche(ancien);
+    const r = await fetch(`https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}?languageCode=fr`, {
+      headers: { 'X-Goog-Api-Key': G_PLACES,
+                 'X-Goog-FieldMask': 'rating,userRatingCount,googleMapsUri,googleMapsLinks,reviews' },
+    });
+    const d = await r.json();
+    if (d?.error) throw Object.assign(new Error(d.error.message ?? 'Erreur Google'), { cle: r.status === 403 });
+
+    // Les avis déjà connus restent : Google n'en rend que cinq à la fois.
+    const tous: Record<string, any> = {};
+    for (const a of base.avis) tous[a.id] = a;
+    for (const a of d.reviews ?? []) {
+      const id = String(a.name ?? '').split('/').pop()!.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 80);
+      const note = Math.round(Number(a.rating) || 0);
+      const texte = nettoieTexte(a.originalText?.text ?? a.text?.text ?? '', 2000);
+      if (!id || note < NOTE_MIN || !texte) continue;
+      const qui = a.authorAttribution ?? {};
+      const profil = /^https:\/\/www\.google\.com\/maps\/contrib\/\d+/.test(qui.uri ?? '') ? qui.uri : null;
+      tous[id] = { id, note, texte, profil,
+                   photo: await photoAuteur(String(qui.photoUri ?? ''), id, tous[id]?.photo),
+                   nom: nettoie(qui.displayName ?? 'Client Google', 60),
+                   date: String(a.publishTime ?? '') };
+    }
+    const avis = Object.values(tous)
+      .sort((x: any, y: any) => Date.parse(y.date) - Date.parse(x.date))
+      .slice(0, MAX_AVIS);
+    const liens = d.googleMapsLinks ?? {};
+    const v = { etat: 'ok', message: '', source: 'places', place_id: placeId,
+                note: typeof d.rating === 'number' ? Math.round(d.rating * 10) / 10 : base.note,
+                nombre: Number.isInteger(d.userRatingCount) ? d.userRatingCount : base.nombre,
+                lien_avis: liens.writeAReviewUri ?? base.lien_avis,
+                fiche: liens.reviewsUri ?? d.googleMapsUri ?? base.fiche, avis };
+    await ecritCache('cache_avis', 'google', v);
+    return v;
+  } catch (e) {
+    const v = { ...base, place_id: ancien?.place_id, etat: (e as any)?.cle ? 'cle_invalide' : 'erreur',
                 message: String((e as Error)?.message ?? 'Google ne répond pas.').slice(0, 200) };
     await ecritCache('cache_avis', 'google', v).catch(() => {});
     return v;

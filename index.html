@@ -2650,10 +2650,11 @@ window.pinoAvis = function(hote, d){
     return e;
   }
   function sur(u){ return /^https:\/\/[a-z0-9-]+\.supabase\.co\//.test(u || ''); }
-  /* Google ne donne pas le profil de l'auteur : on renvoie vers les avis sur la fiche. */
+  /* Profil de l'auteur quand Google le donne, sinon les avis sur la fiche. */
+  function profil(a){ return /^https:\/\/www\.google\.com\/maps\/contrib\/\d+/.test(a.profil || '') ? a.profil : null; }
   var FICHE = /^https:\/\/(www\.|maps\.)?google\.[a-z.]+\//.test(d.fiche || '') ? d.fiche : 'https://www.google.com/maps?cid=8822678863966983754';
-  function lien(cls, titre){
-    var a = el('a', cls); a.href = FICHE; a.target = '_blank'; a.rel = 'noopener'; a.title = titre; a.setAttribute('data-res', 'Avis');
+  function lien(cls, titre, url){
+    var a = el('a', cls); a.href = url || FICHE; a.target = '_blank'; a.rel = 'noopener'; a.title = titre; a.setAttribute('data-res', 'Avis');
     return a;
   }
   /* « il y a 2 semaines », comme le module */
@@ -2673,7 +2674,7 @@ window.pinoAvis = function(hote, d){
     var c = el('div', 'ga-carte');
     var tete = el('div', 'ga-tete');
     var g = lien('ga-g', 'Voir les avis sur Google'); g.innerHTML = G; g.setAttribute('aria-label', 'Voir les avis sur Google'); tete.appendChild(g);
-    var av = lien('ga-av', 'Voir l\u2019avis de ' + (a.nom || '') + ' sur Google'); av.setAttribute('aria-hidden', 'true'); av.tabIndex = -1;
+    var av = lien('ga-av', 'Profil Google de ' + (a.nom || ''), profil(a)); av.setAttribute('aria-hidden', 'true'); av.tabIndex = -1;
     if(sur(a.photo)){ var im = el('img'); im.src = a.photo; im.alt = ''; im.width = 40; im.height = 40; im.loading = 'lazy'; av.appendChild(im); }
     else {
       var nom = String(a.nom || '?');
@@ -2682,7 +2683,7 @@ window.pinoAvis = function(hote, d){
     }
     tete.appendChild(av);
     var qui = el('div', 'ga-qui');
-    var nm = lien('ga-nom', 'Voir l\u2019avis sur Google'); nm.textContent = a.nom; qui.appendChild(nm);
+    var nm = lien('ga-nom', profil(a) ? 'Voir le profil Google' : 'Voir l\u2019avis sur Google', profil(a)); nm.textContent = a.nom; qui.appendChild(nm);
     qui.appendChild(el('div', 'ga-date', ilYa(a.date)));
     tete.appendChild(qui);
     c.appendChild(tete);

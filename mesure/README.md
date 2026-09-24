@@ -151,6 +151,17 @@ traduction de Google), recopie les photos des auteurs dans le bucket public
 `avis` et garde le tout dans la table `cache_avis`, relue au plus toutes les
 trois heures.
 
+**Sans accès Business Profile : l'API Places.** Google refuse l'accès Business
+Profile à beaucoup de petites fiches. À défaut, une simple clé suffit :
+`GOOGLE_PLACES_CLE` (API « Places API (New) », limitée à cette API ;
+`GOOGLE_PLACE_ID` facultatif, sinon la fiche est trouvée par son adresse).
+Google n'y rend que cinq avis par lecture, choisis par lui : la fonction les
+accumule d'une lecture à l'autre et garde les douze plus récents. Elle y gagne
+le lien vers le profil de chaque auteur, que le site met sur la photo et le nom.
+Huit lectures par jour, soit environ 240 par mois : dans la part gratuite
+mensuelle de Google. Un plafond de requêtes par jour dans la console garantit
+qu'aucun euro ne sera facturé.
+
 Tant que ces secrets manquent, la route répond « indisponible » et le site garde
 son module Trustindex, chargé après accord comme avant. Dès qu'ils sont là, le
 site affiche les avis lui-même, sans cookie ni accord à demander, dans une
