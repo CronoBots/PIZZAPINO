@@ -14,8 +14,8 @@
   "theme_color": "#14100D",
   "categories": ["food", "restaurant", "lifestyle"],
   "icons": [
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icons/icon-512.png?v=2", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png?v=2", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "screenshots": [
     { "src": "screenshots/mobile-accueil.webp", "sizes": "780x1688", "type": "image/webp",
@@ -28,12 +28,12 @@
   "shortcuts": [
     { "name": "La carte", "short_name": "Carte", "description": "Pizzas, pâtes, viandes et desserts",
       "url": "./?source=raccourci#carte",
-      "icons": [{ "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }] },
+      "icons": [{ "src": "icons/icon-512.png?v=2", "sizes": "512x512", "type": "image/png" }] },
     { "name": "Ma liste", "short_name": "Ma liste", "description": "Reprendre la liste en cours",
       "url": "./?source=raccourci#liste",
-      "icons": [{ "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }] },
+      "icons": [{ "src": "icons/icon-512.png?v=2", "sizes": "512x512", "type": "image/png" }] },
     { "name": "Nous trouver", "short_name": "Accès", "description": "Adresse, horaires et téléphone",
       "url": "./?source=raccourci#infos",
-      "icons": [{ "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }] }
+      "icons": [{ "src": "icons/icon-512.png?v=2", "sizes": "512x512", "type": "image/png" }] }
   ]
 }
