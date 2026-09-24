@@ -2843,8 +2843,19 @@ window.pinoAvis = function(hote, d){
         carte.setAttribute('aria-label', 'Publication Facebook du ' + dateFr(p.date));
       }
       if(sur(p.image)){
+        // L'image entière, dans son format d'origine (carré, portrait, vidéo
+        // verticale) : rien n'est coupé. Le fond reprend l'image, floutée,
+        // comme le font Facebook et Instagram pour les formats hors cadre.
+        var fond = el('span', 'sf-fond'); fond.style.backgroundImage = 'url("' + p.image + '")';
+        carte.appendChild(fond);
         var img = el('img', 'sf-media'); img.src = p.image; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
         carte.appendChild(img);
+        if(/\/(videos|reel)\//.test(p.lien || '')){
+          var lecture = el('span', 'sf-lecture'); lecture.setAttribute('aria-hidden', 'true');
+          lecture.innerHTML = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>';
+          carte.appendChild(lecture);
+          carte.setAttribute('aria-label', 'Vidéo Facebook du ' + dateFr(p.date));
+        }
       } else if(p.texte){
         carte.appendChild(el('span', 'sf-texte', p.texte));
       }
