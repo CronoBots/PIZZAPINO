@@ -719,11 +719,13 @@
   .ga-tete{position:relative;display:flex;align-items:center;min-height:40px;padding-right:28px}
   .ga-g{position:absolute;top:0;right:0;width:20px;height:20px}
   .ga-g svg{width:100%;height:100%;display:block}
+  a.ga-nom:hover{text-decoration:underline}
+  a.ga-av{text-decoration:none}
   .ga-av{flex:0 0 auto;width:40px;height:40px;border-radius:50%;margin-right:15px;overflow:hidden;
     display:grid;place-items:center;color:#fff;font-size:18px;font-weight:600;background:#ddd}
   .ga-av img{width:100%;height:100%;object-fit:cover;display:block}
   .ga-qui{min-width:0}
-  .ga-nom{font-size:15px;font-weight:600;line-height:21px;color:#000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ga-nom{display:block;text-decoration:none;font-size:15px;font-weight:600;line-height:21px;color:#000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .ga-date{font-size:13px;line-height:18.2px;color:#6b6b6b}
   .ga-etoiles{display:flex;align-items:center;margin:11px 0;line-height:17px}
   .ga-etoile{width:17px;height:17px;margin-right:1px;color:#F6BB06;display:block}
@@ -977,6 +979,7 @@
       display:flex;align-items:center;justify-content:center;font-size:0;
       box-shadow:0 8px 24px -9px rgba(0,0,0,.8);border:1px solid rgba(198,154,77,.2);
       opacity:var(--fab-opacity);transition:opacity .3s}
+    body.resto-open .call-bar .c-tel{background:#1E8E3E;border-color:rgba(255,255,255,.18)}
     .call-bar .c-tel:active{opacity:1}
     .call-bar .c-tel svg{width:21px;height:21px}
     .call-bar .c-menu{display:none}
@@ -1455,6 +1458,9 @@
   html.app-mode .app-bar .ab-status .dot-live{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
   html.app-mode .app-bar .ab-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--rouge,#A8261D);color:#fff;text-decoration:none}
   html.app-mode .app-bar .ab-call svg{width:18px;height:18px}
+  /* Appel : vert quand c'est ouvert (on décroche), neutre quand c'est fermé */
+  html.app-mode body.resto-open .app-bar .ab-call{background:#1E8E3E}
+  html.app-mode body:not(.resto-open) .app-bar .ab-call{background:rgba(241,234,219,.1);color:#cfc3ad}
 
   /* Recherche : dans le contenu, juste sous le titre de catégorie */
   html.app-mode #carte .menu-search{margin:14px auto 0}
