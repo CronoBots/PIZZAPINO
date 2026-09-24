@@ -1502,7 +1502,30 @@
     var loadInsta = tiModule("tiInsta", "tiInstaPh", "Chargement des publications…",
       '<p>Les publications ne s\'affichent pas pour le moment.</p>'
       + '<a class="map-alt" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" data-res="Profil">Voir le profil sur Instagram ↗</a>');
-    function loadReviews(){ loadAvis(); loadInsta(); }
+    /* Avis Google maison : si notre service a les avis (lus sur la fiche par
+       l'API Google Business Profile), on les affiche nous-mêmes — sans
+       Trustindex, sans cookie, sans accord à demander. Sinon, le module
+       Trustindex reste en place, comme avant. L'adresse du service n'est
+       connue qu'à la fin de la page : on attend qu'elle soit lue. */
+    var avisPret = new Promise(function(fini){
+      function go(){
+        var API = window.pinoMesureAPI;
+        if(!API || !window.fetch || !window.pinoAvis){ fini(false); return; }
+        fetch(API + '/avis').then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(d){
+            if(!d || !d.disponible || !(d.avis || []).length){ fini(false); return; }
+            window.pinoAvis(document.getElementById("tiReviews"), d);
+            fini(true);
+          })
+          .catch(function(){ fini(false); });
+      }
+      if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", go);
+      else setTimeout(go, 0);
+    });
+    function loadReviews(){
+      avisPret.then(function(maison){ if(!maison) loadAvis(); });
+      loadInsta();
+    }
     function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
     function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
 
@@ -2604,6 +2627,133 @@
     }
   }, true);
 })();
+</script>
+
+<script>
+/* ===== Avis Google, dessinés chez nous =====
+   Même grille que le module Trustindex qu'ils remplacent, mesurée sur la
+   page : une colonne par tranche de 300 px, trois rangées puis « Charger
+   plus », cartes blanches à ombre douce, auteur et date en Poppins, étoiles
+   jaunes, texte coupé à six lignes et « Lire la suite » qui ouvre l'avis
+   entier. Les colonnes s'empilent chacune à leur hauteur, comme le module. */
+window.pinoAvis = function(hote, d){
+  if(!hote) return;
+  var G = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>';
+  var ETOILE = '<svg viewBox="0 0 16 15" aria-hidden="true"><path fill="currentColor" d="M7.2 .6a.8.8 0 0 1 1.5 0l1.4 4.1c.1.2.3.4.6.4h4.3c.8 0 1.1 1 .5 1.4l-3.5 2.5a.6.6 0 0 0-.2.7l1.3 4.1c.2.7-.6 1.3-1.2.9L8.4 12.2a.6.6 0 0 0-.7 0L4.2 14.7c-.6.4-1.4-.2-1.2-.9l1.3-4.1a.6.6 0 0 0-.2-.7L.6 6.5C0 6.1.3 5.1 1.1 5.1h4.3c.3 0 .5-.2.6-.4z"/></svg>';
+  var VERIFIE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="#4285F4" d="M7.3.3a.9.9 0 0 1 1.4 0l.8 1c.1.2.4.2.6.2l1.2-.5c.5-.2 1.1.1 1.2.7l.2 1.3c0 .2.2.4.4.4l1.3.2c.6.1.9.7.7 1.2l-.5 1.2c-.1.2 0 .4.1.6l1 .8c.4.3.4 1 0 1.4l-1 .8a.5.5 0 0 0-.1.6l.5 1.2c.2.5-.1 1.1-.7 1.2l-1.3.2c-.2 0-.4.2-.4.4l-.2 1.3c-.1.6-.7.9-1.2.7l-1.2-.5c-.2-.1-.4 0-.6.2l-.8 1c-.3.4-1 .4-1.4 0l-.8-1a.5.5 0 0 0-.6-.2l-1.2.5c-.5.2-1.1-.1-1.2-.7l-.2-1.3a.5.5 0 0 0-.4-.4l-1.3-.2c-.6-.1-.9-.7-.7-1.2l.5-1.2c.1-.2 0-.4-.1-.6l-1-.8a.9.9 0 0 1 0-1.4l1-.8c.2-.1.2-.4.1-.6L.9 4.5c-.2-.5.1-1.1.7-1.2l1.3-.2c.2 0 .4-.2.4-.4l.2-1.3C3.6.8 4.2.5 4.7.7l1.2.5c.2.1.4 0 .6-.2z"/><path fill="#fff" d="M11.2 5.4a.7.7 0 0 1 0 1L7.4 10.2a.7.7 0 0 1-1 0L4.8 8.6a.7.7 0 1 1 1-1l1.1 1.1 3.3-3.3a.7.7 0 0 1 1 0z"/></svg>';
+  var COULEURS = ['#1A73E8','#E8710A','#188038','#A142F4','#D93025','#12B5CB','#E52592','#5F6368'];
+
+  function el(tag, cls, texte){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(texte != null) e.textContent = texte;        // jamais d'HTML venu de Google
+    return e;
+  }
+  function sur(u){ return /^https:\/\/[a-z0-9-]+\.supabase\.co\//.test(u || ''); }
+  /* « il y a 2 semaines », comme le module */
+  function ilYa(iso){
+    var j = Math.floor((Date.now() - Date.parse(iso)) / 86400000);
+    if(!isFinite(j)) return '';
+    if(j < 1) return "aujourd'hui";
+    var n, u;
+    if(j < 7){ n = j; u = n > 1 ? 'jours' : 'jour'; }
+    else if(j < 30){ n = Math.floor(j / 7); u = n > 1 ? 'semaines' : 'semaine'; }
+    else if(j < 365){ n = Math.floor(j / 30); u = 'mois'; }
+    else { n = Math.floor(j / 365); u = n > 1 ? 'ans' : 'année'; }
+    return 'il y a ' + n + ' ' + u;
+  }
+
+  function carte(a, entier){
+    var c = el('div', 'ga-carte');
+    var tete = el('div', 'ga-tete');
+    var g = el('span', 'ga-g'); g.innerHTML = G; g.title = 'Publié sur Google'; tete.appendChild(g);
+    var av = el('span', 'ga-av');
+    if(sur(a.photo)){ var im = el('img'); im.src = a.photo; im.alt = ''; im.width = 40; im.height = 40; im.loading = 'lazy'; av.appendChild(im); }
+    else {
+      var nom = String(a.nom || '?');
+      av.textContent = nom.charAt(0).toUpperCase();
+      av.style.background = COULEURS[nom.length % COULEURS.length];
+    }
+    tete.appendChild(av);
+    var qui = el('div', 'ga-qui');
+    qui.appendChild(el('div', 'ga-nom', a.nom));
+    qui.appendChild(el('div', 'ga-date', ilYa(a.date)));
+    tete.appendChild(qui);
+    c.appendChild(tete);
+
+    var et = el('span', 'ga-etoiles');
+    et.setAttribute('role', 'img'); et.setAttribute('aria-label', a.note + ' étoiles sur 5');
+    for(var i = 1; i <= 5; i++){ var s1 = el('span', 'ga-etoile' + (i <= a.note ? '' : ' vide')); s1.innerHTML = ETOILE; et.appendChild(s1); }
+    var v = el('span', 'ga-verifie'); v.innerHTML = VERIFIE; v.title = 'Avis publié sur Google'; et.appendChild(v);
+    c.appendChild(et);
+
+    var t = el('div', 'ga-texte' + (entier ? ' entier' : ''), a.texte);
+    c.appendChild(t);
+    if(!entier){
+      var suite = el('button', 'ga-suite', 'Lire la suite'); suite.type = 'button'; suite.hidden = true;
+      suite.addEventListener('click', function(){ ouvre(a, suite); });
+      c.appendChild(suite);
+    }
+    return c;
+  }
+
+  /* L'avis entier, dans une fenêtre : ce que fait le module en mode « popup ». */
+  function ouvre(a, depuis){
+    var fond = el('div', 'ga-fenetre');
+    fond.setAttribute('role', 'dialog'); fond.setAttribute('aria-modal', 'true'); fond.setAttribute('aria-label', 'Avis de ' + a.nom);
+    var boite = el('div', 'ga-boite');
+    var x = el('button', 'ga-fermer'); x.type = 'button'; x.setAttribute('aria-label', 'Fermer'); x.textContent = '×';
+    boite.appendChild(x); boite.appendChild(carte(a, true));
+    fond.appendChild(boite);
+    function ferme(){ fond.remove(); document.removeEventListener('keydown', clavier); document.documentElement.style.overflow = ''; if(depuis) depuis.focus(); }
+    function clavier(e){ if(e.key === 'Escape') ferme(); }
+    x.addEventListener('click', ferme);
+    fond.addEventListener('click', function(e){ if(e.target === fond) ferme(); });
+    document.addEventListener('keydown', clavier);
+    document.documentElement.style.overflow = 'hidden';
+    document.body.appendChild(fond);
+    x.focus();
+  }
+
+  var avis = d.avis || [];
+  var rangs = 3, montres = 0, cols = 0;
+  hote.innerHTML = '';
+  var racine = el('div', 'ga');
+  var grille = el('div', 'ga-grille');
+  var plus = el('div', 'ga-plus');
+  var btn = el('button', 'ga-plus-btn', 'Charger plus'); btn.type = 'button';
+  plus.appendChild(btn);
+  racine.appendChild(grille); racine.appendChild(plus);
+  hote.appendChild(racine);
+  var cartes = avis.map(function(a){ var it = el('div', 'ga-item'); it.appendChild(carte(a, false)); return it; });
+
+  function coupe(){
+    cartes.forEach(function(it){
+      var t = it.querySelector('.ga-texte'), b = it.querySelector('.ga-suite');
+      if(t && b && it.parentNode) b.hidden = t.scrollHeight <= t.clientHeight + 1;
+    });
+  }
+  function dispose(){
+    var n = Math.max(1, Math.floor((racine.clientWidth + 16) / 300));
+    if(n !== cols){ cols = n; }
+    montres = Math.min(cartes.length, Math.max(montres, cols * rangs));
+    grille.innerHTML = '';
+    var colonnes = [];
+    for(var i = 0; i < cols; i++){ var c = el('div', 'ga-col'); colonnes.push(c); grille.appendChild(c); }
+    for(var k = 0; k < montres; k++) colonnes[k % cols].appendChild(cartes[k]);
+    plus.hidden = montres >= cartes.length;
+    coupe();
+  }
+  btn.addEventListener('click', function(){ montres = Math.min(cartes.length, montres + cols * rangs); dispose(); });
+  var minuteur = null, largeur = racine.clientWidth;
+  window.addEventListener('resize', function(){
+    if(racine.clientWidth === largeur) return;
+    largeur = racine.clientWidth;
+    clearTimeout(minuteur); minuteur = setTimeout(dispose, 150);
+  });
+  dispose();
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(coupe);
+};
 </script>
 
 <script>

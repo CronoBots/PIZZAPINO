@@ -140,6 +140,22 @@ mot de passe du compte change ou s'il perd son rôle sur la page : le tableau de
 bord l'annonce alors dans « Et combien vous suivent », et le site continue
 d'afficher les dernières publications connues.
 
+**Les avis Google, sans Trustindex.** La route `GET /mesure/avis` lit les avis
+de la fiche par l'API Google Business Profile (accès à demander à Google, une
+fois). Les identifiants sont rangés dans les secrets : `GOOGLE_CLIENT_ID`,
+`GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN` (et, facultatif, `GOOGLE_LIEU`
+au format `accounts/…/locations/…` si le compte gère plusieurs fiches). La
+fonction garde les douze avis les plus récents à 4 ou 5 étoiles — la sélection
+du module Trustindex —, ne retient que le texte écrit par l'auteur (jamais la
+traduction de Google), recopie les photos des auteurs dans le bucket public
+`avis` et garde le tout dans la table `cache_avis`, relue au plus toutes les
+trois heures.
+
+Tant que ces secrets manquent, la route répond « indisponible » et le site garde
+son module Trustindex, chargé après accord comme avant. Dès qu'ils sont là, le
+site affiche les avis lui-même, sans cookie ni accord à demander, dans une
+grille aux mesures exactes du module qu'elle remplace.
+
 ---
 
 ## Trois verrous

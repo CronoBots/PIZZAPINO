@@ -706,6 +706,50 @@
   .ti-embed{margin-top:46px;min-height:140px;text-align:left}
   /* Cartes d'avis intégrées */
   .ti-reviews{margin-top:clamp(32px,5vw,48px);min-height:120px}
+  /* Avis Google maison, aux mesures du module Trustindex « grille / ombre
+     douce » : cartes blanches 20 px de marge intérieure, 12 px d'arrondi,
+     16 px entre deux ; photo 40 px ; nom 15 px et date 13 px en Poppins ;
+     étoiles 17 px ; texte 15 px coupé à six lignes. */
+  .ga{text-align:left;font-family:"Poppins",sans-serif;color:#000}
+  .ga-grille{display:flex;align-items:flex-start;margin:0 -8px}
+  .ga-col{flex:1 1 0;min-width:0}
+  .ga-item{padding:8px}
+  .ga-carte{position:relative;background:#fff;border-radius:12px;padding:20px;
+    box-shadow:1px 4px 10px 0 rgba(0,0,0,.1),0 0 2px 0 rgba(0,0,0,.05)}
+  .ga-tete{position:relative;display:flex;align-items:center;min-height:40px;padding-right:28px}
+  .ga-g{position:absolute;top:0;right:0;width:20px;height:20px}
+  .ga-g svg{width:100%;height:100%;display:block}
+  .ga-av{flex:0 0 auto;width:40px;height:40px;border-radius:50%;margin-right:15px;overflow:hidden;
+    display:grid;place-items:center;color:#fff;font-size:18px;font-weight:600;background:#ddd}
+  .ga-av img{width:100%;height:100%;object-fit:cover;display:block}
+  .ga-qui{min-width:0}
+  .ga-nom{font-size:15px;font-weight:600;line-height:21px;color:#000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ga-date{font-size:13px;line-height:18.2px;color:#6b6b6b}
+  .ga-etoiles{display:flex;align-items:center;margin:11px 0;line-height:17px}
+  .ga-etoile{width:17px;height:17px;margin-right:1px;color:#F6BB06;display:block}
+  .ga-etoile.vide{color:#ccc}
+  .ga-etoile svg,.ga-verifie svg{width:100%;height:100%;display:block}
+  .ga-verifie{width:15px;height:15px;margin-left:7px;display:block}
+  .ga-texte{font-size:15px;line-height:21.75px;color:#000;white-space:pre-line;overflow-wrap:anywhere;
+    display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;max-height:130.5px}
+  .ga-texte.entier{display:block;-webkit-line-clamp:unset;max-height:none}
+  .ga-suite{display:block;padding:8px 0 0;background:none;border:0;cursor:pointer;font:inherit;
+    font-size:13.5px;color:#000;opacity:.5;text-align:left}
+  .ga-suite:hover{opacity:1;text-decoration:underline}
+  .ga-suite[hidden]{display:none}
+  .ga-plus{text-align:center}
+  .ga-plus[hidden]{display:none}
+  .ga-plus-btn{display:inline-block;margin-top:16px;border:0;border-radius:12px;padding:10px 20px;background:#fff;color:#000;
+    font-family:"Poppins",sans-serif;font-size:14px;cursor:pointer;transition:background-color .3s ease-in-out;
+    box-shadow:1px 4px 10px 0 rgba(0,0,0,.1),0 0 2px 0 rgba(0,0,0,.05)}
+  .ga-plus-btn:hover{background:#e6e6e6}
+  .ga-fenetre{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+  .ga-boite{position:relative;width:100%;max-width:500px;max-height:90vh;overflow:auto;border-radius:12px;font-family:"Poppins",sans-serif;text-align:left}
+  .ga-boite .ga-carte{box-shadow:none}
+  .ga-fermer{position:absolute;top:6px;right:8px;z-index:2;width:32px;height:32px;border:0;border-radius:50%;background:#fff;
+    font-size:24px;line-height:1;color:#000;cursor:pointer}
+  .ga-boite .ga-tete{padding-right:64px}
+  .ga-boite .ga-g{right:36px}
   .ti-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;text-align:center;
     padding:38px 18px;border:1px dashed var(--hair-ink);border-radius:16px;background:rgba(0,0,0,.02)}
   .ti-ph svg{color:var(--or)}

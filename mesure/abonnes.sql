@@ -74,3 +74,20 @@ revoke all on public.cache_facebook from anon, authenticated;
 insert into storage.buckets (id, name, public)
 values ('facebook', 'facebook', true)
 on conflict (id) do nothing;
+
+-- =====================================================================
+--  Avis Google : la dernière lecture de la fiche, gardée en mémoire.
+--  Une seule ligne (cle = 'google'). Fermée au web, comme cache_facebook.
+--  Les photos des auteurs sont copiées dans le bucket public « avis ».
+-- =====================================================================
+create table if not exists public.cache_avis (
+  cle    text primary key,
+  valeur jsonb not null,
+  maj    timestamptz not null default now()
+);
+alter table public.cache_avis enable row level security;
+revoke all on public.cache_avis from anon, authenticated;
+
+insert into storage.buckets (id, name, public)
+values ('avis', 'avis', true)
+on conflict (id) do nothing;

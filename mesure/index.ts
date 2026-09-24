@@ -5,6 +5,7 @@
      POST  /mesure/e         le site signale un événement
      GET   /mesure/stats     la page /statistiques lit les totaux, clé exigée
      GET   /mesure/facebook  le site lit les dernières publications de la page
+     GET   /mesure/avis      le site lit les avis Google de la fiche
 
    Pourquoi une fonction Edge plutôt qu'un appel direct à la base : la clé
    de service reste ici, côté serveur. La table est fermée à « anon », et
@@ -105,6 +106,21 @@ const GRAPH = 'https://graph.facebook.com/v21.0';
 const FRAICHEUR_FB = 3 * 3600_000;
 const MAX_PUBLICATIONS = 8;
 let fbEnCours: Promise<unknown> | null = null;
+
+/* Les avis Google, lus sur la fiche d'établissement par l'API Google Business
+   Profile, avec les identifiants rangés dans les secrets (GOOGLE_CLIENT_ID,
+   GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN ; GOOGLE_LIEU facultatif,
+   « accounts/…/locations/… »). Tant qu'ils manquent, la route répond
+   « indisponible » et le site garde son module Trustindex. */
+const G_ID      = Deno.env.get('GOOGLE_CLIENT_ID') ?? '';
+const G_SECRET  = Deno.env.get('GOOGLE_CLIENT_SECRET') ?? '';
+const G_REFRESH = Deno.env.get('GOOGLE_REFRESH_TOKEN') ?? '';
+const G_LIEU    = Deno.env.get('GOOGLE_LIEU') ?? '';
+const FRAICHEUR_AVIS = 3 * 3600_000;
+const MAX_AVIS = 12;           // comme le module Trustindex : les douze plus récents
+const NOTE_MIN = 4;            // … parmi les avis à 4 et 5 étoiles
+let avisEnCours: Promise<unknown> | null = null;
+const ETOILES: Record<string, number> = { ONE: 1, TWO: 2, THREE: 3, FOUR: 4, FIVE: 5 };
 
 const MAX_PLATS = 40;
 const MAX_JOURS = 365;
@@ -269,9 +285,11 @@ const ENTETES_SERVICE = () => ({
   'apikey': SERVICE, 'Authorization': `Bearer ${SERVICE}`,
 });
 
-async function lisCacheFacebook(): Promise<{ valeur: any; maj: string } | null> {
+/** Mémoire d'une source (Facebook, avis Google) : une ligne par clé, dans une
+    table fermée au web. */
+async function lisCache(table: string, cle: string): Promise<{ valeur: any; maj: string } | null> {
   try {
-    const r = await fetch(`${URL_BASE}/rest/v1/cache_facebook?cle=eq.page&select=valeur,maj`,
+    const r = await fetch(`${URL_BASE}/rest/v1/${table}?cle=eq.${cle}&select=valeur,maj`,
                           { headers: ENTETES_SERVICE() });
     if (!r.ok) return null;
     const l = await r.json();
@@ -279,14 +297,17 @@ async function lisCacheFacebook(): Promise<{ valeur: any; maj: string } | null> 
   } catch { return null; }
 }
 
-async function ecritCacheFacebook(valeur: unknown): Promise<void> {
-  await fetch(`${URL_BASE}/rest/v1/cache_facebook`, {
+async function ecritCache(table: string, cle: string, valeur: unknown): Promise<void> {
+  await fetch(`${URL_BASE}/rest/v1/${table}`, {
     method: 'POST',
     headers: { ...ENTETES_SERVICE(), 'Content-Type': 'application/json',
                'Prefer': 'resolution=merge-duplicates' },
-    body: JSON.stringify({ cle: 'page', valeur, maj: new Date().toISOString() }),
+    body: JSON.stringify({ cle, valeur, maj: new Date().toISOString() }),
   });
 }
+
+const lisCacheFacebook = () => lisCache('cache_facebook', 'page');
+const ecritCacheFacebook = (v: unknown) => ecritCache('cache_facebook', 'page', v);
 
 async function avecDelai(url: string, ms: number): Promise<Response> {
   const ctrl = new AbortController();
@@ -297,7 +318,7 @@ async function avecDelai(url: string, ms: number): Promise<Response> {
 /** Recopie une image de Facebook dans le bucket public « facebook ». Les
     adresses de Facebook expirent au bout de quelques jours, et les charger
     depuis le site ouvrirait une connexion vers Meta à chaque visiteur. */
-async function recopieImage(source: string, nom: string): Promise<string | null> {
+async function recopieImage(source: string, nom: string, bucket = 'facebook'): Promise<string | null> {
   try {
     const r = await avecDelai(source, 6000);
     if (!r.ok) return null;
@@ -305,14 +326,14 @@ async function recopieImage(source: string, nom: string): Promise<string | null>
     if (!type.startsWith('image/')) return null;
     const corps = new Uint8Array(await r.arrayBuffer());
     if (corps.byteLength > 5_000_000) return null;
-    const up = await fetch(`${URL_BASE}/storage/v1/object/facebook/${nom}`, {
+    const up = await fetch(`${URL_BASE}/storage/v1/object/${bucket}/${nom}`, {
       method: 'POST',
       headers: { ...ENTETES_SERVICE(), 'Content-Type': type, 'x-upsert': 'true',
                  'Cache-Control': 'max-age=86400' },
       body: corps,
     });
     if (!up.ok) return null;
-    return `${URL_BASE}/storage/v1/object/public/facebook/${nom}`;
+    return `${URL_BASE}/storage/v1/object/public/${bucket}/${nom}`;
   } catch { return null; }
 }
 
@@ -429,6 +450,121 @@ async function facebook(origine: string): Promise<Response> {
   const publique = { disponible: (v?.publications ?? []).length > 0, nom: v?.nom, abonnes: v?.abonnes,
                      nb_publications: v?.nb_publications ?? null,
                      lien: v?.lien, avatar: v?.avatar, publications: v?.publications ?? [] };
+  return new Response(JSON.stringify(publique), {
+    headers: { 'Content-Type': 'application/json; charset=utf-8',
+               'Cache-Control': 'public, max-age=600', ...cors(origine) },
+  });
+}
+
+/* ── avis Google ─────────────────────────────────────────────────────────── */
+
+/** Le texte d'un avis, dans la langue où il a été écrit. Google ajoute parfois
+    sa traduction (« (Translated by Google) … ») ou place l'original après
+    « (Original) » : on ne garde que ce que l'auteur a écrit. */
+function texteOriginal(v: string): string {
+  let t = String(v ?? '');
+  const o = t.indexOf('(Original)');
+  if (o >= 0) t = t.slice(o + '(Original)'.length);
+  else {
+    const tr = t.search(/\(Translated by Google\)|\(Traduit par Google\)/);
+    if (tr >= 0) t = t.slice(0, tr);
+  }
+  return nettoieTexte(t, 2000);
+}
+
+async function jetonGoogle(): Promise<string> {
+  const r = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ client_id: G_ID, client_secret: G_SECRET,
+                                refresh_token: G_REFRESH, grant_type: 'refresh_token' }),
+  });
+  const d = await r.json();
+  if (!d?.access_token) throw Object.assign(new Error(d?.error_description ?? d?.error ?? 'jeton'),
+                                            { cle: d?.error === 'invalid_grant' });
+  return d.access_token;
+}
+
+/** « accounts/…/locations/… » : donné par GOOGLE_LIEU, sinon la première fiche
+    du compte (le restaurant n'en a qu'une). */
+async function lieuGoogle(auth: Record<string, string>): Promise<{ chemin: string; lienAvis: string | null; fiche: string | null }> {
+  if (G_LIEU) return { chemin: G_LIEU, lienAvis: null, fiche: null };
+  const ra = await fetch('https://mybusinessaccountmanagement.googleapis.com/v1/accounts', { headers: auth });
+  const comptes = (await ra.json())?.accounts ?? [];
+  for (const c of comptes) {
+    const rl = await fetch(`https://mybusinessbusinessinformation.googleapis.com/v1/${c.name}/locations?readMask=name,title,metadata&pageSize=10`,
+                           { headers: auth });
+    const l = (await rl.json())?.locations?.[0];
+    if (l) return { chemin: `${c.name}/${l.name}`, lienAvis: l.metadata?.newReviewUri ?? null,
+                    fiche: l.metadata?.mapsUri ?? null };
+  }
+  throw new Error('Aucune fiche Google trouvée pour ce compte.');
+}
+
+async function rafraichitAvis(ancien: any): Promise<any> {
+  const base = { avis: ancien?.avis ?? [], note: ancien?.note ?? null, nombre: ancien?.nombre ?? null,
+                 lien_avis: ancien?.lien_avis ?? null, fiche: ancien?.fiche ?? null };
+  if (!G_ID || !G_SECRET || !G_REFRESH) {
+    return { ...base, etat: 'sans_cle', message: 'Identifiants Google absents des secrets.' };
+  }
+  try {
+    const auth = { Authorization: `Bearer ${await jetonGoogle()}` };
+    const lieu = await lieuGoogle(auth);
+    const r = await fetch(`https://mybusiness.googleapis.com/v4/${lieu.chemin}/reviews?pageSize=50&orderBy=updateTime%20desc`,
+                          { headers: auth });
+    const d = await r.json();
+    if (d?.error) throw new Error(d.error.message ?? 'Erreur Google');
+
+    const retenus = (d.reviews ?? [])
+      .map((a: any) => ({ a, note: ETOILES[a.starRating] ?? 0, texte: texteOriginal(a.comment ?? '') }))
+      .filter((x: any) => x.note >= NOTE_MIN && x.texte)
+      .sort((x: any, y: any) => Date.parse(y.a.createTime) - Date.parse(x.a.createTime))
+      .slice(0, MAX_AVIS);
+    const connus: Record<string, any> = {};
+    for (const a of base.avis) connus[a.id] = a;
+    const avis = [];
+    for (const { a, note, texte } of retenus) {
+      const id = String(a.reviewId ?? '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 80);
+      if (!id) continue;
+      const src = String(a.reviewer?.profilePhotoUrl ?? '');
+      const photo = connus[id]?.photo
+        ?? (/^https:\/\/[a-z0-9.-]*googleusercontent\.com\//.test(src)
+            ? await recopieImage(src.replace(/=s\d+[^/]*$/, '') + '=s120-c', `${id}.jpg`, 'avis') : null);
+      avis.push({
+        id, note, texte, photo,
+        nom: a.reviewer?.isAnonymous ? 'Un client Google' : nettoie(a.reviewer?.displayName ?? 'Client Google', 60),
+        date: String(a.createTime ?? ''),
+      });
+    }
+    const v = { etat: 'ok', message: '',
+                note: typeof d.averageRating === 'number' ? Math.round(d.averageRating * 10) / 10 : base.note,
+                nombre: Number.isInteger(d.totalReviewCount) ? d.totalReviewCount : base.nombre,
+                lien_avis: lieu.lienAvis ?? base.lien_avis, fiche: lieu.fiche ?? base.fiche, avis };
+    await ecritCache('cache_avis', 'google', v);
+    return v;
+  } catch (e) {
+    const v = { ...base, etat: (e as any)?.cle ? 'cle_invalide' : 'erreur',
+                message: String((e as Error)?.message ?? 'Google ne répond pas.').slice(0, 200) };
+    await ecritCache('cache_avis', 'google', v).catch(() => {});
+    return v;
+  }
+}
+
+async function contenuAvis(attendre = false): Promise<any> {
+  const c = await lisCache('cache_avis', 'google');
+  const perime = !c || Date.now() - Date.parse(c.maj) > FRAICHEUR_AVIS;
+  if (perime) {
+    if (!avisEnCours) avisEnCours = rafraichitAvis(c?.valeur).finally(() => { avisEnCours = null; });
+    if (!c || attendre) return await avisEnCours;
+    enArrierePlan(avisEnCours);
+  }
+  return { ...c!.valeur, maj: c!.maj };
+}
+
+async function avisGoogle(origine: string): Promise<Response> {
+  const v = await contenuAvis();
+  const publique = { disponible: (v?.avis ?? []).length > 0, note: v?.note ?? null, nombre: v?.nombre ?? null,
+                     lien_avis: v?.lien_avis ?? null, fiche: v?.fiche ?? null, avis: v?.avis ?? [] };
   return new Response(JSON.stringify(publique), {
     headers: { 'Content-Type': 'application/json; charset=utf-8',
                'Cache-Control': 'public, max-age=600', ...cors(origine) },
@@ -579,6 +715,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'POST' && chemin === '/e')     return await evenement(req, origine);
   if (req.method === 'GET'  && chemin === '/stats') return await stats(req, origine);
   if (req.method === 'GET'  && chemin === '/facebook') return await facebook(origine);
+  if (req.method === 'GET'  && chemin === '/avis')     return await avisGoogle(origine);
 
   return new Response('Introuvable', { status: 404, headers: cors(origine) });
 });
