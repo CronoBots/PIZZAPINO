@@ -111,6 +111,22 @@ visiteur n'ouvre donc aucune connexion vers un tiers, et son adresse n'est
 jamais écrite en base. C'est ce qui permet de garder la mesure hors du bandeau
 de consentement. Pour s'en passer complètement, mettre la variable `GEO` à `non`.
 
+**Les abonnés Instagram et Facebook.** Le tableau de bord suit leur nombre jour
+par jour (« Et combien vous suivent »). Aucun accès à Meta n'est nécessaire : le
+module Trustindex du site publie un fichier public qui porte déjà ce nombre
+(`follower_num`). La fonction Edge le lit au plus toutes les trois heures, au fil
+des visites et à l'ouverture du tableau de bord, et garde un chiffre par jour et
+par réseau dans la table `abonnes` (`mesure/abonnes.sql`). La courbe commence au
+premier relevé — le 24 septembre 2026 pour Instagram — : l'historique d'avant
+n'existe nulle part. Un jour sans visite garde le chiffre de la veille.
+
+Pour ajouter Facebook, quand son module Trustindex existe : mettre les deux
+identifiants dans la variable `FLUX_ABONNES`, séparés par une virgule
+(`supabase secrets set FLUX_ABONNES="fa288d1828901758c5563445c70,<id-facebook>"`).
+Sans cette variable, seul le module Instagram est lu. Si Facebook est affiché
+par le Page Plugin de Meta plutôt que par Trustindex, son nombre d'abonnés
+n'est pas accessible de cette façon.
+
 ---
 
 ## Trois verrous
@@ -133,7 +149,8 @@ de consentement. Pour s'en passer complètement, mettre la variable `GEO` à `no
 ### 1. Le schéma
 
 Supabase → projet **PIZZERIAPINO** → *SQL Editor* → *New query* → coller le
-contenu de `mesure/schema.sql` → *Run*.
+contenu de `mesure/schema.sql` → *Run*. Puis, de la même façon,
+`mesure/abonnes.sql` (le relevé des abonnés).
 
 ### 2. Les outils
 

@@ -189,6 +189,24 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
   background:var(--or);opacity:.82}
 .ech-we{display:inline-block;width:7px;height:12px;border-radius:2px;background:#C4483F}
 .ech-tend{display:inline-block;width:16px;height:2px;border-radius:2px;background:#149CAE}
+/* ── abonnés : une carte par réseau, chiffre du jour et courbe de la période ── */
+.abonnes{display:grid;gap:14px}
+@media(min-width:680px){.abonnes{grid-template-columns:1fr 1fr}}
+.ab-carte{background:var(--surface-2);border:1px solid var(--trait);border-radius:12px;padding:14px 16px 12px}
+.ab-tete{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
+.ab-nom{font-family:'Oswald',sans-serif;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--texte-2);flex:1 1 100%}
+.ab-n{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.9rem;line-height:1.1;
+  font-variant-numeric:tabular-nums}
+.ab-unite{color:var(--texte-3);font-size:.85rem}
+.ab-gain{margin-left:auto;font-size:.82rem;color:var(--texte-2);white-space:nowrap}
+.ab-gain.hausse{color:var(--or-l)}
+.ab-trace{margin-top:10px}
+.ab-trace svg{display:block;width:100%;overflow:visible}
+.ab-trace .aire{fill:var(--or);opacity:.12}
+.ab-trace .ligne{fill:none;stroke:var(--or);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.ab-trace .point{fill:var(--or-l)}
+.ab-note{color:var(--texte-3);font-size:.8rem;margin-top:10px}
 /* Le cadre porte la bulle de survol en position absolue. */
 .cadre{position:relative}
 .survol{position:absolute;top:-4px;transform:translateX(-50%);pointer-events:none;
@@ -493,6 +511,19 @@ footer a{color:var(--texte-2)}
        votre compte&nbsp;: ce qu’il y fait ensuite n’appartient qu’à Instagram.</p>
     <div class="barres" id="barReseaux"></div>
     <div id="tblReseaux" hidden></div>
+  </section>
+
+  <section id="secAbonnes">
+    <div class="titre">
+      <h2>Et combien vous suivent</h2>
+      <button class="bascule" type="button" data-cible="tblAbonnes"
+              aria-expanded="false" aria-controls="tblAbonnes">Voir en tableau</button>
+    </div>
+    <p class="chapo">Le nombre d’abonnés de vos comptes, relevé chaque jour dans le module
+       du site. La courbe commence au premier relevé&nbsp;: personne ne fournit
+       l’historique d’avant. Un abonné gagné ne vient pas forcément du site.</p>
+    <div class="abonnes" id="abonnes"></div>
+    <div id="tblAbonnes" hidden></div>
   </section>
 
   <section id="secPubs">
@@ -1525,6 +1556,105 @@ footer a{color:var(--texte-2)}
              classe: v > 0 ? 'd hausse' : 'd' };
   }
 
+  /* ── abonnés ──
+     Un chiffre par jour et par réseau, relevé au fil des visites. Un jour
+     sans relevé garde le chiffre de la veille : un compte ne perd pas ses
+     abonnés parce que personne n'a ouvert le site ce jour-là. Avant le tout
+     premier relevé, il n'y a rien à dessiner, et on ne l'invente pas. */
+  var ORDRE_RESEAUX = ['Instagram', 'Facebook'];
+  var derniersAbonnes = null, minuteurAbonnes = null;
+  window.addEventListener('resize', function(){
+    if(!derniersAbonnes) return;
+    clearTimeout(minuteurAbonnes);
+    minuteurAbonnes = setTimeout(function(){ dessineAbonnes(derniersAbonnes); }, 180);
+  });
+
+  function serieAbonnes(d, x){
+    var brut = {};
+    (x.serie || []).forEach(function(p){ brut[p.j] = p.n; });
+    var a = enDate(d.depuis), b = enDate(d.jusqua), out = [];
+    var v = (x.avant == null) ? null : x.avant;
+    if(!a || !b) return out;
+    for(var t = a.getTime(); t <= b.getTime(); t += 86400000){
+      var j = new Date(t).toISOString().slice(0, 10);
+      if(brut[j] != null) v = brut[j];
+      out.push({ j: j, n: v });
+    }
+    return out;
+  }
+
+  function resumeAbonnes(d){
+    var ab = d.abonnes || {};
+    return ORDRE_RESEAUX.concat(Object.keys(ab).filter(function(r){ return ORDRE_RESEAUX.indexOf(r) < 0; }))
+      .filter(function(r){ return ab[r] && ((ab[r].serie || []).length || ab[r].avant != null); })
+      .map(function(r){
+        var serie = serieAbonnes(d, ab[r]);
+        var connus = serie.filter(function(p){ return p.n != null; });
+        var debut = ab[r].avant != null ? ab[r].avant : (connus[0] ? connus[0].n : null);
+        var fin = connus.length ? connus[connus.length - 1].n : null;
+        return { reseau: r, serie: serie, connus: connus, debut: debut, fin: fin,
+                 premier: ab[r].avant == null && connus[0] ? connus[0].j : null };
+      })
+      .filter(function(x){ return x.fin != null; });
+  }
+
+  function traceAbonnes(x, L){
+    var H = 64, m = 5, pts = x.serie, n = pts.length;
+    var vals = x.connus.map(function(p){ return p.n; });
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    /* Un écart de trois abonnés ne doit pas remplir tout le cadre : on garde
+       une marge, sinon la moindre variation ressemble à une envolée. */
+    var marge = Math.max(2, Math.ceil((hi - lo) * 0.25));
+    lo = Math.max(0, lo - marge); hi = hi + marge;
+    var X = function(i){ return n < 2 ? L / 2 : m + i * (L - 2 * m) / (n - 1); };
+    var Y = function(v){ return H - m - (v - lo) * (H - 2 * m) / (hi - lo || 1); };
+    var seg = [], i0 = -1;
+    pts.forEach(function(p, i){ if(p.n != null){ if(i0 < 0) i0 = i; seg.push([X(i), Y(p.n)]); } });
+    if(!seg.length) return '';
+    var d = seg.map(function(q, k){ return (k ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join('');
+    var aire = d + 'L' + seg[seg.length - 1][0].toFixed(1) + ' ' + (H - m) + 'L' + seg[0][0].toFixed(1) + ' ' + (H - m) + 'Z';
+    var der = seg[seg.length - 1];
+    return '<svg viewBox="0 0 ' + L + ' ' + H + '" height="' + H + '" role="img" aria-label="Abonnés '
+      + x.reseau + ' : ' + nb(x.debut) + ' au début, ' + nb(x.fin) + ' aujourd’hui.">'
+      + (seg.length > 1 ? '<path class="aire" d="' + aire + '"/><path class="ligne" d="' + d + '"/>' : '')
+      + '<circle class="point" cx="' + der[0].toFixed(1) + '" cy="' + der[1].toFixed(1) + '" r="3.5"/></svg>';
+  }
+
+  function dessineAbonnes(d){
+    derniersAbonnes = d;
+    var hote = document.getElementById('abonnes');
+    var liste = resumeAbonnes(d);
+    if(!liste.length){
+      hote.innerHTML = '<p class="vide">Pas encore de relevé. Le premier arrive avec la prochaine visite du site.</p>';
+      document.getElementById('tblAbonnes').innerHTML = '';
+      return;
+    }
+    hote.innerHTML = liste.map(function(x){
+      var g = x.fin - x.debut;
+      var gain = x.connus.length < 2 && x.premier
+        ? '' : (g > 0 ? '↗ +' : (g < 0 ? '↘ −' : '→ ')) + nb(Math.abs(g)) + ' sur la période';
+      var note = x.premier
+        ? '<p class="ab-note">Premier relevé le ' + dateLongue(x.premier) + '. La courbe se dessine au fil des jours.</p>' : '';
+      return '<div class="ab-carte"><div class="ab-tete">'
+        + '<span class="ab-nom">' + echappe(x.reseau) + '</span>'
+        + '<span class="ab-n">' + nb(x.fin) + '</span><span class="ab-unite">' + (x.fin === 1 ? 'abonné' : 'abonnés') + '</span>'
+        + (gain ? '<span class="ab-gain' + (g > 0 ? ' hausse' : '') + '">' + gain + '</span>' : '')
+        + '</div><div class="ab-trace" data-r="' + echappe(x.reseau) + '"></div>' + note + '</div>';
+    }).join('');
+    liste.forEach(function(x){
+      var t = hote.querySelector('.ab-trace[data-r="' + x.reseau + '"]');
+      if(t) t.innerHTML = traceAbonnes(x, Math.max(200, Math.round(t.clientWidth || 300)));
+    });
+    document.getElementById('tblAbonnes').innerHTML =
+      '<table><thead><tr><th>Réseau</th><th>Début de période</th><th>Aujourd’hui</th><th>Évolution</th></tr></thead><tbody>'
+      + liste.map(function(x){
+          var g = x.fin - x.debut;
+          return '<tr><td>' + echappe(x.reseau) + '</td><td>' + nb(x.debut) + '</td><td>' + nb(x.fin)
+               + '</td><td>' + (g > 0 ? '+' : (g < 0 ? '−' : '')) + nb(Math.abs(g)) + '</td></tr>';
+        }).join('')
+      + '</tbody></table>';
+  }
+
   /* ── carte ──
      Projection équirectangulaire centrée sur le restaurant, la longitude
      resserrée par le cosinus de la latitude : sans cela, à 50° de latitude,
@@ -2097,6 +2227,7 @@ footer a{color:var(--texte-2)}
     var reseaux = d.reseaux || [];
     dessineBarres('barReseaux', reseaux, 'clics', null, null, totauxReseaux(reseaux));
     dessineTable('tblReseaux', reseaux, 'Réseau et endroit');
+    dessineAbonnes(d);
     var pubs = nommePubs(d.pubs);
     dessineBarres('barPubs', pubs, 'ouvertures', null, vignettePub);
     dessineTable('tblPubs', pubs, 'Publication');
@@ -2170,6 +2301,17 @@ footer a{color:var(--texte-2)}
           }).filter(function(p){ return p.n > 0; });
         });
         return c;
+      })(),
+      /* Des abonnés qui montent doucement, par à-coups : un compte de
+         restaurant ne gagne pas le même nombre chaque jour. */
+      abonnes: (function(){
+        var ig = [], fb = [], a = 98 - Math.round(n / 6), f = 412 - Math.round(n / 9);
+        courbe.forEach(function(p, i){
+          if(i % 5 === 2) a += 2; else if(i % 3 === 0) a += 1;
+          if(i % 7 === 4) f += 1;
+          ig.push({ j: p.j, n: a }); fb.push({ j: p.j, n: f });
+        });
+        return { Instagram: { serie: ig, avant: ig[0].n - 1 }, Facebook: { serie: fb, avant: fb[0].n } };
       })(),
       /* Deux pointes : le midi et le soir, comme un restaurant. */
       heures: (function(){
@@ -2275,6 +2417,9 @@ footer a{color:var(--texte-2)}
     bloc('Appareils', dernier.supports);
     bloc('Heures de la journée', heuresEnTable(dernier.heures));
     bloc('Réseaux', dernier.reseaux);
+    resumeAbonnes(dernier).forEach(function(x){
+      x.serie.forEach(function(p){ if(p.n != null) lignes.push(['Abonnés ' + x.reseau, p.j, p.n, '']); });
+    });
     bloc('Photos agrandies', nommePhotos(dernier.photos));
     bloc('Publications ouvertes', nommePubs(dernier.pubs));
     bloc('Plats', dernier.plats,

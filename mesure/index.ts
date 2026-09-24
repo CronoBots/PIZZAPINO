@@ -84,6 +84,18 @@ const EXONYMES: Record<string, string> = {
    rien d'autre n'entre en base. */
 const SOURCES = new Set(['Google', 'Facebook', 'Instagram', 'Autre site', 'Accès direct']);
 
+/* Les abonnés Instagram et Facebook. Aucun accès à Meta : le module Trustindex
+   du site publie un petit fichier public qui porte déjà le nombre d'abonnés
+   du compte (follower_num). On le lit au plus toutes les trois heures, au fil
+   des visites et à l'ouverture du tableau de bord, et l'on garde un chiffre
+   par jour et par réseau. Un nouveau module (Facebook) s'ajoute en mettant
+   son identifiant dans FLUX_ABONNES, séparé par des virgules. */
+const FLUX_ABONNES = (Deno.env.get('FLUX_ABONNES') ?? 'fa288d1828901758c5563445c70')
+  .split(',').map(s => s.trim()).filter(s => /^[a-z0-9]{10,40}$/i.test(s));
+const RESEAUX_SUIVIS = new Set(['Instagram', 'Facebook']);
+const INTERVALLE_RELEVE = 3 * 3600_000;
+let dernierReleve = 0;
+
 const MAX_PLATS = 40;
 const MAX_JOURS = 365;
 
@@ -206,6 +218,41 @@ async function rpc(nom: string, corps: unknown): Promise<Response> {
   });
 }
 
+/* ── abonnés ─────────────────────────────────────────────────────────────── */
+
+/** Lit le nombre d'abonnés dans les fichiers Trustindex et l'écrit pour le jour.
+    Jamais bloquant, jamais d'erreur visible : au pire, un jour sans relevé. */
+async function releveAbonnes(): Promise<void> {
+  if (!FLUX_ABONNES.length || Date.now() - dernierReleve < INTERVALLE_RELEVE) return;
+  dernierReleve = Date.now();
+  const releves: { reseau: string; n: number }[] = [];
+  for (const id of FLUX_ABONNES) {
+    try {
+      const ctrl = new AbortController();
+      const minuteur = setTimeout(() => ctrl.abort(), 3000);
+      const r = await fetch(`https://cdn.trustindex.io/widgets/${id.slice(0, 2)}/${id}/data.json`,
+                            { signal: ctrl.signal });
+      clearTimeout(minuteur);
+      if (!r.ok) continue;
+      const d = await r.json();
+      for (const src of Object.values(d?.sources ?? {}) as any[]) {
+        const reseau = String(src?.type ?? '');
+        const n = Number(src?.user?.follower_num);
+        if (RESEAUX_SUIVIS.has(reseau) && Number.isInteger(n) && n >= 0 && n < 1e8) {
+          releves.push({ reseau, n });
+        }
+      }
+    } catch { /* service injoignable : on réessaiera plus tard */ }
+  }
+  if (!releves.length) { dernierReleve = 0; return; }
+  try { await rpc('releve_abonnes', { releves, le_jour: jourBruxelles() }); } catch { dernierReleve = 0; }
+}
+
+/** Laisse le relevé finir après la réponse, sans faire attendre le visiteur. */
+function enArrierePlan(p: Promise<unknown>): void {
+  try { (globalThis as any).EdgeRuntime?.waitUntil?.(p); } catch { /* rien */ }
+}
+
 /* ── écriture ────────────────────────────────────────────────────────────── */
 
 async function evenement(req: Request, origine: string): Promise<Response> {
@@ -241,6 +288,7 @@ async function evenement(req: Request, origine: string): Promise<Response> {
 
   // Le profil n'est relevé qu'à l'arrivée : une seule fois par visite.
   if (type === 'vue') {
+    enArrierePlan(releveAbonnes());
     paires.push(['ville', await ville(req)], ['support', support(req)],
                 ['heure', heureBruxelles()]);
     const src = nettoie(corps.r, 20);
@@ -281,7 +329,12 @@ async function stats(req: Request, origine: string): Promise<Response> {
   const depuis = jourBruxelles(new Date(Date.now() - (jours - 1) * 86_400_000));
   // La fenêtre juste avant, de même longueur : [depuis_prec, depuis[.
   const depuis_prec = jourBruxelles(new Date(Date.now() - (2 * jours - 1) * 86_400_000));
-  const r = await rpc('stats', { depuis, depuis_prec });
+  // Le tableau de bord ouvert, c'est aussi l'occasion d'un relevé frais.
+  await releveAbonnes();
+  const [r, ra] = await Promise.all([
+    rpc('stats', { depuis, depuis_prec }),
+    rpc('stats_abonnes', { depuis }),
+  ]);
   if (!r.ok) {
     return new Response(JSON.stringify({ erreur: 'base' }), {
       status: 502, headers: { 'Content-Type': 'application/json', ...cors(origine) },
@@ -289,6 +342,7 @@ async function stats(req: Request, origine: string): Promise<Response> {
   }
 
   const agrege = await r.json();
+  const abonnes = ra.ok ? await ra.json() : {};
   const totaux    = { vue: 0, appel: 0, itineraire: 0, commande: 0, ...(agrege?.totaux ?? {}) };
   const precedent = { vue: 0, appel: 0, itineraire: 0, commande: 0, ...(agrege?.precedent ?? {}) };
 
@@ -312,6 +366,8 @@ async function stats(req: Request, origine: string): Promise<Response> {
     // entier : la page les répartit par section de la carte.
     villes_autres:   agrege?.villes_autres   ?? 0,
     villes_autres_n: agrege?.villes_autres_n ?? 0,
+    // Les abonnés par réseau : la série de la période et le chiffre d'avant.
+    abonnes: abonnes ?? {},
   }), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
