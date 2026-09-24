@@ -151,6 +151,16 @@ traduction de Google), recopie les photos des auteurs dans le bucket public
 `avis` et garde le tout dans la table `cache_avis`, relue au plus toutes les
 trois heures.
 
+**En attendant : le fichier public de Trustindex.** Tant que l'accès Business
+Profile n'est pas accordé, la fonction lit le fichier que le module d'avis
+Trustindex publie (`AVIS_TRUSTINDEX`, par défaut `65dac18812ea8038d036c61e228`),
+toutes les trois heures, comme elle lit déjà le nombre d'abonnés. Elle en tire
+les douze derniers avis, la photo et le profil de chaque auteur, la photo jointe
+à l'avis s'il y en a une, et recopie les images dans le bucket `avis`. Le site
+les affiche lui-même : aucun script tiers, aucun accord à demander. Si ce
+fichier devient illisible, la fonction passe à l'API Places, puis le site
+revient au module Trustindex (moins de six avis).
+
 **Sans accès Business Profile : l'API Places.** Google refuse l'accès Business
 Profile à beaucoup de petites fiches. À défaut, une simple clé suffit :
 `GOOGLE_PLACES_CLE` (API « Places API (New) », limitée à cette API ;

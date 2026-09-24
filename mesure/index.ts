@@ -122,6 +122,12 @@ const G_LIEU    = Deno.env.get('GOOGLE_LIEU') ?? '';
 const G_PLACES   = Deno.env.get('GOOGLE_PLACES_CLE') ?? '';
 const G_PLACE_ID = Deno.env.get('GOOGLE_PLACE_ID') ?? '';
 const RECHERCHE_FICHE = 'Pizzeria Pino, Route du Condroz 131, 4550 Nandrin';
+/* En attendant l'accès Business Profile : le fichier public du module d'avis
+   Trustindex (AVIS_TRUSTINDEX, son identifiant), que Trustindex tient à jour
+   avec les douze derniers avis. Le serveur le lit comme il lit déjà le nombre
+   d'abonnés : le site n'ouvre aucune connexion vers Trustindex, ne dépose
+   aucun cookie, et garde la main sur l'affichage. Places reste en secours. */
+const AVIS_TI = (Deno.env.get('AVIS_TRUSTINDEX') ?? '65dac18812ea8038d036c61e228').trim();
 const FRAICHEUR_AVIS = 3 * 3600_000;
 const FRAICHEUR_PLACES = 8 * 3600_000;    // trois lectures par jour : ~90 par mois, dans la part gratuite
 const MAX_AVIS = 12;           // comme le module Trustindex : les douze plus récents
@@ -512,6 +518,10 @@ async function rafraichitAvis(ancien: any): Promise<any> {
   const base = { avis: ancien?.avis ?? [], note: ancien?.note ?? null, nombre: ancien?.nombre ?? null,
                  lien_avis: ancien?.lien_avis ?? null, fiche: ancien?.fiche ?? null };
   if (!G_ID || !G_SECRET || !G_REFRESH) {
+    if (/^[a-z0-9]{10,40}$/i.test(AVIS_TI)) {
+      const v = await rafraichitAvisTrustindex(base);
+      if (v) return v;
+    }
     if (G_PLACES) return await rafraichitAvisPlaces(ancien, base);
     return { ...base, etat: 'sans_cle', message: 'Identifiants Google absents des secrets.' };
   }
@@ -562,7 +572,80 @@ async function rafraichitAvis(ancien: any): Promise<any> {
 async function photoAuteur(src: string, id: string, connue: string | null | undefined): Promise<string | null> {
   if (connue) return connue;
   if (!/^https:\/\/[a-z0-9.-]*googleusercontent\.com\//.test(src)) return null;
-  return await recopieImage(src.replace(/=s\d+[^/]*$/, '') + '=s120-c', `${id}.jpg`, 'avis');
+  return await recopieImage(src.replace(/=[a-z]\d+[^/=]*$/, '') + '=s120-c', `${id}.jpg`, 'avis');
+}
+
+/** La photo jointe à un avis (un plat, la salle), recopiée chez nous. */
+async function imageAvis(src: string, id: string, connue: string | null | undefined): Promise<string | null> {
+  if (connue) return connue;
+  if (!/^https:\/\/[a-z0-9.-]*googleusercontent\.com\//.test(src)) return null;
+  return await recopieImage(src.replace(/=[a-z][^/=]*$/, '') + '=s300-c', `${id}-photo.jpg`, 'avis');
+}
+
+function deHtml(v: string): string {
+  return String(v)
+    .replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
+}
+
+/** Les avis tels que le module Trustindex les publie : un bloc par avis,
+    avec sa date (data-time), sa note, la photo et le profil de l'auteur. */
+function lisAvisTrustindex(h: string): any[] {
+  const avis = [];
+  for (const bloc of h.split('<div class="ti-review-item ').slice(1)) {
+    const attr = (n: string) => (bloc.match(new RegExp(`${n}="([^"]*)"`)) ?? [])[1] ?? '';
+    const id = attr('data-id').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 80);
+    const note = Math.round(Number(attr('data-rating')) || 0);
+    const temps = Number(attr('data-time'));
+    // Le fichier compressé perd les repères R-CONTENT : on lit alors le conteneur du texte.
+    // La photo jointe à l'avis, s'il y en a une, est rangée devant le texte.
+    const brut = ((bloc.match(/<!-- R-CONTENT -->([\s\S]*?)<!-- R-CONTENT -->/)
+               ?? bloc.match(/<div class="ti-review-text-container[^"]*">([\s\S]*?)<\/div>\s*<span class="ti-read-more/) ?? [])[1] ?? '')
+      .replace(/<div class="ti-review-image"[\s\S]*?<\/div>\s*<\/div>/, '');
+    const texte = nettoieTexte(deHtml(brut), 2000);
+    const jointe = (bloc.match(/<div class="ti-review-image"[^>]*>\s*<img src="([^"]+)"/) ?? [])[1] ?? '';
+    if (!id || note < NOTE_MIN || !texte || !Number.isFinite(temps)) continue;
+    const img = (bloc.match(/<div class="ti-profile-img">\s*<img src="([^"]+)"/) ?? [])[1] ?? '';
+    const nomBloc = (bloc.match(/<div class="ti-name">([\s\S]*?)<\/div>/) ?? [])[1] ?? '';
+    const lien = (nomBloc.match(/href="(https:\/\/www\.google\.com\/maps\/contrib\/\d+)[^"]*"/) ?? [])[1] ?? null;
+    avis.push({ id, note, texte, profil: lien, src: deHtml(img), srcImage: deHtml(jointe),
+                nom: nettoie(deHtml(nomBloc), 60) || 'Client Google',
+                date: new Date(temps * 1000).toISOString() });
+  }
+  return avis;
+}
+
+/** null si le fichier est illisible : on passe alors à la voie suivante. */
+async function rafraichitAvisTrustindex(base: any): Promise<any | null> {
+  try {
+    const ctrl = new AbortController();
+    const m = setTimeout(() => ctrl.abort(), 8000);
+    const r = await fetch(`https://cdn.trustindex.io/widgets/${AVIS_TI.slice(0, 2)}/${AVIS_TI}/content.html`, {
+      signal: ctrl.signal,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; PizzeriaPino/1.0)', 'Referer': 'https://pizzeriapino.be/' },
+    }).finally(() => clearTimeout(m));
+    if (!r.ok) { console.log('avis trustindex : HTTP', r.status); return null; }
+    const h = await r.text();
+    const lus = lisAvisTrustindex(h)
+      .sort((x, y) => Date.parse(y.date) - Date.parse(x.date)).slice(0, MAX_AVIS);
+    if (!lus.length) { console.log('avis trustindex : aucun avis lu', h.length, h.slice(0, 300)); return null; }
+    const connus: Record<string, any> = {};
+    for (const a of base.avis) connus[a.id] = a;
+    const avis = [];
+    for (const { src, srcImage, ...a } of lus) {
+      avis.push({ ...a, photo: await photoAuteur(src, a.id, connus[a.id]?.photo),
+                  image: await imageAvis(srcImage, a.id, connus[a.id]?.image) });
+    }
+    const v = { etat: 'ok', message: '', source: 'trustindex',
+                note: base.note, nombre: base.nombre, lien_avis: base.lien_avis,
+                fiche: base.fiche ?? 'https://www.google.com/maps/place//data=!4m4!3m3!1s0x47c055bb01ab8f13:0x7a7073aea619564a!9m1!1b1',
+                avis };
+    await ecritCache('cache_avis', 'google', v);
+    return v;
+  } catch (e) { console.log('avis trustindex : erreur', String(e)); return null; }
 }
 
 async function idFiche(ancien: any): Promise<string> {
@@ -627,7 +710,7 @@ async function rafraichitAvisPlaces(ancien: any, base: any): Promise<any> {
 
 async function contenuAvis(attendre = false): Promise<any> {
   const c = await lisCache('cache_avis', 'google');
-  const fraicheur = c?.valeur?.source === 'places' || (!G_REFRESH && G_PLACES) ? FRAICHEUR_PLACES : FRAICHEUR_AVIS;
+  const fraicheur = c?.valeur?.source === 'places' ? FRAICHEUR_PLACES : FRAICHEUR_AVIS;
   const perime = !c || Date.now() - Date.parse(c.maj) > fraicheur;
   if (perime) {
     if (!avisEnCours) avisEnCours = rafraichitAvis(c?.valeur).finally(() => { avisEnCours = null; });

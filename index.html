@@ -2696,7 +2696,16 @@ window.pinoAvis = function(hote, d){
     c.appendChild(et);
 
     var t = el('div', 'ga-texte' + (entier ? ' entier' : ''), a.texte);
-    c.appendChild(t);
+    if(sur(a.image)){
+      // La photo jointe à l'avis : à droite du texte, en grand dans la fenêtre.
+      var corps = el('div', 'ga-corps' + (entier ? ' entier' : ''));
+      var ph = el('img', 'ga-photo'); ph.src = a.image; ph.alt = 'Photo jointe à l\u2019avis'; ph.loading = 'lazy';
+      if(!entier){ ph.tabIndex = 0; ph.setAttribute('role', 'button');
+        ph.addEventListener('click', function(){ ouvre(a, ph); });
+        ph.addEventListener('keydown', function(e){ if(e.key === 'Enter') ouvre(a, ph); }); }
+      corps.appendChild(t); corps.appendChild(ph);
+      c.appendChild(corps);
+    } else c.appendChild(t);
     if(!entier){
       var suite = el('button', 'ga-suite', 'Lire la suite'); suite.type = 'button'; suite.hidden = true;
       suite.addEventListener('click', function(){ ouvre(a, suite); });

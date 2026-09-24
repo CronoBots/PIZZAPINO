@@ -735,6 +735,11 @@
   .ga-texte{font-size:15px;line-height:21.75px;color:#000;white-space:pre-line;overflow-wrap:anywhere;
     display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;max-height:130.5px}
   .ga-texte.entier{display:block;-webkit-line-clamp:unset;max-height:none}
+  .ga-corps{display:flex;gap:12px;align-items:flex-start}
+  .ga-corps .ga-texte{flex:1 1 auto;min-width:0}
+  .ga-photo{flex:0 0 auto;width:80px;height:80px;border-radius:8px;object-fit:cover;cursor:pointer;display:block}
+  .ga-corps.entier{flex-direction:column}
+  .ga-corps.entier .ga-photo{width:100%;height:auto;max-height:60vh;cursor:default}
   .ga-suite{display:block;padding:8px 0 0;background:none;border:0;cursor:pointer;font:inherit;
     font-size:13.5px;color:#000;opacity:.5;text-align:left}
   .ga-suite:hover{opacity:1;text-decoration:underline}
