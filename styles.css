@@ -1704,15 +1704,7 @@
   html.app-mode #infos .feat{grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;padding-top:16px;border-top-color:rgba(198,154,77,.16)}
   html.app-mode #infos .feat li{font-size:.64rem;padding:9px 11px;letter-spacing:.05em;border-color:rgba(198,154,77,.18)}
   /* Carte Google visible en PWA, sous les coordonnées */
-  /* La carte Google ne s'affiche plus sur telephone. Elle y etait l'objet le
-     plus clair d'une page sombre, couverte du mobilier de Google — pastille
-     « Ouvrir dans Maps », commande de deplacement, bandeau d'attribution —
-     dont rien n'est modifiable depuis notre page : c'est une fenetre vers un
-     autre site. Elle n'y servait qu'a une chose, se faire guider, et le bouton
-     « Itineraire » le fait desormais mieux et plus visiblement.
-
-     Elle reste sur grand ecran, ou elle a la place de montrer les environs. */
-  html.app-mode #infos .cb-map{display:none}
+  html.app-mode #infos .cb-map{margin-top:0}
   html.app-mode #infos .map{min-height:220px;border-radius:12px}
   html.app-mode #infos .map iframe{min-height:220px}
   html.app-mode #infos .center .eyebrow{display:none}

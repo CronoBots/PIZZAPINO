@@ -1429,9 +1429,6 @@
 
     function loadMap(){
       if(mapLoaded || !mapWrap) return;
-      /* Masquee sur telephone : la charger quand meme appellerait Google pour
-         un cadre que personne ne verra. offsetParent a null = pas affichee. */
-      if(mapWrap.offsetParent === null) return;
       var src = mapWrap.getAttribute("data-src");
       if(!src) return;
       var f = document.createElement("iframe");
