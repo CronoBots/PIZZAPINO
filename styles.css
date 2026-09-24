@@ -626,6 +626,11 @@
   .sf-lecture{position:absolute;top:50%;left:50%;z-index:2;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;
     display:grid;place-items:center;background:rgba(0,0,0,.55);color:#fff;border:2px solid rgba(255,255,255,.85);pointer-events:none}
   .sf-lecture svg{width:26px;height:26px;margin-left:3px}
+  .sf-video{cursor:pointer}
+  .sf-video:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+  .sf-lit{z-index:4;background:#000;cursor:auto}
+  .sf-carte:hover .sf-lit{transform:none}
+  .sf-carte.lit .sf-lecture,.sf-carte.lit .sf-voile,.sf-carte.lit::before{display:none}
   .sf-texte-seul{background:#fff;color:#000}
   .sf-texte{position:absolute;inset:20px 20px 90px;font-size:14px;line-height:1.5;white-space:pre-line;overflow:hidden;
     display:-webkit-box;-webkit-line-clamp:12;-webkit-box-orient:vertical}

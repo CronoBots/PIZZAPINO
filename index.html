@@ -2832,12 +2832,43 @@ window.pinoAvis = function(hote, d){
     tete.appendChild(suivre);
     fil.appendChild(tete);
 
+    /* Lecture sur place : le lecteur n'est créé qu'au clic, la vidéo n'est
+       téléchargée que si on la regarde. */
+    function lecteur(carte, p){
+      carte.classList.add('sf-video');
+      carte.tabIndex = 0; carte.setAttribute('role', 'button');
+      function joue(e){
+        if(e && e.target.closest && e.target.closest('a')) return;
+        if(carte.querySelector('video')) return;
+        var v = document.createElement('video');
+        v.className = 'sf-media sf-lit'; v.src = p.video; v.poster = p.image;
+        v.controls = true; v.playsInline = true; v.setAttribute('playsinline', '');
+        carte.classList.add('lit'); carte.removeAttribute('role'); carte.removeAttribute('tabindex');
+        carte.appendChild(v);
+        var essai = v.play(); if(essai && essai.catch) essai.catch(function(){});
+        v.focus();
+      }
+      carte.addEventListener('click', joue);
+      carte.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); joue(); } });
+      // Le lien vers la publication reste sur le logo Facebook de la carte.
+      if(sur(p.lien)){
+        var logo = carte.querySelector('.sf-reseau');
+        if(logo){
+          var a = el('a', 'sf-reseau'); a.href = p.lien; a.target = '_blank'; a.rel = 'noopener';
+          a.setAttribute('data-res', 'Publication'); a.setAttribute('aria-label', 'Voir la vidéo sur Facebook');
+          a.innerHTML = logo.innerHTML; logo.parentNode.replaceChild(a, logo);
+        }
+      }
+    }
+
     /* Carrousel */
     var cadre = el('div', 'sf-cadre');
     var piste = el('div', 'sf-piste');
     (d.publications || []).forEach(function(p){
-      var carte = el(sur(p.lien) ? 'a' : 'div', 'sf-carte' + (sur(p.image) ? '' : ' sf-texte-seul'));
-      if(sur(p.lien)){
+      // Une vidéo recopiée chez nous se lit sur place : la carte n'est plus un lien.
+      var video = /^https:\/\/[a-z0-9-]+\.supabase\.co\//.test(p.video || '') && sur(p.image);
+      var carte = el(sur(p.lien) && !video ? 'a' : 'div', 'sf-carte' + (sur(p.image) ? '' : ' sf-texte-seul'));
+      if(sur(p.lien) && !video){
         carte.href = p.lien; carte.target = '_blank'; carte.rel = 'noopener';
         carte.setAttribute('data-res', 'Publication');
         carte.setAttribute('aria-label', 'Publication Facebook du ' + dateFr(p.date));
@@ -2850,12 +2881,13 @@ window.pinoAvis = function(hote, d){
         carte.appendChild(fond);
         var img = el('img', 'sf-media'); img.src = p.image; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
         carte.appendChild(img);
-        if(/\/(videos|reel)\//.test(p.lien || '')){
+        if(video || /\/(videos|reel)\//.test(p.lien || '')){
           var lecture = el('span', 'sf-lecture'); lecture.setAttribute('aria-hidden', 'true');
           lecture.innerHTML = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>';
           carte.appendChild(lecture);
-          carte.setAttribute('aria-label', 'Vidéo Facebook du ' + dateFr(p.date));
+          carte.setAttribute('aria-label', (video ? 'Lire la vidéo Facebook du ' : 'Vidéo Facebook du ') + dateFr(p.date));
         }
+
       } else if(p.texte){
         carte.appendChild(el('span', 'sf-texte', p.texte));
       }
@@ -2867,6 +2899,7 @@ window.pinoAvis = function(hote, d){
       voile.appendChild(qui);
       var logo = el('span', 'sf-reseau'); logo.innerHTML = ICONE; voile.appendChild(logo);
       carte.appendChild(voile);
+      if(video) lecteur(carte, p);
       piste.appendChild(carte);
     });
     cadre.appendChild(piste);
@@ -2885,6 +2918,14 @@ window.pinoAvis = function(hote, d){
     prec.addEventListener('click', function(){ piste.scrollBy({ left: -pas(), behavior: 'smooth' }); });
     suiv.addEventListener('click', function(){ piste.scrollBy({ left: pas(), behavior: 'smooth' }); });
     piste.addEventListener('scroll', etat, { passive: true });
+    // Une vidéo qui sort du cadre se met en pause.
+    piste.addEventListener('scroll', function(){
+      var cadreR = piste.getBoundingClientRect();
+      Array.prototype.forEach.call(piste.querySelectorAll('video'), function(v){
+        var r = v.getBoundingClientRect();
+        if(!v.paused && (r.right < cadreR.left + 20 || r.left > cadreR.right - 20)) v.pause();
+      });
+    }, { passive: true });
     window.addEventListener('resize', etat);
     bloc.hidden = false;
     requestAnimationFrame(etat);

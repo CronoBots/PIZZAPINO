@@ -129,7 +129,8 @@ recopie les photos dans le bucket public `facebook` de Supabase et garde le
 tout dans la table `cache_facebook`. Le site lit ce contenu par
 `GET /mesure/facebook` : afficher le fil n'ouvre aucune connexion vers
 Facebook et ne pose aucun cookie. Le nombre d'abonnés entre dans la table
-`abonnes` comme celui d'Instagram.
+`abonnes` comme celui d'Instagram. Les vidéos (moins de 45 Mo) sont recopiées elles aussi et
+se lisent sur le site même, au clic ; au-delà, la carte renvoie à Facebook.
 
 Obtenir la clé (administrateur de la page, une seule fois) : application Meta
 en mode développement → Explorateur de l'API Graph → token utilisateur avec

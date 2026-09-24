@@ -331,14 +331,16 @@ async function avecDelai(url: string, ms: number): Promise<Response> {
 /** Recopie une image de Facebook dans le bucket public « facebook ». Les
     adresses de Facebook expirent au bout de quelques jours, et les charger
     depuis le site ouvrirait une connexion vers Meta à chaque visiteur. */
-async function recopieImage(source: string, nom: string, bucket = 'facebook'): Promise<string | null> {
+async function recopieImage(source: string, nom: string, bucket = 'facebook',
+                            genre = 'image/', max = 5_000_000, delai = 6000): Promise<string | null> {
   try {
-    const r = await avecDelai(source, 6000);
+    const r = await avecDelai(source, delai);
     if (!r.ok) return null;
-    const type = r.headers.get('content-type') ?? 'image/jpeg';
-    if (!type.startsWith('image/')) return null;
+    const type = r.headers.get('content-type') ?? (genre === 'image/' ? 'image/jpeg' : 'video/mp4');
+    if (!type.startsWith(genre)) return null;
+    if (Number(r.headers.get('content-length') ?? 0) > max) return null;
     const corps = new Uint8Array(await r.arrayBuffer());
-    if (corps.byteLength > 5_000_000) return null;
+    if (corps.byteLength > max) return null;
     const up = await fetch(`${URL_BASE}/storage/v1/object/${bucket}/${nom}`, {
       method: 'POST',
       headers: { ...ENTETES_SERVICE(), 'Content-Type': type, 'x-upsert': 'true',
@@ -365,7 +367,7 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
     const cle = encodeURIComponent(FB_JETON);
     const [rp, rs] = await Promise.all([
       avecDelai(`${GRAPH}/me?fields=id,name,followers_count,fan_count,link,picture.width(200).height(200)&access_token=${cle}`, 8000),
-      avecDelai(`${GRAPH}/me/posts?fields=id,message,created_time,permalink_url,full_picture&limit=20&access_token=${cle}`, 8000),
+      avecDelai(`${GRAPH}/me/posts?fields=id,message,created_time,permalink_url,full_picture,attachments{media_type,type,media{source,image}}&limit=20&access_token=${cle}`, 8000),
     ]);
     const page = await rp.json();
     const posts = await rs.json();
@@ -396,12 +398,20 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
       if (p.full_picture) {
         image = connus[p.id]?.image ?? await recopieImage(p.full_picture, `${p.id}.jpg`);
       }
+      // Les vidéos sont recopiées chez nous, pour se lire sur le site même,
+      // sans lecteur Facebook ni cookie. Au-delà de 45 Mo, on renvoie à Facebook.
+      const piece = p.attachments?.data?.[0];
+      const source = piece?.media?.source;
+      let video: string | null = null;
+      if (source && /video/i.test(`${piece?.media_type ?? ''} ${piece?.type ?? ''}`)) {
+        video = connus[p.id]?.video ?? await recopieImage(source, `${p.id}.mp4`, 'facebook', 'video/', 45_000_000, 30000);
+      }
       publications.push({
         id: String(p.id),
         texte: nettoieTexte(p.message ?? '', 600),
         date: String(p.created_time ?? ''),
         lien: /^https:\/\/(www\.)?facebook\.com\//.test(p.permalink_url ?? '') ? p.permalink_url : null,
-        image,
+        image, video,
       });
     }
     const v = { etat: 'ok', message: '', nom: String(page.name ?? base.nom).slice(0, 80),
