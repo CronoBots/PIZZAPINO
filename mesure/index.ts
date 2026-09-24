@@ -104,7 +104,7 @@ let dernierReleve = 0;
 const FB_JETON = Deno.env.get('FB_JETON') ?? '';
 const GRAPH = 'https://graph.facebook.com/v21.0';
 const FRAICHEUR_FB = 3 * 3600_000;
-const MAX_PUBLICATIONS = 8;
+const MAX_PUBLICATIONS = 3;   // les trois dernières ; les fichiers des plus anciennes sont effacés
 let fbEnCours: Promise<unknown> | null = null;
 
 /* Les avis Google, lus sur la fiche d'établissement par l'API Google Business
@@ -352,11 +352,33 @@ async function recopieImage(source: string, nom: string, bucket = 'facebook',
   } catch { return null; }
 }
 
+/** Ne garde dans le bucket « facebook » que les fichiers des publications
+    retenues (photo, vidéo) et l'avatar : une publication qui sort de la liste
+    emporte ses fichiers avec elle. */
+async function nettoieFacebook(publications: any[]): Promise<void> {
+  try {
+    const gardes = new Set(['avatar.jpg', ...publications.flatMap((p: any) => [`${p.id}.jpg`, `${p.id}.mp4`])]);
+    const r = await fetch(`${URL_BASE}/storage/v1/object/list/facebook`, {
+      method: 'POST',
+      headers: { ...ENTETES_SERVICE(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prefix: '', limit: 1000 }),
+    });
+    if (!r.ok) return;
+    const perimes = ((await r.json()) ?? []).map((o: any) => o?.name).filter((n: any) => n && !gardes.has(n));
+    if (!perimes.length) return;
+    await fetch(`${URL_BASE}/storage/v1/object/facebook`, {
+      method: 'DELETE',
+      headers: { ...ENTETES_SERVICE(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prefixes: perimes }),
+    });
+  } catch { /* on réessaiera à la prochaine lecture */ }
+}
+
 /** Lit la page (nom, abonnés, publications) et met le résultat en mémoire.
     En cas d'échec, on garde les publications déjà connues et l'on note
     l'erreur : le site continue d'afficher, le tableau de bord prévient. */
 async function rafraichitFacebook(ancien: any): Promise<any> {
-  const base = { publications: ancien?.publications ?? [], nom: ancien?.nom ?? 'Pizzeria Pino Nandrin',
+  const base = { publications: (ancien?.publications ?? []).slice(0, MAX_PUBLICATIONS), nom: ancien?.nom ?? 'Pizzeria Pino Nandrin',
                  abonnes: ancien?.abonnes ?? null, lien: ancien?.lien ?? null, avatar: ancien?.avatar ?? null };
   if (!FB_JETON) {
     const v = { ...base, etat: 'sans_cle', message: 'Aucune clé FB_JETON dans les secrets.' };
@@ -376,6 +398,7 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
       const v = { ...base, etat: err.code === 190 ? 'cle_invalide' : 'erreur',
                   message: String(err.message ?? 'Erreur Facebook').slice(0, 200) };
       await ecritCacheFacebook(v).catch(() => {});
+      await nettoieFacebook(base.publications);
       return v;
     }
     const abonnes = Number.isInteger(page.followers_count) ? page.followers_count
@@ -419,6 +442,7 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
                 lien: 'https://www.facebook.com/profile.php?id=100064486855231',
                 avatar, publications };
     await ecritCacheFacebook(v);
+    await nettoieFacebook(publications);
     if (abonnes != null) {
       await rpc('releve_abonnes', { releves: [{ reseau: 'Facebook', n: abonnes }], le_jour: jourBruxelles() })
         .catch(() => {});
