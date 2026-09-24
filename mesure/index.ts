@@ -518,12 +518,23 @@ async function rafraichitAvis(ancien: any): Promise<any> {
   const base = { avis: ancien?.avis ?? [], note: ancien?.note ?? null, nombre: ancien?.nombre ?? null,
                  lien_avis: ancien?.lien_avis ?? null, fiche: ancien?.fiche ?? null };
   if (!G_ID || !G_SECRET || !G_REFRESH) {
+    // Sans Business Profile, deux sources s'additionnent, et rien de ce qui est
+    // déjà connu ne se perd : le fichier Trustindex (tant qu'il existe) et
+    // l'API Places (toutes les 8 heures, dans la part gratuite).
+    let courant: any = { ...base, place_id: ancien?.place_id, places_maj: ancien?.places_maj };
+    let lu = false;
     if (/^[a-z0-9]{10,40}$/i.test(AVIS_TI)) {
-      const v = await rafraichitAvisTrustindex(base);
-      if (v) return v;
+      const v = await rafraichitAvisTrustindex(courant);
+      if (v) { courant = v; lu = true; }
     }
-    if (G_PLACES) return await rafraichitAvisPlaces(ancien, base);
-    return { ...base, etat: 'sans_cle', message: 'Identifiants Google absents des secrets.' };
+    if (G_PLACES && !(Date.now() - Date.parse(courant.places_maj ?? '') < FRAICHEUR_PLACES)) {
+      return await rafraichitAvisPlaces(courant, courant);
+    }
+    if (lu) return courant;
+    const v = { ...courant, etat: G_PLACES ? 'ok' : 'sans_cle',
+                message: G_PLACES ? '' : 'Identifiants Google absents des secrets.' };
+    await ecritCache('cache_avis', 'google', v).catch(() => {});
+    return v;
   }
   try {
     const auth = { Authorization: `Bearer ${await jetonGoogle()}` };
@@ -639,7 +650,13 @@ async function rafraichitAvisTrustindex(base: any): Promise<any | null> {
       avis.push({ ...a, photo: await photoAuteur(src, a.id, connus[a.id]?.photo),
                   image: await imageAvis(srcImage, a.id, connus[a.id]?.image) });
     }
-    const v = { etat: 'ok', message: '', source: 'trustindex',
+    // Les avis déjà connus restent (Places, lectures précédentes) : on garde
+    // les douze plus récents de l'ensemble.
+    const lusIds = new Set(avis.map(a => a.id));
+    for (const a of base.avis) if (!lusIds.has(a.id)) avis.push(a);
+    avis.sort((x: any, y: any) => Date.parse(y.date) - Date.parse(x.date));
+    avis.splice(MAX_AVIS);
+    const v = { etat: 'ok', message: '', source: 'trustindex', place_id: base.place_id, places_maj: base.places_maj,
                 note: base.note, nombre: base.nombre, lien_avis: base.lien_avis,
                 fiche: base.fiche ?? 'https://www.google.com/maps/place//data=!4m4!3m3!1s0x47c055bb01ab8f13:0x7a7073aea619564a!9m1!1b1',
                 avis };
@@ -693,7 +710,7 @@ async function rafraichitAvisPlaces(ancien: any, base: any): Promise<any> {
       .sort((x: any, y: any) => Date.parse(y.date) - Date.parse(x.date))
       .slice(0, MAX_AVIS);
     const liens = d.googleMapsLinks ?? {};
-    const v = { etat: 'ok', message: '', source: 'places', place_id: placeId,
+    const v = { etat: 'ok', message: '', source: 'places', place_id: placeId, places_maj: new Date().toISOString(),
                 note: typeof d.rating === 'number' ? Math.round(d.rating * 10) / 10 : base.note,
                 nombre: Number.isInteger(d.userRatingCount) ? d.userRatingCount : base.nombre,
                 lien_avis: liens.writeAReviewUri ?? base.lien_avis,
@@ -701,7 +718,9 @@ async function rafraichitAvisPlaces(ancien: any, base: any): Promise<any> {
     await ecritCache('cache_avis', 'google', v);
     return v;
   } catch (e) {
-    const v = { ...base, place_id: ancien?.place_id, etat: (e as any)?.cle ? 'cle_invalide' : 'erreur',
+    // L'échec compte comme une lecture : on ne réessaie pas avant 8 heures.
+    const v = { ...base, place_id: ancien?.place_id, places_maj: new Date().toISOString(),
+                etat: (e as any)?.cle ? 'cle_invalide' : 'erreur',
                 message: String((e as Error)?.message ?? 'Google ne répond pas.').slice(0, 200) };
     await ecritCache('cache_avis', 'google', v).catch(() => {});
     return v;
@@ -710,8 +729,8 @@ async function rafraichitAvisPlaces(ancien: any, base: any): Promise<any> {
 
 async function contenuAvis(attendre = false): Promise<any> {
   const c = await lisCache('cache_avis', 'google');
-  const fraicheur = c?.valeur?.source === 'places' ? FRAICHEUR_PLACES : FRAICHEUR_AVIS;
-  const perime = !c || Date.now() - Date.parse(c.maj) > fraicheur;
+  // Toutes les 3 heures ; Places, lui, n'est rappelé qu'au bout de 8 heures.
+  const perime = !c || Date.now() - Date.parse(c.maj) > FRAICHEUR_AVIS;
   if (perime) {
     if (!avisEnCours) avisEnCours = rafraichitAvis(c?.valeur).finally(() => { avisEnCours = null; });
     if (!c || attendre) return await avisEnCours;

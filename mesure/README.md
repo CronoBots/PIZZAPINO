@@ -158,8 +158,10 @@ toutes les trois heures, comme elle lit déjà le nombre d'abonnés. Elle en tir
 les douze derniers avis, la photo et le profil de chaque auteur, la photo jointe
 à l'avis s'il y en a une, et recopie les images dans le bucket `avis`. Le site
 les affiche lui-même : aucun script tiers, aucun accord à demander. Si ce
-fichier devient illisible, la fonction passe à l'API Places, puis le site
-revient au module Trustindex (moins de six avis).
+fichier devient illisible (fin de l'abonnement Trustindex), rien ne se perd :
+les avis déjà connus restent en mémoire avec leurs photos, et l'API Places
+(toutes les 8 heures) y ajoute ceux que Google renvoie. Les deux sources
+s'additionnent ; on garde toujours les douze plus récents.
 
 **Sans accès Business Profile : l'API Places.** Google refuse l'accès Business
 Profile à beaucoup de petites fiches. À défaut, une simple clé suffit :
