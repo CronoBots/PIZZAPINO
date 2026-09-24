@@ -1513,7 +1513,8 @@
         if(!API || !window.fetch || !window.pinoAvis){ fini(false); return; }
         fetch(API + '/avis').then(function(r){ return r.ok ? r.json() : null; })
           .then(function(d){
-            if(!d || !d.disponible || !(d.avis || []).length){ fini(false); return; }
+            // Moins de six avis : le module maison ferait moins bien que Trustindex.
+            if(!d || !d.disponible || (d.avis || []).length < 6){ fini(false); return; }
             window.pinoAvis(document.getElementById("tiReviews"), d);
             fini(true);
           })
