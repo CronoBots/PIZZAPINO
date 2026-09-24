@@ -567,6 +567,23 @@
         <a class="map-alt" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" data-res="Profil">Voir le profil sur Instagram ↗</a>
       </div>
     </div>
+
+    <!-- Fil Facebook — module Trustindex, même régime qu'Instagram.
+         EN ATTENTE : tant que data-ti est vide, le bloc entier reste masqué.
+         Pour l'activer, coller dans data-ti l'adresse du script donné par
+         Trustindex (https://cdn.trustindex.io/loader-feed.js?…), rien d'autre. -->
+    <div class="fb-bloc" id="fbBloc" hidden>
+      <p class="eyebrow reveal">Facebook</p>
+      <h3 class="fb-titre reveal" style="--i:1">Retrouvez-nous <em>sur Facebook</em></h3>
+      <div class="ti-reviews ti-insta ti-fb reveal" style="--i:2" id="tiFb" data-ti="">
+        <div class="ti-ph" id="tiFbPh">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          <p>Les publications Facebook sont affichées via Trustindex, un service tiers. Elles se chargent avec votre accord.</p>
+          <button type="button" class="map-load" id="tiFbLoad">Afficher les publications</button>
+          <a class="map-alt" href="https://www.facebook.com/share/1F96kxvUGi/" target="_blank" rel="noopener" data-res="Profil">Voir la page Facebook ↗</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -662,7 +679,7 @@
 <!-- BANDEAU COOKIES -->
 <div id="cookieBanner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Gestion des cookies" hidden>
   <div class="ck-inner">
-    <p class="ck-text">Ce site utilise uniquement des cookies nécessaires à son fonctionnement. La carte Google Maps n'est chargée qu'avec votre accord, comme les avis clients et les publications Instagram, affichés via un service tiers (Trustindex). Aucun cookie publicitaire ni de suivi. <a href="legal.html#cookies">En savoir plus</a>.</p>
+    <p class="ck-text">Ce site utilise uniquement des cookies nécessaires à son fonctionnement. La carte Google Maps n'est chargée qu'avec votre accord, comme les avis clients et les publications Instagram et Facebook, affichés via un service tiers (Trustindex). Aucun cookie publicitaire ni de suivi. <a href="legal.html#cookies">En savoir plus</a>.</p>
     <div class="ck-actions">
       <button type="button" class="ck-btn ck-refuse" data-consent="essential">Refuser</button>
       <button type="button" class="ck-btn ck-accept" data-consent="all">Tout accepter</button>
@@ -1480,7 +1497,13 @@
     var loadInsta = tiModule("tiInsta", "tiInstaPh", "Chargement des publications…",
       '<p>Les publications ne s\'affichent pas pour le moment.</p>'
       + '<a class="map-alt" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" data-res="Profil">Voir le profil sur Instagram ↗</a>');
-    function loadReviews(){ loadAvis(); loadInsta(); }
+    var loadFb = tiModule("tiFb", "tiFbPh", "Chargement des publications\u2026",
+      '<p>Les publications ne s\'affichent pas pour le moment.</p>'
+      + '<a class="map-alt" href="https://www.facebook.com/share/1F96kxvUGi/" target="_blank" rel="noopener" data-res="Profil">Voir la page Facebook \u2197</a>');
+    // Le bloc Facebook n'apparaît qu'une fois son code Trustindex renseigné.
+    var fbBloc = document.getElementById("fbBloc"), tiFb = document.getElementById("tiFb");
+    if(fbBloc && tiFb && tiFb.getAttribute("data-ti")) fbBloc.hidden = false;
+    function loadReviews(){ loadAvis(); loadInsta(); loadFb(); }
     function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
     function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
 
@@ -1503,6 +1526,8 @@
     if(tiLoad) tiLoad.addEventListener("click", function(){ set("all"); loadReviews(); loadMap(); });
     var tiInstaLoad = document.getElementById("tiInstaLoad");
     if(tiInstaLoad) tiInstaLoad.addEventListener("click", function(){ set("all"); loadReviews(); loadMap(); });
+    var tiFbLoad = document.getElementById("tiFbLoad");
+    if(tiFbLoad) tiFbLoad.addEventListener("click", function(){ set("all"); loadReviews(); loadMap(); });
     var manage = document.getElementById("manageCookies");
     if(manage) manage.addEventListener("click", function(e){ e.preventDefault(); showBanner(); });
 

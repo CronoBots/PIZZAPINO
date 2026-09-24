@@ -571,8 +571,14 @@
   .ti-insta{max-width:760px;margin-left:auto;margin-right:auto}
   /* L'en-tête du module est prévu pour un fond clair : nom et chiffres en noir,
      illisibles sur le fond sombre de la section. On les remet aux couleurs du site. */
-  #tiInsta .ti-header .ti-username,#tiInsta .ti-header .ti-value{color:var(--paper,#F5EFE4)!important}
-  #tiInsta .ti-header .ti-number{color:#B5AB99!important}
+  #tiInsta .ti-header .ti-username,#tiInsta .ti-header .ti-value,
+  #tiFb .ti-header .ti-username,#tiFb .ti-header .ti-value{color:var(--paper,#F5EFE4)!important}
+  #tiInsta .ti-header .ti-number,#tiFb .ti-header .ti-number{color:#B5AB99!important}
+  /* Facebook, sous Instagram dans la même section : un filet et un titre plus petit */
+  .fb-bloc{margin-top:clamp(48px,7vw,72px);padding-top:clamp(36px,5vw,52px);border-top:1px solid rgba(233,206,150,.14)}
+  .fb-bloc[hidden]{display:none}
+  .fb-titre{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.1;margin:0}
+  .fb-titre em{color:var(--or);font-style:italic}
   @media(max-width:760px){#instagram .lead{margin-bottom:6px}}
   /* Section avis en fond clair (desktop) : texte foncé lisible */
   .reviews .social-btn{background:rgba(20,14,10,.04);border-color:rgba(20,14,10,.16)}
