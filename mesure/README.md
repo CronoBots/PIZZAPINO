@@ -158,9 +158,11 @@ Profile à beaucoup de petites fiches. À défaut, une simple clé suffit :
 Google n'y rend que cinq avis par lecture, choisis par lui : la fonction les
 accumule d'une lecture à l'autre et garde les douze plus récents. Elle y gagne
 le lien vers le profil de chaque auteur, que le site met sur la photo et le nom.
-Une lecture par jour, soit une trentaine par mois : loin sous la part gratuite
-mensuelle de Google (1 000 lectures). Le quota « GetPlaceRequest per day » est
-plafonné à 5 dans la console : aucun euro ne peut être facturé.
+Trois lectures par jour (toutes les 8 heures), soit environ 90 par mois : loin
+sous la part gratuite mensuelle de Google (1 000 lectures). Le quota
+« GetPlaceRequest per day » est plafonné à 6 dans la console (au plus 186 par
+mois) : aucun euro ne peut être facturé. Quota atteint, la fonction garde les
+avis déjà connus et réessaie 8 heures plus tard.
 
 Tant que ces secrets manquent, la route répond « indisponible » et le site garde
 son module Trustindex, chargé après accord comme avant. Dès qu'ils sont là, le
