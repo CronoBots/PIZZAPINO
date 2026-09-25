@@ -379,7 +379,8 @@ async function nettoieFacebook(publications: any[]): Promise<void> {
     l'erreur : le site continue d'afficher, le tableau de bord prévient. */
 async function rafraichitFacebook(ancien: any): Promise<any> {
   const base = { publications: (ancien?.publications ?? []).slice(0, MAX_PUBLICATIONS), nom: ancien?.nom ?? 'Pizzeria Pino Nandrin',
-                 abonnes: ancien?.abonnes ?? null, lien: ancien?.lien ?? null, avatar: ancien?.avatar ?? null };
+                 abonnes: ancien?.abonnes ?? null, nb_publications: ancien?.nb_publications ?? null,
+                 lien: ancien?.lien ?? null, avatar: ancien?.avatar ?? null };
   if (!FB_JETON) {
     const v = { ...base, etat: 'sans_cle', message: 'Aucune clé FB_JETON dans les secrets.' };
     await ecritCacheFacebook(v).catch(() => {});

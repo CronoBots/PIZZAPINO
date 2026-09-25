@@ -614,11 +614,14 @@
     outline:3px solid transparent}
   .sf-suivre:hover{background:#3147F8;outline-color:rgba(74,93,249,.5)}
   .sf-suivre svg{width:20px;height:20px;margin-right:8px}
-  @media(min-width:601px){
-    .sf-tete{justify-content:center}
-    .sf-profil{flex:0 1 auto}
-    .sf-id{flex-direction:row;align-items:center;gap:15px}
-    .sf-nom{white-space:nowrap}
+  /* Comme Instagram : profil à gauche (nom, puis les chiffres dessous),
+     bouton « Suivre » calé à droite. */
+  .sf-nom{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Sur ordinateur : trois publications côte à côte, sur une largeur plus
+     grande pour que chacune garde sa taille. */
+  @media(min-width:901px){
+    .sf{max-width:1100px}
+    .sf-piste{grid-auto-columns:calc((100% - 28px) / 3)!important}
   }
   @media(max-width:600px){
     .sf-nom{font-size:13.5px}
