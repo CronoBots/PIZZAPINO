@@ -6,6 +6,7 @@
      GET   /mesure/stats     la page /statistiques lit les totaux, clé exigée
      GET   /mesure/facebook  le site lit les dernières publications de la page
      GET   /mesure/avis      le site lit les avis Google de la fiche
+     GET   /mesure/instagram le site lit les dernières publications Instagram
 
    Pourquoi une fonction Edge plutôt qu'un appel direct à la base : la clé
    de service reste ici, côté serveur. La table est fermée à « anon », et
@@ -355,10 +356,10 @@ async function recopieImage(source: string, nom: string, bucket = 'facebook',
 /** Ne garde dans le bucket « facebook » que les fichiers des publications
     retenues (photo, vidéo) et l'avatar : une publication qui sort de la liste
     emporte ses fichiers avec elle. */
-async function nettoieFacebook(publications: any[]): Promise<void> {
+async function nettoieFacebook(publications: any[], bucket = 'facebook'): Promise<void> {
   try {
     const gardes = new Set(['avatar.jpg', ...publications.flatMap((p: any) => [`${p.id}.jpg`, `${p.id}.mp4`])]);
-    const r = await fetch(`${URL_BASE}/storage/v1/object/list/facebook`, {
+    const r = await fetch(`${URL_BASE}/storage/v1/object/list/${bucket}`, {
       method: 'POST',
       headers: { ...ENTETES_SERVICE(), 'Content-Type': 'application/json' },
       body: JSON.stringify({ prefix: '', limit: 1000 }),
@@ -366,7 +367,7 @@ async function nettoieFacebook(publications: any[]): Promise<void> {
     if (!r.ok) return;
     const perimes = ((await r.json()) ?? []).map((o: any) => o?.name).filter((n: any) => n && !gardes.has(n));
     if (!perimes.length) return;
-    await fetch(`${URL_BASE}/storage/v1/object/facebook`, {
+    await fetch(`${URL_BASE}/storage/v1/object/${bucket}`, {
       method: 'DELETE',
       headers: { ...ENTETES_SERVICE(), 'Content-Type': 'application/json' },
       body: JSON.stringify({ prefixes: perimes }),
@@ -497,6 +498,81 @@ async function facebook(origine: string): Promise<Response> {
   // Le site ne reçoit que le contenu public ; l'état détaillé reste au tableau de bord.
   const publique = { disponible: (v?.publications ?? []).length > 0, nom: v?.nom, abonnes: v?.abonnes,
                      nb_publications: v?.nb_publications ?? null,
+                     lien: v?.lien, avatar: v?.avatar, publications: v?.publications ?? [] };
+  return new Response(JSON.stringify(publique), {
+    headers: { 'Content-Type': 'application/json; charset=utf-8',
+               'Cache-Control': 'public, max-age=600', ...cors(origine) },
+  });
+}
+
+/* ── Instagram ───────────────────────────────────────────────────────────── */
+
+/* En attendant l'accès Meta pour Instagram : le fichier de données public du
+   module Trustindex (FLUX_ABONNES), qui porte le profil et les dernières
+   publications. Photos recopiées dans le bucket « instagram » : les adresses
+   d'Instagram expirent au bout de quelques jours. Quand le fichier disparaît,
+   les publications déjà recopiées restent affichées. */
+let igEnCours: Promise<unknown> | null = null;
+
+async function rafraichitInstagram(ancien: any): Promise<any> {
+  const base = { publications: (ancien?.publications ?? []).slice(0, MAX_PUBLICATIONS), nom: ancien?.nom ?? 'pino.nandrin',
+                 abonnes: ancien?.abonnes ?? null, nb_publications: ancien?.nb_publications ?? null,
+                 abonnements: ancien?.abonnements ?? null, avatar: ancien?.avatar ?? null,
+                 lien: ancien?.lien ?? 'https://www.instagram.com/pino.nandrin/' };
+  const id = FLUX_ABONNES[0];
+  try {
+    if (!id) throw new Error('Aucun flux');
+    const r = await avecDelai(`https://cdn.trustindex.io/widgets/${id.slice(0, 2)}/${id}/data.json`, 8000);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    const src: any = Object.values(d?.sources ?? {}).find((x: any) => x?.type === 'Instagram');
+    const u = src?.user ?? {};
+    const num = (v: any) => Number.isInteger(Number(v)) && v !== '' && v != null ? Number(v) : null;
+    const connus: Record<string, any> = {};
+    for (const p of base.publications) connus[p.id] = p;
+    const publications = [];
+    for (const p of (d?.posts ?? []).slice(0, MAX_PUBLICATIONS)) {
+      const pid = String(p?.id ?? '').replace(/[^0-9A-Za-z_-]/g, '').slice(0, 40);
+      if (!pid) continue;
+      const url = String(p?.media_content?.[0]?.image_url ?? '');
+      const image = connus[pid]?.image
+        ?? (/^https:\/\/[a-z0-9.-]*(cdninstagram\.com|fbcdn\.net)\//.test(url) ? await recopieImage(url, `${pid}.jpg`, 'instagram') : null);
+      const temps = Date.parse(String(p?.created_at ?? '').replace(' ', 'T') + 'Z');
+      publications.push({
+        id: pid, image, video: null,
+        texte: nettoieTexte(p?.text ?? '', 600),
+        date: Number.isFinite(temps) ? new Date(temps).toISOString() : '',
+        lien: /^https:\/\/(www\.)?instagram\.com\//.test(p?.url ?? '') ? p.url : null,
+      });
+    }
+    if (!publications.length) throw new Error('Aucune publication');
+    const av = String(u.avatar_url ?? '');
+    const avatar = base.avatar
+      ?? (/^https:\/\/[a-z0-9.-]*(cdninstagram\.com|fbcdn\.net)\//.test(av) ? await recopieImage(av, 'avatar.jpg', 'instagram') : null);
+    const v = { etat: 'ok', message: '', nom: nettoie(u.author_name ?? base.nom, 60),
+                abonnes: num(u.follower_num) ?? base.abonnes, nb_publications: num(u.post_num) ?? base.nb_publications,
+                abonnements: num(u.follow_num) ?? base.abonnements, avatar,
+                lien: /^https:\/\/(www\.)?instagram\.com\//.test(u.profile_url ?? '') ? u.profile_url : base.lien,
+                publications };
+    await ecritCache('cache_facebook', 'instagram', v);
+    await nettoieFacebook(publications, 'instagram');
+    return v;
+  } catch (e) {
+    const v = { ...base, etat: 'erreur', message: String((e as Error)?.message ?? 'Instagram indisponible').slice(0, 200) };
+    await ecritCache('cache_facebook', 'instagram', v).catch(() => {});
+    return v;
+  }
+}
+
+async function instagram(origine: string): Promise<Response> {
+  const c = await lisCache('cache_facebook', 'instagram');
+  let v: any = c?.valeur;
+  if (!c || Date.now() - Date.parse(c.maj) > FRAICHEUR_FB) {
+    if (!igEnCours) igEnCours = rafraichitInstagram(c?.valeur).finally(() => { igEnCours = null; });
+    if (!c) v = await igEnCours; else enArrierePlan(igEnCours);
+  }
+  const publique = { disponible: (v?.publications ?? []).length > 0, nom: v?.nom, abonnes: v?.abonnes,
+                     nb_publications: v?.nb_publications ?? null, abonnements: v?.abonnements ?? null,
                      lien: v?.lien, avatar: v?.avatar, publications: v?.publications ?? [] };
   return new Response(JSON.stringify(publique), {
     headers: { 'Content-Type': 'application/json; charset=utf-8',
@@ -929,6 +1005,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'GET'  && chemin === '/stats') return await stats(req, origine);
   if (req.method === 'GET'  && chemin === '/facebook') return await facebook(origine);
   if (req.method === 'GET'  && chemin === '/avis')     return await avisGoogle(origine);
+  if (req.method === 'GET'  && chemin === '/instagram') return await instagram(origine);
 
   return new Response('Introuvable', { status: 404, headers: cors(origine) });
 });

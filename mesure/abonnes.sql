@@ -91,3 +91,9 @@ revoke all on public.cache_avis from anon, authenticated;
 insert into storage.buckets (id, name, public)
 values ('avis', 'avis', true)
 on conflict (id) do nothing;
+
+-- Instagram : publications recopiées depuis le fichier de données public du
+-- module Trustindex, en attendant l'accès Meta. Même mémoire que Facebook
+-- (table cache_facebook, clé « instagram »), photos dans un bucket public.
+insert into storage.buckets (id, name, public) values ('instagram', 'instagram', true)
+on conflict (id) do nothing;

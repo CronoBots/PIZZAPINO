@@ -563,6 +563,12 @@
     <p class="lead reveal" style="--i:2">Soirées, nouveautés de la carte et coulisses du four à bois&nbsp;: abonnez-vous pour les voir avant tout le monde.</p>
     <p class="ig-live reveal" style="--i:2"><span class="ig-live-dot" aria-hidden="true"></span>Nos dernières publications, en direct</p>
 
+    <!-- Fil Instagram — servi par notre serveur (route /instagram), photos
+         recopiées chez nous : pas de cookie, pas d'accord à demander. Tant
+         qu'il n'a rien, le module Trustindex ci-dessous garde la place. -->
+    <div class="ig-bloc" id="igBloc" hidden>
+      <div class="sf" id="igFil" aria-label="Publications du compte Instagram de Pizzeria Pino"></div>
+    </div>
     <!-- Fil Instagram en direct — module Trustindex (chargé seulement après consentement, RGPD) -->
     <div class="ti-reviews ti-insta reveal" style="--i:2" id="tiInsta" data-ti="https://cdn.trustindex.io/loader-feed.js?fa288d1828901758c5563445c70">
       <div class="ti-ph" id="tiInstaPh">
@@ -571,10 +577,6 @@
         <button type="button" class="map-load" id="tiInstaLoad">Afficher les publications</button>
         <a class="map-alt" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" data-res="Profil">Voir le profil sur Instagram ↗</a>
       </div>
-    </div>
-    <div class="ig-follow reveal">
-      <a class="ig-follow-btn" href="https://www.instagram.com/pino.nandrin/" target="_blank" rel="noopener" data-res="Suivre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>S'abonner à @pino.nandrin</a>
-      <p class="ig-follow-sub">Gratuit, en un clic depuis l'application Instagram</p>
     </div>
 
     <!-- Fil Facebook — lu par notre service (fonction mesure, route /facebook),
@@ -587,10 +589,6 @@
       <h3 class="fb-titre">Retrouvez-nous <em>sur Facebook</em></h3>
       <p class="ig-live"><span class="ig-live-dot fb" aria-hidden="true"></span>Nos dernières publications, en direct</p>
       <div class="sf" id="fbFil" aria-label="Publications de la page Facebook de Pizzeria Pino"></div>
-      <div class="ig-follow">
-        <a class="fb-follow-btn" href="https://www.facebook.com/profile.php?id=100064486855231" target="_blank" rel="noopener" data-res="Suivre"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg>S'abonner à Pizzeria Pino</a>
-        <p class="ig-follow-sub">Gratuit, en un clic depuis l'application Facebook</p>
-      </div>
     </div>
   </div>
 </section>
@@ -687,7 +685,7 @@
 <!-- BANDEAU COOKIES -->
 <div id="cookieBanner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Gestion des cookies" hidden>
   <div class="ck-inner">
-    <p class="ck-text">Ce site utilise uniquement des cookies nécessaires à son fonctionnement. La carte Google Maps n'est chargée qu'avec votre accord, comme les publications Instagram, affichées via un service tiers (Trustindex). Aucun cookie publicitaire ni de suivi. <a href="legal.html#cookies">En savoir plus</a>.</p>
+    <p class="ck-text">Ce site utilise uniquement des cookies nécessaires à son fonctionnement. La carte Google Maps n'est chargée qu'avec votre accord. Aucun cookie publicitaire ni de suivi. <a href="legal.html#cookies">En savoir plus</a>.</p>
     <div class="ck-actions">
       <button type="button" class="ck-btn ck-refuse" data-consent="essential">Refuser</button>
       <button type="button" class="ck-btn ck-accept" data-consent="all">Tout accepter</button>
@@ -1528,7 +1526,7 @@
     });
     function loadReviews(){
       avisPret.then(function(maison){ if(!maison) loadAvis(); });
-      loadInsta();
+      var igB = document.getElementById("igBloc"); if(!igB || igB.hidden) loadInsta();
     }
     function showBanner(){ if(banner){ banner.hidden = false; requestAnimationFrame(function(){ banner.classList.add("show"); }); } }
     function hideBanner(){ if(banner){ banner.classList.remove("show"); setTimeout(function(){ banner.hidden = true; }, 500); } }
@@ -2781,18 +2779,19 @@ window.pinoAvis = function(hote, d){
    Dessiné sur le modèle du module Instagram, pièce pour pièce : en-tête
    (photo, nom, publications, abonnés, « Suivre »), puis un carrousel de
    grandes cartes avec, en bas, la page, la date et le logo du réseau. */
-(function(){
-  var bloc = document.getElementById('fbBloc');
-  var fil = document.getElementById('fbFil');
+function pinoFil(conf){
+  var bloc = document.getElementById(conf.bloc);
+  var fil = document.getElementById(conf.fil);
   if(!bloc || !fil) return;
+  var R = conf.reseau;
   var charge = false;
-  var ICONE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg>';
+  var ICONE = conf.icone;
   var FLECHE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
 
   function el(tag, cls, texte){
     var e = document.createElement(tag);
     if(cls) e.className = cls;
-    if(texte != null) e.textContent = texte;   // jamais d'HTML venu de Facebook
+    if(texte != null) e.textContent = texte;   // jamais d'HTML venu du réseau
     return e;
   }
   function dateFr(iso){
@@ -2802,7 +2801,7 @@ window.pinoAvis = function(hote, d){
             .replace(/^(\d+) (\S)/, function(m, j, l){ return j + ' ' + l.toUpperCase(); });
   }
   function nombre(n){ return new Intl.NumberFormat('fr-BE').format(n); }
-  function sur(u){ return /^https:\/\/([a-z0-9-]+\.)*(facebook\.com|supabase\.co)\//.test(u || ''); }
+  function sur(u){ return /^https:\/\/([a-z0-9-]+\.)*(facebook\.com|instagram\.com|supabase\.co)\//.test(u || ''); }
   function avatar(src, cls){
     var a = el('span', cls);
     if(sur(src)){ var i = el('img'); i.src = src; i.alt = ''; i.loading = 'lazy'; a.appendChild(i); }
@@ -2810,13 +2809,13 @@ window.pinoAvis = function(hote, d){
   }
 
   function affiche(d){
-    var lien = sur(d.lien) ? d.lien : 'https://www.facebook.com/profile.php?id=100064486855231';
+    var lien = sur(d.lien) ? d.lien : conf.lien;
 
     /* En-tête : comme celui d'Instagram */
     var tete = el('div', 'sf-tete');
     var profil = el('a', 'sf-profil'); profil.href = lien; profil.target = '_blank'; profil.rel = 'noopener';
     profil.setAttribute('data-res', 'Profil');
-    profil.appendChild(avatar(d.avatar, 'sf-av'));
+    profil.appendChild(avatar(d.avatar, 'sf-av' + (conf.classe ? ' ' + conf.classe : '')));
     var id = el('span', 'sf-id');
     id.appendChild(el('span', 'sf-nom', d.nom || 'Pizzeria Pino Nandrin'));
     var chiffres = el('span', 'sf-chiffres');
@@ -2825,6 +2824,9 @@ window.pinoAvis = function(hote, d){
     }
     if(d.abonnes != null){
       var c2 = el('span'); c2.appendChild(el('b', null, nombre(d.abonnes))); c2.appendChild(document.createTextNode(' abonnés')); chiffres.appendChild(c2);
+    }
+    if(d.abonnements != null){
+      var c3 = el('span'); c3.appendChild(el('b', null, nombre(d.abonnements))); c3.appendChild(document.createTextNode(' abonnements')); chiffres.appendChild(c3);
     }
     id.appendChild(chiffres);
     profil.appendChild(id);
@@ -2858,7 +2860,7 @@ window.pinoAvis = function(hote, d){
         var logo = carte.querySelector('.sf-reseau');
         if(logo){
           var a = el('a', 'sf-reseau'); a.href = p.lien; a.target = '_blank'; a.rel = 'noopener';
-          a.setAttribute('data-res', 'Publication'); a.setAttribute('aria-label', 'Voir la vidéo sur Facebook');
+          a.setAttribute('data-res', 'Publication'); a.setAttribute('aria-label', 'Voir la vidéo sur ' + R);
           a.innerHTML = logo.innerHTML; logo.parentNode.replaceChild(a, logo);
         }
       }
@@ -2874,7 +2876,7 @@ window.pinoAvis = function(hote, d){
       if(sur(p.lien) && !video){
         carte.href = p.lien; carte.target = '_blank'; carte.rel = 'noopener';
         carte.setAttribute('data-res', 'Publication');
-        carte.setAttribute('aria-label', 'Publication Facebook du ' + dateFr(p.date));
+        carte.setAttribute('aria-label', 'Publication ' + R + ' du ' + dateFr(p.date));
       }
       if(sur(p.image)){
         // L'image entière, dans son format d'origine (carré, portrait, vidéo
@@ -2888,7 +2890,7 @@ window.pinoAvis = function(hote, d){
           var lecture = el('span', 'sf-lecture'); lecture.setAttribute('aria-hidden', 'true');
           lecture.innerHTML = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>';
           carte.appendChild(lecture);
-          carte.setAttribute('aria-label', (video ? 'Lire la vidéo Facebook du ' : 'Vidéo Facebook du ') + dateFr(p.date));
+          carte.setAttribute('aria-label', (video ? 'Lire la vidéo ' + R + ' du ' : 'Vidéo ' + R + ' du ') + dateFr(p.date));
         }
 
       } else if(p.texte){
@@ -2937,13 +2939,13 @@ window.pinoAvis = function(hote, d){
   function lance(){
     if(charge) return; charge = true;
     var API = window.pinoMesureAPI;
-    if(!API){ bloc.hidden = false; return; }
-    fetch(API + '/facebook').then(function(r){ return r.ok ? r.json() : null; })
+    if(!API){ if(conf.repli) conf.repli(); return; }
+    fetch(API + conf.route).then(function(r){ return r.ok ? r.json() : null; })
       .then(function(d){
         if(d && d.disponible && (d.publications || []).length) affiche(d);
-        else bloc.hidden = false;            // au pire, le bouton vers la page
+        else if(conf.repli) conf.repli();    // rien à montrer : le bloc reste masqué
       })
-      .catch(function(){ bloc.hidden = false; });
+      .catch(function(){ if(conf.repli) conf.repli(); });
   }
 
   /* Rien n'est demandé avant que le visiteur approche de la section. */
@@ -2954,7 +2956,16 @@ window.pinoAvis = function(hote, d){
     }, { rootMargin: '600px 0px' });
     io.observe(cible);
   } else lance();
-})();
+}
+pinoFil({ bloc: 'fbBloc', fil: 'fbFil', route: '/facebook', reseau: 'Facebook',
+  lien: 'https://www.facebook.com/profile.php?id=100064486855231',
+  icone: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg>' });
+/* Instagram : même module, publications recopiées par notre serveur. Tant
+   qu'il n'a rien, le module Trustindex (après accord) garde la place. */
+pinoFil({ bloc: 'igBloc', fil: 'igFil', route: '/instagram', reseau: 'Instagram', classe: 'ig',
+  lien: 'https://www.instagram.com/pino.nandrin/',
+  icone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
+  repli: function(){ if(window.pinoInstaRepli) window.pinoInstaRepli(); } });
 </script>
 
 </body>

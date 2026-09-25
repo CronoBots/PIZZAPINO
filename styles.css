@@ -585,6 +585,12 @@
   .im-in small{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.62rem;opacity:.92}
   /* ===== Fil Instagram : module Trustindex, chargé après accord ===== */
   .ti-insta{max-width:760px;margin-left:auto;margin-right:auto}
+  /* Sur ordinateur, même largeur que le fil Facebook : trois publications. */
+  @media(min-width:901px){.ti-insta{max-width:1000px}}
+  /* Notre fil Instagram remplace le module Trustindex dès qu'il est là. */
+  .ig-bloc[hidden]{display:none}
+  .ig-bloc:not([hidden]) ~ #tiInsta{display:none}
+  .sf-av.ig{background:radial-gradient(120% 120% at 28% 108%,#FEDA75 0%,#FA7E1E 26%,#D62976 54%,#962FBF 78%,#4F5BD5 100%)}
   /* L'en-tête du module est prévu pour un fond clair : nom et chiffres en noir,
      illisibles sur le fond sombre de la section. On les remet aux couleurs du site. */
   #tiInsta .ti-header .ti-username,#tiInsta .ti-header .ti-value{color:var(--paper,#F5EFE4)!important}
@@ -620,7 +626,7 @@
   /* Sur ordinateur : trois publications côte à côte, sur une largeur plus
      grande pour que chacune garde sa taille. */
   @media(min-width:901px){
-    .sf{max-width:1100px}
+    .sf{max-width:1000px}
     .sf-piste{grid-auto-columns:calc((100% - 28px) / 3)!important}
   }
   @media(max-width:600px){

@@ -302,3 +302,12 @@ banque : ne le réutilisez nulle part ailleurs.
 **Si `ipwho.is` tombe**, la mesure continue et range la visite en « Non
 localisé ». Le site du restaurant, lui, n'est jamais ralenti : la balise part en
 arrière-plan et son échec est ignoré.
+
+**Instagram, sans module tiers.** La route `GET /mesure/instagram` lit le
+fichier de données public du module Trustindex (`FLUX_ABONNES`) : profil
+(publications, abonnés, abonnements) et trois dernières publications. Les
+photos sont recopiées dans le bucket public `instagram` et le tout est gardé
+dans `cache_facebook` (clé `instagram`), relu au plus toutes les trois heures.
+Quand ce fichier disparaît, les publications déjà recopiées restent affichées ;
+l'accès Meta (compte Instagram relié à la page Facebook) prendra le relais.
+Le site les affiche avec le même module que Facebook.
