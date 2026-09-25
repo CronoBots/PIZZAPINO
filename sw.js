@@ -3,7 +3,7 @@
    — les pages doivent être fraîches : réseau d'abord, cache en secours ;
    — polices, photos et icônes ne changent jamais sans changer de nom :
      cache d'abord, zéro attente réseau, et rafraîchissement en arrière-plan. */
-var CACHE = 'pino-v286';
+var CACHE = 'pino-v287';
 var CORE = [
   './', './index.html', './legal.html', './manifest.webmanifest',
   /* Le style vit dans son propre fichier. Sans lui dans cette liste, une page
@@ -11,7 +11,7 @@ var CORE = [
      fond blanc. */
   './styles.css',
   './icons/icon-512.png?v=2', './icons/icon-maskable-512.png?v=2', './icons/apple-touch-icon.png?v=2',
-  './favicon.ico?v=2', './icons/favicon-48.png?v=2', './icons/favicon-96.png?v=2', './icons/favicon-192.png?v=2',
+  './favicon.ico?v=3', './icons/favicon-48.png?v=3', './icons/favicon-96.png?v=3', './icons/favicon-192.png?v=3',
   './icons/pino-logo.webp', './icons/pino-logo.png',
   './fonts/fraunces-normal-400_700.woff2', './fonts/inter-normal-400.woff2', './fonts/oswald-normal-400.woff2',
   './images/video-poster.webp', './images/hero-feast.webp',
