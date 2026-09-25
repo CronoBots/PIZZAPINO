@@ -596,7 +596,22 @@
   #tiInsta .ti-header .ti-username,#tiInsta .ti-header .ti-value{color:var(--paper,#F5EFE4)!important}
   #tiInsta .ti-header .ti-number{color:#B5AB99!important}
   /* Facebook, sous Instagram dans la même section : un filet et un titre plus petit */
-  .fb-bloc{margin-top:clamp(48px,7vw,72px);padding-top:clamp(36px,5vw,52px);border-top:1px solid rgba(233,206,150,.14)}
+  .fb-bloc{margin:0}
+  /* Réseaux sociaux : deux onglets, un seul fil à l'écran */
+  .rs-onglets{display:inline-flex;gap:4px;margin:26px auto 0;padding:4px;border-radius:999px;
+    border:1px solid rgba(233,206,150,.22);background:rgba(255,255,255,.03)}
+  .rs-onglet{display:inline-flex;align-items:center;gap:9px;padding:10px 20px;border:0;border-radius:999px;cursor:pointer;
+    background:transparent;color:#b5ab99;font:600 .95rem/1 "Poppins",sans-serif;transition:background-color .2s,color .2s}
+  .rs-onglet svg{width:18px;height:18px;flex:0 0 auto}
+  .rs-onglet.ig svg{color:#e1306c}
+  .rs-onglet.fb svg{color:#1877F2}
+  .rs-onglet:hover{color:var(--paper,#F5EFE4)}
+  .rs-onglet[aria-selected="true"]{background:rgba(233,206,150,.14);color:var(--paper,#F5EFE4);box-shadow:inset 0 0 0 1px rgba(233,206,150,.28)}
+  .rs-onglet:focus-visible{outline:2px solid var(--or,#C69A4D);outline-offset:2px}
+  .rs-compte{font:500 .78rem/1 "Inter",sans-serif;color:var(--or,#C69A4D)}
+  .rs-compte:empty{display:none}
+  .rs-panneau[hidden]{display:none}
+  @media(max-width:420px){.rs-onglet{padding:10px 14px;gap:7px;font-size:.9rem}}
   .fb-bloc[hidden]{display:none}
   .fb-titre{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.1;margin:0}
   .fb-titre em{color:var(--or);font-style:italic}

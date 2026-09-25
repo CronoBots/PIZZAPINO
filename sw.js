@@ -3,7 +3,7 @@
    — les pages doivent être fraîches : réseau d'abord, cache en secours ;
    — polices, photos et icônes ne changent jamais sans changer de nom :
      cache d'abord, zéro attente réseau, et rafraîchissement en arrière-plan. */
-var CACHE = 'pino-v292';
+var CACHE = 'pino-v293';
 var CORE = [
   './', './index.html', './legal.html', './manifest.webmanifest',
   /* Le style vit dans son propre fichier. Sans lui dans cette liste, une page

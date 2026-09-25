@@ -186,7 +186,7 @@
         <li><a href="#avis">Avis</a></li>
         <li><a href="#carte">La carte</a></li>
         <li><a href="#galerie-winter">Événement</a></li>
-        <li><a href="#instagram">Instagram</a></li>
+        <li><a href="#instagram">Réseaux</a></li>
         <li><a href="#infos">Contact</a></li>
       </ul>
     </nav>
@@ -201,7 +201,7 @@
   <a href="#avis">Avis</a>
   <a href="#carte">La carte</a>
   <a href="#galerie-winter">Événement</a>
-  <a href="#instagram">Instagram</a>
+  <a href="#instagram">Réseaux</a>
   <a href="#infos">Contact</a>
   <span class="m-tel">085 51 33 39</span>
 </div>
@@ -558,11 +558,17 @@
 <!-- INSTAGRAM -->
 <section id="instagram" class="insta center">
   <div class="wrap">
-    <p class="eyebrow reveal">Instagram</p>
-    <h2 class="reveal" style="--i:1">Suivez-nous <em>@pino.nandrin</em></h2>
-    <p class="lead reveal" style="--i:2">Soirées, nouveautés de la carte et coulisses du four à bois&nbsp;: abonnez-vous pour les voir avant tout le monde.</p>
-    <p class="ig-live reveal" style="--i:2"><span class="ig-live-dot" aria-hidden="true"></span>Nos dernières publications, en direct</p>
+    <p class="eyebrow reveal">Réseaux sociaux</p>
+    <h2 class="reveal" style="--i:1">La vie de Pino, <em>en direct</em></h2>
+    <p class="lead reveal" style="--i:2">Soirées, nouveautés de la carte et coulisses du four à bois&nbsp;: suivez-nous pour ne rien manquer.</p>
 
+    <!-- Un onglet par réseau : un seul fil à l'écran, le choix reste au visiteur. -->
+    <div class="rs-onglets reveal" style="--i:2" role="tablist" aria-label="Réseaux sociaux">
+      <button type="button" class="rs-onglet ig" role="tab" id="rsOngletIg" aria-controls="rsPanneauIg" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagram</span><small class="rs-compte" data-rs="ig"></small></button>
+      <button type="button" class="rs-onglet fb" role="tab" id="rsOngletFb" aria-controls="rsPanneauFb" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg><span>Facebook</span><small class="rs-compte" data-rs="fb"></small></button>
+    </div>
+
+    <div class="rs-panneau" id="rsPanneauIg" role="tabpanel" aria-labelledby="rsOngletIg">
     <!-- Fil Instagram — servi par notre serveur (route /instagram), photos
          recopiées chez nous : pas de cookie, pas d'accord à demander. Tant
          qu'il n'a rien, le module Trustindex ci-dessous garde la place. -->
@@ -579,16 +585,15 @@
       </div>
     </div>
 
+    </div>
+
     <!-- Fil Facebook — lu par notre service (fonction mesure, route /facebook),
          qui interroge l'API de Facebook toutes les trois heures et recopie les
-         photos chez nous. Le visiteur ne se connecte à Facebook qu'en cliquant :
-         pas de cookie, pas d'accord à demander. Le bloc reste masqué tant que
-         rien n'est arrivé ; si le service ne répond pas, il se réduit au lien. -->
+         photos chez nous. Pas de cookie, pas d'accord à demander. -->
+    <div class="rs-panneau" id="rsPanneauFb" role="tabpanel" aria-labelledby="rsOngletFb" hidden>
     <div class="fb-bloc" id="fbBloc" hidden>
-      <p class="eyebrow">Facebook</p>
-      <h3 class="fb-titre">Retrouvez-nous <em>sur Facebook</em></h3>
-      <p class="ig-live"><span class="ig-live-dot fb" aria-hidden="true"></span>Nos dernières publications, en direct</p>
       <div class="sf" id="fbFil" aria-label="Publications de la page Facebook de Pizzeria Pino"></div>
+    </div>
     </div>
   </div>
 </section>
@@ -2779,6 +2784,34 @@ window.pinoAvis = function(hote, d){
    Dessiné sur le modèle du module Instagram, pièce pour pièce : en-tête
    (photo, nom, publications, abonnés, « Suivre »), puis un carrousel de
    grandes cartes avec, en bas, la page, la date et le logo du réseau. */
+/* Onglets Instagram / Facebook : un seul fil à l'écran. */
+function rsCompte(r, d){
+  var el = document.querySelector('.rs-compte[data-rs="' + r + '"]');
+  if(el && d && d.abonnes != null) el.textContent = new Intl.NumberFormat('fr-BE').format(d.abonnes);
+}
+(function(){
+  var onglets = Array.prototype.slice.call(document.querySelectorAll('.rs-onglet'));
+  function choisis(o, focus){
+    onglets.forEach(function(x){
+      var oui = x === o;
+      x.setAttribute('aria-selected', oui ? 'true' : 'false');
+      x.tabIndex = oui ? 0 : -1;
+      var p = document.getElementById(x.getAttribute('aria-controls'));
+      if(p) p.hidden = !oui;
+    });
+    if(focus) o.focus();
+    // Le carrousel mesure ses cartes : il faut le prévenir qu'il est visible.
+    window.dispatchEvent(new Event('resize'));
+  }
+  onglets.forEach(function(o, i){
+    o.addEventListener('click', function(){ choisis(o); });
+    o.addEventListener('keydown', function(e){
+      var n = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if(n){ e.preventDefault(); choisis(onglets[(i + n + onglets.length) % onglets.length], true); }
+    });
+  });
+})();
+
 function pinoFil(conf){
   var bloc = document.getElementById(conf.bloc);
   var fil = document.getElementById(conf.fil);
@@ -2934,6 +2967,7 @@ function pinoFil(conf){
     window.addEventListener('resize', etat);
     bloc.hidden = false;
     requestAnimationFrame(etat);
+    if(conf.pret) conf.pret(d);
   }
 
   function lance(){
@@ -2957,12 +2991,12 @@ function pinoFil(conf){
     io.observe(cible);
   } else lance();
 }
-pinoFil({ bloc: 'fbBloc', fil: 'fbFil', route: '/facebook', reseau: 'Facebook',
+pinoFil({ bloc: 'fbBloc', fil: 'fbFil', route: '/facebook', reseau: 'Facebook', pret: function(d){ rsCompte('fb', d); },
   lien: 'https://www.facebook.com/profile.php?id=100064486855231',
   icone: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg>' });
 /* Instagram : même module, publications recopiées par notre serveur. Tant
    qu'il n'a rien, le module Trustindex (après accord) garde la place. */
-pinoFil({ bloc: 'igBloc', fil: 'igFil', route: '/instagram', reseau: 'Instagram', classe: 'ig',
+pinoFil({ bloc: 'igBloc', fil: 'igFil', route: '/instagram', reseau: 'Instagram', classe: 'ig', pret: function(d){ rsCompte('ig', d); },
   lien: 'https://www.instagram.com/pino.nandrin/',
   icone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
   repli: function(){ if(window.pinoInstaRepli) window.pinoInstaRepli(); } });
