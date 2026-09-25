@@ -1975,3 +1975,7 @@
   @media (min-width:761px) and (max-height:760px){
     html:not(.app-mode) .hero{padding-top:24px;padding-bottom:24px}
   }
+
+/* Retours à la ligne : titres équilibrés, pas de mot orphelin en fin de paragraphe */
+h1,h2,h3,.q-sign{text-wrap:balance}
+p,li,.lead{text-wrap:pretty}
