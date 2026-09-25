@@ -301,18 +301,45 @@ const ENTETES_SERVICE = () => ({
 });
 
 /** Mémoire d'une source (Facebook, avis Google) : une ligne par clé, dans une
-    table fermée au web. */
+    table fermée au web.
+
+    null veut dire « rien d'enregistré », et seulement cela. Une lecture ratée
+    (base lente, coupure) ne doit jamais passer pour une mémoire vide : la mise
+    à jour repartirait de zéro et écraserait ce qui est connu. Le 25/09/2026,
+    une lecture ratée a ainsi ramené douze avis à un seul. On sert alors la
+    dernière valeur lue par cette instance, sinon on lève une erreur. */
+const derniereLecture: Record<string, { valeur: any; maj: string }> = {};
 async function lisCache(table: string, cle: string): Promise<{ valeur: any; maj: string } | null> {
-  try {
-    const r = await fetch(`${URL_BASE}/rest/v1/${table}?cle=eq.${cle}&select=valeur,maj`,
-                          { headers: ENTETES_SERVICE() });
-    if (!r.ok) return null;
-    const l = await r.json();
-    return l?.[0] ?? null;
-  } catch { return null; }
+  const k = `${table}/${cle}`;
+  for (let essai = 0; essai < 2; essai++) {
+    try {
+      const r = await fetch(`${URL_BASE}/rest/v1/${table}?cle=eq.${cle}&select=valeur,maj`,
+                            { headers: ENTETES_SERVICE() });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const l = await r.json();
+      if (!Array.isArray(l)) throw new Error('réponse illisible');
+      const c = l[0] ?? null;
+      if (c) derniereLecture[k] = c;
+      return c;
+    } catch { /* un second essai, puis la dernière valeur connue */ }
+  }
+  if (derniereLecture[k]) return derniereLecture[k];
+  throw new Error(`mémoire ${k} illisible`);
 }
 
-async function ecritCache(table: string, cle: string, valeur: unknown): Promise<void> {
+async function ecritCache(table: string, cle: string, valeur: any): Promise<void> {
+  // Garde-fou : une liste d'avis ne rétrécit jamais. Google n'en supprime pas
+  // d'un coup ; une liste plus courte que celle en mémoire trahit une erreur.
+  if (table === 'cache_avis' && Array.isArray(valeur?.avis)) {
+    const avant = await lisCache(table, cle).catch(() => undefined);
+    if (avant === undefined) throw new Error('mémoire illisible : écriture refusée');
+    const connus = avant?.valeur?.avis;
+    if (Array.isArray(connus) && valeur.avis.length < Math.min(connus.length, MAX_AVIS)) {
+      const ids = new Set(valeur.avis.map((a: any) => a.id));
+      valeur = { ...valeur, avis: [...valeur.avis, ...connus.filter((a: any) => !ids.has(a.id))]
+        .sort((x: any, y: any) => Date.parse(y.date) - Date.parse(x.date)).slice(0, MAX_AVIS) };
+    }
+  }
   await fetch(`${URL_BASE}/rest/v1/${table}`, {
     method: 'POST',
     headers: { ...ENTETES_SERVICE(), 'Content-Type': 'application/json',
@@ -497,7 +524,9 @@ function nettoieTexte(v: string, max: number): string {
     Sans mémoire du tout, on attend la lecture ; sinon on sert l'ancienne
     version tout de suite et l'on rafraîchit en arrière-plan. */
 async function contenuFacebook(attendre = false): Promise<any> {
-  const c = await lisCacheFacebook();
+  let c;
+  try { c = await lisCacheFacebook(); }
+  catch { return { publications: [], etat: 'erreur', message: 'Mémoire illisible.' }; }
   const perime = !c || Date.now() - Date.parse(c.maj) > FRAICHEUR_FB;
   if (perime) {
     if (!fbEnCours) fbEnCours = rafraichitFacebook(c?.valeur).finally(() => { fbEnCours = null; });
@@ -579,9 +608,10 @@ async function rafraichitInstagram(ancien: any): Promise<any> {
 }
 
 async function instagram(origine: string): Promise<Response> {
-  const c = await lisCache('cache_facebook', 'instagram');
+  let c: { valeur: any; maj: string } | null = null, lisible = true;
+  try { c = await lisCache('cache_facebook', 'instagram'); } catch { lisible = false; }
   let v: any = c?.valeur;
-  if (!c || Date.now() - Date.parse(c.maj) > FRAICHEUR_FB) {
+  if (lisible && (!c || Date.now() - Date.parse(c.maj) > FRAICHEUR_FB)) {
     if (!igEnCours) igEnCours = rafraichitInstagram(c?.valeur).finally(() => { igEnCours = null; });
     if (!c) v = await igEnCours; else enArrierePlan(igEnCours);
   }
@@ -767,7 +797,7 @@ async function rafraichitAvisTrustindex(base: any): Promise<any | null> {
     const h = await r.text();
     const lus = lisAvisTrustindex(h)
       .sort((x, y) => Date.parse(y.date) - Date.parse(x.date)).slice(0, MAX_AVIS);
-    if (!lus.length) { console.log('avis trustindex : aucun avis lu', h.length, h.slice(0, 300)); return null; }
+    if (!lus.length) { console.log('avis trustindex : aucun avis lu (abonnement terminé ?)', h.length); return null; }
     const connus: Record<string, any> = {};
     for (const a of base.avis) connus[a.id] = a;
     const avis = [];
@@ -853,7 +883,9 @@ async function rafraichitAvisPlaces(ancien: any, base: any): Promise<any> {
 }
 
 async function contenuAvis(attendre = false): Promise<any> {
-  const c = await lisCache('cache_avis', 'google');
+  let c;
+  try { c = await lisCache('cache_avis', 'google'); }
+  catch { return { avis: [], etat: 'erreur', message: 'Mémoire illisible.' }; }
   // Toutes les 3 heures ; Places, lui, n'est rappelé qu'au bout de 8 heures.
   const perime = !c || Date.now() - Date.parse(c.maj) > FRAICHEUR_AVIS;
   if (perime) {
