@@ -564,8 +564,8 @@
 
     <!-- Un onglet par réseau : un seul fil à l'écran, le choix reste au visiteur. -->
     <div class="rs-onglets reveal" style="--i:2" role="tablist" aria-label="Réseaux sociaux">
-      <button type="button" class="rs-onglet ig" role="tab" id="rsOngletIg" aria-controls="rsPanneauIg" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagram</span><small class="rs-compte" data-rs="ig"></small></button>
-      <button type="button" class="rs-onglet fb" role="tab" id="rsOngletFb" aria-controls="rsPanneauFb" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg><span>Facebook</span><small class="rs-compte" data-rs="fb"></small></button>
+      <button type="button" class="rs-onglet ig" role="tab" id="rsOngletIg" aria-controls="rsPanneauIg" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagram</span></button>
+      <button type="button" class="rs-onglet fb" role="tab" id="rsOngletFb" aria-controls="rsPanneauFb" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg><span>Facebook</span></button>
     </div>
 
     <div class="rs-panneau" id="rsPanneauIg" role="tabpanel" aria-labelledby="rsOngletIg">
@@ -2864,9 +2864,10 @@ function pinoFil(conf){
     id.appendChild(chiffres);
     profil.appendChild(id);
     tete.appendChild(profil);
-    var suivre = el('a', 'sf-suivre'); suivre.href = lien; suivre.target = '_blank'; suivre.rel = 'noopener';
+    var suivre = el('a', 'sf-suivre ' + (conf.classe || 'fb')); suivre.href = lien; suivre.target = '_blank'; suivre.rel = 'noopener';
     suivre.setAttribute('data-res', 'Suivre');
-    suivre.innerHTML = ICONE; suivre.appendChild(document.createTextNode('Suivre'));
+    suivre.setAttribute('aria-label', 'Suivre Pizzeria Pino sur ' + R);
+    suivre.innerHTML = ICONE; suivre.appendChild(el('span', null, 'Suivre'));
     tete.appendChild(suivre);
     fil.appendChild(tete);
 
@@ -2929,10 +2930,12 @@ function pinoFil(conf){
       } else if(p.texte){
         carte.appendChild(el('span', 'sf-texte', p.texte));
       }
+      // Bas de carte : la légende (le compte est déjà nommé dans l'en-tête),
+      // puis la date.
       var voile = el('span', 'sf-voile');
-      voile.appendChild(avatar(d.avatar, 'sf-av-petit'));
       var qui = el('span', 'sf-qui');
-      qui.appendChild(el('b', null, d.nom || 'Pizzeria Pino Nandrin'));
+      var legende = (p.texte || '').replace(/\s+/g, ' ').trim();
+      if(legende) qui.appendChild(el('b', null, legende));
       qui.appendChild(el('small', null, dateFr(p.date)));
       voile.appendChild(qui);
       var logo = el('span', 'sf-reseau'); logo.innerHTML = ICONE; voile.appendChild(logo);

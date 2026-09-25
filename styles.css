@@ -608,8 +608,6 @@
   .rs-onglet:hover{color:var(--paper,#F5EFE4)}
   .rs-onglet[aria-selected="true"]{background:rgba(233,206,150,.14);color:var(--paper,#F5EFE4);box-shadow:inset 0 0 0 1px rgba(233,206,150,.28)}
   .rs-onglet:focus-visible{outline:2px solid var(--or,#C69A4D);outline-offset:2px}
-  .rs-compte{font:500 .78rem/1 "Inter",sans-serif;color:var(--or,#C69A4D)}
-  .rs-compte:empty{display:none}
   .rs-panneau[hidden]{display:none}
   @media(max-width:420px){.rs-onglet{padding:10px 14px;gap:7px;font-size:.9rem}}
   .fb-bloc[hidden]{display:none}
@@ -634,6 +632,12 @@
     background:#4A5DF9;color:#fff;font-size:14px;font-weight:400;line-height:1.4;text-decoration:none;transition:background-color .2s,outline-color .2s;
     outline:3px solid transparent}
   .sf-suivre:hover{background:#3147F8;outline-color:rgba(74,93,249,.5)}
+  /* Aux couleurs de chaque réseau, en pilule comme les onglets */
+  .sf-suivre{border-radius:999px;height:40px;padding:0 20px;font-family:"Poppins",sans-serif;font-weight:600;gap:0}
+  .sf-suivre.fb{background:#1877F2}
+  .sf-suivre.fb:hover{background:#166FE5;outline-color:rgba(24,119,242,.35)}
+  .sf-suivre.ig{background:linear-gradient(45deg,#F58529 0%,#DD2A7B 45%,#8134AF 75%,#515BD4 100%)}
+  .sf-suivre.ig:hover{filter:brightness(1.08);outline-color:rgba(221,42,123,.35)}
   .sf-suivre svg{width:20px;height:20px;margin-right:8px}
   /* Comme Instagram : profil à gauche (nom, puis les chiffres dessous),
      bouton « Suivre » calé à droite. */
@@ -645,9 +649,11 @@
     .sf-piste{grid-auto-columns:calc((100% - 28px) / 3)!important}
   }
   @media(max-width:600px){
-    .sf-nom{font-size:13.5px}
-    .sf-chiffres{font-size:12px}
-    .sf-av{width:44px;height:44px}
+    .sf-tete{flex-wrap:wrap}
+    .sf-nom{font-size:14px}
+    .sf-chiffres{font-size:12.5px;gap:2px 12px}
+    .sf-av{width:48px;height:48px}
+    .sf-suivre{flex:1 1 100%;justify-content:center;height:44px}
   }
   .sf-cadre{position:relative}
   .sf-piste{display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
@@ -673,15 +679,16 @@
   .sf-texte{position:absolute;inset:20px 20px 90px;font-size:14px;line-height:1.5;white-space:pre-line;overflow:hidden;
     display:-webkit-box;-webkit-line-clamp:12;-webkit-box-orient:vertical}
   /* Le voile : transparent jusqu'à 90 px du bas, puis noir à 50 % */
-  .sf-carte::before{content:"";position:absolute;left:0;right:0;top:calc(100% - 90px);height:90px;z-index:1;pointer-events:none;
-    background:linear-gradient(to bottom,transparent,rgba(0,0,0,.5) 45px)}
+  .sf-carte::before{content:"";position:absolute;left:0;right:0;top:calc(100% - 140px);height:140px;z-index:1;pointer-events:none;
+    background:linear-gradient(to bottom,transparent,rgba(0,0,0,.72) 90px)}
   .sf-texte-seul::before{display:none}
-  .sf-voile{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;height:90px;padding:20px;box-sizing:border-box}
+  .sf-voile{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:flex-end;gap:14px;padding:18px 20px;box-sizing:border-box}
   .sf-av-petit{flex:0 0 auto;width:40px;height:40px;margin-right:10px;border-radius:50%;border:2px solid #fff;box-sizing:border-box;overflow:hidden;background:#111;display:block}
   .sf-av-petit img{width:100%;height:100%;object-fit:cover;display:block}
   .sf-qui{display:flex;flex-direction:column;min-width:0;flex:1}
-  .sf-qui b{font-family:"Poppins",sans-serif;font-size:14px;font-weight:600;line-height:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .sf-qui small{font-size:11px;line-height:12px;color:rgba(255,255,255,.7)}
+  .sf-qui b{font-family:"Inter",sans-serif;font-size:13.5px;font-weight:500;line-height:1.4;color:#fff;margin-bottom:6px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+  .sf-qui small{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:10.5px;line-height:1.2;color:rgba(255,255,255,.72)}
   .sf-texte-seul .sf-qui small{color:#555}
   .sf-reseau{flex:0 0 auto;width:20px;height:20px;color:#fff}
   .sf-texte-seul .sf-reseau{color:#000}
