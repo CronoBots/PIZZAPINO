@@ -340,37 +340,51 @@
     color:var(--ink);padding:10px 0;border-bottom:1px solid var(--hair-ink)}
   .supp-box li:last-child{border-bottom:0}
   .supp-box li:first-child{color:var(--rouge);font-weight:600}
-  /* Suppléments (liste détaillée sous la carte) */
-  .supplements{max-width:660px;margin:0 auto;border:1px solid rgba(233,206,150,.32);border-radius:14px;
-    padding:22px 28px 18px;background:rgba(14,10,7,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
-  /* Bandeau « Pizza Junior » intégré au cadre des suppléments */
-  /* Bandeau Junior : uniquement quand la catégorie Pizzas est active */
+  /* Suppléments : un cadre de la même largeur et du même dessin que les
+     cadres de plats (fond, filet, arrondi, ombre), en trois étages : l'offre
+     Junior (pizzas), les suppléments à prix propre, puis ceux à 1 €. */
+  .supp-cadre{margin-top:34px}
+  .supplements{width:100%;margin:0;text-align:left;background:rgba(13,9,6,.62);border:1px solid rgba(233,206,150,.16);
+    border-radius:16px;box-shadow:0 18px 40px -24px #000;overflow:hidden;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+  .supp-tete{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 16px;padding:18px 18px 14px;border-bottom:1px solid rgba(233,206,150,.12)}
+  .supp-h{margin:0;font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:1.45rem;line-height:1.2;color:#E9CE96}
+  .supp-sous{margin:0;margin-left:auto;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.66rem;color:#b9ac96}
+  /* Offre Junior : visible avec les pizzas (ou pendant une recherche) */
   .supp-junior{display:none}
-  /* Plus de cadre intérieur (évite le « cadre dans le cadre ») : bandeau ouvert,
-     séparé de la liste des suppléments par un simple trait. */
-  body[data-menucat="pizzas"] .supp-junior,body.searching .supp-junior{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;
-    padding:0 2px 16px;margin:0 0 18px;border-bottom:1px solid rgba(233,206,150,.16)}
-  .supp-junior .sj-name{font-family:"Fraunces",serif;font-weight:600;font-size:1.1rem;color:#F5EEDF}
-  .supp-junior .jn-age{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.58em;color:#c7b89e;margin-left:5px;vertical-align:middle}
-  .supp-junior .sj-price{margin-left:auto;font-family:"Fraunces",serif;font-weight:600;font-size:1.5rem;color:var(--rouge-l,#e0574b);line-height:1}
-  .supp-junior .sj-sub{flex:1 1 100%;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.11em;font-size:.62rem;color:#c7b89e}
-  .supp-h{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:1.35rem;color:#F7F1E5;margin:0 0 14px}
-  .supp-grid{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 38px;text-align:left}
+  body[data-menucat="pizzas"] .supp-junior,body.searching .supp-junior{display:flex;align-items:center;flex-wrap:wrap;gap:2px 14px;
+    padding:14px 18px;background:rgba(168,38,29,.12);border-bottom:1px solid rgba(233,206,150,.12);box-shadow:inset 3px 0 0 var(--rouge-l,#e0574b)}
+  .supp-junior .sj-name{font-family:"Fraunces",serif;font-weight:600;font-size:1.06rem;color:#F5EEDF}
+  .supp-junior .jn-age{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.62em;color:#c7b89e;margin-left:6px;vertical-align:middle}
+  .supp-junior .sj-sub{font-family:"Fraunces",serif;font-style:italic;font-size:.9rem;color:#c7b89e}
+  .supp-junior .sj-price{margin-left:auto;font-family:"Fraunces",serif;font-weight:600;font-size:1.25rem;color:var(--rouge-l,#e0574b);white-space:nowrap}
+  /* Intertitres, dans la voix des cadres de plats */
+  .supp-titre{display:flex;align-items:baseline;margin:0;padding:16px 18px 4px;font-family:"Oswald",sans-serif;text-transform:uppercase;
+    letter-spacing:.14em;font-size:.72rem;color:#E9CE96}
+  /* Suppléments à prix propre : lignes de plat, pointillés et prix alignés */
+  .supp-grid{list-style:none;margin:0;padding:0 18px 6px;display:grid;grid-template-columns:repeat(3,1fr);gap:0 40px}
+  @media(max-width:900px){.supp-grid{grid-template-columns:1fr 1fr;gap:0 32px}}
   @media(max-width:560px){.supp-grid{grid-template-columns:1fr}}
-  .supp-grid li{display:flex;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(233,206,150,.12);
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.73rem;color:#EFE7D6}
-  .supp-grid li i{flex:1;border-bottom:1px dotted rgba(233,206,150,.35);margin:0 6px;transform:translateY(-3px)}
-  .supp-grid li b{flex:0 0 auto;color:#E9CE96;font-weight:600}
-  .supp-grid li b::after{content:" €";font-size:.82em;color:#c69a4d}
+  .supp-grid li{display:flex;align-items:baseline;padding:10px 0;border-bottom:1px solid rgba(233,206,150,.08);
+    font-family:"Fraunces",serif;font-size:1rem;font-weight:500;color:#EFE7D6}
+  .supp-grid li i,.supp-un-h i{flex:1;min-width:14px;border-bottom:1px dotted rgba(233,206,150,.32);margin:0 8px;transform:translateY(-4px)}
+  .supp-grid li b,.supp-un-h b{flex:0 0 auto;font-family:"Fraunces",serif;font-weight:600;font-size:1rem;letter-spacing:0;color:#E9CE96;white-space:nowrap}
+  .supp-grid li b::after,.supp-un-h b::after{content:" €";font-size:.78em;color:#c69a4d;font-weight:500}
   .supp-grid li.free b{color:#7fd39a}
   .supp-grid li.free b::after{content:""}
-  /* Les suppléments à 1 € : une liste qui coule, sans pointillés ni prix répétés */
-  .supp-un-h{margin:18px 0 8px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.74rem;color:#E9CE96;text-align:left}
-  .supp-un{list-style:none;margin:0;padding:0;text-align:left;font-family:"Inter",sans-serif;font-size:.86rem;line-height:1.7;color:#d9ccb4}
-  .supp-un li{display:inline;white-space:nowrap}
-  /* Espace insécable avant le point : la ligne se coupe après lui, jamais avant */
-  .supp-un li:not(:last-child)::after{content:"\00a0· ";white-space:normal;color:#8a7a60}
-  .supp-note{margin:14px 0 0;font-family:"Inter",sans-serif;font-size:.82rem;color:#b9ac96;font-style:italic;text-transform:none;letter-spacing:0}
+  /* Tous les autres à 1 € : un prix, une liste en colonnes */
+  .supp-un-h{padding-top:20px;margin-top:6px;border-top:1px solid rgba(233,206,150,.12)}
+  .supp-un-h span{flex:0 0 auto}
+  .supp-un{list-style:none;margin:0;padding:8px 18px 4px;columns:4 150px;column-gap:40px;
+    font-family:"Fraunces",serif;font-size:.95rem;line-height:1.5;color:#d9ccb4}
+  .supp-un li{break-inside:avoid;padding:3px 0 3px 14px;position:relative}
+  .supp-un li::before{content:"";position:absolute;left:0;top:.8em;width:5px;height:5px;border-radius:50%;background:rgba(233,206,150,.45)}
+  .supp-note{display:block;border:0;border-radius:0;margin:10px 0 0;padding:12px 18px 16px;border-top:1px solid rgba(233,206,150,.08);font-family:"Fraunces",serif;
+    font-style:italic;font-size:.86rem;color:#b9ac96;background:none;text-transform:none;letter-spacing:0}
+  @media(max-width:560px){
+    .supp-sous{margin-left:0;flex-basis:100%}
+    .supp-un{columns:2 120px;column-gap:16px;font-size:.9rem}
+    .supp-junior .sj-sub{flex-basis:100%;order:3}
+  }
   /* Les suppléments ne concernent pas les desserts */
   body[data-menucat="desserts"]:not(.searching) .supplements{display:none}
 
