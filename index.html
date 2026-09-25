@@ -253,7 +253,7 @@
 <section id="galerie" class="gallery center">
   <div class="wrap">
     <p class="eyebrow reveal">Le restaurant</p>
-    <h2 class="reveal" style="--i:1">Bienvenue <em>chez Pino</em></h2>
+    <h2 class="reveal" style="--i:1">Bienvenue à la <em>Pizzeria Pino</em></h2>
     <p class="lead reveal" style="--i:2">Un restaurant familial qui régale Nandrin, le Condroz et la région de Liège et de Huy depuis vingt-neuf ans. Pizzas au feu de bois, pâtes fraîches et desserts maison, préparés chaque jour avec passion et générosité.</p>
     <div class="gal-grid" data-gallery="etab">
       <div class="gal-item reveal" data-full="images/etab-facade.jpg"><picture><source type="image/webp" sizes="(min-width:900px) 33vw, (min-width:700px) 30vw, 44vw" srcset="images/vignettes/etab-facade-400.webp 400w, images/vignettes/etab-facade-700.webp 700w"><img loading="lazy" decoding="async" width="1200" height="900" src="images/etab-facade.jpg" alt="Façade du Restaurant Pizzeria Pino à Nandrin"></picture><span class="cap">La façade<small>Route du Condroz</small></span></div>
@@ -559,8 +559,8 @@
 <section id="instagram" class="insta center">
   <div class="wrap">
     <p class="eyebrow reveal">Réseaux sociaux</p>
-    <h2 class="reveal" style="--i:1">La vie de Pino, <em>en direct</em></h2>
-    <p class="lead reveal" style="--i:2">Soirées, nouveautés de la carte et coulisses du four à bois&nbsp;: suivez-nous pour ne rien manquer.</p>
+    <h2 class="reveal" style="--i:1">Suivez la <em>Pizzeria Pino</em></h2>
+    <p class="lead reveal" style="--i:2">Soirées, nouveautés de la carte et coulisses du four à bois&nbsp;: les dernières publications de la Pizzeria Pino sur Instagram et Facebook.</p>
 
     <!-- Un onglet par réseau : un seul fil à l'écran, le choix reste au visiteur. -->
     <div class="rs-onglets reveal" style="--i:2" role="tablist" aria-label="Réseaux sociaux">
@@ -602,7 +602,7 @@
 <section class="quote">
   <div class="wrap">
     <p class="reveal">La Pizzeria Pino utilise des produits italiens de première qualité</p>
-    <div class="q-sign reveal" style="--i:1">Au plaisir de vous accueillir<br>ou de vous revoir.<br><span class="qs-name">Pino</span></div>
+    <div class="q-sign reveal" style="--i:1">Au plaisir de vous accueillir<br>ou de vous revoir.<br><span class="qs-name">L’équipe de la Pizzeria Pino</span></div>
   </div>
 </section>
 
@@ -2858,9 +2858,7 @@ function pinoFil(conf){
     if(d.abonnes != null){
       var c2 = el('span'); c2.appendChild(el('b', null, nombre(d.abonnes))); c2.appendChild(document.createTextNode(' abonnés')); chiffres.appendChild(c2);
     }
-    if(d.abonnements != null){
-      var c3 = el('span'); c3.appendChild(el('b', null, nombre(d.abonnements))); c3.appendChild(document.createTextNode(' abonnements')); chiffres.appendChild(c3);
-    }
+
     id.appendChild(chiffres);
     profil.appendChild(id);
     tete.appendChild(profil);
