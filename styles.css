@@ -651,10 +651,19 @@
   }
   @media(max-width:600px){
     /* Comme l'application : profil à gauche, petit bouton à droite */
-    .sf-tete{gap:10px 12px}
-    .sf-av{width:46px;height:46px;margin-right:12px}
-    .sf-nom{font-size:14px}
-    .sf-chiffres{font-size:12px;gap:0 10px}
+    /* Comme l'application : photo, nom et bouton sur une ligne, puis les
+       chiffres en colonnes (nombre au-dessus, libellé dessous). */
+    .sf-tete{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"av nom btn" "st st st";
+      align-items:center;gap:14px 12px}
+    .sf-profil,.sf-id{display:contents}
+    .sf-av{grid-area:av;width:46px;height:46px;margin-right:0}
+    .sf-nom{grid-area:nom;font-size:15px;min-width:0}
+    .sf-suivre{grid-area:btn}
+    .sf-chiffres{grid-area:st;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0;
+      padding:10px 0;border-top:1px solid rgba(233,206,150,.12);border-bottom:1px solid rgba(233,206,150,.12)}
+    .sf-chiffres > span{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;line-height:1.2}
+    .sf-chiffres > span + span{border-left:1px solid rgba(233,206,150,.1)}
+    .sf-chiffres b{margin:0;font-size:16px;font-family:"Poppins",sans-serif}
     .sf-suivre{height:34px;padding:0 14px;font-size:13px}
     .sf-suivre svg{width:16px;height:16px;margin-right:6px}
     /* La carte suivante dépasse : on comprend qu'on peut glisser */
