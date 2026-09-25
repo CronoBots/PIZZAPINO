@@ -2918,7 +2918,7 @@ function pinoFil(conf){
         carte.appendChild(fond);
         var img = el('img', 'sf-media'); img.src = p.image; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
         carte.appendChild(img);
-        if(video || /\/(videos|reel)\//.test(p.lien || '')){
+        if(video || /\/(videos|reel|watch)\//.test(p.lien || '')){
           var lecture = el('span', 'sf-lecture'); lecture.setAttribute('aria-hidden', 'true');
           lecture.innerHTML = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>';
           carte.appendChild(lecture);

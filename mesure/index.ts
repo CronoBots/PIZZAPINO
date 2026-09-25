@@ -104,6 +104,7 @@ let dernierReleve = 0;
    contenu public de la page, et les photos recopiées chez nous. */
 const FB_JETON = Deno.env.get('FB_JETON') ?? '';
 const GRAPH = 'https://graph.facebook.com/v21.0';
+const FB_PAGE_PROFIL = '100064486855231';
 const FRAICHEUR_FB = 3 * 3600_000;
 const MAX_PUBLICATIONS = 3;   // les trois dernières ; les fichiers des plus anciennes sont effacés
 let fbEnCours: Promise<unknown> | null = null;
@@ -435,13 +436,13 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
         id: String(p.id),
         texte: nettoieTexte(p.message ?? '', 600),
         date: String(p.created_time ?? ''),
-        lien: /^https:\/\/(www\.)?facebook\.com\//.test(p.permalink_url ?? '') ? p.permalink_url : null,
+        lien: lienFacebook(p),
         image, video,
       });
     }
     const v = { etat: 'ok', message: '', nom: String(page.name ?? base.nom).slice(0, 80),
                 abonnes, nb_publications: await compteFacebook(cle),
-                lien: 'https://www.facebook.com/profile.php?id=100064486855231',
+                lien: `https://www.facebook.com/profile.php?id=${FB_PAGE_PROFIL}`,
                 avatar, publications };
     await ecritCacheFacebook(v);
     await nettoieFacebook(publications);
@@ -453,6 +454,19 @@ async function rafraichitFacebook(ancien: any): Promise<any> {
   } catch {
     return { ...base, etat: 'erreur', message: 'Facebook ne répond pas.' };
   }
+}
+
+/** Le lien « Voir sur Facebook » d'une publication. Le permalink_url de
+    Graph pointe vers un identifiant interne (…/1501127215380159/posts/…) que
+    l'app Facebook refuse (« Ce contenu n'est pas disponible ») : on construit
+    donc nous-mêmes un lien public stable. Vidéo : watch/?v=, sinon
+    permalink.php avec l'identifiant de la page. */
+function lienFacebook(p: any): string {
+  const video = String(p.permalink_url ?? '').match(/\/videos\/(\d+)/);
+  if (video) return `https://www.facebook.com/watch/?v=${video[1]}`;
+  const [, histoire] = String(p.id).split('_');
+  return histoire ? `https://www.facebook.com/permalink.php?story_fbid=${histoire}&id=${FB_PAGE_PROFIL}`
+                  : `https://www.facebook.com/profile.php?id=${FB_PAGE_PROFIL}`;
 }
 
 /** Le nombre total de publications de la page, pour l'en-tête du fil, comme
