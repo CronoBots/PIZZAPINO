@@ -631,13 +631,14 @@
   .sf-suivre{flex:0 0 auto;display:inline-flex;align-items:center;height:36px;padding:8px 15px;box-sizing:border-box;border-radius:8px;
     background:#4A5DF9;color:#fff;font-size:14px;font-weight:400;line-height:1.4;text-decoration:none;transition:background-color .2s,outline-color .2s;
     outline:3px solid transparent}
-  .sf-suivre:hover{background:#3147F8;outline-color:rgba(74,93,249,.5)}
+  @media(hover:hover){.sf-suivre:hover{background:#3147F8;outline-color:rgba(74,93,249,.5)}}
+  .sf-suivre:focus-visible{outline-color:rgba(233,206,150,.6)}
   /* Aux couleurs de chaque réseau, en pilule comme les onglets */
   .sf-suivre{border-radius:999px;height:40px;padding:0 20px;font-family:"Poppins",sans-serif;font-weight:600;gap:0}
   .sf-suivre.fb{background:#1877F2}
-  .sf-suivre.fb:hover{background:#166FE5;outline-color:rgba(24,119,242,.35)}
+  @media(hover:hover){.sf-suivre.fb:hover{background:#166FE5;outline-color:rgba(24,119,242,.35)}}
   .sf-suivre.ig{background:linear-gradient(45deg,#F58529 0%,#DD2A7B 45%,#8134AF 75%,#515BD4 100%)}
-  .sf-suivre.ig:hover{filter:brightness(1.08);outline-color:rgba(221,42,123,.35)}
+  @media(hover:hover){.sf-suivre.ig:hover{filter:brightness(1.08);outline-color:rgba(221,42,123,.35)}}
   .sf-suivre svg{width:20px;height:20px;margin-right:8px}
   /* Comme Instagram : profil à gauche (nom, puis les chiffres dessous),
      bouton « Suivre » calé à droite. */
@@ -649,11 +650,16 @@
     .sf-piste{grid-auto-columns:calc((100% - 28px) / 3)!important}
   }
   @media(max-width:600px){
-    .sf-tete{flex-wrap:wrap}
+    /* Comme l'application : profil à gauche, petit bouton à droite */
+    .sf-tete{gap:10px 12px}
+    .sf-av{width:46px;height:46px;margin-right:12px}
     .sf-nom{font-size:14px}
-    .sf-chiffres{font-size:12.5px;gap:2px 12px}
-    .sf-av{width:48px;height:48px}
-    .sf-suivre{flex:1 1 100%;justify-content:center;height:44px}
+    .sf-chiffres{font-size:12px;gap:0 10px}
+    .sf-suivre{height:34px;padding:0 14px;font-size:13px}
+    .sf-suivre svg{width:16px;height:16px;margin-right:6px}
+    /* La carte suivante dépasse : on comprend qu'on peut glisser */
+    .sf-piste{grid-auto-columns:82%!important;gap:10px!important}
+    .sf-nav{display:none!important}
   }
   .sf-cadre{position:relative}
   .sf-piste{display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
