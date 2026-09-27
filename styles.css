@@ -1153,6 +1153,11 @@
   .credit{margin-top:18px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.66rem;color:var(--gris-d)}
   .credit a,.credit b{color:var(--or);text-decoration:none;font-weight:500}
   .credit a:hover{text-decoration:underline}
+  /* Signature « UPL⏻ADED » : Poppins 600, le O remplacé par le symbole marche/arrêt,
+     dessiné à la hauteur exacte des capitales et avec la même épaisseur de trait. */
+  .credit .uploaded{display:inline-flex;align-items:baseline;margin-left:.35em;font:600 1.55em/1 "Poppins",sans-serif;
+    letter-spacing:.08em;color:var(--or);vertical-align:-.1em}
+  .credit .uploaded svg{width:.68em;height:.745em;margin:0 .08em 0 0;transform:translateY(.012em);flex:0 0 auto}
   
   
   
