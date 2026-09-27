@@ -1106,21 +1106,21 @@
   @keyframes hiUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
   @keyframes hiFade{to{opacity:1}}
   @keyframes hiLine{to{width:min(300px,62vw)}}
-  /* Ordinateur : contenu du héros agrandi (≈ +12 % à 1280 px, +25 % à 1920 px).
-     Téléphone et tablette gardent les tailles ci-dessus. */
+  /* Ordinateur : contenu du héros légèrement agrandi (≈ +4 % à 1280 px, +10 % à
+     1440 px, +14 % à 1920 px). Téléphone et tablette gardent les tailles ci-dessus. */
   @media(min-width:1024px){
-    .hi-center{max-width:920px}
-    .hi-cat{font-size:.78rem}
-    .hero .hi-brand{font-size:clamp(5.4rem,6.3vw,6.2rem);margin-top:16px}
-    .hero .hi-sub{font-size:clamp(1.6rem,1.9vw,1.85rem);margin-top:14px}
-    .hi-line{margin:28px auto 22px}
-    .hi-desc{font-size:clamp(1.24rem,1.35vw,1.4rem);max-width:50ch}
-    .hi-cta{margin-top:40px;gap:16px}
-    .hi-btn{font-size:.9rem}
-    .hi-btn .hb-ico{width:36px;height:36px}
-    .hi-btn .hb-ico svg{width:17px;height:17px}
-    .hi-cta-note{font-size:.72rem}
-    .hi-rating{font-size:.84rem;margin-top:26px}
+    .hi-center{max-width:850px}
+    .hi-cat{font-size:.73rem}
+    .hero .hi-brand{font-size:clamp(5.1rem,calc(4.4vw + 1.5rem),5.6rem)}
+    .hero .hi-sub{font-size:clamp(1.5rem,1.75vw,1.62rem)}
+    .hi-line{margin:26px auto 20px}
+    .hi-desc{font-size:clamp(1.18rem,1.3vw,1.26rem)}
+    .hi-cta{margin-top:37px}
+    .hi-btn{font-size:.84rem}
+    .hi-btn .hb-ico{width:33px;height:33px}
+    .hi-btn .hb-ico svg{width:16px;height:16px}
+    .hi-cta-note{font-size:.67rem}
+    .hi-rating{font-size:.78rem;margin-top:24px}
   }
   /* Ordinateur à écran bas (1280 × 720…) : espacements resserrés pour que la note
      ne vienne pas toucher l'indicateur de défilement. */
