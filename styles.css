@@ -1155,8 +1155,12 @@
   .credit a:hover{text-decoration:underline}
   /* Signature « UPL⏻ADED » : Poppins 600, le O remplacé par le symbole marche/arrêt,
      dessiné à la hauteur exacte des capitales et avec la même épaisseur de trait. */
-  .credit .uploaded{display:inline-flex;align-items:baseline;margin-left:.35em;font:600 1.55em/1 "Poppins",sans-serif;
-    letter-spacing:.08em;color:var(--or);vertical-align:-.1em}
+  .credit{display:flex;justify-content:center;align-items:center;gap:.7em;line-height:1}
+  /* Boîtes centrées, puis correction optique : les capitales d'Oswald et de Poppins
+     ne sont pas placées pareil dans leur boîte ; on aligne leurs milieux. */
+  .credit>span{transform:translateY(-.125em)}
+  .credit .uploaded{display:inline-flex;align-items:baseline;font:600 1.55em/1 "Poppins",sans-serif;
+    letter-spacing:.08em;color:var(--or)}
   .credit .uploaded svg{width:.68em;height:.745em;margin:0 .08em 0 0;transform:translateY(.012em);flex:0 0 auto}
   
   
