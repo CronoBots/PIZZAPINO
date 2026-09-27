@@ -894,6 +894,9 @@
   /* ===== FOOTER ===== */
   footer{background:#0E0B09;color:var(--gris-d);padding:64px 0 36px;text-align:center;font-size:.86rem;
     border-top:1px solid rgba(198,154,77,.2)}
+  /* La marge basse du body (barre d'onglets, bouton du panier) passe sous le pied de
+     page : sinon elle montre le fond de la page, plus clair, en bande sous le footer. */
+  footer{margin-bottom:calc(-1 * var(--bas,0px));padding-bottom:calc(36px + var(--bas,0px))}
   footer .brand{font-size:1.6rem;margin-bottom:14px}
   
   
@@ -993,7 +996,7 @@
     /* Pas de parallaxe / compositing sur mobile (évite les saccades au scroll) */
     /* Aucune parallaxe sur mobile : fonds totalement statiques (zéro transform) */
     .hero-bg{will-change:auto!important;transform:none!important}
-    body{padding-bottom:calc(26px + env(safe-area-inset-bottom))}
+    body{--bas:calc(26px + env(safe-area-inset-bottom));padding-bottom:var(--bas)}
     /* Appeler = cercle discret en bas à GAUCHE, visible seulement quand le resto est ouvert */
     .call-bar{display:none;position:fixed;right:auto;left:18px;top:auto;bottom:calc(20px + env(safe-area-inset-bottom));
       z-index:95;gap:0;border:none;padding:0;background:none;box-shadow:none;width:auto}
@@ -1155,10 +1158,12 @@
   .credit a:hover{text-decoration:underline}
   /* Signature « UPL⏻ADED » : Poppins 600, le O remplacé par le symbole marche/arrêt,
      dessiné à la hauteur exacte des capitales et avec la même épaisseur de trait. */
-  .credit{display:flex;justify-content:center;align-items:center;gap:.7em;line-height:1}
-  /* Boîtes centrées, puis correction optique : les capitales d'Oswald et de Poppins
-     ne sont pas placées pareil dans leur boîte ; on aligne leurs milieux. */
-  .credit>span{transform:translateY(-.125em)}
+  /* Les deux textes partagent la ligne de base (identique dans tous les navigateurs,
+     contrairement au placement des lettres dans leur boîte). Majuscules : Oswald
+     0,81 em, Poppins 0,70 em × 1,55 ; pour aligner leurs milieux, « Réalisation : »
+     remonte de (0,70 × 1,55 − 0,81) ÷ 2 = 0,1375 em. */
+  .credit{display:flex;justify-content:center;align-items:baseline;gap:.7em;line-height:1}
+  .credit>span{transform:translateY(-.1375em)}
   .credit .uploaded{display:inline-flex;align-items:baseline;font:600 1.55em/1 "Poppins",sans-serif;
     letter-spacing:.08em;color:var(--or)}
   .credit .uploaded svg{width:.68em;height:.745em;margin:0 .08em 0 0;transform:translateY(.012em);flex:0 0 auto}
@@ -1262,7 +1267,7 @@
     .cart-fab .cf-total{margin-left:auto}
     /* Pendant qu'une commande est en cours, on masque les flottants de coin */
     body.has-order #toTop,body.has-order #heroStatus,body.has-order .call-bar{display:none!important}
-    body.has-order{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+    body.has-order{--bas:calc(84px + env(safe-area-inset-bottom));padding-bottom:var(--bas)}
   }
 
   /* Panneau commande (bottom sheet) */
@@ -1524,7 +1529,7 @@
      dvh plutot que vh : sur telephone, vh ignore la barre d'adresse et
      depasse. box-sizing:border-box est global, la marge basse est donc
      comprise dans la hauteur — aucun defilement ajoute. */
-  html.app-mode body{padding-bottom:calc(70px + env(safe-area-inset-bottom));
+  html.app-mode body{--bas:calc(70px + env(safe-area-inset-bottom));padding-bottom:var(--bas);
     min-height:100vh;min-height:100dvh}
   /* Bandeau cookies : au-dessus de la barre d'onglets en PWA (sinon masqué derrière) */
   html.app-mode .cookie-banner{bottom:calc(70px + env(safe-area-inset-bottom));z-index:131;
