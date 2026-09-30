@@ -134,6 +134,12 @@ const FRAICHEUR_AVIS = 3 * 3600_000;
 const FRAICHEUR_PLACES = 8 * 3600_000;    // trois lectures par jour : ~90 par mois, dans la part gratuite
 const MAX_AVIS = 12;           // comme le module Trustindex : les douze plus récents
 const NOTE_MIN = 4;            // … parmi les avis à 4 et 5 étoiles
+/* Avis figés (demande du propriétaire, 30/09/2026) : la liste affichée reste celle
+   en mémoire — les douze avis recopiés de Trustindex le 24/09 — tant qu'une
+   meilleure source n'est pas trouvée. Google ne met plus à jour que la note, le
+   nombre d'avis et les liens. Copie de secours : cache_avis, clé « copie_2026-09-30 ».
+   AVIS_FIGES=non dans les secrets rouvre la mise à jour de la liste. */
+const AVIS_FIGES = (Deno.env.get('AVIS_FIGES') ?? 'oui').toLowerCase() !== 'non';
 let avisEnCours: Promise<unknown> | null = null;
 const ETOILES: Record<string, number> = { ONE: 1, TWO: 2, THREE: 3, FOUR: 4, FIVE: 5 };
 
@@ -334,7 +340,9 @@ async function ecritCache(table: string, cle: string, valeur: any): Promise<void
     const avant = await lisCache(table, cle).catch(() => undefined);
     if (avant === undefined) throw new Error('mémoire illisible : écriture refusée');
     const connus = avant?.valeur?.avis;
-    if (Array.isArray(connus) && valeur.avis.length < Math.min(connus.length, MAX_AVIS)) {
+    if (AVIS_FIGES && Array.isArray(connus) && connus.length) {
+      valeur = { ...valeur, avis: connus };
+    } else if (Array.isArray(connus) && valeur.avis.length < Math.min(connus.length, MAX_AVIS)) {
       const ids = new Set(valeur.avis.map((a: any) => a.id));
       valeur = { ...valeur, avis: [...valeur.avis, ...connus.filter((a: any) => !ids.has(a.id))]
         .sort((x: any, y: any) => Date.parse(y.date) - Date.parse(x.date)).slice(0, MAX_AVIS) };
@@ -849,7 +857,7 @@ async function rafraichitAvisPlaces(ancien: any, base: any): Promise<any> {
     // Les avis déjà connus restent : Google n'en rend que cinq à la fois.
     const tous: Record<string, any> = {};
     for (const a of base.avis) tous[a.id] = a;
-    for (const a of d.reviews ?? []) {
+    for (const a of AVIS_FIGES ? [] : d.reviews ?? []) {   // figés : pas de photo recopiée pour rien
       const id = String(a.name ?? '').split('/').pop()!.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 80);
       const note = Math.round(Number(a.rating) || 0);
       const texte = nettoieTexte(a.originalText?.text ?? a.text?.text ?? '', 2000);
