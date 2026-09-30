@@ -43,7 +43,13 @@
 <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96.png?v=3">
 <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png?v=3">
 <link rel="icon" href="favicon.ico?v=3" sizes="any">
-<link rel="manifest" href="manifest.webmanifest">
+<script>/* Manifeste (installation en application) : téléphone et tablette seulement.
+   Sur ordinateur, Chrome et Edge proposeraient sinon « Installer l'application ». */
+(function(){try{var m=window.matchMedia;
+  if(!(m&&(m('(pointer:coarse)').matches||m('(max-width:760px)').matches||m('(display-mode: standalone)').matches)||navigator.standalone===true)){
+    window.addEventListener('beforeinstallprompt',function(e){e.preventDefault()});return}
+  var l=document.createElement('link');l.rel='manifest';l.href='manifest.webmanifest';document.head.appendChild(l);
+}catch(e){}})();</script>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
