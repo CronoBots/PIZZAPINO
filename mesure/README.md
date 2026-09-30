@@ -165,6 +165,15 @@ les avis déjà connus restent en mémoire avec leurs photos, et l'API Places
 (toutes les 8 heures) y ajoute ceux que Google renvoie. Les deux sources
 s'additionnent ; on garde toujours les douze plus récents.
 
+**Avis figés (depuis le 30/09/2026).** À la demande du propriétaire, la liste
+affichée ne change plus : ce sont les douze avis recopiés de Trustindex le 24/09,
+gardés tant qu'une meilleure source n'est pas trouvée. Google (Places) ne met
+plus à jour que la note, le nombre d'avis et les liens ; aucune photo n'est
+recopiée pour un avis qui ne serait pas gardé. Le verrou est dans `ecritCache`
+(`AVIS_FIGES`, actif par défaut) ; `AVIS_FIGES=non` dans les secrets rouvre la
+mise à jour de la liste. Copie de secours : table `cache_avis`, clé
+`copie_2026-09-30`.
+
 **Sans accès Business Profile : l'API Places.** Google refuse l'accès Business
 Profile à beaucoup de petites fiches. À défaut, une simple clé suffit :
 `GOOGLE_PLACES_CLE` (API « Places API (New) », limitée à cette API ;
@@ -226,6 +235,13 @@ mkdir -p supabase/functions/mesure
 cp mesure/index.ts supabase/functions/mesure/index.ts
 supabase functions deploy mesure --no-verify-jwt
 ```
+
+Sans Supabase CLI (session sans jeton d'accès), la version 38 a été déployée
+par le connecteur Supabase avec un point d'entrée d'une ligne qui importe
+`mesure/index.ts` au commit exact, depuis
+`https://raw.githubusercontent.com/CronoBots/PIZZAPINO/<commit>/mesure/index.ts` :
+Supabase intègre ce fichier au déploiement, le code en ligne est donc celui du
+dépôt à l'octet près. Pour comparer, lire le commit dans le point d'entrée.
 
 Le `--no-verify-jwt` est indispensable : le site appelle la fonction sans jeton,
 puisque c'est une balise posée par un visiteur anonyme. La protection vient de la
