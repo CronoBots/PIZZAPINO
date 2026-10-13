@@ -319,6 +319,14 @@ banque : ne le réutilisez nulle part ailleurs.
 localisé ». Le site du restaurant, lui, n'est jamais ralenti : la balise part en
 arrière-plan et son échec est ignoré.
 
+**Instagram par Meta (depuis le 13/10/2026).** Le compte pino.nandrin est relié
+à la page Facebook : la clé de page `FB_JETON` (avec `instagram_basic`) le lit
+comme `instagram_business_account` — profil, abonnés, trois dernières
+publications, photos (et vidéos des reels quand Meta les fournit) recopiées
+dans le bucket `instagram`, au plus toutes les trois heures. Accès aux données
+Meta à reconfirmer tous les 90 jours (prochaine échéance vers le 30/12/2026 :
+refaire la clé de page). En cas d'échec, secours ci-dessous.
+
 **Instagram, sans module tiers.** La route `GET /mesure/instagram` lit le
 fichier de données public du module Trustindex (`FLUX_ABONNES`) : profil
 (publications, abonnés, abonnements) et trois dernières publications. Les
