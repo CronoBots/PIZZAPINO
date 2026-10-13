@@ -558,18 +558,78 @@ async function facebook(origine: string): Promise<Response> {
 
 /* ── Instagram ───────────────────────────────────────────────────────────── */
 
-/* En attendant l'accès Meta pour Instagram : le fichier de données public du
+/* Secours d'Instagram par Meta (ci-dessous) : le fichier de données public du
    module Trustindex (FLUX_ABONNES), qui porte le profil et les dernières
    publications. Photos recopiées dans le bucket « instagram » : les adresses
    d'Instagram expirent au bout de quelques jours. Quand le fichier disparaît,
    les publications déjà recopiées restent affichées. */
 let igEnCours: Promise<unknown> | null = null;
 
+/* Instagram par Meta : dès que le compte pino.nandrin est relié à la page
+   Facebook, la clé de page (FB_JETON, avec instagram_basic) le voit comme
+   instagram_business_account. Sans liaison, sans clé ou en cas d'erreur, null :
+   on retombe sur le fichier Trustindex, puis sur les publications déjà recopiées. */
+async function instagramMeta(base: any): Promise<any | null> {
+  if (!FB_JETON) return null;
+  try {
+    const champs = 'instagram_business_account{id,username,followers_count,follows_count,media_count,'
+      + 'profile_picture_url,media.limit(10){id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,'
+      + 'children{media_type,media_url,thumbnail_url}}}';
+    const r = await avecDelai(`${GRAPH}/me?fields=${encodeURIComponent(champs)}&access_token=${encodeURIComponent(FB_JETON)}`, 10000);
+    const d = await r.json();
+    const ig = d?.instagram_business_account;
+    if (d?.error || !ig?.id) {
+      console.log('instagram meta : indisponible', d?.error?.message ?? 'compte non relié à la page');
+      return null;
+    }
+    const connus: Record<string, any> = {};
+    for (const p of base.publications) connus[p.id] = p;
+    const cdn = /^https:\/\/[a-z0-9.-]*(cdninstagram\.com|fbcdn\.net)\//;
+    const publications = [];
+    for (const m of (ig.media?.data ?? []).slice(0, MAX_PUBLICATIONS)) {
+      const pid = String(m?.id ?? '').replace(/[^0-9]/g, '').slice(0, 40);
+      if (!pid) continue;
+      const premier = m.children?.data?.[0] ?? {};
+      const estVideo = m.media_type === 'VIDEO';
+      const srcImage = String((estVideo ? m.thumbnail_url : m.media_url)
+        ?? (premier.media_type === 'VIDEO' ? premier.thumbnail_url : premier.media_url) ?? '');
+      const image = connus[pid]?.image ?? (cdn.test(srcImage) ? await recopieImage(srcImage, `${pid}.jpg`, 'instagram') : null);
+      // Les vidéos (reels) sont recopiées comme celles de Facebook, pour se lire sur le site même.
+      const srcVideo = estVideo ? String(m.media_url ?? '') : '';
+      const video = connus[pid]?.video
+        ?? (cdn.test(srcVideo) ? await recopieImage(srcVideo, `${pid}.mp4`, 'instagram', 'video/', 45_000_000, 30000) : null);
+      publications.push({
+        id: pid, image, video,
+        texte: nettoieTexte(m.caption ?? '', 600),
+        date: Number.isFinite(Date.parse(m.timestamp ?? '')) ? new Date(Date.parse(m.timestamp)).toISOString() : '',
+        lien: /^https:\/\/(www\.)?instagram\.com\//.test(m.permalink ?? '') ? m.permalink : null,
+      });
+    }
+    if (!publications.length) return null;
+    const av = String(ig.profile_picture_url ?? '');
+    const avatar = (cdn.test(av) ? await recopieImage(av, 'avatar.jpg', 'instagram') : null) ?? base.avatar;
+    const num = (v: any) => Number.isInteger(v) ? v : null;
+    const nom = nettoie(ig.username ?? base.nom, 60);
+    const v = { etat: 'ok', message: '', source: 'meta', nom,
+                abonnes: num(ig.followers_count) ?? base.abonnes, nb_publications: num(ig.media_count) ?? base.nb_publications,
+                abonnements: num(ig.follows_count) ?? base.abonnements, avatar,
+                lien: `https://www.instagram.com/${encodeURIComponent(nom)}/`, publications };
+    await ecritCache('cache_facebook', 'instagram', v);
+    await nettoieFacebook(publications, 'instagram');
+    return v;
+  } catch (e) {
+    console.log('instagram meta : erreur', String(e));
+    return null;
+  }
+}
+
 async function rafraichitInstagram(ancien: any): Promise<any> {
   const base = { publications: (ancien?.publications ?? []).slice(0, MAX_PUBLICATIONS), nom: ancien?.nom ?? 'pino.nandrin',
                  abonnes: ancien?.abonnes ?? null, nb_publications: ancien?.nb_publications ?? null,
                  abonnements: ancien?.abonnements ?? null, avatar: ancien?.avatar ?? null,
                  lien: ancien?.lien ?? 'https://www.instagram.com/pino.nandrin/' };
+  const parMeta = await instagramMeta(base);
+  if (parMeta) return parMeta;
   const id = FLUX_ABONNES[0];
   try {
     if (!id) throw new Error('Aucun flux');
