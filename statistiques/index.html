@@ -128,6 +128,17 @@ h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.28rem;letter
   font-variant-numeric:tabular-nums;color:var(--texte);white-space:nowrap}
 .barre .val span{font-family:'Inter',sans-serif;font-weight:400;font-size:.78rem;color:var(--texte-3)}
 .piste{height:10px;background:var(--piste);border-radius:0 5px 5px 0;overflow:hidden}
+/* Une section dépliable : on touche la barre, ses plats s'ouvrent dessous. */
+details.barre>summary{list-style:none;cursor:pointer;border-radius:6px;outline-offset:4px}
+details.barre>summary::-webkit-details-marker{display:none}
+details.barre>summary .nom::before{content:'';display:inline-block;width:.42em;height:.42em;
+  margin:0 .55em .12em 0;border-right:1.5px solid var(--or);border-bottom:1.5px solid var(--or);
+  transform:rotate(-45deg);transition:transform .2s}
+details.barre[open]>summary .nom::before{transform:rotate(45deg)}
+details.barre>summary:hover .nom{color:var(--or)}
+.plats-oublies{list-style:none;margin:10px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.plats-oublies li{font-size:.82rem;color:var(--texte-2);padding:4px 10px;
+  border:1px solid var(--trait);border-radius:999px}
 
 /* ── les vingt-quatre heures ──
    Des barres debout, dans l'ordre de l'horloge : on y cherche un creux et une
@@ -588,7 +599,8 @@ footer a{color:var(--texte-2)}
     <p class="chapo">Les plats de la carte qui ne sont entrés dans aucun panier sur la
        période choisie. Sur sept jours presque tout est «&nbsp;jamais&nbsp;»&nbsp;; c’est
        sur trois mois que la lecture devient utile. Et un plat absent d’ici n’est pas
-       un plat qui ne se vend pas&nbsp;: il ne se compose pas <em>sur le site</em>.</p>
+       un plat qui ne se vend pas&nbsp;: il ne se compose pas <em>sur le site</em>.
+       Touchez une section pour voir ses plats.</p>
     <div class="barres" id="barOublies"></div>
     <div id="tblOublies" hidden></div>
   </section>
@@ -1988,12 +2000,18 @@ footer a{color:var(--texte-2)}
     hote.innerHTML = '<p class="resume"><b>' + nb(jamais) + '</b> plats sur ' + nb(total)
       + ' n’ont jamais été mis au panier sur cette période.</p>'
       + lignes.map(function(l){
-          return '<div class="barre"><div class="haut">'
+          var haut = '<div class="haut">'
             + '<span class="nom">' + echappe(l.nom) + '</span>'
             + '<span class="val">' + nb(l.n) + ' <span>sur ' + nb(l.sur) + ' · '
             + pourcent(l.n, l.sur) + ' %</span></span></div>'
             + '<div class="piste"><div class="remplissage" data-l="'
-            + (l.n * 100 / l.sur) + '"></div></div></div>';
+            + (l.n * 100 / l.sur) + '"></div></div>';
+          /* Une section dont tous les plats ont trouvé preneur n'a rien à déplier. */
+          if(!l.n) return '<div class="barre">' + haut + '</div>';
+          return '<details class="barre"><summary>' + haut + '</summary>'
+            + '<ul class="plats-oublies">'
+            + l.noms.map(function(n){ return '<li>' + echappe(n) + '</li>'; }).join('')
+            + '</ul></details>';
         }).join('');
 
     requestAnimationFrame(function(){
