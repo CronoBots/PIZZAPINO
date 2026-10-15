@@ -2489,6 +2489,22 @@
      campagne. Seule une catégorie parmi cinq valeurs fixes part d'ici — de
      quoi savoir si la fiche Google travaille, rien de plus. */
   function provenance(){
+    /* Les applications Instagram et Facebook ne transmettent souvent aucun
+       référent : les liens publiés portent donc ?utm_source=instagram (ou
+       facebook, google). Seule la catégorie en est tirée, puis le marqueur est
+       retiré de l'adresse pour qu'il ne se recopie pas en partageant le lien. */
+    try{
+      var q = new URLSearchParams(location.search), u = (q.get('utm_source') || '').toLowerCase();
+      if(u){
+        q.delete('utm_source'); q.delete('utm_medium'); q.delete('utm_campaign');
+        var rest = q.toString();
+        history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+        if(/^(instagram|ig)$/.test(u)) return 'Instagram';
+        if(/^(facebook|fb)$/.test(u)) return 'Facebook';
+        if(/^google/.test(u)) return 'Google';
+        return 'Autre site';
+      }
+    }catch(e){}
     var r = '';
     try{ r = document.referrer || ''; }catch(e){ return 'Accès direct'; }
     if(!r) return 'Accès direct';
