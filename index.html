@@ -734,6 +734,14 @@
       <span class="sep">·</span>
       <button type="button" id="manageCookies" class="linkbtn">Gérer les cookies</button>
     </nav>
+    <!-- Installer l'application : version mobile seulement (le bandeau d'installation
+         y est masqué, il chevaucherait la barre d'onglets), jamais dans l'app installée. -->
+    <div class="app-install" id="appInstall" hidden>
+      <img src="icons/icon-512.png" alt="" width="40" height="40" loading="lazy">
+      <p><b>Installer l’application</b><span>Pizzeria Pino en un geste, depuis votre écran d’accueil.</span></p>
+      <button type="button" id="appInstallBtn">Installer</button>
+      <p class="ai-aide" id="appInstallAide" hidden></p>
+    </div>
     <p class="gerant"><button type="button" id="ouvrirGerant" aria-haspopup="dialog"><svg
          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10.5"
@@ -2291,6 +2299,33 @@
     if(deferred || isIOS) setTimeout(show, 400);
   }
   setTimeout(maybeShow, 3200);
+})();
+</script>
+
+<script>
+(function(){
+  var bloc = document.getElementById('appInstall');
+  if(!bloc) return;
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  if(standalone || !document.documentElement.classList.contains('app-mode')) return;
+  var aide = document.getElementById('appInstallAide');
+  var ua = navigator.userAgent || '';
+  var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var invite = null;
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); invite = e; });
+  window.addEventListener('appinstalled', function(){ bloc.hidden = true; });
+  bloc.hidden = false;
+  document.getElementById('appInstallBtn').addEventListener('click', function(){
+    if(invite){
+      invite.prompt();
+      invite.userChoice.then(function(r){ invite = null; if(r && r.outcome === 'accepted') bloc.hidden = true; });
+      return;
+    }
+    aide.innerHTML = ios
+      ? 'Appuyez sur <b>Partager</b> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M8 8l4-4 4 4"/><path d="M20 14v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6"/></svg> en bas de l’écran, puis «&nbsp;<b>Sur l’écran d’accueil</b>&nbsp;».'
+      : 'Ouvrez le menu <b>⋮</b> de votre navigateur, puis «&nbsp;<b>Ajouter à l’écran d’accueil</b>&nbsp;» ou «&nbsp;<b>Installer l’application</b>&nbsp;».';
+    aide.hidden = false;
+  });
 })();
 </script>
 

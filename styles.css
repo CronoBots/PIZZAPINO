@@ -1169,6 +1169,22 @@
   .legal-links .linkbtn{background:none;border:0;cursor:pointer;font:inherit;text-transform:uppercase;letter-spacing:.08em;padding:0}
   /* Acces au tableau de bord, reserve a la maison. Discret par choix : ce qui
      protege la page est sa cle, pas le fait qu'on ignore son adresse. */
+  /* Installer l'application (version mobile) : une carte sobre au-dessus de l'espace gérant. */
+  .app-install{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;max-width:420px;
+    margin:22px auto 6px;padding:12px 12px 12px 14px;text-align:left;border:1px solid rgba(233,206,150,.22);
+    border-radius:14px;background:rgba(233,206,150,.05)}
+  .app-install[hidden]{display:none}
+  .app-install img{width:40px;height:40px;border-radius:10px;display:block}
+  .app-install p{margin:0;display:flex;flex-direction:column;gap:2px;line-height:1.3}
+  .app-install b{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;color:#F5EFE4;font-weight:500}
+  .app-install span{font-size:.72rem;color:var(--gris-d)}
+  .app-install button{background:var(--rouge);color:#fff;border:0;border-radius:999px;padding:9px 15px;cursor:pointer;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.68rem}
+  .app-install .ai-aide{grid-column:1/-1;display:block;font-size:.76rem;color:#D8CDB9;line-height:1.55;
+    padding-top:10px;border-top:1px solid rgba(233,206,150,.14)}
+  .app-install .ai-aide[hidden]{display:none}
+  .app-install .ai-aide b{color:#EAD09A;font-family:inherit;text-transform:none;letter-spacing:0;font-size:inherit}
+  .app-install .ai-aide svg{width:15px;height:15px;vertical-align:-3px;color:#C69A4D}
   .gerant{margin-top:16px;font-size:.72rem}
   .gerant button{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);
     text-decoration:none;padding:7px 14px;border:1px solid rgba(233,206,150,.18);
