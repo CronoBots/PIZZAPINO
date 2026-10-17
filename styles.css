@@ -1184,6 +1184,14 @@
      En-tête façade + identité de l'app, puis un téléphone dessiné qui rejoue
      les gestes, et les étapes en une ligne chacune. */
   html.inst-ouvert,html.inst-ouvert body{overflow:hidden}
+  /* Arrivée par le QR code : le site reste masqué jusqu'à l'ouverture du guide */
+  html.inst-attente{background:var(--noir)}
+  html.inst-attente body{visibility:hidden;background:var(--noir)}
+  html.inst-attente .inst{visibility:visible}
+  html.inst-attente::after{content:"";position:fixed;z-index:2400;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;
+    border-radius:18px;background:url(icons/icon-512.png) center/cover;box-shadow:0 0 0 1px rgba(233,206,150,.3),0 16px 40px -10px rgba(198,154,77,.5);
+    animation:instAttente 1.4s ease-in-out infinite}
+  @keyframes instAttente{50%{opacity:.6;transform:scale(.94)}}
   .inst{position:fixed;inset:0;z-index:2500;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
     background:var(--noir);color:var(--blanc);opacity:0;transition:opacity .26s ease}
   .inst[hidden]{display:none}

@@ -20,6 +20,14 @@
   var mobile=window.matchMedia&&matchMedia('(max-width:760px)').matches;
   if(pwa||mobile)document.documentElement.classList.add('app-mode');
   if(standalone)document.documentElement.classList.add('standalone');
+  /* Arrivée par le QR code : le guide d'installation s'ouvre une fois la page
+     lue ; d'ici là, le site reste masqué (fond sombre, icône Pino) pour qu'on
+     ne le voie pas passer. Le guide lève ce masque en se refermant ; par
+     sécurité, il tombe seul au bout de 8 secondes. */
+  if(!standalone&&location.hash==='#installer'){
+    document.documentElement.classList.add('inst-attente');
+    setTimeout(function(){document.documentElement.classList.remove('inst-attente')},8000);
+  }
 }catch(e){}})();
 /* Hauteur du hero FIGÉE en pixels au chargement (= taille de l'écran), recalculée uniquement
    à la rotation — jamais au scroll. La barre d'URL mobile ne redimensionne donc plus le cadre
@@ -2579,6 +2587,7 @@
   function ferme(){
     if(guide.hidden) return;
     clearTimeout(minuterie);
+    html.classList.remove('inst-attente');
     guide.classList.remove('inst-visible');
     html.classList.remove('inst-ouvert');
     setTimeout(function(){ guide.hidden = true; }, 260);
