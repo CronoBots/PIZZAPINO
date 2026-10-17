@@ -2313,27 +2313,21 @@
      Une démonstration plutôt qu'une notice : un téléphone dessiné rejoue en
      boucle les gestes à faire, avec le navigateur du client (Safari, Chrome,
      Edge, Samsung…), un doigt sur le bouton à toucher, et finit sur l'icône
-     Pino posée sur l'écran d'accueil. Sous le téléphone, les mêmes étapes en
-     une ligne chacune ; on peut toucher une étape pour la revoir. -->
-<div id="installGuide" class="inst" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="instTitre" hidden>
+     Pino posée sur l'écran d'accueil. Rien d'autre à l'écran : sous le
+     téléphone, une barre de progression et la consigne de l'étape en cours ;
+     toucher un segment rejoue son étape. -->
+<div id="installGuide" class="inst" tabindex="-1" role="dialog" aria-modal="true" aria-label="Installer l’application Pino" hidden>
   <div class="inst-page">
-    <div class="inst-haut">
-      <img class="inst-photo" src="images/etab-facade.webp" alt="" loading="lazy" decoding="async">
-      <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer">×</button>
-      <div class="inst-id">
-        <img class="inst-icone" src="icons/icon-512.png" alt="" width="72" height="72">
-        <div>
-          <p class="inst-sur">Installation de l’application</p>
-          <h2 id="instTitre">Pizzeria Pino</h2>
-          <p class="inst-meta">Gratuite · moins d’une minute</p>
-        </div>
-      </div>
+    <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer">×</button>
+    <div class="inst-demo" id="instDemo" aria-hidden="true">
+      <div class="inst-tel" id="instTel"><div class="inst-ecran" id="instEcran"></div></div>
+    </div>
+    <div class="inst-suivi" id="instSuivi">
+      <div class="inst-barres" id="instBarres"></div>
+      <p class="inst-num" id="instNum"></p>
+      <p class="inst-legende" id="instLegende" aria-live="polite"></p>
     </div>
     <div class="inst-action" id="instAction"></div>
-    <div class="inst-demo" id="instDemo" aria-hidden="true">
-      <div class="inst-tel"><div class="inst-ecran" id="instEcran"></div></div>
-    </div>
-    <ol class="inst-pas" id="instPas" aria-live="polite"></ol>
     <div class="inst-plus" id="instPlus"></div>
     <button type="button" class="inst-continuer" id="instContinuer">Continuer sans installer</button>
   </div>
@@ -2348,7 +2342,11 @@
   if(!guide) return;
   var ecran = document.getElementById('instEcran');
   var demo = document.getElementById('instDemo');
-  var liste = document.getElementById('instPas');
+  var tel = document.getElementById('instTel');
+  var barres = document.getElementById('instBarres');
+  var numero = document.getElementById('instNum');
+  var legende = document.getElementById('instLegende');
+  var suivi = document.getElementById('instSuivi');
   var action = document.getElementById('instAction');
   var plus = document.getElementById('instPlus');
   var continuer = document.getElementById('instContinuer');
@@ -2461,34 +2459,50 @@
   var FIN = {s: 'accueil', c: 'L’icône <b>Pino</b> est sur votre écran d’accueil', fin: 1};
 
   /* ── La démonstration ── */
-  var m = null, pas = 0, minuterie = null, doigt = null;
+  var m = null, pas = 0, minuterie = null;
+  /* Le téléphone est dessiné à une taille fixe (212 × 400) puis mis à
+     l'échelle de l'écran, pour rester net et entier sur tous les téléphones. */
+  var LT = 212, HT = 400, echelle = 1;
+  function ajuste(){
+    echelle = Math.max(.75, Math.min(1.35, (innerHeight - 340) / HT, (innerWidth - 48) / LT));
+    tel.style.transform = 'scale(' + echelle + ')';
+    demo.style.width = LT * echelle + 'px'; demo.style.height = HT * echelle + 'px';
+    suivi.style.width = Math.max(260, LT * echelle + 40) + 'px';
+  }
+  window.addEventListener('resize', function(){ if(!guide.hidden) ajuste(); });
   function joue(i){
     clearTimeout(minuterie);
     pas = i;
-    var e = m.e[i];
+    var e = m.e[i], duree = e.fin ? 3400 : 2800;
     ecran.innerHTML = scene(e, m);
     ecran.className = 'inst-ecran s-' + e.s;
-    var li = liste.children;
-    for(var k = 0; k < li.length; k++){ li[k].classList.toggle('actif', k === i); li[k].classList.toggle('fait', k < i); }
-    /* Le doigt se pose sur l'élément à toucher. */
+    numero.textContent = e.fin ? 'Terminé' : 'Étape ' + (i + 1) + ' sur ' + (m.e.length - (m.e[m.e.length - 1].fin ? 1 : 0));
+    legende.innerHTML = e.c;
+    legende.classList.remove('entre'); void legende.offsetWidth; legende.classList.add('entre');
+    var b = barres.children;
+    for(var k = 0; k < b.length; k++){
+      b[k].className = k < i ? 'fait' : k === i ? 'actif' : '';
+      b[k].style.setProperty('--d', duree + 'ms');
+    }
+    /* Le doigt se pose sur l'élément à toucher (coordonnées ramenées à
+       l'échelle du dessin). */
     var cible = ecran.querySelector('.cible');
     if(cible){
       var r = cible.getBoundingClientRect(), o = ecran.getBoundingClientRect();
-      doigt = document.createElement('span'); doigt.className = 'd-doigt';
-      doigt.style.left = (r.left - o.left + r.width / 2) + 'px';
-      doigt.style.top = (r.top - o.top + r.height / 2) + 'px';
+      var doigt = document.createElement('span'); doigt.className = 'd-doigt';
+      doigt.style.left = (r.left - o.left + r.width / 2) / echelle + 'px';
+      doigt.style.top = (r.top - o.top + r.height / 2) / echelle + 'px';
       ecran.appendChild(doigt);
     }
-    if(!calme) minuterie = setTimeout(function(){ joue((pas + 1) % m.e.length); }, e.fin ? 3200 : 2600);
+    if(!calme && m.e.length > 1) minuterie = setTimeout(function(){ joue((pas + 1) % m.e.length); }, duree);
   }
   function montre(methode, finale){
     m = methode;
     if(finale !== false) m.e = m.e.concat([FIN]);
-    demo.hidden = false;
-    liste.innerHTML = m.e.map(function(e, i){
-      return '<li><button type="button" data-pas="' + i + '"><span class="p-num">' + (e.fin ? I.ok : i + 1) + '</span><span>' + e.c + '</span></button></li>';
-    }).join('');
-    var b = liste.querySelectorAll('[data-pas]');
+    demo.hidden = false; suivi.hidden = false;
+    ajuste();
+    barres.innerHTML = m.e.map(function(e, i){ return '<button type="button" data-pas="' + i + '" aria-label="Revoir l’étape ' + (i + 1) + '"><i></i></button>'; }).join('');
+    var b = barres.querySelectorAll('[data-pas]');
     for(var i = 0; i < b.length; i++) b[i].onclick = function(){ joue(+this.getAttribute('data-pas')); };
     joue(0);
   }
@@ -2515,7 +2529,7 @@
   var invite = null, manuel = false;
   function rendu(){
     clearTimeout(minuterie); sansFleche();
-    action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; liste.innerHTML = '';
+    action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; suivi.hidden = true;
     continuer.textContent = 'Continuer sans installer';
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';
@@ -2556,8 +2570,9 @@
     clearTimeout(minuterie); sansFleche();
     action.innerHTML = '<p class="inst-reussi">' + I.ok + '<span><b>C’est installé&nbsp;!</b>Ouvrez Pino depuis votre écran d’accueil.</span></p>';
     plus.innerHTML = '';
-    m = {barre: [], e: [FIN]}; demo.hidden = false; liste.innerHTML = '';
-    ecran.innerHTML = scene(FIN, m); ecran.className = 'inst-ecran s-accueil';
+    montre({barre: [], e: []});
+    numero.textContent = ''; legende.innerHTML = '';
+    barres.innerHTML = '';
     continuer.textContent = 'Fermer';
     if(bloc) bloc.hidden = true;
   }
