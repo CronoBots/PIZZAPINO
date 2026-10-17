@@ -1200,7 +1200,12 @@
   /* En-tête : la photo du four, la fiche de l'app par-dessus */
   .inst-hero{position:relative;padding:calc(132px + env(safe-area-inset-top)) 20px 0}
   .inst-photo{position:absolute;left:0;right:0;top:0;width:100%;height:calc(210px + env(safe-area-inset-top));object-fit:cover;
-    -webkit-mask-image:linear-gradient(#000 35%,transparent);mask-image:linear-gradient(#000 35%,transparent);opacity:.75}
+    -webkit-mask-image:linear-gradient(#000 40%,transparent);mask-image:linear-gradient(#000 40%,transparent);opacity:.85}
+  .inst-badge{position:absolute;left:20px;top:calc(18px + env(safe-area-inset-top));z-index:5;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;margin:0;
+    padding:7px 13px 7px 11px;border-radius:999px;background:rgba(20,16,13,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border:1px solid rgba(233,206,150,.3);color:var(--or-l);font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.66rem}
+  .inst-badge svg{width:14px;height:14px}
+  .inst.inst-fleche-haut .inst-badge{left:50%;transform:translateX(-50%)}
   .inst-fiche{position:relative;display:flex;align-items:center;gap:16px}
   .inst-icone{width:92px;height:92px;border-radius:22px;flex-shrink:0;box-shadow:0 18px 40px -12px rgba(0,0,0,.9),0 0 0 1px rgba(233,206,150,.3)}
   .inst-nom{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
@@ -1212,17 +1217,11 @@
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.82rem;cursor:pointer;box-shadow:0 10px 24px -10px rgba(168,38,29,.9)}
   .inst-obtenir.fait{background:rgba(198,154,77,.16);color:var(--or-l);box-shadow:none}
   .inst-obtenir svg{width:15px;height:15px}
-  .inst-infos{list-style:none;display:flex;margin:22px 0 0;padding:14px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
-  .inst-infos li{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center}
-  .inst-infos li+li{border-left:1px solid var(--hair)}
-  .inst-infos b{font-size:.95rem;font-weight:600;color:var(--blanc)}
-  .inst-infos li:first-child b{color:var(--or-l)}
-  .inst-infos li>span{font-size:.7rem;color:var(--gris-d);letter-spacing:.02em}
 
   /* Les gestes d'installation */
-  .inst-carte{margin:22px 16px 0;padding:20px 18px 18px;border-radius:20px;background:linear-gradient(rgba(233,206,150,.07),rgba(233,206,150,.03));
+  .inst-carte{margin:24px 16px 0;padding:20px 18px 18px;border-radius:20px;background:linear-gradient(rgba(233,206,150,.07),rgba(233,206,150,.03));
     border:1px solid rgba(233,206,150,.16)}
-  .inst-carte h3,.inst-apercu h3{font-family:"Fraunces",serif;font-weight:600;font-size:1.25rem;margin:0;color:var(--blanc);letter-spacing:-.005em}
+  .inst-carte h3{font-family:"Fraunces",serif;font-weight:600;font-size:1.25rem;margin:0;color:var(--blanc);letter-spacing:-.005em}
   .inst-carte .inst-sous{margin:4px 0 16px;font-size:.86rem;color:var(--gris)}
   .inst-carte .inst-sous:empty{display:none}
   .inst-etapes{list-style:none;margin:0;padding:0;counter-reset:e}
@@ -1266,13 +1265,18 @@
     background:rgba(198,154,77,.15);border:1px solid var(--or);color:var(--or)}
   .inst-reussi svg{width:32px;height:32px}
 
-  /* Aperçu : deux écrans de l'app, comme sur une fiche de store */
-  .inst-apercu{margin:28px 0 0;padding:0 16px}
-  .inst-captures{display:flex;gap:12px;margin-top:14px}
-  .inst-captures figure{flex:1;margin:0;text-align:center}
-  .inst-captures img{display:block;width:100%;height:auto;border-radius:18px;border:1px solid rgba(233,206,150,.18);
-    box-shadow:0 20px 40px -18px #000;background:#1d1713}
-  .inst-captures figcaption{margin-top:8px;font-size:.74rem;color:var(--gris-d)}
+  /* Le résultat : un écran d'accueil esquissé, l'icône Pino mise en avant */
+  .inst-resultat{margin:26px 16px 0;text-align:center}
+  .inst-ecran{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 18px;width:min(290px,100%);margin:0 auto;padding:22px 22px 26px;
+    border-radius:30px;border:1px solid rgba(233,206,150,.16);background:radial-gradient(120% 90% at 50% 0%,rgba(198,154,77,.14),rgba(255,255,255,.02))}
+  .inst-ecran i{aspect-ratio:1;border-radius:24%;background:rgba(245,239,228,.08)}
+  .inst-app{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px}
+  .inst-app img{width:100%;height:auto;aspect-ratio:1;border-radius:24%;box-shadow:0 0 0 2px var(--or),0 8px 26px -4px rgba(198,154,77,.7);
+    animation:instApp 2.4s ease-in-out infinite}
+  .inst-app b{position:absolute;top:100%;margin-top:5px;font-size:.68rem;font-weight:500;color:var(--blanc)}
+  @keyframes instApp{50%{transform:scale(1.07)}}
+  .inst-resultat p{margin:16px auto 0;max-width:300px;font-size:.86rem;line-height:1.5;color:var(--gris)}
+  .inst-resultat p b{color:var(--blanc);font-weight:600}
   .inst-continuer{display:block;margin:28px auto 0;background:none;border:0;color:var(--gris);cursor:pointer;padding:10px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem}
 
@@ -1292,7 +1296,7 @@
   @keyframes instBas{50%{transform:translateY(6px)}}
   @keyframes instHaut{50%{transform:translateY(-6px)}}
   @keyframes instHautFleche{0%,100%{transform:rotate(180deg)}50%{transform:rotate(180deg) translateY(6px)}}
-  @media (prefers-reduced-motion:reduce){.inst-v::after,.inst-fleche>*{animation:none}.inst,.inst-page{transition:none}}
+  @media (prefers-reduced-motion:reduce){.inst-v::after,.inst-fleche>*,.inst-app img{animation:none}.inst,.inst-page{transition:none}}
   .app-install .ai-aide svg{width:15px;height:15px;vertical-align:-3px;color:#C69A4D}
   .gerant{margin-top:16px;font-size:.72rem}
   .gerant button{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);

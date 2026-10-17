@@ -2309,34 +2309,31 @@
   <div class="inst-page">
     <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer">×</button>
     <div class="inst-hero">
-      <img class="inst-photo" src="images/four-bois.webp" alt="" loading="lazy" decoding="async">
+      <img class="inst-photo" src="images/etab-facade.webp" alt="" loading="lazy" decoding="async">
+      <p class="inst-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>Installation de l’application</p>
       <div class="inst-fiche">
         <img class="inst-icone" src="icons/icon-512.png" alt="" width="92" height="92">
         <div class="inst-nom">
           <h2 id="instTitre">Pizzeria Pino</h2>
-          <p>L’app officielle · Nandrin</p>
+          <p>Application officielle · gratuite</p>
           <div id="instAction"></div>
         </div>
       </div>
-      <ul class="inst-infos">
-        <li><b><span id="instNote">4,2</span> ★</b><span>Avis Google</span></li>
-        <li><b>Gratuite</b><span>Sans App Store</span></li>
-        <li><b>Plein écran</b><span>Comme une app</span></li>
-      </ul>
     </div>
     <section class="inst-carte" aria-labelledby="instTitreEtapes">
       <h3 id="instTitreEtapes">Installer</h3>
       <p class="inst-sous" id="instSousEtapes"></p>
       <div class="inst-corps" id="instCorps" aria-live="polite"></div>
     </section>
-    <section class="inst-apercu" aria-label="Aperçu de l’app">
-      <h3>Aperçu</h3>
-      <div class="inst-captures">
-        <figure><img src="screenshots/mobile-accueil.webp" alt="L’accueil de l’app" width="780" height="1688" loading="lazy" decoding="async"><figcaption>L’accueil</figcaption></figure>
-        <figure><img src="screenshots/mobile-carte.webp" alt="La carte dans l’app" width="780" height="1688" loading="lazy" decoding="async"><figcaption>La carte</figcaption></figure>
+    <!-- Le résultat attendu : l'icône Pino parmi les autres apps du téléphone -->
+    <section class="inst-resultat" aria-label="Résultat">
+      <div class="inst-ecran" aria-hidden="true">
+        <i></i><i></i><i></i><i></i>
+        <i></i><span class="inst-app"><img src="icons/icon-512.png" alt="" width="52" height="52"><b>Pino</b></span><i></i><i></i>
       </div>
+      <p>L’icône <b>Pino</b> arrive sur votre écran d’accueil, à côté de vos autres applications.</p>
     </section>
-    <button type="button" class="inst-continuer" id="instContinuer">Continuer sur le site</button>
+    <button type="button" class="inst-continuer" id="instContinuer">Plus tard</button>
   </div>
   <div class="inst-fleche" id="instFleche" aria-hidden="true" hidden>
     <span id="instFlecheTxt"></span>
@@ -2459,9 +2456,7 @@
   function rendu(){
     fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
     action.innerHTML = '';
-    /* La note Google affichée par le site (mise à jour par le module d'avis). */
-    var n = document.querySelector('.hi-rating b');
-    if(n && /^\d,\d$/.test(n.textContent)) document.getElementById('instNote').textContent = n.textContent;
+    document.getElementById('instContinuer').textContent = 'Plus tard';
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';
       titre('Ouvrir dans le navigateur', 'Cette page est ouverte dans une application : l’installation se fait depuis le navigateur.');
@@ -2503,6 +2498,7 @@
     fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
     action.innerHTML = '<span class="inst-obtenir fait">' + I.ok + 'Installée</span>';
     titre('C’est installé !', 'L’icône Pino vous attend sur l’écran d’accueil.');
+    document.getElementById('instContinuer').textContent = 'Fermer';
     corps.innerHTML = '<div class="inst-reussi">' + I.ok + '</div>';
     if(bloc) bloc.hidden = true;
   }
