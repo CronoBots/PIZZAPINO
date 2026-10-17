@@ -2333,7 +2333,7 @@
       </div>
       <p>L’icône <b>Pino</b> arrive sur votre écran d’accueil, à côté de vos autres applications.</p>
     </section>
-    <button type="button" class="inst-continuer" id="instContinuer">Plus tard</button>
+    <button type="button" class="inst-continuer" id="instContinuer">Continuer sans installer</button>
   </div>
   <div class="inst-fleche" id="instFleche" aria-hidden="true" hidden>
     <span id="instFlecheTxt"></span>
@@ -2456,7 +2456,7 @@
   function rendu(){
     fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
     action.innerHTML = '';
-    document.getElementById('instContinuer').textContent = 'Plus tard';
+    document.getElementById('instContinuer').textContent = 'Continuer sans installer';
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';
       titre('Ouvrir dans le navigateur', 'Cette page est ouverte dans une application : l’installation se fait depuis le navigateur.');
