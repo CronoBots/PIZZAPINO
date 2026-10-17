@@ -41,23 +41,3 @@ jour : 16 octobre 2026.
 
 Tenue hors de ce dépôt, qui est public et publié tel quel sur pizzeriapino.be.
 La dernière version (8 pages) a été envoyée dans la conversation du 15/10/2026.
-
-## Horaires exceptionnels (congés, jours fériés, service changé)
-
-Une seule liste à tenir, `EXCEPTIONS`, dans `index.html` (bloc « Statut
-Ouvert / Fermé en temps réel »), juste au-dessus de la semaine type :
-
-```js
-{ du: "2026-12-24", au: "2026-12-26", ferme: true, note: "Congés de Noël" },
-{ du: "2026-12-31", services: [[720,840]], note: "Réveillon : midi seulement" },
-```
-
-Le site en tire tout seul :
-- un badge au-dessus du nom dans le haut de page, dès 3 semaines avant et
-  jusqu'à la fin de la période (« Fermé du 24 au 26 déc. », « Fermé jusqu'au
-  26 déc. », « Le 31 déc. : 12h–14h ») ; il mène aux horaires ;
-- la liste des exceptions à venir en tête du bloc Horaires, avec la note ;
-- le statut Ouvert / Fermé, la réouverture (« rouvre ven. à 12h ») et le jour
-  du tableau barré quand une exception le couvre.
-
-Penser à monter la version du cache dans `sw.js` à chaque modification.

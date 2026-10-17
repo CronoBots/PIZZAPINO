@@ -232,7 +232,6 @@
   <div class="wrap">
     <div class="hi-center">
       <div class="hi-top">
-        <a class="hi-avis" id="heroAvis" href="#infos" hidden></a>
         <span class="hi-cat">Restaurant italien · Nandrin</span>
         <h1 class="hi-brand">Pizzeria <b>Pino</b></h1>
         <p class="hi-sub">Pizza, pasta, basta</p>
@@ -633,7 +632,6 @@
     <div class="infos-stack">
       <div class="hours-block reveal" style="--i:1">
         <h3 class="ic-head">Horaires</h3>
-        <ul class="hours-exc" id="hoursExc" aria-label="Horaires exceptionnels" hidden></ul>
         <ul class="hours" id="hoursList">
           <li data-days="1"><span class="day">Lundi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–21h30</span></span></span></li>
           <li data-days="2"><span class="day">Mardi</span><span class="hrs"><span class="svc"><b class="sl">Midi</b><span class="nb">12h–14h</span></span><span class="svc"><b class="sl">Soir</b><span class="nb">17h–21h30</span></span></span></li>
@@ -1182,91 +1180,15 @@
       0:[[720,840],[1020,1320]], 1:[[720,840],[1020,1290]], 2:[[720,840],[1020,1290]],
       3:[[720,840],[1020,1290]], 4:[[720,840],[1020,1290]], 5:[[720,840],[1020,1320]], 6:[[720,840],[1020,1320]]
     };
-    /* HORAIRES EXCEPTIONNELS — la seule chose à modifier pour un congé, un
-       jour férié ou un service changé. Une ligne par période, dates au format
-       AAAA-MM-JJ (« au » facultatif pour un seul jour) :
-         { du: "2026-12-24", au: "2026-12-26", ferme: true, note: "Congés de Noël" },
-         { du: "2026-12-31", services: [[720,840]], note: "Réveillon : midi seulement" },
-       Les créneaux sont en minutes depuis minuit, comme ci-dessus (720 = 12h).
-       Le site en tire tout seul : le badge du haut de page (dès 3 semaines
-       avant), le statut Ouvert / Fermé, et la liste sous la grille des horaires. */
-    var EXCEPTIONS = [
-    ];
-
     var now = new Date();
     var day = now.getDay();
     var mins = now.getHours()*60 + now.getMinutes();
-    function cleJour(d){ return d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0"+d.getDate()).slice(-2); }
-    function exceptionDu(d){
-      var k = cleJour(d);
-      for(var i = 0; i < EXCEPTIONS.length; i++){ var e = EXCEPTIONS[i]; if(k >= e.du && k <= (e.au || e.du)) return e; }
-      return null;
-    }
-    /* Les créneaux d'un jour donné : l'exception l'emporte sur la semaine type. */
-    function creneaux(d){
-      var e = exceptionDu(d);
-      if(e) return e.ferme ? [] : (e.services || []);
-      return schedule[d.getDay()] || [];
-    }
-    var auj = creneaux(now);
     var open = false, nextOpen = null;
-    auj.forEach(function(s){ if(mins>=s[0] && mins<s[1]) open = true; });
+    (schedule[day]||[]).forEach(function(s){ if(mins>=s[0] && mins<s[1]) open = true; });
     // prochaine ouverture aujourd'hui
-    auj.forEach(function(s){ if(mins < s[0] && nextOpen===null) nextOpen = s[0]; });
+    (schedule[day]||[]).forEach(function(s){ if(mins < s[0] && nextOpen===null) nextOpen = s[0]; });
 
     function hhmm(m){ var h=Math.floor(m/60), mm=m%60; return h+"h"+(mm ? (mm<10?"0"+mm:mm) : ""); }
-    /* Prochaine réouverture après aujourd'hui (jusqu'à un mois, congés compris). */
-    var JOURS = ["dim.","lun.","mar.","mer.","jeu.","ven.","sam."];
-    var MOIS = ["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
-    function rouvre(){
-      for(var i = 1; i <= 31; i++){
-        var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i), c = creneaux(d);
-        if(c.length) return (i === 1 ? "demain" : (i < 7 ? JOURS[d.getDay()] : "le " + d.getDate() + " " + MOIS[d.getMonth()])) + " à " + hhmm(c[0][0]);
-      }
-      return "";
-    }
-
-    /* Badge du héros et liste des exceptions */
-    (function(){
-      var k = cleJour(now);
-      var horizon = cleJour(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 21));
-      var aVenir = EXCEPTIONS.filter(function(e){ return (e.au || e.du) >= k; })
-        .sort(function(a, b){ return a.du < b.du ? -1 : 1; });
-      function date(c){ var p = c.split("-"); return { j: +p[2], m: MOIS[+p[1] - 1], a: p[0] }; }
-      function periode(e){
-        var a = date(e.du), b = date(e.au || e.du);
-        if(e.du === (e.au || e.du)) return "le " + a.j + " " + a.m;
-        if(a.m === b.m) return "du " + a.j + " au " + b.j + " " + b.m;
-        return "du " + a.j + " " + a.m + " au " + b.j + " " + b.m;
-      }
-      function services(e){ return (e.services || []).map(function(s){ return hhmm(s[0]) + "–" + hhmm(s[1]); }).join(" · "); }
-      function phrase(e){
-        var enCours = e.du <= k, fin = date(e.au || e.du);
-        if(e.ferme){
-          if(enCours) return (e.au || e.du) === k ? "Fermé aujourd’hui" : "Fermé jusqu’au " + fin.j + " " + fin.m;
-          return "Fermé " + periode(e);
-        }
-        if(enCours && (e.au || e.du) === k) return "Aujourd’hui : " + services(e);
-        var p = periode(e); return p.charAt(0).toUpperCase() + p.slice(1) + " : " + services(e);
-      }
-      var badge = document.getElementById("heroAvis");
-      var proche = aVenir.filter(function(e){ return e.du <= horizon; })[0];
-      if(badge && proche){
-        badge.innerHTML = '<span class="ha-point ' + (proche.ferme ? "ferme" : "change") + '"></span>'
-          + '<span class="ha-txt">' + phrase(proche) + '</span>'
-          + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
-        badge.setAttribute("aria-label", phrase(proche) + (proche.note ? " — " + proche.note : "") + ". Voir les horaires");
-        badge.hidden = false;
-        badge.addEventListener("click", function(ev){ ev.preventDefault(); scrollToSection("infos"); });
-      }
-      var liste = document.getElementById("hoursExc");
-      if(liste && aVenir.length){
-        liste.innerHTML = aVenir.slice(0, 4).map(function(e){
-          return '<li class="' + (e.ferme ? "ferme" : "change") + '"><b>' + phrase(e) + '</b>' + (e.note ? '<span>' + e.note + '</span>' : '') + '</li>';
-        }).join("");
-        liste.hidden = false;
-      }
-    })();
     // pastille statut (bas-gauche) : si ouvert -> "Ouvert" + téléphone cliquable ; sinon "Fermé · ouvre à…"
     var hs = document.getElementById("heroStatus");
     if(hs){
@@ -1314,19 +1236,18 @@
     var cmStatus = document.getElementById("cmStatus");
     if(cmStatus){
       if(open){ cmStatus.className = "cm-status open"; cmStatus.innerHTML = '<span class="dot-live open"></span>Ouvert maintenant'; }
-      else { cmStatus.className = "cm-status closed"; cmStatus.innerHTML = '<span class="dot-live closed"></span>' + (nextOpen!==null ? "Fermé · ouvre à "+hhmm(nextOpen) : "Fermé" + (rouvre() ? " · rouvre " + rouvre() : "")); }
+      else { cmStatus.className = "cm-status closed"; cmStatus.innerHTML = '<span class="dot-live closed"></span>' + (nextOpen!==null ? "Fermé · ouvre à "+hhmm(nextOpen) : "Fermé · rouvre demain à "+hhmm((schedule[(day+1)%7]||[[720]])[0][0])); }
     }
     // horaires du jour dans le pop-up
     var cmJour = document.getElementById("cmJour");
-    if(cmJour) cmJour.textContent = "Aujourd’hui\u00a0: " + (auj.length ? "" : "fermé") + auj.map(function(s){ return hhmm(s[0]) + "–" + hhmm(s[1]); }).join(" · ");
+    if(cmJour) cmJour.textContent = "Aujourd’hui\u00a0: " + (schedule[day]||[]).map(function(s){ return hhmm(s[0]) + "–" + hhmm(s[1]); }).join(" · ");
     // surligner la ligne d'horaire du jour (accent doré) + créneau en cours en vert
     document.querySelectorAll("#hoursList li").forEach(function(li){
       var days = (li.getAttribute("data-days")||"").split(",");
       if(days.indexOf(String(day))>-1){
         li.classList.add("today");
         var svcs = li.querySelectorAll(".svc");
-        if(exceptionDu(now)) li.classList.add("exception");
-        else auj.forEach(function(s, i){
+        (schedule[day]||[]).forEach(function(s, i){
           if(mins >= s[0] && mins < s[1] && svcs[i]) svcs[i].classList.add("now");
         });
       }
