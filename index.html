@@ -2302,37 +2302,31 @@
 </script>
 
 <!-- GUIDE D'INSTALLATION (QR code du restaurant, bouton du bas de page)
-     Plein écran, une seule méthode à la fois : celle du téléphone et du
-     navigateur du client. Les boutons à toucher sont reproduits tels que le
-     client les verra, pour qu'il les reconnaisse au lieu de lire une consigne. -->
+     Une démonstration plutôt qu'une notice : un téléphone dessiné rejoue en
+     boucle les gestes à faire, avec le navigateur du client (Safari, Chrome,
+     Edge, Samsung…), un doigt sur le bouton à toucher, et finit sur l'icône
+     Pino posée sur l'écran d'accueil. Sous le téléphone, les mêmes étapes en
+     une ligne chacune ; on peut toucher une étape pour la revoir. -->
 <div id="installGuide" class="inst" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="instTitre" hidden>
   <div class="inst-page">
-    <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer">×</button>
-    <div class="inst-hero">
+    <div class="inst-haut">
       <img class="inst-photo" src="images/etab-facade.webp" alt="" loading="lazy" decoding="async">
-      <p class="inst-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>Installation de l’application</p>
-      <div class="inst-fiche">
-        <img class="inst-icone" src="icons/icon-512.png" alt="" width="92" height="92">
-        <div class="inst-nom">
+      <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer">×</button>
+      <div class="inst-id">
+        <img class="inst-icone" src="icons/icon-512.png" alt="" width="72" height="72">
+        <div>
+          <p class="inst-sur">Installation de l’application</p>
           <h2 id="instTitre">Pizzeria Pino</h2>
-          <p>Application officielle · gratuite</p>
-          <div id="instAction"></div>
+          <p class="inst-meta">Gratuite · moins d’une minute</p>
         </div>
       </div>
     </div>
-    <section class="inst-carte" aria-labelledby="instTitreEtapes">
-      <h3 id="instTitreEtapes">Installer</h3>
-      <p class="inst-sous" id="instSousEtapes"></p>
-      <div class="inst-corps" id="instCorps" aria-live="polite"></div>
-    </section>
-    <!-- Le résultat attendu : l'icône Pino parmi les autres apps du téléphone -->
-    <section class="inst-resultat" aria-label="Résultat">
-      <div class="inst-ecran" aria-hidden="true">
-        <i></i><i></i><i></i><i></i>
-        <i></i><span class="inst-app"><img src="icons/icon-512.png" alt="" width="52" height="52"><b>Pino</b></span><i></i><i></i>
-      </div>
-      <p>L’icône <b>Pino</b> arrive sur votre écran d’accueil, à côté de vos autres applications.</p>
-    </section>
+    <div class="inst-action" id="instAction"></div>
+    <div class="inst-demo" id="instDemo" aria-hidden="true">
+      <div class="inst-tel"><div class="inst-ecran" id="instEcran"></div></div>
+    </div>
+    <ol class="inst-pas" id="instPas" aria-live="polite"></ol>
+    <div class="inst-plus" id="instPlus"></div>
     <button type="button" class="inst-continuer" id="instContinuer">Continuer sans installer</button>
   </div>
   <div class="inst-fleche" id="instFleche" aria-hidden="true" hidden>
@@ -2344,11 +2338,17 @@
 (function(){
   var guide = document.getElementById('installGuide');
   if(!guide) return;
-  var corps = document.getElementById('instCorps');
+  var ecran = document.getElementById('instEcran');
+  var demo = document.getElementById('instDemo');
+  var liste = document.getElementById('instPas');
+  var action = document.getElementById('instAction');
+  var plus = document.getElementById('instPlus');
+  var continuer = document.getElementById('instContinuer');
   var fleche = document.getElementById('instFleche');
   var bloc = document.getElementById('appInstall');
   var html = document.documentElement;
   var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  var calme = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ── Le téléphone et le navigateur ── */
   var ua = navigator.userAgent || '';
@@ -2359,7 +2359,7 @@
      aucun ne sait installer une page, il faut d'abord en sortir. */
   var integre = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Line\/|Snapchat|TikTok|BytedanceWebview|musical_ly|LinkedInApp|Pinterest|GSA\/|; wv\)/.test(ua);
   var safariVersion = +((/Version\/(\d+)/.exec(ua) || [])[1] || 0);
-  /* Le navigateur reconnu. null : navigateur rare, on propose le plus courant
+  /* Le navigateur reconnu. null : navigateur rare, on montre le plus courant
      du téléphone sans prétendre savoir où se trouvent ses boutons. */
   var detecte = ios ? (/CriOS/.test(ua) ? 'chrome' : /EdgiOS/.test(ua) ? 'edge' : /FxiOS/.test(ua) ? 'firefox' : /OPiOS|DuckDuckGo|YaBrowser/.test(ua) ? null : 'safari')
                     : (/SamsungBrowser/.test(ua) ? 'samsung' : /EdgA/.test(ua) ? 'edge' : /Firefox/.test(ua) ? 'firefox' : /OPR|MiuiBrowser|HuaweiBrowser|YaBrowser/.test(ua) ? null : 'chrome');
@@ -2367,103 +2367,154 @@
   var NAVS = ios ? [['safari', 'Safari'], ['chrome', 'Chrome'], ['edge', 'Edge'], ['firefox', 'Firefox']]
                  : [['chrome', 'Chrome'], ['samsung', 'Samsung'], ['edge', 'Edge'], ['firefox', 'Firefox']];
 
-  /* ── Les pictogrammes, dessinés comme sur le téléphone ── */
+  /* ── Pictogrammes ── */
+  function svg(d, plein){ return '<svg viewBox="0 0 24 24" ' + (plein ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"') + '>' + d + '</svg>'; }
   var I = {
-    partage: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M8 10H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1h-2"/></svg>',
-    ajout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/></svg>',
-    telAjout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 8.5v6M9 11.5h6"/></svg>',
-    points: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
-    pointsV: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>',
-    lignes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
-    telephone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>',
-    ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+    partage: svg('<path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M8 10H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1h-2"/>'),
+    ajout: svg('<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/>'),
+    tel: svg('<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 8.5v6M9 11.5h6"/>'),
+    points: svg('<circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>', 1),
+    pointsV: svg('<circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/>', 1),
+    lignes: svg('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    retour: svg('<path d="M15 5l-7 7 7 7"/>'),
+    avance: svg('<path d="M9 5l7 7-7 7"/>'),
+    livre: svg('<path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/>'),
+    onglets: svg('<rect x="4" y="7" width="13" height="13" rx="2"/><path d="M8 4h10a2 2 0 0 1 2 2v10"/>'),
+    plus: svg('<path d="M12 5v14M5 12h14"/>'),
+    copie: svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),
+    etoile: svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'),
+    ok: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+    externe: svg('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>')
   };
-  /* Une étape = le bouton tel qu'il apparaît à l'écran, et au besoin où le
-     trouver. Pas de phrase à lire : le client reconnaît le bouton et le touche. */
-  function bouton(ic, txt, cls){ return '<span class="inst-v inst-b ' + (cls || '') + '">' + (ic || '') + (txt ? '<span>' + txt + '</span>' : '') + '</span>'; }
-  function etapes(liste){
-    return '<ol class="inst-etapes">' + liste.map(function(e, i){
-      return '<li><span class="inst-num">' + (i + 1) + '</span>' + e[0] + (e[1] ? '<small>' + e[1] + '</small>' : '') + '</li>';
-    }).join('') + '</ol>';
+
+  /* ── Les scènes du téléphone ──
+     barre   : le navigateur, le bouton à toucher mis en avant ;
+     menu    : un menu ouvert, la ligne à choisir mise en avant ;
+     feuille : la feuille de partage d'iOS ;
+     valider : la confirmation (« Ajouter », « Installer ») ;
+     accueil : l'écran d'accueil, l'icône Pino qui arrive. */
+  var PAGE = '<img class="d-page" src="screenshots/mobile-accueil.webp" alt="">';
+  function barre(pos, icone, cible){
+    /* pos : où est le bouton (bas-droite, bas-centre, haut-droite) */
+    var url = '<span class="d-url">pizzeriapino.be</span>';
+    var c = function(i, on){ return '<span class="d-ic' + (on && cible ? ' cible' : on ? ' fort' : '') + '">' + i + '</span>'; };
+    if(pos === 'haut-droite') return '<div class="d-barre haut">' + url + c(icone, 1) + '</div>';
+    var outils = pos === 'bas-centre' ? [I.retour, I.avance, icone, I.livre, I.onglets] : [I.retour, I.avance, I.plus, I.onglets, icone];
+    var cle = pos === 'bas-centre' ? 2 : 4;
+    return '<div class="d-barre bas">' + url + '<div class="d-outils">' + outils.map(function(i, k){ return c(i, k === cle); }).join('') + '</div></div>';
   }
-  function pointe(ou, txt){
-    fleche.className = 'inst-fleche ' + ou;
-    document.getElementById('instFlecheTxt').textContent = txt;
-    fleche.hidden = false;
-    guide.classList.toggle('inst-fleche-haut', ou === 'haut-droite');
+  function vide(n){ var s = ''; for(var i = 0; i < n; i++) s += '<span class="d-ligne d-vide"><i></i></span>'; return s; }
+  function scene(e, m){
+    var b = m.barre;
+    if(e.s === 'barre') return PAGE + barre(b[0], b[1], true);
+    if(e.s === 'menu') return PAGE + barre(b[0], b[1], false) + '<div class="d-voile"></div>' +
+      '<div class="d-menu ' + (e.haut ? 'haut' : 'bas') + '">' + vide(e.haut ? 2 : 3) +
+      '<span class="d-ligne cible"><b>' + e.t + '</b>' + (e.i || '') + '</span>' + vide(e.haut ? 3 : 1) + '</div>';
+    if(e.s === 'feuille') return PAGE + '<div class="d-voile"></div><div class="d-feuille">' +
+      '<div class="d-f-tete"><img src="icons/icon-512.png" alt=""><span><b>Pizzeria Pino</b><small>pizzeriapino.be</small></span></div>' +
+      '<div class="d-f-apps"><i></i><i></i><i></i><i></i></div>' +
+      '<span class="d-ligne"><b>Copier</b>' + I.copie + '</span><span class="d-ligne"><b>Ajouter aux favoris</b>' + I.etoile + '</span>' +
+      '<span class="d-ligne cible"><b>Sur l’écran d’accueil</b>' + I.ajout + '</span></div>';
+    if(e.s === 'valider'){
+      if(ios) return PAGE + '<div class="d-voile"></div><div class="d-valider ios"><div class="d-v-tete"><span>Annuler</span><b>Écran d’accueil</b><span class="d-v-ok cible">' + e.t + '</span></div>' +
+        '<div class="d-v-app"><img src="icons/icon-512.png" alt=""><span><b>Pizzeria Pino</b><small>pizzeriapino.be</small></span></div></div>';
+      return PAGE + '<div class="d-voile"></div><div class="d-valider and"><img src="icons/icon-512.png" alt=""><b>Installer l’application&nbsp;?</b><small>Pizzeria Pino · pizzeriapino.be</small>' +
+        '<div class="d-v-boutons"><span>Annuler</span><span class="d-v-ok cible">' + e.t + '</span></div></div>';
+    }
+    /* accueil */
+    var g = ''; for(var i = 0; i < 16; i++) g += i === 9 ? '<span class="d-pino"><img src="icons/icon-512.png" alt=""><small>Pino</small></span>' : '<i></i>';
+    return '<div class="d-accueil"><div class="d-heure">' + new Date().toTimeString().slice(0, 5) + '</div><div class="d-grille">' + g + '</div></div>';
   }
 
   /* ── Les méthodes, navigateur par navigateur ──
-     Chacune : les boutons dans l'ordre, et où se trouve le premier. */
-  var B = {
-    partage: bouton(I.partage, 'Partager', 'ios'),
-    ecran: bouton('', 'Sur l’écran d’accueil' + I.ajout, 'ios large'),
-    ajouter: bouton('', 'Ajouter', 'ios bleu')
-  };
+     barre : où est le premier bouton et son pictogramme ; e : les étapes. */
+  var FEUILLE = {s: 'feuille', c: 'Choisissez <b>Sur l’écran d’accueil</b>'};
+  var AJOUT_IOS = {s: 'valider', t: 'Ajouter', c: 'Touchez <b>Ajouter</b>'};
   var M = {
     ios: {
       safari: function(){
         /* Depuis iOS 26, Partager est rangé sous « ⋯ » (sauf avec la barre
            d'onglets classique, choisie dans les réglages de Safari). */
-        if(ipad) return {e: [[B.partage, 'en haut à droite'], [B.ecran], [B.ajouter]], f: ['haut-droite', 'Ici']};
-        if(safariVersion >= 26) return {e: [[bouton(I.points, '', 'ios'), 'en bas à droite'], [B.partage], [B.ecran, 'plus bas dans la liste'], [B.ajouter]], f: ['bas-droite', 'Ici']};
-        return {e: [[bouton(I.partage, '', 'ios'), 'en bas, au milieu'], [B.ecran, 'plus bas dans la liste'], [B.ajouter]], f: ['bas-centre', 'Ici']};
+        if(ipad) return {barre: ['haut-droite', I.partage], f: 'haut-droite', e: [{s: 'barre', c: 'Touchez <b>Partager</b> en haut à droite'}, FEUILLE, AJOUT_IOS]};
+        if(safariVersion >= 26) return {barre: ['bas-droite', I.points], f: 'bas-droite', e: [{s: 'barre', c: 'Touchez <b>⋯</b> en bas à droite'}, {s: 'menu', t: 'Partager', i: I.partage, c: 'Touchez <b>Partager</b>'}, FEUILLE, AJOUT_IOS]};
+        return {barre: ['bas-centre', I.partage], f: 'bas-centre', e: [{s: 'barre', c: 'Touchez <b>Partager</b> en bas de l’écran'}, FEUILLE, AJOUT_IOS]};
       },
-      chrome: function(){ return {e: [[bouton(I.partage, '', 'ios'), 'dans la barre d’adresse'], [B.ecran], [B.ajouter]], f: ['haut-droite', 'Ici']}; },
-      edge: function(){ return {e: [[bouton(I.lignes, '', 'ios'), 'en bas à droite'], [B.partage], [B.ecran], [B.ajouter]], f: ['bas-droite', 'Ici']}; },
-      firefox: function(){ return {e: [[bouton(I.lignes, '', 'ios'), 'en bas à droite'], [B.partage], [B.ecran], [B.ajouter]], f: ['bas-droite', 'Ici']}; }
+      chrome: function(){ return {barre: ['haut-droite', I.partage], f: 'haut-droite', e: [{s: 'barre', c: 'Touchez <b>Partager</b> dans la barre d’adresse'}, FEUILLE, AJOUT_IOS]}; },
+      edge: function(){ return {barre: ['bas-droite', I.lignes], f: 'bas-droite', e: [{s: 'barre', c: 'Touchez <b>≡</b> en bas à droite'}, {s: 'menu', t: 'Partager', i: I.partage, c: 'Touchez <b>Partager</b>'}, FEUILLE, AJOUT_IOS]}; },
+      firefox: function(){ return {barre: ['bas-droite', I.lignes], f: 'bas-droite', e: [{s: 'barre', c: 'Touchez <b>≡</b> en bas à droite'}, {s: 'menu', t: 'Partager', i: I.partage, c: 'Touchez <b>Partager</b>'}, FEUILLE, AJOUT_IOS]}; }
     },
     android: {
-      chrome: function(){ return {e: [[bouton(I.pointsV, '', 'and'), 'en haut à droite'], [bouton('', 'Ajouter à l’écran d’accueil' + I.ajout, 'and large'), 'ou « Installer l’application »'], [bouton('', 'Installer', 'and plein')]], f: ['haut-droite', 'Ici']}; },
-      samsung: function(){ return {e: [[bouton(I.lignes, '', 'and'), 'en bas à droite'], [bouton('', 'Ajouter la page à', 'and large')], [bouton('', 'Écran d’accueil', 'and large')], [bouton('', 'Ajouter', 'and plein')]], f: ['bas-droite', 'Ici']}; },
-      edge: function(){ return {e: [[bouton(I.points, '', 'and'), 'en bas, au milieu'], [bouton('', 'Ajouter au téléphone' + I.telAjout, 'and large')], [bouton('', 'Installer', 'and plein')]], f: ['bas-centre', 'Ici']}; },
-      firefox: function(){ return {e: [[bouton(I.pointsV, '', 'and'), 'en haut à droite'], [bouton('', 'Ajouter à l’écran d’accueil' + I.ajout, 'and large')], [bouton('', 'Ajouter', 'and plein')]], f: ['haut-droite', 'Ici']}; }
+      chrome: function(){ return {barre: ['haut-droite', I.pointsV], f: 'haut-droite', e: [{s: 'barre', c: 'Touchez <b>⋮</b> en haut à droite'}, {s: 'menu', haut: 1, t: 'Ajouter à l’écran d’accueil', i: I.ajout, c: 'Choisissez <b>Ajouter à l’écran d’accueil</b>'}, {s: 'valider', t: 'Installer', c: 'Touchez <b>Installer</b>'}]}; },
+      samsung: function(){ return {barre: ['bas-droite', I.lignes], f: 'bas-droite', e: [{s: 'barre', c: 'Touchez <b>≡</b> en bas à droite'}, {s: 'menu', t: 'Ajouter la page à', i: I.ajout, c: 'Choisissez <b>Ajouter la page à</b>'}, {s: 'menu', t: 'Écran d’accueil', i: I.tel, c: 'Puis <b>Écran d’accueil</b>'}, {s: 'valider', t: 'Ajouter', c: 'Touchez <b>Ajouter</b>'}]}; },
+      edge: function(){ return {barre: ['bas-centre', I.points], f: 'bas-centre', e: [{s: 'barre', c: 'Touchez <b>⋯</b> en bas de l’écran'}, {s: 'menu', t: 'Ajouter au téléphone', i: I.tel, c: 'Choisissez <b>Ajouter au téléphone</b>'}, {s: 'valider', t: 'Installer', c: 'Touchez <b>Installer</b>'}]}; },
+      firefox: function(){ return {barre: ['haut-droite', I.pointsV], f: 'haut-droite', e: [{s: 'barre', c: 'Touchez <b>⋮</b> en haut à droite'}, {s: 'menu', haut: 1, t: 'Ajouter à l’écran d’accueil', i: I.ajout, c: 'Choisissez <b>Ajouter à l’écran d’accueil</b>'}, {s: 'valider', t: 'Ajouter', c: 'Touchez <b>Ajouter</b>'}]}; }
     }
   };
+  var FIN = {s: 'accueil', c: 'L’icône <b>Pino</b> est sur votre écran d’accueil', fin: 1};
 
-  /* Le navigateur reconnu est pris d'office ; un petit lien en bas permet
-     d'en choisir un autre si la détection se trompe. */
+  /* ── La démonstration ── */
+  var m = null, pas = 0, minuterie = null, doigt = null;
+  function joue(i){
+    clearTimeout(minuterie);
+    pas = i;
+    var e = m.e[i];
+    ecran.innerHTML = scene(e, m);
+    ecran.className = 'inst-ecran s-' + e.s;
+    var li = liste.children;
+    for(var k = 0; k < li.length; k++){ li[k].classList.toggle('actif', k === i); li[k].classList.toggle('fait', k < i); }
+    /* Le doigt se pose sur l'élément à toucher. */
+    var cible = ecran.querySelector('.cible');
+    if(cible){
+      var r = cible.getBoundingClientRect(), o = ecran.getBoundingClientRect();
+      doigt = document.createElement('span'); doigt.className = 'd-doigt';
+      doigt.style.left = (r.left - o.left + r.width / 2) + 'px';
+      doigt.style.top = (r.top - o.top + r.height / 2) + 'px';
+      ecran.appendChild(doigt);
+    }
+    if(!calme) minuterie = setTimeout(function(){ joue((pas + 1) % m.e.length); }, e.fin ? 3200 : 2600);
+  }
+  function montre(methode, finale){
+    m = methode;
+    if(finale !== false) m.e = m.e.concat([FIN]);
+    demo.hidden = false;
+    liste.innerHTML = m.e.map(function(e, i){
+      return '<li><button type="button" data-pas="' + i + '"><span class="p-num">' + (e.fin ? I.ok : i + 1) + '</span><span>' + e.c + '</span></button></li>';
+    }).join('');
+    var b = liste.querySelectorAll('[data-pas]');
+    for(var i = 0; i < b.length; i++) b[i].onclick = function(){ joue(+this.getAttribute('data-pas')); };
+    joue(0);
+  }
+  function pointe(ou){
+    fleche.className = 'inst-fleche ' + ou;
+    document.getElementById('instFlecheTxt').textContent = 'Ici';
+    fleche.hidden = false;
+    guide.classList.toggle('inst-fleche-haut', ou === 'haut-droite');
+  }
+  function sansFleche(){ fleche.hidden = true; guide.classList.remove('inst-fleche-haut'); }
+
+  /* Le choix du navigateur : présélectionné, corrigeable d'un geste. */
   function selecteur(){
-    return '<details class="inst-navs"><summary>Pas le bon navigateur&nbsp;?</summary><div>' +
-      NAVS.map(function(n){
-        return '<button type="button" data-nav="' + n[0] + '" aria-pressed="' + (n[0] === choix) + '">' + n[1] + '</button>';
-      }).join('') + '</div></details>';
-  }
-  function titre(t, sous){
-    document.getElementById('instTitreEtapes').textContent = t;
-    document.getElementById('instSousEtapes').textContent = sous || '';
-  }
-  function methode(){
-    var m = M[ios ? 'ios' : 'android'][choix]();
-    fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
-    /* La flèche ne montre un bouton que dans le navigateur réellement ouvert. */
-    if(choix === detecte) pointe(m.f[0], m.f[1]);
-    titre('Installer en ' + m.e.length + ' gestes', 'Touchez ces boutons, dans l’ordre.');
-    return etapes(m.e);
-  }
-  function branche(zone){
-    var boutons = zone.querySelectorAll('[data-nav]');
-    for(var i = 0; i < boutons.length; i++) boutons[i].onclick = function(){
-      choix = this.getAttribute('data-nav');
-      document.getElementById('instMethode').innerHTML = methode();
-      for(var j = 0; j < boutons.length; j++) boutons[j].setAttribute('aria-pressed', boutons[j] === this);
+    plus.innerHTML = '<details class="inst-navs"><summary>Pas le bon navigateur&nbsp;?</summary><div>' +
+      NAVS.map(function(n){ return '<button type="button" data-nav="' + n[0] + '" aria-pressed="' + (n[0] === choix) + '">' + n[1] + '</button>'; }).join('') + '</div></details>';
+    var b = plus.querySelectorAll('[data-nav]');
+    for(var i = 0; i < b.length; i++) b[i].onclick = function(){
+      choix = this.getAttribute('data-nav'); manuel = true; rendu();
+      plus.querySelector('details').open = true;
     };
   }
 
   /* ── Ce qu'on affiche ── */
-  var invite = null;
-  var action = document.getElementById('instAction');
+  var invite = null, manuel = false;
   function rendu(){
-    fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
-    action.innerHTML = '';
-    document.getElementById('instContinuer').textContent = 'Continuer sans installer';
+    clearTimeout(minuterie); sansFleche();
+    action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; liste.innerHTML = '';
+    continuer.textContent = 'Continuer sans installer';
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';
-      titre('Ouvrir dans le navigateur', 'Cette page est ouverte dans une application : l’installation se fait depuis le navigateur.');
-      corps.innerHTML = (android
-          ? '<a class="inst-bouton" href="intent://pizzeriapino.be/#installer#Intent;scheme=https;package=com.android.chrome;end">Ouvrir dans Chrome</a>'
-          : etapes([[bouton(I.points, '', 'ios'), 'en haut ou en bas'], [bouton('', 'Ouvrir dans Safari', 'ios large')]])) +
-        '<button type="button" class="inst-lien" id="instCopier">Copier le lien</button>';
+      action.innerHTML = '<p class="inst-info">Cette page est ouverte dans une application. L’installation se fait depuis le navigateur&nbsp;:</p>' +
+        (android ? '<a class="inst-bouton" href="intent://pizzeriapino.be/#installer#Intent;scheme=https;package=com.android.chrome;end">' + I.externe + 'Ouvrir dans Chrome</a>' : '');
+      if(!android) montre({barre: ['haut-droite', I.points], e: [{s: 'barre', c: 'Touchez <b>⋯</b> (ou <b>↗</b>)'}, {s: 'menu', haut: 1, t: 'Ouvrir dans Safari', i: I.externe, c: 'Choisissez <b>Ouvrir dans Safari</b>'}]}, false);
+      plus.innerHTML = '<button type="button" class="inst-lien" id="instCopier">Copier le lien</button>';
       document.getElementById('instCopier').onclick = function(){
         var b = this;
         (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function(){ b.textContent = 'Lien copié ✓'; }, function(){ b.textContent = url; });
@@ -2471,43 +2522,43 @@
       return;
     }
     if(ios || android){
-      if(android && invite){
-        /* Comme sur un store : le bouton dans la fiche, en un geste. */
-        action.innerHTML = '<button type="button" class="inst-obtenir" id="instInstaller">Installer</button>';
-        titre('Installer en un geste', 'Touchez « Installer », puis confirmez.');
-        corps.innerHTML = '<details class="inst-autre"><summary>Ça ne marche pas&nbsp;?</summary><div id="instMethode"></div>' + selecteur() + '</details>';
-        document.getElementById('instMethode').innerHTML = methode();
-        titre('Installer en un geste', 'Touchez « Installer », puis confirmez.');
-        fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
+      if(android && invite && !manuel){
+        /* Android propose l'installation directe : un bouton suffit. */
+        action.innerHTML = '<button type="button" class="inst-bouton" id="instInstaller">' + I.tel + 'Installer l’application</button>';
+        montre({barre: ['haut-droite', I.pointsV], e: [{s: 'valider', t: 'Installer', c: 'Touchez <b>Installer l’application</b>, puis confirmez'}]});
         document.getElementById('instInstaller').onclick = function(){
           var p = invite; invite = null;
           p.prompt();
           p.userChoice.then(function(r){ if(r && r.outcome === 'accepted') reussi(); else rendu(); }, rendu);
         };
       } else {
-        corps.innerHTML = '<div id="instMethode">' + methode() + '</div>' + selecteur();
+        var meth = M[ios ? 'ios' : 'android'][choix]();
+        montre(meth);
+        /* La flèche ne montre un bouton que dans le navigateur réellement ouvert. */
+        if(choix === detecte) pointe(meth.f);
       }
-      branche(corps);
+      selecteur();
       return;
     }
     /* Ordinateur : l'installation se fait sur le téléphone. */
-    titre('Sur votre téléphone', 'Scannez ce code avec l’appareil photo.');
-    corps.innerHTML = '<img class="inst-qr" src="qr/qr-app-pino.svg" alt="QR code vers pizzeriapino.be" width="220" height="220">';
+    action.innerHTML = '<p class="inst-info">L’app s’installe sur votre téléphone. Scannez ce code avec son appareil photo&nbsp;:</p>' +
+      '<img class="inst-qr" src="qr/qr-app-pino.svg" alt="QR code vers pizzeriapino.be" width="220" height="220">';
   }
   function reussi(){
-    fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
-    action.innerHTML = '<span class="inst-obtenir fait">' + I.ok + 'Installée</span>';
-    titre('C’est installé !', 'L’icône Pino vous attend sur l’écran d’accueil.');
-    document.getElementById('instContinuer').textContent = 'Fermer';
-    corps.innerHTML = '<div class="inst-reussi">' + I.ok + '</div>';
+    clearTimeout(minuterie); sansFleche();
+    action.innerHTML = '<p class="inst-reussi">' + I.ok + '<span><b>C’est installé&nbsp;!</b>Ouvrez Pino depuis votre écran d’accueil.</span></p>';
+    plus.innerHTML = '';
+    m = {barre: [], e: [FIN]}; demo.hidden = false; liste.innerHTML = '';
+    ecran.innerHTML = scene(FIN, m); ecran.className = 'inst-ecran s-accueil';
+    continuer.textContent = 'Fermer';
     if(bloc) bloc.hidden = true;
   }
 
   /* L'invite d'installation d'Android peut arriver après l'ouverture du
-     guide : on la garde, et l'on remplace les étapes par le bouton. */
+     guide : on la garde, et l'on passe au bouton direct. */
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault(); invite = e;
-    if(!guide.hidden && android && !integre) rendu();
+    if(!guide.hidden && android && !integre && !manuel) rendu();
   });
   window.addEventListener('appinstalled', function(){ invite = null; if(!guide.hidden) reussi(); else if(bloc) bloc.hidden = true; });
 
@@ -2515,9 +2566,10 @@
   var historique = false, avant = null;
   function ouvre(pousse){
     avant = document.activeElement;
-    rendu();
+    manuel = false;
     guide.hidden = false;
     guide.scrollTop = 0;
+    rendu();
     html.classList.add('inst-ouvert');
     requestAnimationFrame(function(){ guide.classList.add('inst-visible'); });
     /* Le bouton « retour » d'Android ferme le guide au lieu de quitter le site. */
@@ -2526,6 +2578,7 @@
   }
   function ferme(){
     if(guide.hidden) return;
+    clearTimeout(minuterie);
     guide.classList.remove('inst-visible');
     html.classList.remove('inst-ouvert');
     setTimeout(function(){ guide.hidden = true; }, 260);
@@ -2534,7 +2587,7 @@
   function quitte(){ if(historique){ historique = false; history.back(); } else ferme(); }
   window.addEventListener('popstate', function(){ if(historique){ historique = false; ferme(); } });
   document.getElementById('instFermer').addEventListener('click', quitte);
-  document.getElementById('instContinuer').addEventListener('click', quitte);
+  continuer.addEventListener('click', quitte);
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !guide.hidden) quitte(); });
 
   /* Bouton du bas de page (site mobile) : l'invite directe quand Android
