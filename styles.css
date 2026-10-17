@@ -867,6 +867,16 @@
   /* Badges d'infos répartis en dessous */
   /* Toutes les pastilles ont la meme boite : grid-auto-rows:1fr aligne chaque
      rangee sur la plus haute, donc celles a deux lignes donnent le gabarit. */
+  /* Exceptions, sous la grille des horaires */
+  .hours-exc{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:8px}
+  /* Jour couvert par une exception : ses horaires habituels ne valent pas */
+  .hours li.exception .hrs{opacity:.4;text-decoration:line-through}
+  .hours-exc[hidden]{display:none}
+  .hours-exc li{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-radius:10px;border-left:3px solid var(--or);
+    background:rgba(198,154,77,.08)}
+  .hours-exc li.ferme{border-left-color:#E2574B;background:rgba(226,87,75,.08)}
+  .hours-exc b{font-weight:600;font-size:.92rem;color:var(--blanc)}
+  .hours-exc span{font-size:.82rem;color:var(--gris)}
   .feat{margin:20px 0 0;padding:20px 0 0;list-style:none;border-top:1px solid var(--hair);
     display:grid;grid-template-columns:1fr 1fr;gap:8px;grid-auto-rows:1fr}
   .feat li{display:flex;align-items:center;gap:9px;font-size:.7rem;
@@ -1067,6 +1077,19 @@
   .hero-frame{position:absolute;inset:16px;z-index:2;border:1px solid rgba(233,206,150,.26);pointer-events:none;
     opacity:0;animation:hiFade 1.4s ease .9s forwards}
   .hi-center{position:relative;z-index:3;max-width:780px;margin:0 auto;padding:0 24px}
+  /* Horaires exceptionnels : un badge discret au-dessus du nom, qui mène aux horaires */
+  .hi-avis{display:inline-flex;align-items:center;gap:9px;margin:0 auto 18px;padding:7px 12px 7px 11px;border-radius:999px;
+    background:rgba(14,10,8,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(233,206,150,.32);
+    color:#F5EFE4;font-size:.8rem;font-weight:500;line-height:1.2;text-decoration:none;letter-spacing:.01em;
+    box-shadow:0 8px 24px -10px rgba(0,0,0,.7);opacity:0;animation:hiUp .8s ease .35s forwards}
+  .hi-avis[hidden]{display:none}
+  .hi-avis svg{width:14px;height:14px;opacity:.6;flex-shrink:0}
+  .ha-point{position:relative;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .ha-point.ferme{background:#E2574B}
+  .ha-point.change{background:var(--or)}
+  .ha-point::after{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:haPulse 2s ease-out infinite}
+  @keyframes haPulse{70%,100%{transform:scale(2.6);opacity:0}}
+  @media (prefers-reduced-motion:reduce){.ha-point::after{animation:none}}
   .hi-cat{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.4em;
     font-size:.68rem;color:var(--or);font-weight:500;text-shadow:0 1px 12px rgba(0,0,0,.8);opacity:0;animation:hiUp .8s ease .5s forwards}
   .hero .hi-brand{font-family:"Fraunces",serif;font-weight:600;letter-spacing:.015em;text-transform:uppercase;
