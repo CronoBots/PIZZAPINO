@@ -1191,10 +1191,10 @@
     padding:calc(28px + env(safe-area-inset-top)) 18px calc(96px + env(safe-area-inset-bottom));
     transform:translateY(14px);transition:transform .32s cubic-bezier(.22,.68,.16,1)}
   .inst.inst-visible .inst-page{transform:none}
-  .inst.inst-fleche-haut .inst-page{padding-top:calc(78px + env(safe-area-inset-top));padding-bottom:calc(30px + env(safe-area-inset-bottom))}
-  .inst-fermer{position:absolute;top:calc(12px + env(safe-area-inset-top));right:10px;width:42px;height:42px;border-radius:50%;
+  .inst.inst-fleche-haut .inst-page{padding-top:calc(64px + env(safe-area-inset-top));padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+  .inst-fermer{position:absolute;z-index:2;top:calc(12px + env(safe-area-inset-top));right:14px;width:42px;height:42px;border-radius:50%;
     border:1px solid rgba(233,206,150,.22);background:rgba(20,16,13,.6);color:var(--blanc);font-size:1.5rem;line-height:1;cursor:pointer}
-  .inst.inst-fleche-haut .inst-fermer{top:auto;bottom:calc(14px + env(safe-area-inset-bottom));position:fixed;right:14px}
+  .inst.inst-fleche-haut .inst-fermer{right:auto;left:14px;top:calc(12px + env(safe-area-inset-top))}
   .inst-tete{text-align:center;margin-bottom:22px}
   .inst-icone{width:84px;height:84px;border-radius:20px;display:block;margin:6px auto 16px;
     box-shadow:0 14px 40px -10px rgba(198,154,77,.55),0 0 0 1px rgba(233,206,150,.25)}
@@ -1205,6 +1205,15 @@
     border:1px solid rgba(233,206,150,.25);border-radius:999px;padding:5px 10px}
   .inst-chapo{text-align:center;font-size:.92rem;line-height:1.55;color:#D8CDB9;margin:0 0 18px}
   .inst-chapo b{color:var(--blanc);font-family:"Fraunces",serif;font-size:1.3rem;font-weight:600}
+  .inst:focus{outline:none}
+  .inst-navs{display:flex;flex-direction:column;align-items:center;gap:8px;margin:0 0 18px}
+  .inst-navs>span{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.62rem;color:var(--gris-d)}
+  .inst-navs div{display:flex;width:100%;padding:4px;gap:4px;border-radius:12px;background:rgba(233,206,150,.06);border:1px solid rgba(233,206,150,.14)}
+  .inst-navs button{flex:1;min-width:0;padding:9px 4px;border:0;border-radius:9px;background:none;color:var(--gris);font-size:.8rem;font-weight:500;cursor:pointer;transition:background .2s,color .2s}
+  .inst-navs button[aria-pressed="true"]{background:var(--or);color:#1a1510;font-weight:600}
+  .inst-ensuite{display:flex;align-items:center;gap:12px;margin:14px 0 0;padding:12px 14px;border-radius:14px;
+    border:1px dashed rgba(233,206,150,.28);font-size:.82rem;line-height:1.45;color:#D8CDB9}
+  .inst-ensuite img{width:32px;height:32px;border-radius:8px;flex-shrink:0}
   .inst-etapes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
   .inst-etapes li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:14px;border-radius:14px;
     background:rgba(233,206,150,.05);border:1px solid rgba(233,206,150,.14)}
@@ -1246,17 +1255,22 @@
     background:rgba(198,154,77,.15);border:1px solid var(--or);color:var(--or)}
   .inst-reussi svg{width:36px;height:36px}
   /* La flèche montre le vrai bouton du navigateur, hors de la page */
-  .inst-fleche{position:fixed;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--or);pointer-events:none;
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.66rem;animation:instBas 1.2s ease-in-out infinite}
+  .inst-fleche{position:fixed;left:0;right:0;bottom:0;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:30px 14px calc(6px + env(safe-area-inset-bottom));background:linear-gradient(rgba(20,16,13,0),var(--noir) 55%);
+    color:var(--or);pointer-events:none;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.68rem}
   .inst-fleche[hidden]{display:none}
+  .inst-fleche>*{animation:instBas 1.2s ease-in-out infinite}
   .inst-fleche svg{width:30px;height:30px}
-  .inst-fleche.bas-centre{left:50%;bottom:calc(8px + env(safe-area-inset-bottom));margin-left:-50px;width:100px}
-  .inst-fleche.bas-droite{right:6px;bottom:calc(8px + env(safe-area-inset-bottom));width:100px}
-  .inst-fleche.haut-droite{right:6px;top:calc(6px + env(safe-area-inset-top));width:110px;flex-direction:column-reverse;animation-name:instHaut}
-  .inst-fleche.haut-droite svg{transform:rotate(180deg)}
+  .inst-fleche.bas-droite{align-items:flex-end}
+  .inst-fleche.bas-droite>*{margin-right:4px}
+  .inst-fleche.haut-droite{top:0;bottom:auto;align-items:flex-end;flex-direction:column-reverse;
+    padding:calc(6px + env(safe-area-inset-top)) 14px 30px;background:linear-gradient(var(--noir) 45%,rgba(20,16,13,0))}
+  .inst-fleche.haut-droite>*{animation-name:instHaut}
+  .inst-fleche.haut-droite svg{transform:rotate(180deg);animation-name:instHautFleche}
   @keyframes instBas{50%{transform:translateY(6px)}}
   @keyframes instHaut{50%{transform:translateY(-6px)}}
-  @media (prefers-reduced-motion:reduce){.inst-rond::after,.inst-fleche{animation:none}.inst,.inst-page{transition:none}}
+  @keyframes instHautFleche{0%,100%{transform:rotate(180deg)}50%{transform:rotate(180deg) translateY(6px)}}
+  @media (prefers-reduced-motion:reduce){.inst-rond::after,.inst-fleche>*{animation:none}.inst,.inst-page{transition:none}}
   .app-install .ai-aide svg{width:15px;height:15px;vertical-align:-3px;color:#C69A4D}
   .gerant{margin-top:16px;font-size:.72rem}
   .gerant button{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);

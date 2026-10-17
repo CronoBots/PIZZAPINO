@@ -2305,7 +2305,7 @@
      Plein écran, une seule méthode à la fois : celle du téléphone et du
      navigateur du client. Les boutons à toucher sont reproduits tels que le
      client les verra, pour qu'il les reconnaisse au lieu de lire une consigne. -->
-<div id="installGuide" class="inst" role="dialog" aria-modal="true" aria-labelledby="instTitre" hidden>
+<div id="installGuide" class="inst" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="instTitre" hidden>
   <div class="inst-page">
     <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer le guide">×</button>
     <div class="inst-tete">
@@ -2342,13 +2342,19 @@
      aucun ne sait installer une page, il faut d'abord en sortir. */
   var integre = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Line\/|Snapchat|TikTok|BytedanceWebview|musical_ly|LinkedInApp|Pinterest|GSA\/|; wv\)/.test(ua);
   var safariVersion = +((/Version\/(\d+)/.exec(ua) || [])[1] || 0);
-  var nav = ios ? (/CriOS/.test(ua) ? 'chrome' : /FxiOS|EdgiOS|OPiOS/.test(ua) ? 'autre' : 'safari')
-               : (/SamsungBrowser/.test(ua) ? 'samsung' : /Firefox/.test(ua) ? 'firefox' : 'chrome');
+  /* Le navigateur reconnu. null : navigateur rare, on propose le plus courant
+     du téléphone sans prétendre savoir où se trouvent ses boutons. */
+  var detecte = ios ? (/CriOS/.test(ua) ? 'chrome' : /EdgiOS/.test(ua) ? 'edge' : /FxiOS/.test(ua) ? 'firefox' : /OPiOS|DuckDuckGo|YaBrowser/.test(ua) ? null : 'safari')
+                    : (/SamsungBrowser/.test(ua) ? 'samsung' : /EdgA/.test(ua) ? 'edge' : /Firefox/.test(ua) ? 'firefox' : /OPR|MiuiBrowser|HuaweiBrowser|YaBrowser/.test(ua) ? null : 'chrome');
+  var choix = detecte || (ios ? 'safari' : 'chrome');
+  var NAVS = ios ? [['safari', 'Safari'], ['chrome', 'Chrome'], ['edge', 'Edge'], ['firefox', 'Firefox']]
+                 : [['chrome', 'Chrome'], ['samsung', 'Samsung'], ['edge', 'Edge'], ['firefox', 'Firefox']];
 
   /* ── Les pictogrammes, dessinés comme sur le téléphone ── */
   var I = {
     partage: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M8 10H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1h-2"/></svg>',
     ajout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/></svg>',
+    telAjout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 8.5v6M9 11.5h6"/></svg>',
     points: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
     pointsV: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>',
     lignes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
@@ -2374,46 +2380,89 @@
     guide.classList.toggle('inst-fleche-haut', ou === 'haut-droite');
   }
 
-  /* ── Les méthodes ── */
-  function methodeIOS(){
-    if(nav === 'chrome') return etapes([
-      ['Touchez <i>Partager</i>', 'En haut à droite, dans la barre d’adresse.', rond(I.partage, 'ios')],
-      ['Choisissez « Sur l’écran d’accueil »', 'Faites défiler la liste si besoin.', ligne('Sur l’écran d’accueil', I.ajout, 'ios')],
-      ['Touchez « Ajouter »', 'En haut à droite. C’est terminé.', action('Ajouter', 'ios')]
-    ]);
-    if(nav === 'autre') return etapes([
-      ['Ouvrez le menu du navigateur', 'Puis touchez <i>Partager</i>.', rond(I.partage, 'ios')],
-      ['Choisissez « Sur l’écran d’accueil »', 'Faites défiler la liste si besoin.', ligne('Sur l’écran d’accueil', I.ajout, 'ios')],
-      ['Touchez « Ajouter »', 'En haut à droite. C’est terminé.', action('Ajouter', 'ios')]
-    ]) + '<p class="inst-note">Le plus simple reste Safari : ouvrez-y pizzeriapino.be et suivez les mêmes étapes.</p>';
-    /* Safari. Depuis iOS 26, le bouton Partager est rangé sous « ⋯ » (sauf
-       si la barre d'onglets classique est choisie dans les réglages). */
-    var e = [];
-    if(safariVersion >= 26 && !ipad){
-      e.push(['Touchez <i>⋯</i>', 'En bas à droite de l’écran.', rond(I.points, 'ios')]);
-      e.push(['Touchez <i>Partager</i>', 'Si le bouton est déjà visible en bas, touchez-le directement.', rond(I.partage, 'ios')]);
-    } else {
-      e.push(['Touchez <i>Partager</i>', ipad ? 'En haut à droite de l’écran.' : 'Au milieu de la barre, en bas de l’écran.', rond(I.partage, 'ios')]);
+  /* ── Les méthodes, navigateur par navigateur ──
+     Chacune : les étapes, et où se trouve le premier bouton à toucher. */
+  var ECRAN_IOS = ['Choisissez « Sur l’écran d’accueil »', 'Faites défiler vers le bas. Au besoin, touchez « Afficher plus ».', ligne('Sur l’écran d’accueil', I.ajout, 'ios')];
+  var AJOUT_IOS = ['Touchez « Ajouter »', 'En haut à droite. L’icône Pino arrive sur votre écran d’accueil.', action('Ajouter', 'ios')];
+  var PARTAGE_MENU = ['Touchez « Partager »', 'Dans le menu qui s’ouvre.', ligne('Partager', I.partage, 'ios')];
+  var M = {
+    ios: {
+      safari: function(){
+        /* Depuis iOS 26, Partager est rangé sous « ⋯ » (sauf avec la barre
+           d'onglets classique, choisie dans les réglages de Safari). */
+        if(ipad) return {e: [['Touchez <i>Partager</i>', 'En haut à droite de l’écran.', rond(I.partage, 'ios')], ECRAN_IOS, AJOUT_IOS], f: ['haut-droite', 'Partager']};
+        if(safariVersion >= 26) return {e: [
+          ['Touchez <i>⋯</i>', 'En bas à droite de l’écran.', rond(I.points, 'ios')],
+          ['Touchez <i>Partager</i>', 'Déjà visible en bas de l’écran ? Touchez-le directement.', rond(I.partage, 'ios')],
+          ECRAN_IOS,
+          ['Touchez « Ajouter »', 'Laissez « Ouvrir comme app web » activé. L’icône Pino arrive sur votre écran d’accueil.', action('Ajouter', 'ios')]
+        ], f: ['bas-droite', 'Touchez ⋯']};
+        return {e: [['Touchez <i>Partager</i>', 'Au milieu de la barre, en bas de l’écran.', rond(I.partage, 'ios')], ECRAN_IOS, AJOUT_IOS], f: ['bas-centre', 'Partager']};
+      },
+      chrome: function(){ return {e: [
+        ['Touchez <i>Partager</i>', 'À droite de la barre d’adresse.', rond(I.partage, 'ios')], ECRAN_IOS, AJOUT_IOS
+      ], f: ['haut-droite', 'Partager']}; },
+      edge: function(){ return {e: [
+        ['Touchez le menu <i>≡</i>', 'En bas à droite de l’écran.', rond(I.lignes, 'ios')], PARTAGE_MENU, ECRAN_IOS, AJOUT_IOS
+      ], f: ['bas-droite', 'Menu']}; },
+      firefox: function(){ return {e: [
+        ['Touchez le menu <i>≡</i>', 'En bas à droite de l’écran.', rond(I.lignes, 'ios')], PARTAGE_MENU, ECRAN_IOS, AJOUT_IOS
+      ], f: ['bas-droite', 'Menu']}; }
+    },
+    android: {
+      chrome: function(){ return {e: [
+        ['Touchez le menu <i>⋮</i>', 'En haut à droite de l’écran.', rond(I.pointsV, 'and')],
+        ['Choisissez « Ajouter à l’écran d’accueil »', 'Selon le téléphone : « Installer l’application ».', ligne('Ajouter à l’écran d’accueil', I.ajout, 'and')],
+        ['Touchez « Installer »', 'L’icône Pino arrive sur votre écran d’accueil.', action('Installer', 'and')]
+      ], f: ['haut-droite', 'Menu']}; },
+      samsung: function(){ return {e: [
+        ['Touchez le menu <i>≡</i>', 'En bas à droite de l’écran.', rond(I.lignes, 'and')],
+        ['Choisissez « Ajouter la page à »', '', ligne('Ajouter la page à', I.ajout, 'and')],
+        ['Puis « Écran d’accueil »', '', ligne('Écran d’accueil', '', 'and')],
+        ['Touchez « Ajouter »', 'L’icône Pino arrive sur votre écran d’accueil.', action('Ajouter', 'and')]
+      ], f: ['bas-droite', 'Menu']}; },
+      edge: function(){ return {e: [
+        ['Touchez le menu <i>⋯</i>', 'En bas, au centre de l’écran.', rond(I.points, 'and')],
+        ['Choisissez « Ajouter au téléphone »', 'Faites glisser le menu vers le haut si besoin.', ligne('Ajouter au téléphone', I.telAjout, 'and')],
+        ['Touchez « Installer »', 'L’icône Pino arrive sur votre écran d’accueil.', action('Installer', 'and')]
+      ], f: ['bas-centre', 'Menu']}; },
+      firefox: function(){ return {e: [
+        ['Touchez le menu <i>⋮</i>', 'En haut à droite, ou en bas selon votre barre d’outils.', rond(I.pointsV, 'and')],
+        ['Choisissez « Ajouter à l’écran d’accueil »', 'Selon la version : « Installer ».', ligne('Ajouter à l’écran d’accueil', I.ajout, 'and')],
+        ['Touchez « Ajouter »', 'L’icône Pino arrive sur votre écran d’accueil.', action('Ajouter', 'and')]
+      ], f: ['haut-droite', 'Menu']}; }
     }
-    e.push(['Choisissez « Sur l’écran d’accueil »', 'Faites défiler vers le bas. Au besoin, touchez « Afficher plus ».', ligne('Sur l’écran d’accueil', I.ajout, 'ios')]);
-    e.push(['Touchez « Ajouter »', safariVersion >= 26 ? 'Laissez « Ouvrir comme app web » activé. C’est terminé.' : 'En haut à droite. C’est terminé.', action('Ajouter', 'ios')]);
-    return etapes(e);
+  };
+
+  /* Le choix du navigateur, présélectionné : si la détection se trompe, le
+     client corrige d'un geste. */
+  function selecteur(){
+    return '<div class="inst-navs" role="group" aria-label="Votre navigateur"><span>Votre navigateur</span><div>' +
+      NAVS.map(function(n){
+        return '<button type="button" data-nav="' + n[0] + '" aria-pressed="' + (n[0] === choix) + '">' + n[1] + '</button>';
+      }).join('') + '</div></div>';
   }
-  function methodeAndroid(){
-    if(nav === 'samsung') return etapes([
-      ['Touchez le menu', 'Les trois traits, en bas à droite.', rond(I.lignes, 'and')],
-      ['Choisissez « Ajouter la page à »', '', ligne('Ajouter la page à', '', 'and')],
-      ['Puis « Écran d’accueil »', 'Confirmez avec « Ajouter ».', action('Ajouter', 'and')]
-    ]);
-    return etapes([
-      ['Touchez le menu', 'Les trois points, en haut à droite.', rond(I.pointsV, 'and')],
-      ['Choisissez « Ajouter à l’écran d’accueil »', 'Selon le téléphone : « Installer l’application ».', ligne('Ajouter à l’écran d’accueil', I.ajout, 'and')],
-      ['Touchez « Installer »', 'C’est terminé.', action('Installer', 'and')]
-    ]) + '<p class="inst-note">Le menu propose « Ouvrir l’application » ? Elle est déjà installée sur ce téléphone.</p>';
+  function methode(){
+    var m = M[ios ? 'ios' : 'android'][choix]();
+    fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
+    /* La flèche ne montre un bouton que dans le navigateur réellement ouvert. */
+    if(choix === detecte) pointe(m.f[0], m.f[1]);
+    return '<p class="inst-chapo">Moins d’une minute, en ' + m.e.length + ' gestes.</p>' + etapes(m.e) +
+      '<p class="inst-ensuite"><img src="icons/icon-512.png" alt="" width="32" height="32"><span>Ensuite, ouvrez Pino depuis cette icône&nbsp;: la carte, votre liste et nos horaires, en plein écran.</span></p>' +
+      (android ? '<p class="inst-note">Le menu propose « Ouvrir l’application » ? Pino est déjà installée sur ce téléphone.</p>' : '');
+  }
+  function branche(zone){
+    var boutons = zone.querySelectorAll('[data-nav]');
+    for(var i = 0; i < boutons.length; i++) boutons[i].onclick = function(){
+      choix = this.getAttribute('data-nav');
+      var z = document.getElementById('instMethode');
+      z.innerHTML = methode();
+      for(var j = 0; j < boutons.length; j++) boutons[j].setAttribute('aria-pressed', boutons[j] === this);
+    };
   }
 
   /* ── Ce qu'on affiche ── */
-  var invite = null, attente = null;
+  var invite = null;
   function rendu(){
     fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
     if(integre){
@@ -2430,25 +2479,22 @@
       };
       return;
     }
-    if(ios){
-      corps.innerHTML = '<p class="inst-chapo">En quelques gestes, l’app s’ouvre en plein écran, comme les autres.</p>' + methodeIOS();
-      if(nav === 'safari') pointe(ipad ? 'haut-droite' : (safariVersion >= 26 ? 'bas-droite' : 'bas-centre'), ipad || safariVersion < 26 ? 'Partager est ici' : '⋯ est ici');
-      else if(nav === 'chrome') pointe('haut-droite', 'Partager est ici');
-      return;
-    }
-    if(android){
-      if(invite){
-        corps.innerHTML = '<p class="inst-chapo">Un seul geste : votre téléphone vous demandera simplement de confirmer.</p>' +
+    if(ios || android){
+      if(android && invite){
+        corps.innerHTML = '<p class="inst-chapo">Un seul geste&nbsp;: votre téléphone vous demandera simplement de confirmer.</p>' +
           '<button type="button" class="inst-bouton" id="instInstaller">' + I.telephone + 'Installer l’application</button>' +
-          '<details class="inst-autre"><summary>Rien ne se passe ?</summary>' + methodeAndroid() + '</details>';
+          '<details class="inst-autre"><summary>Rien ne se passe&nbsp;?</summary>' + selecteur() + '<div id="instMethode"></div></details>';
+        document.getElementById('instMethode').innerHTML = methode();
+        fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
         document.getElementById('instInstaller').onclick = function(){
           var p = invite; invite = null;
           p.prompt();
           p.userChoice.then(function(r){ if(r && r.outcome === 'accepted') reussi(); else rendu(); }, rendu);
         };
       } else {
-        corps.innerHTML = '<p class="inst-chapo">En quelques gestes, l’app s’ouvre en plein écran, comme les autres.</p>' + methodeAndroid();
+        corps.innerHTML = selecteur() + '<div id="instMethode">' + methode() + '</div>';
       }
+      branche(corps);
       return;
     }
     /* Ordinateur : l'installation se fait sur le téléphone. */
@@ -2479,7 +2525,7 @@
     requestAnimationFrame(function(){ guide.classList.add('inst-visible'); });
     /* Le bouton « retour » d'Android ferme le guide au lieu de quitter le site. */
     if(pousse && history.pushState){ history.pushState({inst: 1}, ''); historique = true; }
-    document.getElementById('instFermer').focus({preventScroll: true});
+    guide.focus({preventScroll: true});
   }
   function ferme(){
     if(guide.hidden) return;
