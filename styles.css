@@ -1331,18 +1331,18 @@
     padding:28px 14px calc(6px + env(safe-area-inset-bottom));background:linear-gradient(rgba(20,16,13,0),var(--noir) 55%);
     color:var(--or);pointer-events:none;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.68rem}
   .inst-fleche[hidden]{display:none}
-  .inst-fleche>*{animation:instBas 1.2s ease-in-out infinite}
-  .inst-fleche svg{width:30px;height:30px}
+  /* Libellé et flèche dans un même bloc, centrés l'un sur l'autre */
+  .f-bloc{display:flex;flex-direction:column;align-items:center;gap:2px;width:44px;animation:instBas 1.2s ease-in-out infinite}
+  .f-bloc span{padding-left:.12em}
+  .inst-fleche svg{display:block;width:30px;height:30px}
   .inst-fleche.bas-droite{align-items:flex-end}
-  .inst-fleche.bas-droite>*{margin-right:4px}
   .inst-fleche.haut-droite{top:0;bottom:auto;align-items:flex-end;flex-direction:column-reverse;
     padding:calc(6px + env(safe-area-inset-top)) 14px 28px;background:linear-gradient(rgba(20,16,13,.85) 40%,rgba(20,16,13,0))}
-  .inst-fleche.haut-droite>*{animation-name:instHaut}
-  .inst-fleche.haut-droite svg{transform:rotate(180deg);animation-name:instHautFleche}
+  .inst-fleche.haut-droite .f-bloc{flex-direction:column-reverse;animation-name:instHaut}
+  .inst-fleche.haut-droite svg{transform:rotate(180deg)}
   @keyframes instBas{50%{transform:translateY(6px)}}
   @keyframes instHaut{50%{transform:translateY(-6px)}}
-  @keyframes instHautFleche{0%,100%{transform:rotate(180deg)}50%{transform:rotate(180deg) translateY(6px)}}
-  @media (prefers-reduced-motion:reduce){.inst-fleche>*,.inst-barres .actif i::after,.inst-legende.entre,.d-doigt,.d-doigt::after,.d-pino img,.d-menu,.d-feuille,.d-valider,.d-voile{animation:none}.inst,.inst-page{transition:none}}
+  @media (prefers-reduced-motion:reduce){.f-bloc,.inst-barres .actif i::after,.inst-legende.entre,.d-doigt,.d-doigt::after,.d-pino img,.d-menu,.d-feuille,.d-valider,.d-voile{animation:none}.inst,.inst-page{transition:none}}
   .app-install .ai-aide svg{width:15px;height:15px;vertical-align:-3px;color:#C69A4D}
   .gerant{margin-top:16px;font-size:.72rem}
   .gerant button{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);
