@@ -81,11 +81,11 @@ const EXONYMES: Record<string, string> = {
   'hoei': 'Huy',
   'bergen': 'Mons',
 };
-/* D'ou vient le visiteur. Le site ne transmet qu'une de ces cinq etiquettes,
+/* D'ou vient le visiteur. Le site ne transmet qu'une de ces six etiquettes,
    jamais le referent brut — une adresse porterait le terme cherche ou un
    identifiant de campagne. Le vocabulaire etant ferme, on le verifie ici :
    rien d'autre n'entre en base. */
-const SOURCES = new Set(['Google', 'Facebook', 'Instagram', 'Autre site', 'Accès direct']);
+const SOURCES = new Set(['Google', 'Facebook', 'Instagram', 'QR code', 'Autre site', 'Accès direct']);
 
 /* Les abonnés Instagram et Facebook. Aucun accès à Meta : le module Trustindex
    du site publie un petit fichier public qui porte déjà le nombre d'abonnés

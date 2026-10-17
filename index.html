@@ -2326,6 +2326,15 @@
       : 'Ouvrez le menu <b>⋮</b> de votre navigateur, puis «&nbsp;<b>Ajouter à l’écran d’accueil</b>&nbsp;» ou «&nbsp;<b>Installer l’application</b>&nbsp;».';
     aide.hidden = false;
   });
+  /* Arrivée par le QR code du restaurant (#installer) : on amène le client
+     droit sur le bouton, et sur iPhone — où aucune invite n'existe — on
+     affiche d'emblée le geste à faire. */
+  if(location.hash === '#installer'){
+    setTimeout(function(){
+      bloc.scrollIntoView({behavior: 'smooth', block: 'center'});
+      if(ios) document.getElementById('appInstallBtn').click();
+    }, 600);
+  }
 })();
 </script>
 
@@ -2486,12 +2495,12 @@
 
   /* D'où vient le visiteur. On n'envoie JAMAIS le référent brut : une adresse
      peut porter des paramètres, un terme de recherche, un identifiant de
-     campagne. Seule une catégorie parmi cinq valeurs fixes part d'ici — de
+     campagne. Seule une catégorie parmi six valeurs fixes part d'ici — de
      quoi savoir si la fiche Google travaille, rien de plus. */
   function provenance(){
     /* Les applications Instagram et Facebook ne transmettent souvent aucun
        référent : les liens publiés portent donc ?utm_source=instagram (ou
-       facebook, google). Seule la catégorie en est tirée, puis le marqueur est
+       facebook, google ; qr pour le QR code affiché au restaurant). Seule la catégorie en est tirée, puis le marqueur est
        retiré de l'adresse pour qu'il ne se recopie pas en partageant le lien. */
     try{
       var q = new URLSearchParams(location.search), u = (q.get('utm_source') || '').toLowerCase();
@@ -2502,6 +2511,7 @@
         if(/^(instagram|ig)$/.test(u)) return 'Instagram';
         if(/^(facebook|fb)$/.test(u)) return 'Facebook';
         if(/^google/.test(u)) return 'Google';
+        if(u === 'qr') return 'QR code';
         return 'Autre site';
       }
     }catch(e){}
