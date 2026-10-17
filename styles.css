@@ -1219,6 +1219,9 @@
   .inst-obtenir svg{width:15px;height:15px}
 
   /* Les gestes d'installation */
+  /* Le style général des <section> du site (grandes marges) ne s'applique pas ici */
+  .inst section{padding:0}
+  .inst .inst-carte{padding:20px 18px 18px}
   .inst-carte{margin:24px 16px 0;padding:20px 18px 18px;border-radius:20px;background:linear-gradient(rgba(233,206,150,.07),rgba(233,206,150,.03));
     border:1px solid rgba(233,206,150,.16)}
   .inst-carte h3{font-family:"Fraunces",serif;font-weight:600;font-size:1.25rem;margin:0;color:var(--blanc);letter-spacing:-.005em}
