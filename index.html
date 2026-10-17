@@ -2310,10 +2310,8 @@
     <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer le guide">×</button>
     <div class="inst-tete">
       <img class="inst-icone" src="icons/icon-512.png" alt="" width="84" height="84">
-      <h2 id="instTitre">Pizzeria Pino<br><em>sur votre écran d’accueil</em></h2>
-      <ul class="inst-atouts">
-        <li>Gratuit</li><li>Sans App Store</li><li>Sans compte</li>
-      </ul>
+      <h2 id="instTitre">Installer l’app <em>Pino</em></h2>
+      <p class="inst-sous">Gratuit · sans App Store</p>
     </div>
     <div class="inst-corps" id="instCorps" aria-live="polite"></div>
     <button type="button" class="inst-continuer" id="instContinuer">Continuer sur le site</button>
@@ -2361,16 +2359,12 @@
     telephone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>',
     ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
   };
-  /* Les éléments d'interface à reconnaître : un bouton rond, une ligne de menu, un bouton d'action. */
-  function rond(ic, cls){ return '<span class="inst-v inst-rond ' + (cls || '') + '">' + ic + '</span>'; }
-  function ligne(txt, ic, cls){ return '<span class="inst-v inst-ligne ' + (cls || '') + '"><span>' + txt + '</span>' + (ic || '') + '</span>'; }
-  function action(txt, cls){ return '<span class="inst-v inst-action ' + (cls || '') + '">' + txt + '</span>'; }
-
+  /* Une étape = le bouton tel qu'il apparaît à l'écran, et au besoin où le
+     trouver. Pas de phrase à lire : le client reconnaît le bouton et le touche. */
+  function bouton(ic, txt, cls){ return '<span class="inst-v inst-b ' + (cls || '') + '">' + (ic || '') + (txt ? '<span>' + txt + '</span>' : '') + '</span>'; }
   function etapes(liste){
     return '<ol class="inst-etapes">' + liste.map(function(e, i){
-      /* Une ligne de menu se lit en entier : elle passe sous le texte. */
-      return '<li' + (/inst-ligne/.test(e[2] || '') ? ' class="inst-large"' : '') + '><span class="inst-num">' + (i + 1) + '</span><div class="inst-txt"><b>' + e[0] + '</b>' +
-             (e[1] ? '<small>' + e[1] + '</small>' : '') + '</div>' + (e[2] || '') + '</li>';
+      return '<li><span class="inst-num">' + (i + 1) + '</span>' + e[0] + (e[1] ? '<small>' + e[1] + '</small>' : '') + '</li>';
     }).join('') + '</ol>';
   }
   function pointe(ou, txt){
@@ -2381,82 +2375,53 @@
   }
 
   /* ── Les méthodes, navigateur par navigateur ──
-     Chacune : les étapes, et où se trouve le premier bouton à toucher. */
-  var ECRAN_IOS = ['Choisissez « Sur l’écran d’accueil »', 'Faites défiler vers le bas. Au besoin, touchez « Afficher plus ».', ligne('Sur l’écran d’accueil', I.ajout, 'ios')];
-  var AJOUT_IOS = ['Touchez « Ajouter »', 'En haut à droite. L’icône Pino arrive sur votre écran d’accueil.', action('Ajouter', 'ios')];
-  var PARTAGE_MENU = ['Touchez « Partager »', 'Dans le menu qui s’ouvre.', ligne('Partager', I.partage, 'ios')];
+     Chacune : les boutons dans l'ordre, et où se trouve le premier. */
+  var B = {
+    partage: bouton(I.partage, 'Partager', 'ios'),
+    ecran: bouton('', 'Sur l’écran d’accueil' + I.ajout, 'ios large'),
+    ajouter: bouton('', 'Ajouter', 'ios bleu')
+  };
   var M = {
     ios: {
       safari: function(){
         /* Depuis iOS 26, Partager est rangé sous « ⋯ » (sauf avec la barre
            d'onglets classique, choisie dans les réglages de Safari). */
-        if(ipad) return {e: [['Touchez <i>Partager</i>', 'En haut à droite de l’écran.', rond(I.partage, 'ios')], ECRAN_IOS, AJOUT_IOS], f: ['haut-droite', 'Partager']};
-        if(safariVersion >= 26) return {e: [
-          ['Touchez <i>⋯</i>', 'En bas à droite de l’écran.', rond(I.points, 'ios')],
-          ['Touchez <i>Partager</i>', 'Déjà visible en bas de l’écran ? Touchez-le directement.', rond(I.partage, 'ios')],
-          ECRAN_IOS,
-          ['Touchez « Ajouter »', 'Laissez « Ouvrir comme app web » activé. L’icône Pino arrive sur votre écran d’accueil.', action('Ajouter', 'ios')]
-        ], f: ['bas-droite', 'Touchez ⋯']};
-        return {e: [['Touchez <i>Partager</i>', 'Au milieu de la barre, en bas de l’écran.', rond(I.partage, 'ios')], ECRAN_IOS, AJOUT_IOS], f: ['bas-centre', 'Partager']};
+        if(ipad) return {e: [[B.partage, 'en haut à droite'], [B.ecran], [B.ajouter]], f: ['haut-droite', 'Ici']};
+        if(safariVersion >= 26) return {e: [[bouton(I.points, '', 'ios'), 'en bas à droite'], [B.partage], [B.ecran, 'plus bas dans la liste'], [B.ajouter]], f: ['bas-droite', 'Ici']};
+        return {e: [[bouton(I.partage, '', 'ios'), 'en bas, au milieu'], [B.ecran, 'plus bas dans la liste'], [B.ajouter]], f: ['bas-centre', 'Ici']};
       },
-      chrome: function(){ return {e: [
-        ['Touchez <i>Partager</i>', 'À droite de la barre d’adresse.', rond(I.partage, 'ios')], ECRAN_IOS, AJOUT_IOS
-      ], f: ['haut-droite', 'Partager']}; },
-      edge: function(){ return {e: [
-        ['Touchez le menu <i>≡</i>', 'En bas à droite de l’écran.', rond(I.lignes, 'ios')], PARTAGE_MENU, ECRAN_IOS, AJOUT_IOS
-      ], f: ['bas-droite', 'Menu']}; },
-      firefox: function(){ return {e: [
-        ['Touchez le menu <i>≡</i>', 'En bas à droite de l’écran.', rond(I.lignes, 'ios')], PARTAGE_MENU, ECRAN_IOS, AJOUT_IOS
-      ], f: ['bas-droite', 'Menu']}; }
+      chrome: function(){ return {e: [[bouton(I.partage, '', 'ios'), 'dans la barre d’adresse'], [B.ecran], [B.ajouter]], f: ['haut-droite', 'Ici']}; },
+      edge: function(){ return {e: [[bouton(I.lignes, '', 'ios'), 'en bas à droite'], [B.partage], [B.ecran], [B.ajouter]], f: ['bas-droite', 'Ici']}; },
+      firefox: function(){ return {e: [[bouton(I.lignes, '', 'ios'), 'en bas à droite'], [B.partage], [B.ecran], [B.ajouter]], f: ['bas-droite', 'Ici']}; }
     },
     android: {
-      chrome: function(){ return {e: [
-        ['Touchez le menu <i>⋮</i>', 'En haut à droite de l’écran.', rond(I.pointsV, 'and')],
-        ['Choisissez « Ajouter à l’écran d’accueil »', 'Selon le téléphone : « Installer l’application ».', ligne('Ajouter à l’écran d’accueil', I.ajout, 'and')],
-        ['Touchez « Installer »', 'L’icône Pino arrive sur votre écran d’accueil.', action('Installer', 'and')]
-      ], f: ['haut-droite', 'Menu']}; },
-      samsung: function(){ return {e: [
-        ['Touchez le menu <i>≡</i>', 'En bas à droite de l’écran.', rond(I.lignes, 'and')],
-        ['Choisissez « Ajouter la page à »', '', ligne('Ajouter la page à', I.ajout, 'and')],
-        ['Puis « Écran d’accueil »', '', ligne('Écran d’accueil', '', 'and')],
-        ['Touchez « Ajouter »', 'L’icône Pino arrive sur votre écran d’accueil.', action('Ajouter', 'and')]
-      ], f: ['bas-droite', 'Menu']}; },
-      edge: function(){ return {e: [
-        ['Touchez le menu <i>⋯</i>', 'En bas, au centre de l’écran.', rond(I.points, 'and')],
-        ['Choisissez « Ajouter au téléphone »', 'Faites glisser le menu vers le haut si besoin.', ligne('Ajouter au téléphone', I.telAjout, 'and')],
-        ['Touchez « Installer »', 'L’icône Pino arrive sur votre écran d’accueil.', action('Installer', 'and')]
-      ], f: ['bas-centre', 'Menu']}; },
-      firefox: function(){ return {e: [
-        ['Touchez le menu <i>⋮</i>', 'En haut à droite, ou en bas selon votre barre d’outils.', rond(I.pointsV, 'and')],
-        ['Choisissez « Ajouter à l’écran d’accueil »', 'Selon la version : « Installer ».', ligne('Ajouter à l’écran d’accueil', I.ajout, 'and')],
-        ['Touchez « Ajouter »', 'L’icône Pino arrive sur votre écran d’accueil.', action('Ajouter', 'and')]
-      ], f: ['haut-droite', 'Menu']}; }
+      chrome: function(){ return {e: [[bouton(I.pointsV, '', 'and'), 'en haut à droite'], [bouton('', 'Ajouter à l’écran d’accueil' + I.ajout, 'and large'), 'ou « Installer l’application »'], [bouton('', 'Installer', 'and plein')]], f: ['haut-droite', 'Ici']}; },
+      samsung: function(){ return {e: [[bouton(I.lignes, '', 'and'), 'en bas à droite'], [bouton('', 'Ajouter la page à', 'and large')], [bouton('', 'Écran d’accueil', 'and large')], [bouton('', 'Ajouter', 'and plein')]], f: ['bas-droite', 'Ici']}; },
+      edge: function(){ return {e: [[bouton(I.points, '', 'and'), 'en bas, au milieu'], [bouton('', 'Ajouter au téléphone' + I.telAjout, 'and large')], [bouton('', 'Installer', 'and plein')]], f: ['bas-centre', 'Ici']}; },
+      firefox: function(){ return {e: [[bouton(I.pointsV, '', 'and'), 'en haut à droite'], [bouton('', 'Ajouter à l’écran d’accueil' + I.ajout, 'and large')], [bouton('', 'Ajouter', 'and plein')]], f: ['haut-droite', 'Ici']}; }
     }
   };
 
-  /* Le choix du navigateur, présélectionné : si la détection se trompe, le
-     client corrige d'un geste. */
+  /* Le navigateur reconnu est pris d'office ; un petit lien en bas permet
+     d'en choisir un autre si la détection se trompe. */
   function selecteur(){
-    return '<div class="inst-navs" role="group" aria-label="Votre navigateur"><span>Votre navigateur</span><div>' +
+    return '<details class="inst-navs"><summary>Pas le bon navigateur&nbsp;?</summary><div>' +
       NAVS.map(function(n){
         return '<button type="button" data-nav="' + n[0] + '" aria-pressed="' + (n[0] === choix) + '">' + n[1] + '</button>';
-      }).join('') + '</div></div>';
+      }).join('') + '</div></details>';
   }
   function methode(){
     var m = M[ios ? 'ios' : 'android'][choix]();
     fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
     /* La flèche ne montre un bouton que dans le navigateur réellement ouvert. */
     if(choix === detecte) pointe(m.f[0], m.f[1]);
-    return '<p class="inst-chapo">Moins d’une minute, en ' + m.e.length + ' gestes.</p>' + etapes(m.e) +
-      '<p class="inst-ensuite"><img src="icons/icon-512.png" alt="" width="32" height="32"><span>Ensuite, ouvrez Pino depuis cette icône&nbsp;: la carte, votre liste et nos horaires, en plein écran.</span></p>' +
-      (android ? '<p class="inst-note">Le menu propose « Ouvrir l’application » ? Pino est déjà installée sur ce téléphone.</p>' : '');
+    return '<p class="inst-chapo">Touchez dans l’ordre&nbsp;:</p>' + etapes(m.e);
   }
   function branche(zone){
     var boutons = zone.querySelectorAll('[data-nav]');
     for(var i = 0; i < boutons.length; i++) boutons[i].onclick = function(){
       choix = this.getAttribute('data-nav');
-      var z = document.getElementById('instMethode');
-      z.innerHTML = methode();
+      document.getElementById('instMethode').innerHTML = methode();
       for(var j = 0; j < boutons.length; j++) boutons[j].setAttribute('aria-pressed', boutons[j] === this);
     };
   }
@@ -2467,11 +2432,10 @@
     fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';
-      corps.innerHTML = '<p class="inst-chapo">Cette page est ouverte à l’intérieur d’une application. Pour installer Pino, ouvrez-la d’abord dans votre navigateur.</p>' +
+      corps.innerHTML = '<p class="inst-chapo">Ouvrez d’abord cette page dans votre navigateur&nbsp;:</p>' +
         (android
           ? '<a class="inst-bouton" href="intent://pizzeriapino.be/#installer#Intent;scheme=https;package=com.android.chrome;end">Ouvrir dans Chrome</a>'
-          : etapes([['Touchez <i>⋯</i> ou <i>↗</i>', 'En haut ou en bas de l’écran.', rond(I.points, 'ios')],
-                    ['Choisissez « Ouvrir dans Safari »', 'Ou « Ouvrir dans le navigateur ».', ligne('Ouvrir dans Safari', '', 'ios')]])) +
+          : etapes([[bouton(I.points, '', 'ios'), 'en haut ou en bas'], [bouton('', 'Ouvrir dans Safari', 'ios large')]])) +
         '<button type="button" class="inst-lien" id="instCopier">Copier le lien</button>';
       document.getElementById('instCopier').onclick = function(){
         var b = this;
@@ -2481,9 +2445,8 @@
     }
     if(ios || android){
       if(android && invite){
-        corps.innerHTML = '<p class="inst-chapo">Un seul geste&nbsp;: votre téléphone vous demandera simplement de confirmer.</p>' +
-          '<button type="button" class="inst-bouton" id="instInstaller">' + I.telephone + 'Installer l’application</button>' +
-          '<details class="inst-autre"><summary>Rien ne se passe&nbsp;?</summary>' + selecteur() + '<div id="instMethode"></div></details>';
+        corps.innerHTML = '<button type="button" class="inst-bouton" id="instInstaller">' + I.telephone + 'Installer</button>' +
+          '<details class="inst-autre"><summary>Ça ne marche pas&nbsp;?</summary><div id="instMethode"></div>' + selecteur() + '</details>';
         document.getElementById('instMethode').innerHTML = methode();
         fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
         document.getElementById('instInstaller').onclick = function(){
@@ -2492,18 +2455,18 @@
           p.userChoice.then(function(r){ if(r && r.outcome === 'accepted') reussi(); else rendu(); }, rendu);
         };
       } else {
-        corps.innerHTML = selecteur() + '<div id="instMethode">' + methode() + '</div>';
+        corps.innerHTML = '<div id="instMethode">' + methode() + '</div>' + selecteur();
       }
       branche(corps);
       return;
     }
     /* Ordinateur : l'installation se fait sur le téléphone. */
-    corps.innerHTML = '<p class="inst-chapo">L’app s’installe sur votre téléphone. Scannez ce code avec son appareil photo.</p>' +
+    corps.innerHTML = '<p class="inst-chapo">Scannez ce code avec votre téléphone&nbsp;:</p>' +
       '<img class="inst-qr" src="qr/qr-app-pino.svg" alt="QR code vers pizzeriapino.be" width="220" height="220">';
   }
   function reussi(){
     fleche.hidden = true;
-    corps.innerHTML = '<div class="inst-reussi">' + I.ok + '</div><p class="inst-chapo"><b>C’est installé !</b><br>Retrouvez l’icône Pino sur votre écran d’accueil.</p>';
+    corps.innerHTML = '<div class="inst-reussi">' + I.ok + '</div><p class="inst-chapo"><b>C’est installé !</b><br>L’icône Pino est sur votre écran d’accueil.</p>';
     if(bloc) bloc.hidden = true;
   }
 

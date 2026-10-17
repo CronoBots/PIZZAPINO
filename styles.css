@@ -1195,58 +1195,51 @@
   .inst-fermer{position:absolute;z-index:2;top:calc(12px + env(safe-area-inset-top));right:14px;width:42px;height:42px;border-radius:50%;
     border:1px solid rgba(233,206,150,.22);background:rgba(20,16,13,.6);color:var(--blanc);font-size:1.5rem;line-height:1;cursor:pointer}
   .inst.inst-fleche-haut .inst-fermer{right:auto;left:14px;top:calc(12px + env(safe-area-inset-top))}
-  .inst-tete{text-align:center;margin-bottom:22px}
-  .inst-icone{width:84px;height:84px;border-radius:20px;display:block;margin:6px auto 16px;
+  .inst-tete{text-align:center;margin-bottom:26px}
+  .inst-icone{width:76px;height:76px;border-radius:18px;display:block;margin:10px auto 16px;
     box-shadow:0 14px 40px -10px rgba(198,154,77,.55),0 0 0 1px rgba(233,206,150,.25)}
-  .inst-tete h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.6rem;line-height:1.15;margin:0 0 12px;color:var(--blanc)}
+  .inst-tete h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.75rem;line-height:1.15;margin:0 0 6px;color:var(--blanc)}
   .inst-tete h2 em{font-style:normal;color:var(--or)}
-  .inst-atouts{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:0;padding:0}
-  .inst-atouts li{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.64rem;color:var(--or-l);
-    border:1px solid rgba(233,206,150,.25);border-radius:999px;padding:5px 10px}
-  .inst-chapo{text-align:center;font-size:.92rem;line-height:1.55;color:#D8CDB9;margin:0 0 18px}
+  .inst-sous{margin:0;font-size:.85rem;color:var(--gris)}
+  .inst-chapo{text-align:center;font-size:1rem;line-height:1.5;color:#D8CDB9;margin:0 0 14px}
   .inst-chapo b{color:var(--blanc);font-family:"Fraunces",serif;font-size:1.3rem;font-weight:600}
-  .inst:focus{outline:none}
-  .inst-navs{display:flex;flex-direction:column;align-items:center;gap:8px;margin:0 0 18px}
-  .inst-navs>span{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.62rem;color:var(--gris-d)}
-  .inst-navs div{display:flex;width:100%;padding:4px;gap:4px;border-radius:12px;background:rgba(233,206,150,.06);border:1px solid rgba(233,206,150,.14)}
-  .inst-navs button{flex:1;min-width:0;padding:9px 4px;border:0;border-radius:9px;background:none;color:var(--gris);font-size:.8rem;font-weight:500;cursor:pointer;transition:background .2s,color .2s}
-  .inst-navs button[aria-pressed="true"]{background:var(--or);color:#1a1510;font-weight:600}
-  .inst-ensuite{display:flex;align-items:center;gap:12px;margin:14px 0 0;padding:12px 14px;border-radius:14px;
-    border:1px dashed rgba(233,206,150,.28);font-size:.82rem;line-height:1.45;color:#D8CDB9}
-  .inst-ensuite img{width:32px;height:32px;border-radius:8px;flex-shrink:0}
+  /* Les étapes : un numéro, le bouton tel qu'à l'écran, et où le trouver */
   .inst-etapes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-  .inst-etapes li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:14px;border-radius:14px;
+  .inst-etapes li{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;padding:14px 16px;border-radius:16px;
     background:rgba(233,206,150,.05);border:1px solid rgba(233,206,150,.14)}
-  .inst-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--or);
-    color:#1a1510;font-family:"Oswald",sans-serif;font-weight:600;font-size:.86rem}
-  .inst-txt{display:flex;flex-direction:column;gap:3px;min-width:0}
-  .inst-txt b{font-weight:600;font-size:.95rem;line-height:1.3;color:var(--blanc)}
-  .inst-txt b i{font-style:normal;color:var(--or-l)}
-  .inst-txt small{font-size:.78rem;line-height:1.45;color:var(--gris)}
-  /* Reproductions des boutons du téléphone : iOS (bleu système) et Android (Material) */
-  .inst-v{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap}
-  .inst-v svg{width:20px;height:20px}
-  .inst-rond{width:42px;height:42px;border-radius:12px;background:#2C2C2E;color:#0A84FF;position:relative}
-  .inst-rond.and{border-radius:50%;background:#2B2930;color:#E6E1E5}
-  .inst-rond::after{content:"";position:absolute;inset:-4px;border-radius:inherit;border:2px solid var(--or);animation:instPulse 1.8s ease-out infinite}
-  .inst-etapes li.inst-large{grid-template-columns:auto 1fr}
-  .inst-etapes li.inst-large .inst-ligne{grid-column:2;justify-self:start;max-width:100%}
-  .inst-ligne{gap:10px;max-width:150px;padding:10px 13px;border-radius:10px;background:#2C2C2E;color:#F2F2F7;font-size:.8rem}
-  .inst-ligne span{overflow:hidden;text-overflow:ellipsis}
-  .inst-ligne.and{background:#2B2930;color:#E6E1E5}
-  .inst-ligne svg{width:17px;height:17px;flex-shrink:0}
-  .inst-action{padding:8px 13px;border-radius:10px;font-weight:600;font-size:.86rem}
-  .inst-action.ios{color:#0A84FF;background:#2C2C2E}
-  .inst-action.and{color:#381E72;background:#D0BCFF;border-radius:999px}
-  @keyframes instPulse{0%{opacity:.9;transform:scale(.92)}70%,100%{opacity:0;transform:scale(1.18)}}
-  @media (max-width:360px){.inst-etapes li{grid-template-columns:auto 1fr}.inst-etapes .inst-v{grid-column:2;justify-self:start}}
-  .inst-note{font-size:.78rem;line-height:1.5;color:var(--gris);text-align:center;margin:14px 6px 0}
+  .inst-etapes small{font-size:.85rem;color:var(--gris)}
+  .inst-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--or);
+    color:#1a1510;font-family:"Oswald",sans-serif;font-weight:600;font-size:.92rem;flex-shrink:0}
+  .inst-v{display:inline-flex;align-items:center;gap:9px;flex-shrink:0;white-space:nowrap;position:relative;
+    min-height:46px;min-width:46px;justify-content:center;padding:0 14px;border-radius:12px;font-size:.98rem;font-weight:500}
+  .inst-v svg{width:22px;height:22px;flex-shrink:0}
+  .inst-v.ios{background:#2C2C2E;color:#0A84FF}
+  .inst-v.ios.large{color:#F2F2F7}
+  .inst-v.ios.large svg{color:#F2F2F7}
+  .inst-v.ios.bleu{font-weight:600}
+  .inst-v.and{background:#2B2930;color:#E6E1E5}
+  .inst-v.and:not(.large):not(.plein){border-radius:50%;padding:0}
+  .inst-v.and.plein{background:#D0BCFF;color:#381E72;border-radius:999px;font-weight:600}
+  .inst-v.large{max-width:100%;white-space:normal}
+  .inst-v span svg{margin-left:10px;vertical-align:-5px}
+  .inst-etapes li:first-child .inst-v::after{content:"";position:absolute;inset:-4px;border-radius:inherit;
+    border:2px solid var(--or);animation:instPulse 1.8s ease-out infinite}
+  @keyframes instPulse{0%{opacity:.9;transform:scale(.94)}70%,100%{opacity:0;transform:scale(1.15)}}
+  .inst-navs{margin:22px 0 0;text-align:center}
+  .inst-navs summary,.inst-autre summary{list-style:none;display:inline-block;font-size:.85rem;color:var(--gris);cursor:pointer;
+    text-decoration:underline;text-underline-offset:3px}
+  .inst-navs summary::-webkit-details-marker,.inst-autre summary::-webkit-details-marker{display:none}
+  .inst-navs div{display:flex;gap:6px;margin-top:12px}
+  .inst-navs button{flex:1;min-width:0;padding:10px 4px;border:1px solid rgba(233,206,150,.2);border-radius:10px;background:none;
+    color:var(--gris);font-size:.82rem;cursor:pointer}
+  .inst-navs button[aria-pressed="true"]{background:var(--or);border-color:var(--or);color:#1a1510;font-weight:600}
   .inst-bouton{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;border:0;border-radius:14px;
     background:var(--rouge);color:#fff;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.9rem;
     text-decoration:none;cursor:pointer;box-shadow:0 14px 34px -12px rgba(168,38,29,.8)}
   .inst-bouton svg{width:20px;height:20px}
-  .inst-autre{margin-top:18px}
-  .inst-autre summary{text-align:center;font-size:.82rem;color:var(--gris);cursor:pointer;margin-bottom:12px}
+  .inst-autre{margin-top:20px;text-align:center}
+  .inst-autre[open] summary{margin-bottom:14px}
+  .inst-autre .inst-etapes{text-align:left}
   .inst-lien,.inst-continuer{display:block;margin:16px auto 0;background:none;border:0;color:var(--gris);font-size:.84rem;
     text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px;word-break:break-all}
   .inst-continuer{margin-top:auto;padding-top:26px;text-decoration:none;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}
@@ -1270,7 +1263,7 @@
   @keyframes instBas{50%{transform:translateY(6px)}}
   @keyframes instHaut{50%{transform:translateY(-6px)}}
   @keyframes instHautFleche{0%,100%{transform:rotate(180deg)}50%{transform:rotate(180deg) translateY(6px)}}
-  @media (prefers-reduced-motion:reduce){.inst-rond::after,.inst-fleche>*{animation:none}.inst,.inst-page{transition:none}}
+  @media (prefers-reduced-motion:reduce){.inst-v::after,.inst-fleche>*{animation:none}.inst,.inst-page{transition:none}}
   .app-install .ai-aide svg{width:15px;height:15px;vertical-align:-3px;color:#C69A4D}
   .gerant{margin-top:16px;font-size:.72rem}
   .gerant button{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);
