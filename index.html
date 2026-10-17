@@ -2313,12 +2313,17 @@
      Une démonstration plutôt qu'une notice : un téléphone dessiné rejoue en
      boucle les gestes à faire, avec le navigateur du client (Safari, Chrome,
      Edge, Samsung…), un doigt sur le bouton à toucher, et finit sur l'icône
-     Pino posée sur l'écran d'accueil. Rien d'autre à l'écran : sous le
-     téléphone, une barre de progression et la consigne de l'étape en cours ;
+     Pino posée sur l'écran d'accueil. Au-dessus, le logo, le titre et une
+     ligne d'explication ; sous le téléphone, une barre de progression et la consigne de l'étape en cours ;
      toucher un segment rejoue son étape. -->
-<div id="installGuide" class="inst" tabindex="-1" role="dialog" aria-modal="true" aria-label="Installer l’application Pino" hidden>
+<div id="installGuide" class="inst" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="instTitre" hidden>
   <div class="inst-page">
     <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer">×</button>
+    <div class="inst-tete">
+      <img src="icons/pino-logo-guide.webp" alt="Pizzeria Pino" width="288" height="235" decoding="async">
+      <h2 id="instTitre">Installer Pizzeria Pino</h2>
+      <p>Sur l’écran d’accueil, comme une application</p>
+    </div>
     <div class="inst-demo" id="instDemo" aria-hidden="true">
       <div class="inst-tel" id="instTel"><div class="inst-ecran" id="instEcran"></div></div>
     </div>
@@ -2463,7 +2468,7 @@
      l'échelle de l'écran, pour rester net et entier sur tous les téléphones. */
   var LT = 212, HT = 400, echelle = 1;
   function ajuste(){
-    echelle = Math.max(.75, Math.min(1.35, (innerHeight - 340) / HT, (innerWidth - 48) / LT));
+    echelle = Math.max(.7, Math.min(1.2, (innerHeight - 450) / HT, (innerWidth - 48) / LT));
     tel.style.transform = 'scale(' + echelle + ')';
     demo.style.width = LT * echelle + 'px'; demo.style.height = HT * echelle + 'px';
     suivi.style.width = Math.max(260, LT * echelle + 40) + 'px';
