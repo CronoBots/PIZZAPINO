@@ -1180,10 +1180,83 @@
   .app-install span{font-size:.72rem;color:var(--gris-d)}
   .app-install button{background:var(--rouge);color:#fff;border:0;border-radius:999px;padding:9px 15px;cursor:pointer;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.68rem}
-  .app-install .ai-aide{grid-column:1/-1;display:block;font-size:.76rem;color:#D8CDB9;line-height:1.55;
-    padding-top:10px;border-top:1px solid rgba(233,206,150,.14)}
-  .app-install .ai-aide[hidden]{display:none}
-  .app-install .ai-aide b{color:#EAD09A;font-family:inherit;text-transform:none;letter-spacing:0;font-size:inherit}
+    /* Guide d'installation plein écran (QR code du restaurant, bouton ci-dessus) */
+  html.inst-ouvert,html.inst-ouvert body{overflow:hidden}
+  .inst{position:fixed;inset:0;z-index:2500;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+    background:radial-gradient(120% 60% at 50% -10%,rgba(198,154,77,.2),transparent 60%),var(--noir);color:var(--blanc);
+    opacity:0;transition:opacity .26s ease}
+  .inst[hidden]{display:none}
+  .inst.inst-visible{opacity:1}
+  .inst-page{position:relative;max-width:440px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
+    padding:calc(28px + env(safe-area-inset-top)) 18px calc(96px + env(safe-area-inset-bottom));
+    transform:translateY(14px);transition:transform .32s cubic-bezier(.22,.68,.16,1)}
+  .inst.inst-visible .inst-page{transform:none}
+  .inst.inst-fleche-haut .inst-page{padding-top:calc(78px + env(safe-area-inset-top));padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+  .inst-fermer{position:absolute;top:calc(12px + env(safe-area-inset-top));right:10px;width:42px;height:42px;border-radius:50%;
+    border:1px solid rgba(233,206,150,.22);background:rgba(20,16,13,.6);color:var(--blanc);font-size:1.5rem;line-height:1;cursor:pointer}
+  .inst.inst-fleche-haut .inst-fermer{top:auto;bottom:calc(14px + env(safe-area-inset-bottom));position:fixed;right:14px}
+  .inst-tete{text-align:center;margin-bottom:22px}
+  .inst-icone{width:84px;height:84px;border-radius:20px;display:block;margin:6px auto 16px;
+    box-shadow:0 14px 40px -10px rgba(198,154,77,.55),0 0 0 1px rgba(233,206,150,.25)}
+  .inst-tete h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.6rem;line-height:1.15;margin:0 0 12px;color:var(--blanc)}
+  .inst-tete h2 em{font-style:normal;color:var(--or)}
+  .inst-atouts{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:0;padding:0}
+  .inst-atouts li{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.64rem;color:var(--or-l);
+    border:1px solid rgba(233,206,150,.25);border-radius:999px;padding:5px 10px}
+  .inst-chapo{text-align:center;font-size:.92rem;line-height:1.55;color:#D8CDB9;margin:0 0 18px}
+  .inst-chapo b{color:var(--blanc);font-family:"Fraunces",serif;font-size:1.3rem;font-weight:600}
+  .inst-etapes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .inst-etapes li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:14px;border-radius:14px;
+    background:rgba(233,206,150,.05);border:1px solid rgba(233,206,150,.14)}
+  .inst-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--or);
+    color:#1a1510;font-family:"Oswald",sans-serif;font-weight:600;font-size:.86rem}
+  .inst-txt{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .inst-txt b{font-weight:600;font-size:.95rem;line-height:1.3;color:var(--blanc)}
+  .inst-txt b i{font-style:normal;color:var(--or-l)}
+  .inst-txt small{font-size:.78rem;line-height:1.45;color:var(--gris)}
+  /* Reproductions des boutons du téléphone : iOS (bleu système) et Android (Material) */
+  .inst-v{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap}
+  .inst-v svg{width:20px;height:20px}
+  .inst-rond{width:42px;height:42px;border-radius:12px;background:#2C2C2E;color:#0A84FF;position:relative}
+  .inst-rond.and{border-radius:50%;background:#2B2930;color:#E6E1E5}
+  .inst-rond::after{content:"";position:absolute;inset:-4px;border-radius:inherit;border:2px solid var(--or);animation:instPulse 1.8s ease-out infinite}
+  .inst-etapes li.inst-large{grid-template-columns:auto 1fr}
+  .inst-etapes li.inst-large .inst-ligne{grid-column:2;justify-self:start;max-width:100%}
+  .inst-ligne{gap:10px;max-width:150px;padding:10px 13px;border-radius:10px;background:#2C2C2E;color:#F2F2F7;font-size:.8rem}
+  .inst-ligne span{overflow:hidden;text-overflow:ellipsis}
+  .inst-ligne.and{background:#2B2930;color:#E6E1E5}
+  .inst-ligne svg{width:17px;height:17px;flex-shrink:0}
+  .inst-action{padding:8px 13px;border-radius:10px;font-weight:600;font-size:.86rem}
+  .inst-action.ios{color:#0A84FF;background:#2C2C2E}
+  .inst-action.and{color:#381E72;background:#D0BCFF;border-radius:999px}
+  @keyframes instPulse{0%{opacity:.9;transform:scale(.92)}70%,100%{opacity:0;transform:scale(1.18)}}
+  @media (max-width:360px){.inst-etapes li{grid-template-columns:auto 1fr}.inst-etapes .inst-v{grid-column:2;justify-self:start}}
+  .inst-note{font-size:.78rem;line-height:1.5;color:var(--gris);text-align:center;margin:14px 6px 0}
+  .inst-bouton{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;border:0;border-radius:14px;
+    background:var(--rouge);color:#fff;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.9rem;
+    text-decoration:none;cursor:pointer;box-shadow:0 14px 34px -12px rgba(168,38,29,.8)}
+  .inst-bouton svg{width:20px;height:20px}
+  .inst-autre{margin-top:18px}
+  .inst-autre summary{text-align:center;font-size:.82rem;color:var(--gris);cursor:pointer;margin-bottom:12px}
+  .inst-lien,.inst-continuer{display:block;margin:16px auto 0;background:none;border:0;color:var(--gris);font-size:.84rem;
+    text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px;word-break:break-all}
+  .inst-continuer{margin-top:auto;padding-top:26px;text-decoration:none;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}
+  .inst-qr{display:block;margin:0 auto;width:220px;height:220px;background:#fff;border-radius:16px;padding:12px}
+  .inst-reussi{width:76px;height:76px;margin:10px auto 16px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(198,154,77,.15);border:1px solid var(--or);color:var(--or)}
+  .inst-reussi svg{width:36px;height:36px}
+  /* La flèche montre le vrai bouton du navigateur, hors de la page */
+  .inst-fleche{position:fixed;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--or);pointer-events:none;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:.66rem;animation:instBas 1.2s ease-in-out infinite}
+  .inst-fleche[hidden]{display:none}
+  .inst-fleche svg{width:30px;height:30px}
+  .inst-fleche.bas-centre{left:50%;bottom:calc(8px + env(safe-area-inset-bottom));margin-left:-50px;width:100px}
+  .inst-fleche.bas-droite{right:6px;bottom:calc(8px + env(safe-area-inset-bottom));width:100px}
+  .inst-fleche.haut-droite{right:6px;top:calc(6px + env(safe-area-inset-top));width:110px;flex-direction:column-reverse;animation-name:instHaut}
+  .inst-fleche.haut-droite svg{transform:rotate(180deg)}
+  @keyframes instBas{50%{transform:translateY(6px)}}
+  @keyframes instHaut{50%{transform:translateY(-6px)}}
+  @media (prefers-reduced-motion:reduce){.inst-rond::after,.inst-fleche{animation:none}.inst,.inst-page{transition:none}}
   .app-install .ai-aide svg{width:15px;height:15px;vertical-align:-3px;color:#C69A4D}
   .gerant{margin-top:16px;font-size:.72rem}
   .gerant button{display:inline-flex;align-items:center;gap:7px;color:var(--gris-d);

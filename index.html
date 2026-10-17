@@ -740,7 +740,6 @@
       <img src="icons/icon-512.png" alt="" width="40" height="40" loading="lazy">
       <p><b>Installer l’application</b><span>Pizzeria Pino en un geste, depuis votre écran d’accueil.</span></p>
       <button type="button" id="appInstallBtn">Installer</button>
-      <p class="ai-aide" id="appInstallAide" hidden></p>
     </div>
     <p class="gerant"><button type="button" id="ouvrirGerant" aria-haspopup="dialog"><svg
          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
@@ -2302,38 +2301,229 @@
 })();
 </script>
 
+<!-- GUIDE D'INSTALLATION (QR code du restaurant, bouton du bas de page)
+     Plein écran, une seule méthode à la fois : celle du téléphone et du
+     navigateur du client. Les boutons à toucher sont reproduits tels que le
+     client les verra, pour qu'il les reconnaisse au lieu de lire une consigne. -->
+<div id="installGuide" class="inst" role="dialog" aria-modal="true" aria-labelledby="instTitre" hidden>
+  <div class="inst-page">
+    <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer le guide">×</button>
+    <div class="inst-tete">
+      <img class="inst-icone" src="icons/icon-512.png" alt="" width="84" height="84">
+      <h2 id="instTitre">Pizzeria Pino<br><em>sur votre écran d’accueil</em></h2>
+      <ul class="inst-atouts">
+        <li>Gratuit</li><li>Sans App Store</li><li>Sans compte</li>
+      </ul>
+    </div>
+    <div class="inst-corps" id="instCorps" aria-live="polite"></div>
+    <button type="button" class="inst-continuer" id="instContinuer">Continuer sur le site</button>
+  </div>
+  <div class="inst-fleche" id="instFleche" aria-hidden="true" hidden>
+    <span id="instFlecheTxt"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg>
+  </div>
+</div>
 <script>
 (function(){
+  var guide = document.getElementById('installGuide');
+  if(!guide) return;
+  var corps = document.getElementById('instCorps');
+  var fleche = document.getElementById('instFleche');
   var bloc = document.getElementById('appInstall');
-  if(!bloc) return;
+  var html = document.documentElement;
   var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
-  if(standalone || !document.documentElement.classList.contains('app-mode')) return;
-  var aide = document.getElementById('appInstallAide');
+
+  /* ── Le téléphone et le navigateur ── */
   var ua = navigator.userAgent || '';
-  var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  var invite = null;
-  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); invite = e; });
-  window.addEventListener('appinstalled', function(){ bloc.hidden = true; });
-  bloc.hidden = false;
-  document.getElementById('appInstallBtn').addEventListener('click', function(){
-    if(invite){
-      invite.prompt();
-      invite.userChoice.then(function(r){ invite = null; if(r && r.outcome === 'accepted') bloc.hidden = true; });
+  var ipad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var ios = ipad || /iPhone|iPod/.test(ua);
+  var android = /Android/.test(ua);
+  /* Navigateurs intégrés aux applications (Instagram, Facebook, TikTok…) :
+     aucun ne sait installer une page, il faut d'abord en sortir. */
+  var integre = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Line\/|Snapchat|TikTok|BytedanceWebview|musical_ly|LinkedInApp|Pinterest|GSA\/|; wv\)/.test(ua);
+  var safariVersion = +((/Version\/(\d+)/.exec(ua) || [])[1] || 0);
+  var nav = ios ? (/CriOS/.test(ua) ? 'chrome' : /FxiOS|EdgiOS|OPiOS/.test(ua) ? 'autre' : 'safari')
+               : (/SamsungBrowser/.test(ua) ? 'samsung' : /Firefox/.test(ua) ? 'firefox' : 'chrome');
+
+  /* ── Les pictogrammes, dessinés comme sur le téléphone ── */
+  var I = {
+    partage: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M8 10H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1h-2"/></svg>',
+    ajout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/></svg>',
+    points: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
+    pointsV: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>',
+    lignes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+    telephone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>',
+    ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+  };
+  /* Les éléments d'interface à reconnaître : un bouton rond, une ligne de menu, un bouton d'action. */
+  function rond(ic, cls){ return '<span class="inst-v inst-rond ' + (cls || '') + '">' + ic + '</span>'; }
+  function ligne(txt, ic, cls){ return '<span class="inst-v inst-ligne ' + (cls || '') + '"><span>' + txt + '</span>' + (ic || '') + '</span>'; }
+  function action(txt, cls){ return '<span class="inst-v inst-action ' + (cls || '') + '">' + txt + '</span>'; }
+
+  function etapes(liste){
+    return '<ol class="inst-etapes">' + liste.map(function(e, i){
+      /* Une ligne de menu se lit en entier : elle passe sous le texte. */
+      return '<li' + (/inst-ligne/.test(e[2] || '') ? ' class="inst-large"' : '') + '><span class="inst-num">' + (i + 1) + '</span><div class="inst-txt"><b>' + e[0] + '</b>' +
+             (e[1] ? '<small>' + e[1] + '</small>' : '') + '</div>' + (e[2] || '') + '</li>';
+    }).join('') + '</ol>';
+  }
+  function pointe(ou, txt){
+    fleche.className = 'inst-fleche ' + ou;
+    document.getElementById('instFlecheTxt').textContent = txt;
+    fleche.hidden = false;
+    guide.classList.toggle('inst-fleche-haut', ou === 'haut-droite');
+  }
+
+  /* ── Les méthodes ── */
+  function methodeIOS(){
+    if(nav === 'chrome') return etapes([
+      ['Touchez <i>Partager</i>', 'En haut à droite, dans la barre d’adresse.', rond(I.partage, 'ios')],
+      ['Choisissez « Sur l’écran d’accueil »', 'Faites défiler la liste si besoin.', ligne('Sur l’écran d’accueil', I.ajout, 'ios')],
+      ['Touchez « Ajouter »', 'En haut à droite. C’est terminé.', action('Ajouter', 'ios')]
+    ]);
+    if(nav === 'autre') return etapes([
+      ['Ouvrez le menu du navigateur', 'Puis touchez <i>Partager</i>.', rond(I.partage, 'ios')],
+      ['Choisissez « Sur l’écran d’accueil »', 'Faites défiler la liste si besoin.', ligne('Sur l’écran d’accueil', I.ajout, 'ios')],
+      ['Touchez « Ajouter »', 'En haut à droite. C’est terminé.', action('Ajouter', 'ios')]
+    ]) + '<p class="inst-note">Le plus simple reste Safari : ouvrez-y pizzeriapino.be et suivez les mêmes étapes.</p>';
+    /* Safari. Depuis iOS 26, le bouton Partager est rangé sous « ⋯ » (sauf
+       si la barre d'onglets classique est choisie dans les réglages). */
+    var e = [];
+    if(safariVersion >= 26 && !ipad){
+      e.push(['Touchez <i>⋯</i>', 'En bas à droite de l’écran.', rond(I.points, 'ios')]);
+      e.push(['Touchez <i>Partager</i>', 'Si le bouton est déjà visible en bas, touchez-le directement.', rond(I.partage, 'ios')]);
+    } else {
+      e.push(['Touchez <i>Partager</i>', ipad ? 'En haut à droite de l’écran.' : 'Au milieu de la barre, en bas de l’écran.', rond(I.partage, 'ios')]);
+    }
+    e.push(['Choisissez « Sur l’écran d’accueil »', 'Faites défiler vers le bas. Au besoin, touchez « Afficher plus ».', ligne('Sur l’écran d’accueil', I.ajout, 'ios')]);
+    e.push(['Touchez « Ajouter »', safariVersion >= 26 ? 'Laissez « Ouvrir comme app web » activé. C’est terminé.' : 'En haut à droite. C’est terminé.', action('Ajouter', 'ios')]);
+    return etapes(e);
+  }
+  function methodeAndroid(){
+    if(nav === 'samsung') return etapes([
+      ['Touchez le menu', 'Les trois traits, en bas à droite.', rond(I.lignes, 'and')],
+      ['Choisissez « Ajouter la page à »', '', ligne('Ajouter la page à', '', 'and')],
+      ['Puis « Écran d’accueil »', 'Confirmez avec « Ajouter ».', action('Ajouter', 'and')]
+    ]);
+    return etapes([
+      ['Touchez le menu', 'Les trois points, en haut à droite.', rond(I.pointsV, 'and')],
+      ['Choisissez « Ajouter à l’écran d’accueil »', 'Selon le téléphone : « Installer l’application ».', ligne('Ajouter à l’écran d’accueil', I.ajout, 'and')],
+      ['Touchez « Installer »', 'C’est terminé.', action('Installer', 'and')]
+    ]) + '<p class="inst-note">Le menu propose « Ouvrir l’application » ? Elle est déjà installée sur ce téléphone.</p>';
+  }
+
+  /* ── Ce qu'on affiche ── */
+  var invite = null, attente = null;
+  function rendu(){
+    fleche.hidden = true; guide.classList.remove('inst-fleche-haut');
+    if(integre){
+      var url = 'https://pizzeriapino.be/#installer';
+      corps.innerHTML = '<p class="inst-chapo">Cette page est ouverte à l’intérieur d’une application. Pour installer Pino, ouvrez-la d’abord dans votre navigateur.</p>' +
+        (android
+          ? '<a class="inst-bouton" href="intent://pizzeriapino.be/#installer#Intent;scheme=https;package=com.android.chrome;end">Ouvrir dans Chrome</a>'
+          : etapes([['Touchez <i>⋯</i> ou <i>↗</i>', 'En haut ou en bas de l’écran.', rond(I.points, 'ios')],
+                    ['Choisissez « Ouvrir dans Safari »', 'Ou « Ouvrir dans le navigateur ».', ligne('Ouvrir dans Safari', '', 'ios')]])) +
+        '<button type="button" class="inst-lien" id="instCopier">Copier le lien</button>';
+      document.getElementById('instCopier').onclick = function(){
+        var b = this;
+        (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function(){ b.textContent = 'Lien copié ✓'; }, function(){ b.textContent = url; });
+      };
       return;
     }
-    aide.innerHTML = ios
-      ? 'Appuyez sur <b>Partager</b> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M8 8l4-4 4 4"/><path d="M20 14v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6"/></svg> en bas de l’écran, puis «&nbsp;<b>Sur l’écran d’accueil</b>&nbsp;».'
-      : 'Ouvrez le menu <b>⋮</b> de votre navigateur, puis «&nbsp;<b>Ajouter à l’écran d’accueil</b>&nbsp;» ou «&nbsp;<b>Installer l’application</b>&nbsp;».';
-    aide.hidden = false;
+    if(ios){
+      corps.innerHTML = '<p class="inst-chapo">En quelques gestes, l’app s’ouvre en plein écran, comme les autres.</p>' + methodeIOS();
+      if(nav === 'safari') pointe(ipad ? 'haut-droite' : (safariVersion >= 26 ? 'bas-droite' : 'bas-centre'), ipad || safariVersion < 26 ? 'Partager est ici' : '⋯ est ici');
+      else if(nav === 'chrome') pointe('haut-droite', 'Partager est ici');
+      return;
+    }
+    if(android){
+      if(invite){
+        corps.innerHTML = '<p class="inst-chapo">Un seul geste : votre téléphone vous demandera simplement de confirmer.</p>' +
+          '<button type="button" class="inst-bouton" id="instInstaller">' + I.telephone + 'Installer l’application</button>' +
+          '<details class="inst-autre"><summary>Rien ne se passe ?</summary>' + methodeAndroid() + '</details>';
+        document.getElementById('instInstaller').onclick = function(){
+          var p = invite; invite = null;
+          p.prompt();
+          p.userChoice.then(function(r){ if(r && r.outcome === 'accepted') reussi(); else rendu(); }, rendu);
+        };
+      } else {
+        corps.innerHTML = '<p class="inst-chapo">En quelques gestes, l’app s’ouvre en plein écran, comme les autres.</p>' + methodeAndroid();
+      }
+      return;
+    }
+    /* Ordinateur : l'installation se fait sur le téléphone. */
+    corps.innerHTML = '<p class="inst-chapo">L’app s’installe sur votre téléphone. Scannez ce code avec son appareil photo.</p>' +
+      '<img class="inst-qr" src="qr/qr-app-pino.svg" alt="QR code vers pizzeriapino.be" width="220" height="220">';
+  }
+  function reussi(){
+    fleche.hidden = true;
+    corps.innerHTML = '<div class="inst-reussi">' + I.ok + '</div><p class="inst-chapo"><b>C’est installé !</b><br>Retrouvez l’icône Pino sur votre écran d’accueil.</p>';
+    if(bloc) bloc.hidden = true;
+  }
+
+  /* L'invite d'installation d'Android peut arriver après l'ouverture du
+     guide : on la garde, et l'on remplace les étapes par le bouton. */
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault(); invite = e;
+    if(!guide.hidden && android && !integre) rendu();
   });
-  /* Arrivée par le QR code du restaurant (#installer) : on amène le client
-     droit sur le bouton, et sur iPhone — où aucune invite n'existe — on
-     affiche d'emblée le geste à faire. */
+  window.addEventListener('appinstalled', function(){ invite = null; if(!guide.hidden) reussi(); else if(bloc) bloc.hidden = true; });
+
+  /* ── Ouvrir, fermer ── */
+  var historique = false, avant = null;
+  function ouvre(pousse){
+    avant = document.activeElement;
+    rendu();
+    guide.hidden = false;
+    html.classList.add('inst-ouvert');
+    requestAnimationFrame(function(){ guide.classList.add('inst-visible'); });
+    /* Le bouton « retour » d'Android ferme le guide au lieu de quitter le site. */
+    if(pousse && history.pushState){ history.pushState({inst: 1}, ''); historique = true; }
+    document.getElementById('instFermer').focus({preventScroll: true});
+  }
+  function ferme(){
+    if(guide.hidden) return;
+    guide.classList.remove('inst-visible');
+    html.classList.remove('inst-ouvert');
+    setTimeout(function(){ guide.hidden = true; }, 260);
+    if(avant && avant.focus) avant.focus({preventScroll: true});
+  }
+  function quitte(){ if(historique){ historique = false; history.back(); } else ferme(); }
+  window.addEventListener('popstate', function(){ if(historique){ historique = false; ferme(); } });
+  document.getElementById('instFermer').addEventListener('click', quitte);
+  document.getElementById('instContinuer').addEventListener('click', quitte);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !guide.hidden) quitte(); });
+
+  /* Bouton du bas de page (site mobile) : l'invite directe quand Android
+     la propose, le guide sinon. */
+  if(bloc && !standalone && html.classList.contains('app-mode')){
+    bloc.hidden = false;
+    document.getElementById('appInstallBtn').addEventListener('click', function(){
+      if(invite && !integre){
+        var p = invite; invite = null;
+        p.prompt();
+        p.userChoice.then(function(r){ if(r && r.outcome === 'accepted') bloc.hidden = true; });
+      } else ouvre(true);
+    });
+  }
+
+  /* Arrivée par le QR code (#installer). La marque est retirée de l'adresse
+     tout de suite : sur iPhone, l'icône ajoutée ouvre l'adresse affichée, et
+     le guide ne doit pas se rouvrir à chaque lancement. Le marqueur
+     utm_source est lu par la mesure plus bas dans la page ; on attend donc
+     qu'elle soit passée pour ouvrir le guide, puis on s'assure qu'il ne reste
+     rien dans l'adresse. */
   if(location.hash === '#installer'){
-    setTimeout(function(){
-      bloc.scrollIntoView({behavior: 'smooth', block: 'center'});
-      if(ios) document.getElementById('appInstallBtn').click();
-    }, 600);
+    history.replaceState(history.state, '', location.pathname + location.search);
+    if(standalone) return;
+    var lance = function(){
+      var propre = location.search.replace(/([?&])utm_(source|medium|campaign)=[^&]*/g, '$1').replace(/[?&]+$/, '').replace(/\?&+/, '?');
+      if(propre !== location.search) history.replaceState(history.state, '', location.pathname + propre);
+      /* Pas d'entrée d'historique ici : ajoutée sans geste du client, Chrome
+         la sauterait au retour et « Continuer » ferait quitter le site. */
+      ouvre(false);
+    };
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', lance); else lance();
   }
 })();
 </script>
