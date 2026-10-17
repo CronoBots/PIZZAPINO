@@ -1936,10 +1936,36 @@ footer a{color:var(--texte-2)}
     }).join(' · ') + '.</p>';
   }
 
+  /* Les publications plus récentes que la table PUBS (engendrée à la main par
+     mesure/photos.py) n'y figurent pas encore. On les nomme d'après le fil
+     Instagram que lit déjà le site : la date et le début de la légende, et sa
+     photo en vignette — plutôt qu'un code court illisible. */
+  var FIL = {};
+  var MOIS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+  function nomFil(p){
+    var t = String(p.texte || '').split('\n')[0].replace(/#[^\s#]+/g, '').replace(/\s+/g, ' ').trim();
+    if(t.length > 40) t = t.slice(0, 38).replace(/\s+\S*$/, '') + '…';
+    var j = new Date(p.date), date = isNaN(j) ? '' : j.getDate() + ' ' + MOIS[j.getMonth()];
+    var genre = /\/reels?\//.test(p.lien) ? 'Reel' : 'Publication';
+    return genre + (date ? ' du ' + date : '') + (t ? ' · ' + t : '');
+  }
+  fetch(API + '/instagram').then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+    ((d && d.publications) || []).forEach(function(p){
+      var m = /instagram\.com\/(?:reels?|p|tv)\/([A-Za-z0-9_-]+)/.exec(p.lien || '');
+      if(m) FIL[m[1]] = { nom: nomFil(p), image: p.image };
+    });
+    if(dernier) dessinePubs(dernier);
+  }).catch(function(){});
+
   function nommePubs(liste){
     return (liste || []).map(function(d){
-      return { nom: PUBS[d.nom] || ('Publication ' + d.nom), n: d.n, cle: d.nom };
+      return { nom: PUBS[d.nom] || (FIL[d.nom] && FIL[d.nom].nom) || ('Publication ' + d.nom), n: d.n, cle: d.nom };
     });
+  }
+  function dessinePubs(d){
+    var pubs = nommePubs(d.pubs);
+    dessineBarres('barPubs', pubs, 'ouvertures', null, vignettePub);
+    dessineTable('tblPubs', pubs, 'Publication');
   }
 
   /* « Pino Winter 2K25 n° 7 » ne dit pas laquelle : on montre la photo. Les
@@ -1953,7 +1979,13 @@ footer a{color:var(--texte-2)}
          + '.webp" alt="" loading="lazy" decoding="async" width="34" height="34"'
          + ' onerror="this.remove()">';
   }
-  var vignettePub = vignettePhoto;          // même dossier, même règle
+  /* Même dossier, même règle ; à défaut, la photo du fil Instagram. */
+  function vignettePub(d){
+    var f = d.cle && !PUBS[d.cle] && FIL[d.cle];
+    if(f && /^https:\/\//.test(f.image || '')) return '<img class="vign" src="' + echappe(f.image)
+      + '" alt="" loading="lazy" decoding="async" width="34" height="34" onerror="this.remove()">';
+    return vignettePhoto(d);
+  }
 
   /* ── les plats que personne ne compose ──
      Aucune mesure nouvelle : la carte est déjà dans la page (PLATS, engendré
@@ -2263,9 +2295,7 @@ footer a{color:var(--texte-2)}
     dessineBarres('barReseaux', reseaux, 'clics', null, null, totauxReseaux(reseaux));
     dessineTable('tblReseaux', reseaux, 'Réseau et endroit');
     dessineAbonnes(d);
-    var pubs = nommePubs(d.pubs);
-    dessineBarres('barPubs', pubs, 'ouvertures', null, vignettePub);
-    dessineTable('tblPubs', pubs, 'Publication');
+    dessinePubs(d);
     var photos = nommePhotos(d.photos);
     dessineBarres('barPhotos', photos, 'ouvertures', null, vignettePhoto);
     dessineTable('tblPhotos', photos, 'Photo');
