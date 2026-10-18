@@ -1201,13 +1201,14 @@
   .inst[hidden]{display:none}
   .inst.inst-visible{opacity:1}
   .inst:focus{outline:none}
-  .inst-page{position:relative;max-width:460px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    padding:calc(56px + env(safe-area-inset-top)) 0 calc(88px + env(safe-area-inset-bottom));transform:translateY(12px);transition:transform .32s cubic-bezier(.22,.68,.16,1)}
+  .inst-page{position:relative;max-width:460px;margin:0 auto;height:100%;min-height:440px;display:flex;flex-direction:column;align-items:center;
+    padding:calc(54px + env(safe-area-inset-top)) 0 calc(14px + env(safe-area-inset-bottom));transform:translateY(12px);transition:transform .32s cubic-bezier(.22,.68,.16,1)}
   .inst.inst-visible .inst-page{transform:none}
-  .inst.inst-fleche-haut .inst-page{padding-top:calc(64px + env(safe-area-inset-top));padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+  .inst.inst-fleche-haut .inst-page{padding-top:calc(60px + env(safe-area-inset-top))}
+  .inst.inst-fleche-bas .inst-page{padding-bottom:calc(66px + env(safe-area-inset-bottom))}
 
   /* En-tête : logo, titre, sous-titre */
-  .inst-tete{text-align:center;padding:0 24px;margin-bottom:22px}
+  .inst-tete{text-align:center;padding:0 24px;margin-bottom:14px}
   .inst-tete img{display:block;width:80px;height:auto;margin:0 auto 10px}
   .inst-tete h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;color:var(--blanc)}
   .inst-tete p{margin:6px 0 0;font-size:.92rem;color:var(--gris)}
@@ -1232,9 +1233,10 @@
   .inst-reussi b{font-family:"Fraunces",serif;font-size:1.15rem;font-weight:600;color:var(--blanc)}
 
   /* Le téléphone */
-  .inst-demo{position:relative;flex-shrink:0}
+  /* Le téléphone occupe l'espace restant ; il y est centré et mis à l'échelle */
+  .inst-demo{position:relative;flex:1 1 0;min-height:180px;width:100%}
   .inst-demo[hidden]{display:none}
-  .inst-tel{position:absolute;left:0;top:0;transform-origin:0 0;width:212px;padding:8px;border-radius:38px;background:#0a0807;
+  .inst-tel{position:absolute;left:50%;top:50%;transform-origin:50% 50%;width:212px;padding:8px;border-radius:38px;background:#0a0807;
     box-shadow:0 0 0 1.5px #3a3029,0 30px 60px -24px #000,0 0 80px -20px rgba(198,154,77,.35)}
   .inst-ecran{position:relative;height:384px;border-radius:30px;overflow:hidden;background:#1b1512;font-family:-apple-system,"Inter",sans-serif}
   .inst-ecran::before{content:"";position:absolute;z-index:6;left:50%;top:7px;width:62px;height:18px;margin-left:-31px;border-radius:12px;background:#000}
@@ -1314,7 +1316,7 @@
   @keyframes dPop{from{opacity:0;transform:scale(.3)}}
 
   /* Sous le téléphone : progression et consigne de l'étape en cours */
-  .inst-suivi{margin-top:26px;max-width:calc(100% - 40px);text-align:center}
+  .inst-suivi{margin-top:16px;max-width:calc(100% - 40px);text-align:center}
   .inst-suivi[hidden]{display:none}
   .inst-barres{display:flex;gap:5px}
   .inst-barres button{flex:1;height:18px;padding:7px 0;border:0;background:none;cursor:pointer}
@@ -1329,7 +1331,12 @@
   .inst-legende b{color:var(--or-l);font-weight:600}
   .inst-legende.entre{animation:instLeg .45s ease}
   @keyframes instLeg{from{opacity:0;transform:translateY(6px)}}
-  .inst-plus{text-align:center;margin-top:8px;padding:0 16px;width:100%;max-width:400px}
+  /* Bas de page : les deux liens sur une ligne */
+  .inst-bas{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0 18px;margin-top:6px;padding:0 16px;width:100%;max-width:420px}
+  .inst-plus{text-align:center}
+  .inst-plus:empty{display:none}
+  .inst-plus.ouvert{flex-basis:100%;order:2}
+  .inst.sans-demo .inst-page{justify-content:center}
   .inst-navs summary{list-style:none;display:inline-block;font-size:.82rem;color:var(--gris);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   .inst-navs summary::-webkit-details-marker{display:none}
   .inst-navs div{display:flex;gap:6px;margin-top:12px}
@@ -1337,8 +1344,8 @@
     color:var(--gris);font-size:.8rem;cursor:pointer}
   .inst-navs button[aria-pressed="true"]{background:var(--or);border-color:var(--or);color:#1a1510;font-weight:600}
   .inst-lien{background:none;border:0;color:var(--gris);font-size:.84rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px;word-break:break-all}
-  .inst-continuer{display:block;margin:14px auto 0;background:none;border:0;color:var(--gris);cursor:pointer;padding:10px;
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem}
+  .inst-continuer{background:none;border:0;color:var(--gris);cursor:pointer;padding:10px 4px;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.7rem}
 
   /* La flèche montre le vrai bouton du navigateur, hors de la page */
   .inst-fleche{position:fixed;left:0;right:0;bottom:0;z-index:4;display:flex;flex-direction:column;align-items:center;gap:2px;
@@ -1361,11 +1368,9 @@
     .inst-tete img{width:54px;margin-bottom:6px}
     .inst-tete h2{font-size:1.3rem}
     .inst-tete p{font-size:.82rem;margin-top:4px}
-    .inst-suivi{margin-top:14px}
+    .inst-suivi{margin-top:10px}
     .inst-num{margin-top:8px}
     .inst-legende{font-size:1rem;min-height:2.6em}
-    .inst-plus{margin-top:2px}
-    .inst-continuer{margin-top:2px}
   }
   @media (prefers-reduced-motion:reduce){.f-bloc,.inst-barres .actif i::after,.inst-legende.entre,.d-doigt,.d-doigt::after,.d-pino img,.d-menu,.d-feuille,.d-valider,.d-voile{animation:none}.inst,.inst-page{transition:none}}
   .app-install .ai-aide svg{width:15px;height:15px;vertical-align:-3px;color:#C69A4D}

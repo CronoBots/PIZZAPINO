@@ -2335,8 +2335,10 @@
       <ol class="inst-sr" id="instSR"></ol>
     </div>
     <div class="inst-action" id="instAction"></div>
-    <div class="inst-plus" id="instPlus"></div>
-    <button type="button" class="inst-continuer" id="instContinuer">Continuer sans installer</button>
+    <div class="inst-bas">
+      <div class="inst-plus" id="instPlus"></div>
+      <button type="button" class="inst-continuer" id="instContinuer">Continuer sans installer</button>
+    </div>
   </div>
   <div class="inst-fleche" id="instFleche" aria-hidden="true" hidden>
     <span class="f-bloc"><span id="instFlecheTxt"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg></span>
@@ -2469,40 +2471,30 @@
   /* Le téléphone est dessiné à une taille fixe (212 × 400) puis mis à
      l'échelle de l'écran, pour rester net et entier sur tous les téléphones. */
   var LT = 212, HT = 400, echelle = 1;
-  /* L'échelle se déduit de la place qui reste réellement une fois le reste
-     posé (en-tête, consigne, liens, marges, bandeau de la flèche) : tout
-     tient sur un écran, de l'iPhone SE au grand Android. */
-  var page = guide.querySelector('.inst-page');
+  /* Le téléphone prend toute la place libre de la page (bloc souple, voir
+     .inst-demo) : son échelle se lit directement sur cet espace, et se
+     recalcule dès qu'il change (polices, logo, barre du navigateur,
+     rotation). Pas de calcul par soustraction, fragile sur un vrai téléphone. */
   function ajuste(){
-    demo.style.height = '0px';
-    var cs = getComputedStyle(page), premier = page.firstElementChild, haut = Infinity, bas = 0;
-    for(var el = premier; el; el = el.nextElementSibling){
-      if(el.hidden || el.offsetParent === null || getComputedStyle(el).position === 'fixed') continue;
-      var r = el.getBoundingClientRect(), mg = getComputedStyle(el);
-      haut = Math.min(haut, r.top - parseFloat(mg.marginTop)); bas = Math.max(bas, r.bottom + parseFloat(mg.marginBottom));
-    }
-    var reste = innerHeight - (bas - haut) - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    pose(Math.max(.5, Math.min(1.2, reste / HT, (innerWidth - 48) / LT)));
-    /* Garde-fou : s'il reste un dépassement (polices ou logo arrivés entre-
-       temps), le téléphone rétrécit d'autant. */
-    var trop = guide.scrollHeight - guide.clientHeight;
-    if(trop > 0 && echelle > .5) pose(Math.max(.5, echelle - trop / HT));
+    var h = demo.clientHeight, w = demo.clientWidth;
+    if(!h || !w) return;
+    echelle = Math.max(.45, Math.min(1.3, (h - 4) / HT, (w - 32) / LT));
+    tel.style.transform = 'translate(-50%,-50%) scale(' + echelle + ')';
+    suivi.style.width = Math.max(260, LT * echelle + 40) + 'px';
   }
-  function pose(k){
-    echelle = k;
-    tel.style.transform = 'scale(' + k + ')';
-    demo.style.width = LT * k + 'px'; demo.style.height = HT * k + 'px';
-    suivi.style.width = Math.max(260, LT * k + 40) + 'px';
-  }
-  var logo = guide.querySelector('.inst-tete img');
-  if(logo && !logo.complete) logo.addEventListener('load', function(){ if(!guide.hidden && m){ ajuste(); joue(pas); } });
-  window.addEventListener('resize', function(){ if(!guide.hidden && m){ ajuste(); joue(pas); } });
+  var derniereH = 0;
+  if(window.ResizeObserver) new ResizeObserver(function(){
+    if(guide.hidden || !m) return;
+    var h = demo.clientHeight;
+    if(Math.abs(h - derniereH) < 2) return;
+    derniereH = h; ajuste(); joue(pas);   /* rejoue l'étape : le doigt se recale */
+  }).observe(demo);
+  window.addEventListener('resize', function(){ if(!guide.hidden && m){ ajuste(); joue(pas); } });   /* sans ResizeObserver */
   /* Onglet caché, téléphone verrouillé : l'animation s'arrête et reprend à l'étape en cours. */
   document.addEventListener('visibilitychange', function(){
     if(document.hidden) clearTimeout(minuterie); else if(!guide.hidden && m && !demo.hidden) joue(pas);
   });
-  /* Les polices arrivent parfois après l'ouverture et changent les hauteurs. */
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(!guide.hidden && m){ ajuste(); joue(pas); } });
+
   function joue(i){
     clearTimeout(minuterie);
     pas = i;
@@ -2537,7 +2529,7 @@
   function montre(methode, finale){
     m = methode;
     if(finale !== false) m.e = m.e.concat([FIN]);
-    demo.hidden = false; suivi.hidden = false;
+    demo.hidden = false; suivi.hidden = false; guide.classList.remove('sans-demo');
     tel.classList.toggle('android', android);
     if(ios || android){
       appareil.textContent = (ios ? (ipad ? 'iPad' : 'iPhone') : 'Android') + (integre ? '' : ' · ' + nomNav());
@@ -2558,8 +2550,9 @@
     document.getElementById('instFlecheTxt').textContent = 'Ici';
     fleche.hidden = false;
     guide.classList.toggle('inst-fleche-haut', ou === 'haut-droite');
+    guide.classList.toggle('inst-fleche-bas', ou !== 'haut-droite');
   }
-  function sansFleche(){ fleche.hidden = true; guide.classList.remove('inst-fleche-haut'); }
+  function sansFleche(){ fleche.hidden = true; guide.classList.remove('inst-fleche-haut', 'inst-fleche-bas'); }
 
   /* Le choix du navigateur : présélectionné, corrigeable d'un geste. */
   function selecteur(){
@@ -2568,16 +2561,18 @@
     var b = plus.querySelectorAll('[data-nav]');
     for(var i = 0; i < b.length; i++) b[i].onclick = function(){
       choix = this.getAttribute('data-nav'); manuel = true; rendu();
-      plus.querySelector('details').open = true;
+      plus.querySelector('details').open = true; plus.classList.add('ouvert');
     };
+    /* Ouverte, la liste prend toute la largeur, sous les deux liens. */
+    plus.querySelector('details').addEventListener('toggle', function(){ plus.classList.toggle('ouvert', this.open); });
   }
 
   /* ── Ce qu'on affiche ── */
   var invite = null, manuel = false;
   function rendu(){
     if(dejaInstallee && !manuel) return deja();
-    clearTimeout(minuterie); sansFleche();
-    action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; suivi.hidden = true; appareil.hidden = true;
+    clearTimeout(minuterie); sansFleche(); guide.classList.add('sans-demo');
+    action.innerHTML = ''; plus.innerHTML = ''; plus.className = 'inst-plus'; demo.hidden = true; suivi.hidden = true; appareil.hidden = true;
     continuer.textContent = 'Continuer sans installer';
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';
