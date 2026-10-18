@@ -2320,7 +2320,7 @@
   <div class="inst-page">
     <button type="button" class="inst-fermer" id="instFermer" aria-label="Fermer">×</button>
     <div class="inst-tete">
-      <img src="icons/pino-logo-guide.webp" alt="Pizzeria Pino" width="288" height="235" decoding="async">
+      <img src="icons/pino-logo-guide.webp" alt="Pizzeria Pino" width="240" height="196" decoding="async">
       <h2 id="instTitre">Installer Pizzeria Pino</h2>
       <p>Sur l’écran d’accueil, comme une application</p>
     </div>
@@ -2331,7 +2331,8 @@
     <div class="inst-suivi" id="instSuivi">
       <div class="inst-barres" id="instBarres"></div>
       <p class="inst-num" id="instNum"></p>
-      <p class="inst-legende" id="instLegende" aria-live="polite"></p>
+      <p class="inst-legende" id="instLegende" aria-hidden="true"></p>
+      <ol class="inst-sr" id="instSR"></ol>
     </div>
     <div class="inst-action" id="instAction"></div>
     <div class="inst-plus" id="instPlus"></div>
@@ -2468,20 +2469,48 @@
   /* Le téléphone est dessiné à une taille fixe (212 × 400) puis mis à
      l'échelle de l'écran, pour rester net et entier sur tous les téléphones. */
   var LT = 212, HT = 400, echelle = 1;
+  /* L'échelle se déduit de la place qui reste réellement une fois le reste
+     posé (en-tête, consigne, liens, marges, bandeau de la flèche) : tout
+     tient sur un écran, de l'iPhone SE au grand Android. */
+  var page = guide.querySelector('.inst-page');
   function ajuste(){
-    echelle = Math.max(.7, Math.min(1.2, (innerHeight - 450) / HT, (innerWidth - 48) / LT));
-    tel.style.transform = 'scale(' + echelle + ')';
-    demo.style.width = LT * echelle + 'px'; demo.style.height = HT * echelle + 'px';
-    suivi.style.width = Math.max(260, LT * echelle + 40) + 'px';
+    demo.style.height = '0px';
+    var cs = getComputedStyle(page), premier = page.firstElementChild, haut = Infinity, bas = 0;
+    for(var el = premier; el; el = el.nextElementSibling){
+      if(el.hidden || el.offsetParent === null || getComputedStyle(el).position === 'fixed') continue;
+      var r = el.getBoundingClientRect(), mg = getComputedStyle(el);
+      haut = Math.min(haut, r.top - parseFloat(mg.marginTop)); bas = Math.max(bas, r.bottom + parseFloat(mg.marginBottom));
+    }
+    var reste = innerHeight - (bas - haut) - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    pose(Math.max(.5, Math.min(1.2, reste / HT, (innerWidth - 48) / LT)));
+    /* Garde-fou : s'il reste un dépassement (polices ou logo arrivés entre-
+       temps), le téléphone rétrécit d'autant. */
+    var trop = guide.scrollHeight - guide.clientHeight;
+    if(trop > 0 && echelle > .5) pose(Math.max(.5, echelle - trop / HT));
   }
-  window.addEventListener('resize', function(){ if(!guide.hidden) ajuste(); });
+  function pose(k){
+    echelle = k;
+    tel.style.transform = 'scale(' + k + ')';
+    demo.style.width = LT * k + 'px'; demo.style.height = HT * k + 'px';
+    suivi.style.width = Math.max(260, LT * k + 40) + 'px';
+  }
+  var logo = guide.querySelector('.inst-tete img');
+  if(logo && !logo.complete) logo.addEventListener('load', function(){ if(!guide.hidden && m){ ajuste(); joue(pas); } });
+  window.addEventListener('resize', function(){ if(!guide.hidden && m){ ajuste(); joue(pas); } });
+  /* Onglet caché, téléphone verrouillé : l'animation s'arrête et reprend à l'étape en cours. */
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) clearTimeout(minuterie); else if(!guide.hidden && m && !demo.hidden) joue(pas);
+  });
+  /* Les polices arrivent parfois après l'ouverture et changent les hauteurs. */
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(!guide.hidden && m){ ajuste(); joue(pas); } });
   function joue(i){
     clearTimeout(minuterie);
     pas = i;
     var e = m.e[i], duree = e.fin ? 3400 : 2800;
     ecran.innerHTML = scene(e, m);
     ecran.className = 'inst-ecran s-' + e.s;
-    numero.textContent = e.fin ? 'Terminé' : 'Étape ' + (i + 1) + ' sur ' + (m.e.length - (m.e[m.e.length - 1].fin ? 1 : 0));
+    var total = m.e.length - (m.e[m.e.length - 1].fin ? 1 : 0);
+    numero.textContent = e.fin ? 'Terminé' : total === 1 ? 'En un geste' : 'Étape ' + (i + 1) + ' sur ' + total;
     legende.innerHTML = e.c;
     legende.classList.remove('entre'); void legende.offsetWidth; legende.classList.add('entre');
     var b = barres.children;
@@ -2514,10 +2543,14 @@
       appareil.textContent = (ios ? (ipad ? 'iPad' : 'iPhone') : 'Android') + (integre ? '' : ' · ' + nomNav());
       appareil.hidden = false;
     } else appareil.hidden = true;
-    ajuste();
     barres.innerHTML = m.e.map(function(e, i){ return '<button type="button" data-pas="' + i + '" aria-label="Revoir l’étape ' + (i + 1) + '"><i></i></button>'; }).join('');
     var b = barres.querySelectorAll('[data-pas]');
     for(var i = 0; i < b.length; i++) b[i].onclick = function(){ joue(+this.getAttribute('data-pas')); };
+    /* Pour les lecteurs d'écran : toutes les étapes, une fois, sans la boucle. */
+    document.getElementById('instSR').innerHTML = m.e.map(function(e){ return '<li>' + e.c + '</li>'; }).join('');
+    /* Mesurer une fois la consigne en place (sa hauteur compte). */
+    numero.textContent = 'Étape'; legende.innerHTML = m.e[0].c;
+    ajuste();
     joue(0);
   }
   function pointe(ou){
@@ -2542,15 +2575,16 @@
   /* ── Ce qu'on affiche ── */
   var invite = null, manuel = false;
   function rendu(){
+    if(dejaInstallee && !manuel) return deja();
     clearTimeout(minuterie); sansFleche();
     action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; suivi.hidden = true; appareil.hidden = true;
     continuer.textContent = 'Continuer sans installer';
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';
       action.innerHTML = '<p class="inst-info">Cette page est ouverte dans une application. L’installation se fait depuis le navigateur&nbsp;:</p>' +
-        (android ? '<a class="inst-bouton" href="intent://pizzeriapino.be/#installer#Intent;scheme=https;package=com.android.chrome;end">' + I.externe + 'Ouvrir dans Chrome</a>' : '');
-      if(!android) montre({barre: ['haut-droite', I.points], e: [{s: 'barre', c: 'Touchez <b>⋯</b> (ou <b>↗</b>)'}, {s: 'menu', haut: 1, t: 'Ouvrir dans Safari', i: I.externe, c: 'Choisissez <b>Ouvrir dans Safari</b>'}]}, false);
+        (android ? '<a class="inst-bouton" href="intent://pizzeriapino.be/?utm_source=qr#installer#Intent;scheme=https;action=android.intent.action.VIEW;end">' + I.externe + 'Ouvrir dans le navigateur</a>' : '');
       plus.innerHTML = '<button type="button" class="inst-lien" id="instCopier">Copier le lien</button>';
+      if(!android) montre({barre: ['haut-droite', I.points], e: [{s: 'barre', c: 'Touchez <b>⋯</b> (ou <b>↗</b>)'}, {s: 'menu', haut: 1, t: 'Ouvrir dans Safari', i: I.externe, c: 'Choisissez <b>Ouvrir dans Safari</b>'}]}, false);
       document.getElementById('instCopier').onclick = function(){
         var b = this;
         (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function(){ b.textContent = 'Lien copié ✓'; }, function(){ b.textContent = url; });
@@ -2558,6 +2592,7 @@
       return;
     }
     if(ios || android){
+      selecteur();   /* avant la démonstration : sa hauteur entre dans le calcul de l'échelle */
       if(android && invite && !manuel){
         /* Android propose l'installation directe : un bouton suffit. */
         action.innerHTML = '<button type="button" class="inst-bouton" id="instInstaller">' + I.tel + 'Installer l’application</button>';
@@ -2573,7 +2608,6 @@
         /* La flèche ne montre un bouton que dans le navigateur réellement ouvert. */
         if(choix === detecte) pointe(meth.f);
       }
-      selecteur();
       return;
     }
     /* Ordinateur : l'installation se fait sur le téléphone. */
@@ -2589,6 +2623,22 @@
     barres.innerHTML = '';
     continuer.textContent = 'Fermer';
     if(bloc) bloc.hidden = true;
+  }
+
+  /* Déjà installée ? Chrome sur Android sait le dire (manifeste :
+     related_applications). Le guide l'annonce alors au lieu de dérouler des
+     étapes inutiles. */
+  var dejaInstallee = false;
+  if(navigator.getInstalledRelatedApps) navigator.getInstalledRelatedApps().then(function(l){
+    if(l && l.length){ dejaInstallee = true; if(!guide.hidden) deja(); }
+  }).catch(function(){});
+  function deja(){
+    clearTimeout(minuterie); sansFleche();
+    action.innerHTML = '<p class="inst-reussi">' + I.ok + '<span><b>Déjà installée</b>Ouvrez Pino depuis votre écran d’accueil.</span></p>';
+    plus.innerHTML = '';
+    montre({barre: [], e: []});
+    numero.textContent = ''; legende.innerHTML = ''; barres.innerHTML = '';
+    continuer.textContent = 'Fermer';
   }
 
   /* L'invite d'installation d'Android peut arriver après l'ouverture du
@@ -2626,7 +2676,18 @@
   window.addEventListener('popstate', function(){ if(historique){ historique = false; ferme(); } });
   document.getElementById('instFermer').addEventListener('click', quitte);
   continuer.addEventListener('click', quitte);
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !guide.hidden) quitte(); });
+  document.addEventListener('keydown', function(e){
+    if(guide.hidden) return;
+    if(e.key === 'Escape') quitte();
+    /* Tab tourne à l'intérieur du guide (fenêtre modale). */
+    if(e.key === 'Tab'){
+      var f = [].filter.call(guide.querySelectorAll('button, a[href], summary'), function(x){ return x.offsetParent !== null && !x.disabled; });
+      if(!f.length) return;
+      var i = f.indexOf(document.activeElement);
+      if(e.shiftKey && i <= 0){ e.preventDefault(); f[f.length - 1].focus(); }
+      else if(!e.shiftKey && (i === f.length - 1 || i === -1)){ e.preventDefault(); f[0].focus(); }
+    }
+  });
 
   /* Bouton du bas de page (site mobile) : l'invite directe quand Android
      la propose, le guide sinon. */

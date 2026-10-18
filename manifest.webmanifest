@@ -12,6 +12,7 @@
   "orientation": "portrait-primary",
   "background_color": "#14100D",
   "theme_color": "#14100D",
+  "related_applications": [{ "platform": "webapp", "url": "https://pizzeriapino.be/manifest.webmanifest" }],
   "categories": ["food", "restaurant", "lifestyle"],
   "icons": [
     { "src": "icons/icon-512.png?v=2", "sizes": "512x512", "type": "image/png", "purpose": "any" },
