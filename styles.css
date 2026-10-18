@@ -1208,7 +1208,7 @@
 
   /* En-tête : logo, titre, sous-titre */
   .inst-tete{text-align:center;padding:0 24px;margin-bottom:22px}
-  .inst-tete img{display:block;width:96px;height:auto;margin:0 auto 12px}
+  .inst-tete img{display:block;width:80px;height:auto;margin:0 auto 10px}
   .inst-tete h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;color:var(--blanc)}
   .inst-tete p{margin:6px 0 0;font-size:.92rem;color:var(--gris)}
   /* Fermer */
