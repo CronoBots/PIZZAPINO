@@ -2324,7 +2324,10 @@
       <h2 id="instTitre">Installer Pizzeria Pino</h2>
       <p>Sur l’écran d’accueil, comme une application</p>
     </div>
-    <p class="inst-appareil" id="instAppareil" hidden></p>
+    <div class="inst-appareil" id="instAppareil" hidden>
+      <button type="button" class="ia-btn" id="instAppBtn" aria-expanded="false" aria-controls="instNavs"></button>
+      <div class="ia-navs" id="instNavs" role="group" aria-label="Choisir votre navigateur" hidden></div>
+    </div>
     <div class="inst-demo" id="instDemo" aria-hidden="true">
       <div class="inst-tel" id="instTel"><div class="inst-ecran" id="instEcran"></div></div>
     </div>
@@ -2504,6 +2507,8 @@
   /* Pour quel téléphone est la démonstration : dit en clair au-dessus, et
      visible au dessin (îlot noir de l'iPhone, caméra ronde d'Android). */
   var appareil = document.getElementById('instAppareil');
+  var appBtn = document.getElementById('instAppBtn');
+  var navs = document.getElementById('instNavs');
   function nomNav(){ for(var i = 0; i < NAVS.length; i++) if(NAVS[i][0] === choix) return NAVS[i][1]; return ''; }
   function montre(methode, finale){
     m = methode;
@@ -2511,7 +2516,9 @@
     demo.hidden = false; suivi.hidden = false;
     tel.classList.toggle('android', android);
     if(ios || android){
-      appareil.textContent = (ios ? (ipad ? 'iPad' : 'iPhone') : 'Android') + (integre ? '' : ' · ' + nomNav());
+      appBtn.innerHTML = '<span>' + (ios ? (ipad ? 'iPad' : 'iPhone') : 'Android') + (integre ? '' : ' · ' + nomNav()) + '</span>'
+        + (integre ? '' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>');
+      appBtn.disabled = integre;
       appareil.hidden = false;
     } else appareil.hidden = true;
     ajuste();
@@ -2529,21 +2536,28 @@
   function sansFleche(){ fleche.hidden = true; guide.classList.remove('inst-fleche-haut'); }
 
   /* Le choix du navigateur : présélectionné, corrigeable d'un geste. */
+  /* Le choix du navigateur, sur la mention elle-même : « iPhone · Edge ▾ ».
+     Toucher la mention déplie les autres navigateurs juste en dessous ; en
+     choisir un rejoue la démonstration et replie la liste. */
   function selecteur(){
-    plus.innerHTML = '<details class="inst-navs"><summary>Pas le bon navigateur&nbsp;?</summary><div>' +
-      NAVS.map(function(n){ return '<button type="button" data-nav="' + n[0] + '" aria-pressed="' + (n[0] === choix) + '">' + n[1] + '</button>'; }).join('') + '</div></details>';
-    var b = plus.querySelectorAll('[data-nav]');
+    navs.innerHTML = NAVS.map(function(n){ return '<button type="button" data-nav="' + n[0] + '" aria-pressed="' + (n[0] === choix) + '">' + n[1] + '</button>'; }).join('');
+    var b = navs.querySelectorAll('[data-nav]');
     for(var i = 0; i < b.length; i++) b[i].onclick = function(){
-      choix = this.getAttribute('data-nav'); manuel = true; rendu();
-      plus.querySelector('details').open = true;
+      choix = this.getAttribute('data-nav'); manuel = true; deplie(false); rendu();
     };
   }
+  function deplie(oui){
+    navs.hidden = !oui;
+    appBtn.setAttribute('aria-expanded', oui ? 'true' : 'false');
+    appareil.classList.toggle('ouvert', oui);
+  }
+  appBtn.addEventListener('click', function(){ deplie(navs.hidden); });
 
   /* ── Ce qu'on affiche ── */
   var invite = null, manuel = false;
   function rendu(){
     clearTimeout(minuterie); sansFleche();
-    action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; suivi.hidden = true; appareil.hidden = true;
+    action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; suivi.hidden = true; appareil.hidden = true; deplie(false);
     continuer.textContent = 'Continuer sans installer';
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';

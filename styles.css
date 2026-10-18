@@ -1242,9 +1242,21 @@
   .inst-tel.android{border-radius:30px}
   .inst-tel.android .inst-ecran{border-radius:22px}
   /* Le téléphone montré : « iPhone · Edge », « Android · Chrome »… */
-  .inst-appareil{margin:0 0 14px;padding:5px 12px;border-radius:999px;border:1px solid rgba(233,206,150,.25);
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.66rem;color:var(--or-l)}
+  .inst-appareil{display:flex;flex-direction:column;align-items:center;margin:0 0 14px}
   .inst-appareil[hidden]{display:none}
+  .ia-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px 6px 13px;border-radius:999px;border:1px solid rgba(233,206,150,.25);
+    background:none;cursor:pointer;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.66rem;color:var(--or-l);
+    transition:border-color .2s,background .2s}
+  .ia-btn svg{width:13px;height:13px;opacity:.7;transition:transform .25s}
+  .ia-btn:disabled{cursor:default;padding-right:13px}
+  .inst-appareil.ouvert .ia-btn{border-color:rgba(233,206,150,.55);background:rgba(198,154,77,.08)}
+  .inst-appareil.ouvert .ia-btn svg{transform:rotate(180deg)}
+  .ia-navs{display:flex;gap:6px;margin-top:10px;animation:iaIn .22s ease}
+  .ia-navs[hidden]{display:none}
+  .ia-navs button{padding:7px 12px;border-radius:999px;border:1px solid rgba(233,206,150,.18);background:rgba(255,255,255,.03);
+    color:var(--gris);font-size:.78rem;cursor:pointer}
+  .ia-navs button[aria-pressed="true"]{background:var(--or);border-color:var(--or);color:#1a1510;font-weight:600}
+  @keyframes iaIn{from{opacity:0;transform:translateY(-4px)}}
   .inst-ecran img{display:block}
   .d-page{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
   .d-voile{position:absolute;inset:0;background:rgba(0,0,0,.45);animation:dIn .3s ease}
@@ -1328,12 +1340,6 @@
   .inst-legende.entre{animation:instLeg .45s ease}
   @keyframes instLeg{from{opacity:0;transform:translateY(6px)}}
   .inst-plus{text-align:center;margin-top:8px;padding:0 16px;width:100%;max-width:400px}
-  .inst-navs summary{list-style:none;display:inline-block;font-size:.82rem;color:var(--gris);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-  .inst-navs summary::-webkit-details-marker{display:none}
-  .inst-navs div{display:flex;gap:6px;margin-top:12px}
-  .inst-navs button{flex:1;min-width:0;padding:9px 4px;border:1px solid rgba(233,206,150,.2);border-radius:10px;background:none;
-    color:var(--gris);font-size:.8rem;cursor:pointer}
-  .inst-navs button[aria-pressed="true"]{background:var(--or);border-color:var(--or);color:#1a1510;font-weight:600}
   .inst-lien{background:none;border:0;color:var(--gris);font-size:.84rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px;word-break:break-all}
   .inst-continuer{display:block;margin:14px auto 0;background:none;border:0;color:var(--gris);cursor:pointer;padding:10px;
     font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem}
