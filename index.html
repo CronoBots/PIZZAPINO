@@ -2475,19 +2475,20 @@
      .inst-demo) : son échelle se lit directement sur cet espace, et se
      recalcule dès qu'il change (polices, logo, barre du navigateur,
      rotation). Pas de calcul par soustraction, fragile sur un vrai téléphone. */
+  var derniereH = 0;
   function ajuste(){
     var h = demo.clientHeight, w = demo.clientWidth;
     if(!h || !w) return;
+    derniereH = h;   /* la mesure de référence suit chaque calcul */
     echelle = Math.max(.45, Math.min(1.3, (h - 4) / HT, (w - 32) / LT));
     tel.style.transform = 'translate(-50%,-50%) scale(' + echelle + ')';
     suivi.style.width = Math.max(260, LT * echelle + 40) + 'px';
   }
-  var derniereH = 0;
   if(window.ResizeObserver) new ResizeObserver(function(){
     if(guide.hidden || !m) return;
     var h = demo.clientHeight;
     if(Math.abs(h - derniereH) < 2) return;
-    derniereH = h; ajuste(); joue(pas);   /* rejoue l'étape : le doigt se recale */
+    ajuste(); joue(pas);   /* rejoue l'étape : le doigt se recale */
   }).observe(demo);
   window.addEventListener('resize', function(){ if(!guide.hidden && m){ ajuste(); joue(pas); } });   /* sans ResizeObserver */
   /* Onglet caché, téléphone verrouillé : l'animation s'arrête et reprend à l'étape en cours. */
@@ -2562,6 +2563,9 @@
     for(var i = 0; i < b.length; i++) b[i].onclick = function(){
       choix = this.getAttribute('data-nav'); manuel = true; rendu();
       plus.querySelector('details').open = true; plus.classList.add('ouvert');
+      /* La liste rouverte reprend sa place : on recale le téléphone tout de
+         suite (l'observateur de taille ne voit pas un aller-retour). */
+      ajuste(); joue(0);
     };
     /* Ouverte, la liste prend toute la largeur, sous les deux liens. */
     plus.querySelector('details').addEventListener('toggle', function(){ plus.classList.toggle('ouvert', this.open); });

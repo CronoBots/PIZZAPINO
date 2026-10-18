@@ -1335,7 +1335,7 @@
   .inst-bas{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0 18px;margin-top:6px;padding:0 16px;width:100%;max-width:420px}
   .inst-plus{text-align:center}
   .inst-plus:empty{display:none}
-  .inst-plus.ouvert{flex-basis:100%;order:2}
+  .inst-plus.ouvert{flex-basis:100%}
   .inst.sans-demo .inst-page{justify-content:center}
   .inst-navs summary{list-style:none;display:inline-block;font-size:.82rem;color:var(--gris);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   .inst-navs summary::-webkit-details-marker{display:none}
