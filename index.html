@@ -2469,7 +2469,7 @@
      l'échelle de l'écran, pour rester net et entier sur tous les téléphones. */
   var LT = 212, HT = 400, echelle = 1;
   function ajuste(){
-    echelle = Math.max(.7, Math.min(1.2, (innerHeight - 480) / HT, (innerWidth - 48) / LT));
+    echelle = Math.max(.7, Math.min(1.2, (innerHeight - 450) / HT, (innerWidth - 48) / LT));
     tel.style.transform = 'scale(' + echelle + ')';
     demo.style.width = LT * echelle + 'px'; demo.style.height = HT * echelle + 'px';
     suivi.style.width = Math.max(260, LT * echelle + 40) + 'px';
@@ -2501,8 +2501,8 @@
     }
     if(!calme && m.e.length > 1) minuterie = setTimeout(function(){ joue((pas + 1) % m.e.length); }, duree);
   }
-  /* Pour quel téléphone est la démonstration : dit en clair au-dessus, et
-     visible au dessin (îlot noir de l'iPhone, caméra ronde d'Android). */
+  /* Pour quel téléphone est la démonstration : dit discrètement en haut à
+     gauche de l'écran, et visible au dessin (îlot noir de l'iPhone, caméra ronde d'Android). */
   var appareil = document.getElementById('instAppareil');
   function nomNav(){ for(var i = 0; i < NAVS.length; i++) if(NAVS[i][0] === choix) return NAVS[i][1]; return ''; }
   function montre(methode, finale){

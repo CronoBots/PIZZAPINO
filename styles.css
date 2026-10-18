@@ -1207,7 +1207,7 @@
   .inst.inst-fleche-haut .inst-page{padding-top:calc(64px + env(safe-area-inset-top));padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 
   /* En-tête : logo, titre, sous-titre */
-  .inst-tete{text-align:center;padding:0 24px;margin-bottom:16px}
+  .inst-tete{text-align:center;padding:0 24px;margin-bottom:22px}
   .inst-tete img{display:block;width:80px;height:auto;margin:0 auto 10px}
   .inst-tete h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;color:var(--blanc)}
   .inst-tete p{margin:6px 0 0;font-size:.92rem;color:var(--gris)}
@@ -1242,8 +1242,9 @@
   .inst-tel.android{border-radius:30px}
   .inst-tel.android .inst-ecran{border-radius:22px}
   /* Le téléphone montré : « iPhone · Edge », « Android · Chrome »… */
-  .inst-appareil{margin:0 0 14px;padding:5px 12px;border-radius:999px;border:1px solid rgba(233,206,150,.25);
-    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.66rem;color:var(--or-l)}
+  .inst-appareil{position:fixed;z-index:5;top:calc(12px + env(safe-area-inset-top));left:18px;margin:0;line-height:36px;
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:.62rem;color:var(--gris-d)}
+  .inst.inst-fleche-haut .inst-appareil{left:62px}
   .inst-appareil[hidden]{display:none}
   .inst-ecran img{display:block}
   .d-page{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
