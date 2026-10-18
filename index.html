@@ -2324,6 +2324,7 @@
       <h2 id="instTitre">Installer Pizzeria Pino</h2>
       <p>Sur l’écran d’accueil, comme une application</p>
     </div>
+    <p class="inst-appareil" id="instAppareil" hidden></p>
     <div class="inst-demo" id="instDemo" aria-hidden="true">
       <div class="inst-tel" id="instTel"><div class="inst-ecran" id="instEcran"></div></div>
     </div>
@@ -2468,7 +2469,7 @@
      l'échelle de l'écran, pour rester net et entier sur tous les téléphones. */
   var LT = 212, HT = 400, echelle = 1;
   function ajuste(){
-    echelle = Math.max(.7, Math.min(1.2, (innerHeight - 450) / HT, (innerWidth - 48) / LT));
+    echelle = Math.max(.7, Math.min(1.2, (innerHeight - 480) / HT, (innerWidth - 48) / LT));
     tel.style.transform = 'scale(' + echelle + ')';
     demo.style.width = LT * echelle + 'px'; demo.style.height = HT * echelle + 'px';
     suivi.style.width = Math.max(260, LT * echelle + 40) + 'px';
@@ -2500,10 +2501,19 @@
     }
     if(!calme && m.e.length > 1) minuterie = setTimeout(function(){ joue((pas + 1) % m.e.length); }, duree);
   }
+  /* Pour quel téléphone est la démonstration : dit en clair au-dessus, et
+     visible au dessin (îlot noir de l'iPhone, caméra ronde d'Android). */
+  var appareil = document.getElementById('instAppareil');
+  function nomNav(){ for(var i = 0; i < NAVS.length; i++) if(NAVS[i][0] === choix) return NAVS[i][1]; return ''; }
   function montre(methode, finale){
     m = methode;
     if(finale !== false) m.e = m.e.concat([FIN]);
     demo.hidden = false; suivi.hidden = false;
+    tel.classList.toggle('android', android);
+    if(ios || android){
+      appareil.textContent = (ios ? (ipad ? 'iPad' : 'iPhone') : 'Android') + (integre ? '' : ' · ' + nomNav());
+      appareil.hidden = false;
+    } else appareil.hidden = true;
     ajuste();
     barres.innerHTML = m.e.map(function(e, i){ return '<button type="button" data-pas="' + i + '" aria-label="Revoir l’étape ' + (i + 1) + '"><i></i></button>'; }).join('');
     var b = barres.querySelectorAll('[data-pas]');
@@ -2533,7 +2543,7 @@
   var invite = null, manuel = false;
   function rendu(){
     clearTimeout(minuterie); sansFleche();
-    action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; suivi.hidden = true;
+    action.innerHTML = ''; plus.innerHTML = ''; demo.hidden = true; suivi.hidden = true; appareil.hidden = true;
     continuer.textContent = 'Continuer sans installer';
     if(integre){
       var url = 'https://pizzeriapino.be/#installer';
