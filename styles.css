@@ -366,6 +366,8 @@
   .supp-grid li b::after,.supp-un-h b::after{content:" €";font-size:.78em;color:#c69a4d;font-weight:500}
   .supp-grid li.free b{color:#7fd39a}
   .supp-grid li.free b::after{content:""}
+  .supp-un-h.free b{color:#7fd39a}
+  .supp-un-h.free b::after{content:""}
   /* Tous les autres à 1 € : un prix, une liste en colonnes */
   .supp-un-h{padding-top:20px;margin-top:6px;border-top:1px solid rgba(233,206,150,.12)}
   .supp-un-h span{flex:0 0 auto}
