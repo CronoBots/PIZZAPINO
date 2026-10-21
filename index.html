@@ -3072,7 +3072,8 @@ window.pinoAvis = function(hote, d){
     if(texte != null) e.textContent = texte;        // jamais d'HTML venu de Google
     return e;
   }
-  function sur(u){ return /^https:\/\/[a-z0-9-]+\.supabase\.co\//.test(u || ''); }
+  /* Photos : le bucket Supabase, ou images/avis/ du site (avis ajoutés à la main). */
+  function sur(u){ return /^https:\/\/([a-z0-9-]+\.supabase\.co|pizzeriapino\.be\/images\/avis)\//.test(u || ''); }
   /* Profil de l'auteur quand Google le donne, sinon les avis sur la fiche. */
   function profil(a){ return /^https:\/\/www\.google\.com\/maps\/contrib\/\d+/.test(a.profil || '') ? a.profil : null; }
   var FICHE = /^https:\/\/(www\.|maps\.)?google\.[a-z.]+\//.test(d.fiche || '') ? d.fiche : 'https://www.google.com/maps?cid=8822678863966983754';
