@@ -365,6 +365,15 @@ footer a{color:var(--texte-2)}
      recouvrait. On donne au corps de quoi laisser passer les deux boutons :
      48 px de haut, 20 px du bord, et de la marge. */
   body{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+  /* Zone morte : fixes dans les coins, les deux boutons flottants
+     recouvraient en permanence ce qui passe dessous — l'etiquette « 11 aout »
+     et les premieres barres du graphique, les lignes « samedi »/« dimanche »
+     du tableau. Sur telephone, ils s'effacent quand on descend (le temps de
+     lire vers le bas, les coins sont degages) et reviennent des qu'on remonte
+     ou tout en haut. Le bouton du pied de page, lui, reste toujours la. */
+  #quitterFlottant,#toTop{transition:opacity .3s,transform .3s,visibility .3s}
+  #quitterFlottant.enFuite,#toTop.enFuite{opacity:0;visibility:hidden;
+    transform:translateY(130%);pointer-events:none}
 }
 
 /* ── confirmation de sortie ────────────────────────────────────────
@@ -2634,18 +2643,37 @@ footer a{color:var(--texte-2)}
   (function(){
     var bouton = document.getElementById('toTop');
     if(!bouton) return;
+    var sortie = document.getElementById('quitterFlottant');
     var doux = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var attente = false, montre = null;
+    var petit = matchMedia('(max-width:760px)');
+    var attente = false, montre = null, cache = null, dernierY = window.scrollY || window.pageYOffset;
+    /* enFuite : les boutons flottants quittent l'écran pour dégager les coins.
+       Seulement sur téléphone — ailleurs le contenu tient dans une colonne
+       centrée et les boutons tombent dans la marge, sans rien recouvrir. */
+    function efface(c){
+      if(c === cache) return; cache = c;
+      bouton.classList.toggle('enFuite', c);
+      if(sortie) sortie.classList.toggle('enFuite', c);
+    }
     function suit(){
       attente = false;
-      var v = (window.scrollY || window.pageYOffset) > 600;
+      var y = window.scrollY || window.pageYOffset;
+      var v = y > 600;
       if(v !== montre){ bouton.classList.toggle('show', v); montre = v; }
+      if(petit.matches){
+        if(y <= 80) efface(false);              // tout en haut : toujours là
+        else if(y > dernierY + 6) efface(true); // on descend : on s'efface
+        else if(y < dernierY - 6) efface(false);// on remonte : on revient
+      } else efface(false);
+      dernierY = y;
     }
     addEventListener('scroll', function(){
       if(attente) return;
       attente = true;
       requestAnimationFrame(suit);
     }, { passive:true });
+    /* Repasser en grand écran (rotation, redimensionnement) : on remet tout. */
+    if(petit.addEventListener) petit.addEventListener('change', function(){ efface(false); });
     suit();
     bouton.addEventListener('click', function(){
       window.scrollTo({ top:0, behavior: doux ? 'smooth' : 'auto' });
