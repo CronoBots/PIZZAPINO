@@ -1332,9 +1332,12 @@
          fin du chargement lancera la vidéo. Les écouteurs se retirent dès
          qu'elle tourne. */
       arme();
-      /* Auto-lancement dès que la vidéo est prête — sauf si le visiteur a
-         demandé moins d'animations (on attend alors son geste). */
-      if(!reduce) v.addEventListener("loadeddata", essaie, {once:true});
+      /* Auto-lancement dès que la vidéo est prête. C'est un fond d'ambiance
+         muet et discret, voulu par le restaurant : on le lance toujours sur
+         mobile. La politique du navigateur (éco d'énergie, réglage « lecture
+         auto » de Safari) reste maîtresse — si elle refuse, le geste prend
+         le relais. */
+      v.addEventListener("loadeddata", essaie, {once:true});
       v.load();
     }
     /* On diffère le chargement de la vidéo (2 Mo) après l'affichage de la page pour ne pas ralentir le 1er rendu */
