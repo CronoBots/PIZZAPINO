@@ -1291,10 +1291,38 @@
     if(!mobile || reduce) return; // desktop ou mouvement réduit : on garde la photo (aucun téléchargement)
     var c = navigator.connection || {};
     if(c.saveData || (c.effectiveType && c.effectiveType !== "4g")) return; // économie de données / réseau lent (2g/3g) : on garde l'image
+    /* Essaie de lancer la lecture. En mode économie d'énergie (ou onglet en
+       arrière-plan), iOS refuse la lecture automatique : on arme alors un
+       rattrapage au premier geste du visiteur — un appui ou un défilement
+       suffit, iOS l'autorise alors. On réessaie aussi quand la page
+       redevient visible. Les écouteurs se retirent dès que la vidéo tourne. */
+    var relance = null;
+    function enMarche(){ return !v.paused && !v.ended && v.readyState > 2; }
+    function essaie(){
+      var p = v.play();
+      if(p && p.then) p.then(function(){ if(enMarche()) desarme(); }).catch(function(){ arme(); });
+      else setTimeout(function(){ enMarche() ? desarme() : arme(); }, 120);
+    }
+    function surGeste(){ if(!enMarche()) essaie(); else desarme(); }
+    function surVisible(){ if(document.visibilityState === "visible" && !enMarche()) essaie(); }
+    function arme(){
+      if(relance) return; relance = true;
+      ["touchend", "pointerup", "click", "scroll"].forEach(function(ev){
+        addEventListener(ev, surGeste, { passive:true });
+      });
+      document.addEventListener("visibilitychange", surVisible);
+    }
+    function desarme(){
+      if(!relance) return; relance = false;
+      ["touchend", "pointerup", "click", "scroll"].forEach(function(ev){
+        removeEventListener(ev, surGeste);
+      });
+      document.removeEventListener("visibilitychange", surVisible);
+    }
     function loadVid(){
       if(v.getAttribute("src")) return;
       v.src = "media/pino-soiree.mp4";
-      v.addEventListener("loadeddata", function(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }, {once:true});
+      v.addEventListener("loadeddata", essaie, {once:true});
       v.load();
     }
     /* On diffère le chargement de la vidéo (2 Mo) après l'affichage de la page pour ne pas ralentir le 1er rendu */
