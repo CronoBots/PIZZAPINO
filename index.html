@@ -1288,22 +1288,24 @@
     var v = document.getElementById("heroVideo");
     if(!v) return;
     var mobile = window.matchMedia && window.matchMedia("(max-width:760px)").matches;
-    if(!mobile || reduce) return; // desktop ou mouvement réduit : on garde la photo (aucun téléchargement)
+    if(!mobile) return; // bureau : on garde la photo (aucun téléchargement)
     var c = navigator.connection || {};
     if(c.saveData || (c.effectiveType && c.effectiveType !== "4g")) return; // économie de données / réseau lent (2g/3g) : on garde l'image
-    /* Essaie de lancer la lecture. En mode économie d'énergie (ou onglet en
-       arrière-plan), iOS refuse la lecture automatique : on arme alors un
-       rattrapage au premier geste du visiteur — un appui ou un défilement
-       suffit, iOS l'autorise alors. On réessaie aussi quand la page
-       redevient visible. Les écouteurs se retirent dès que la vidéo tourne. */
+    /* La lecture automatique peut être refusée pour plein de raisons côté
+       iPhone : mode économie d'énergie, réglage « lecture auto » de Safari,
+       onglet en arrière-plan… On essaie quand même, et si c'est refusé on
+       arme un rattrapage au PREMIER GESTE du visiteur (appui ou défilement) —
+       iOS l'autorise alors toujours. On réessaie aussi au retour au premier
+       plan. Avec « Réduire les animations », on ne lance rien tout seul (pas
+       de mouvement imposé), mais un appui démarre la vidéo si on le souhaite. */
     var relance = null;
-    function enMarche(){ return !v.paused && !v.ended && v.readyState > 2; }
+    function enMarche(){ return !v.paused && !v.ended; }
     function essaie(){
       var p = v.play();
-      if(p && p.then) p.then(function(){ if(enMarche()) desarme(); }).catch(function(){ arme(); });
-      else setTimeout(function(){ enMarche() ? desarme() : arme(); }, 120);
+      if(p && p.then) p.then(desarme).catch(arme);
+      else setTimeout(function(){ enMarche() ? desarme() : arme(); }, 150);
     }
-    function surGeste(){ if(!enMarche()) essaie(); else desarme(); }
+    function surGeste(){ enMarche() ? desarme() : essaie(); }
     function surVisible(){ if(document.visibilityState === "visible" && !enMarche()) essaie(); }
     function arme(){
       if(relance) return; relance = true;
@@ -1321,8 +1323,18 @@
     }
     function loadVid(){
       if(v.getAttribute("src")) return;
+      /* iOS n'autorise la lecture en ligne que si la vidéo est bien muette :
+         on force la propriété, l'attribut seul ne suffit pas toujours. */
+      v.muted = true; v.defaultMuted = true; v.setAttribute("muted", "");
+      v.playsInline = true;
       v.src = "media/pino-soiree.mp4";
-      v.addEventListener("loadeddata", essaie, {once:true});
+      /* On arme tout de suite le démarrage au geste : même un appui avant la
+         fin du chargement lancera la vidéo. Les écouteurs se retirent dès
+         qu'elle tourne. */
+      arme();
+      /* Auto-lancement dès que la vidéo est prête — sauf si le visiteur a
+         demandé moins d'animations (on attend alors son geste). */
+      if(!reduce) v.addEventListener("loadeddata", essaie, {once:true});
       v.load();
     }
     /* On diffère le chargement de la vidéo (2 Mo) après l'affichage de la page pour ne pas ralentir le 1er rendu */
